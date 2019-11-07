@@ -12,6 +12,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using tvz2api.Models;
+using AutoMapper;
+using tvz2api.AutoMapper;
 
 namespace tvz2api
 {
@@ -29,6 +31,11 @@ namespace tvz2api
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddDbContext<tvz2Context>();
+            services.AddCors(o => o.AddPolicy("EVERYTHING", builder =>
+            {
+                builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+            }));
+            services.AddAutoMapper(typeof(AutoMapperProfile));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +53,7 @@ namespace tvz2api
 
             app.UseHttpsRedirection();
             app.UseMvc();
+            app.UseCors("EVERYTHING");
         }
     }
 }
