@@ -28,6 +28,7 @@ namespace tvz2api.Models
         public virtual DbSet<Vijest> Vijest { get; set; }
         public virtual DbSet<VrstaZaposljenja> VrstaZaposljenja { get; set; }
         public virtual DbSet<Zaposlenik> Zaposlenik { get; set; }
+        public object Korisnik { get; internal set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
