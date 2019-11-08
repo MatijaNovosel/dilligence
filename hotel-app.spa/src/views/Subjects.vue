@@ -23,8 +23,8 @@
             </v-toolbar>
             <v-list three-line subheader>
               <v-divider></v-divider>
-              <template v-for="item in subjects">
-                <v-list-item :key="item.ID" router :to="{ name: 'subjectPage', params: { id: item.id }}">
+              <template v-for="(item, i) in subjects">
+                <v-list-item :key="item.id" router :to="{ name: 'subjectPage', params: { id: item.id }}">
                   <v-list-item-avatar size="50" :color="randColor()" class="justify-center">
                     <span class="white--text headline"> {{ acronym(item.naziv) }} </span>
                   </v-list-item-avatar>
@@ -37,7 +37,7 @@
                     <v-icon>mdi-eye</v-icon>
                   </v-list-item-action>
                 </v-list-item>
-                <!-- <v-divider v-if="i < subjects.length - 1" :key="i + 999999999"></v-divider> -->
+                <v-divider :key="i + subjects.length + 1" v-if="i < subjects.length - 1" />
               </template>
             </v-list>
           </v-card>
@@ -57,7 +57,7 @@ export default {
       subjects: [],
       totalSubjects: 0,
       loading: true,
-      chipSelection: [ 0 ],
+      chipSelection: [ SmjerInformation.inf ],
       replacementSubjects: [],
       tags: []
     }
@@ -74,23 +74,13 @@ export default {
   methods: {
     getData() {
       this.loading = true;
-      KolegijService.getKolegiji(0, null)
+      KolegijService.getKolegijBySmjerID([ this.chipSelection ], 0, null)
       .then(({ data }) => {
         this.subjects = data.results;
         this.replacementSubjects = data.results;
         this.totalSubjects = data.total;
       }).finally(() => {
         this.loading = false;
-      });
-    },
-    filterSubjects(smjerovi) {
-      this.subjects = this.replacementSubjects;
-      this.subjects = this.subjects.filter(x => {
-        let naziv = x.NazivSmjera;
-        if(this.tags.filter(y => smjerovi.includes(y.value)).map(y => y.name).includes(naziv)) {
-          return true;
-        }
-        return false;
       });
     },
     acronym: function(s) {
@@ -122,7 +112,7 @@ export default {
   },
   watch: {
     chipSelection: function(value) {
-      this.filterSubjects(value);
+      this.getData();
     }
   }
 };
