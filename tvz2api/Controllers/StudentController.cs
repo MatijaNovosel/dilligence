@@ -13,7 +13,7 @@ using tvz2api.Models.DTO;
 
 namespace tvz2api.Controllers
 {
-    [Route("api/Student")]
+    [Route("api/[controller]")]
     [ApiController]
     public class StudentController : ControllerBase
     {
@@ -28,10 +28,18 @@ namespace tvz2api.Controllers
 
         // GET: api/Student
         [HttpGet]
-        public async Task<ActionResult<ResponseDataWrapper<List<StudentDTO>>>> GetStudent()
+        public async Task<ActionResult<ResponseDataWrapper<List<StudentDTO>>>> GetStudent(int skip = 0, int? take = null)
         {
-            var students = await _context.Student.ToListAsync();
-            return new ResponseDataWrapper<List<StudentDTO>>(_mapper.Map<List<Student>, List<StudentDTO>>(students));
+            List<Student> studenti = await _context.Student.ToListAsync();
+            return new ResponseDataWrapper<List<StudentDTO>>(
+                _mapper.Map<List<Student>,
+                List<StudentDTO>>(
+                    studenti
+                    .Skip(skip)
+                    .Take(take ?? studenti.Count)
+                    .ToList()
+                )
+            );
         }
 
         // GET: api/Student/5
@@ -46,11 +54,6 @@ namespace tvz2api.Controllers
             }
 
             return _mapper.Map<Student, StudentDTO>(student);
-        }
-
-        private bool StudentExists(int id)
-        {
-            return _context.Student.Any(e => e.Id == id);
         }
     }
 }

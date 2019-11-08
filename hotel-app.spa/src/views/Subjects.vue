@@ -23,21 +23,21 @@
             </v-toolbar>
             <v-list three-line subheader>
               <v-divider></v-divider>
-              <template v-for="(item, i) in subjects">
-                <v-list-item :key="item.ID" router :to="{ name: 'subjectPage', params: { id: item.ID }}">
+              <template v-for="item in subjects">
+                <v-list-item :key="item.ID" router :to="{ name: 'subjectPage', params: { id: item.id }}">
                   <v-list-item-avatar size="50" :color="randColor()" class="justify-center">
-                    <span class="white--text headline"> {{ acronym(item.Naziv) }} </span>
+                    <span class="white--text headline"> {{ acronym(item.naziv) }} </span>
                   </v-list-item-avatar>
                   <v-list-item-content>
-                    <v-list-item-title v-html="item.Naziv"></v-list-item-title>
-                    <v-list-item-subtitle><b>ECTS: </b>{{ item.ECTS }}</v-list-item-subtitle>
-                    <v-list-item-subtitle><b>ISVU: </b>{{ item.ISVU }}</v-list-item-subtitle>
+                    <v-list-item-title v-html="item.naziv"></v-list-item-title>
+                    <v-list-item-subtitle><b>ECTS: </b>{{ item.ects }}</v-list-item-subtitle>
+                    <v-list-item-subtitle><b>ISVU: </b>{{ item.isvu }}</v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action class="mt-8 mr-5">
                     <v-icon>mdi-eye</v-icon>
                   </v-list-item-action>
                 </v-list-item>
-                <v-divider v-if="i < subjects.length - 1" :key="i + 999999999"></v-divider>
+                <!-- <v-divider v-if="i < subjects.length - 1" :key="i + 999999999"></v-divider> -->
               </template>
             </v-list>
           </v-card>
@@ -76,9 +76,9 @@ export default {
       this.loading = true;
       KolegijService.getKolegiji(0, null)
       .then(({ data }) => {
-        this.subjects = data.Results;
-        this.replacementSubjects = data.Results;
-        this.totalSubjects = data.Total;
+        this.subjects = data.results;
+        this.replacementSubjects = data.results;
+        this.totalSubjects = data.total;
       }).finally(() => {
         this.loading = false;
       });

@@ -9,12 +9,12 @@ namespace tvz2api.Helpers
     public class ResponseDataWrapper<T> where T : IEnumerable, IList
     {
         public T Results { get; set; }
-        public int Count { get; set; }
+        public int Total { get; set; }
 
         public ResponseDataWrapper(T Results)
         {
             this.Results = Results;
-            Count = Results.Count;
+            Total = Results.Count;
         }
     }
 }

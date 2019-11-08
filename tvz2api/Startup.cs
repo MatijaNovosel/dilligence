@@ -51,9 +51,9 @@ namespace tvz2api
                 app.UseHsts();
             }
 
+            app.UseCors("EVERYTHING");
             app.UseHttpsRedirection();
             app.UseMvc();
-            app.UseCors("EVERYTHING");
         }
     }
 }
