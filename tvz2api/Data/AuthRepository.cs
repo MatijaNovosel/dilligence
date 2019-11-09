@@ -21,7 +21,7 @@ namespace tvz2api.Data
             {
                 return null;
             }
-            if(!verifyPasswordHash(password, user.passwordHash, user.passwordSalt)) 
+            if(!verifyPasswordHash(password, user.PasswordHash, user.PasswordSalt)) 
             {
                 return null;
             }
@@ -48,8 +48,8 @@ namespace tvz2api.Data
         {
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
-            user.passwordHash = passwordHash;
-            user.passwordSalt = passwordSalt;
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
             
             await _context.Korisnik.AddAsync(user);
             await _context.SaveChangesAsync();

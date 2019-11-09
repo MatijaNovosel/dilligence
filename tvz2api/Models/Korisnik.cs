@@ -1,20 +1,20 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace tvz2api.Models
 {
-    public partial class Korisnik 
+    public partial class Korisnik
     {
-        public int ID { get; set; }
+        [Column("ID")]
+        public int Id { get; set; }
+        [StringLength(255)]
         public string Username { get; set; }
-        public byte[] passwordHash { 
-            get; 
-            set; 
-        }
-        public byte[] passwordSalt { 
-            get; 
-            set; 
-        }
-        public DateTime Created { get; set; }
+        [MaxLength(255)]
+        public byte[] PasswordHash { get; set; }
+        [MaxLength(255)]
+        public byte[] PasswordSalt { get; set; }
+        public DateTime? Created { get; set; }
     }
 }

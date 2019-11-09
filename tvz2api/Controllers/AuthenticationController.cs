@@ -54,7 +54,7 @@ namespace tvz2api.Controllers {
             
             // Token contains two claims, one is the ID and the other is the username
             var claims = new[] {
-                new Claim(ClaimTypes.NameIdentifier, userFromRepo.ID.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
                 new Claim(ClaimTypes.Name, userFromRepo.Username)
             };
             
