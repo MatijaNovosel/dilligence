@@ -11,9 +11,7 @@ namespace tvz2api.Models
         public int Id { get; set; }
         [StringLength(255)]
         public string Username { get; set; }
-        [MaxLength(255)]
         public byte[] PasswordHash { get; set; }
-        [MaxLength(255)]
         public byte[] PasswordSalt { get; set; }
         public DateTime? Created { get; set; }
     }

@@ -71,7 +71,7 @@ namespace tvz2api.Controllers {
             
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            var user = _mapper.Map<UserForListDto>(userFromRepo);
+            var user = _mapper.Map<Korisnik, UserForListDto>(userFromRepo);
             
             return(Ok(new {
                 token = tokenHandler.WriteToken(token),
