@@ -6,35 +6,40 @@ import Subjects from './views/Subjects.vue';
 import Employees from './views/Employees.vue';
 import Calendar from './views/Calendar.vue';
 import SubjectPage from './views/SubjectPage.vue';
+import Login from './views/Login/Login.vue';
 
 Vue.use(Router);
 
 export default new Router ({
-    mode: 'history',
-    base: process.env.BASE_URL,
-    routes: [{
-        path: "/",
-        name: "index",
-        component: Index
-    }, {
-        path: "/account",
-        name: "account",
-        component: Account
-    }, {
-        path: "/subjects",
-        name: "subjects",
-        component: Subjects
-    }, {
-        path: "/subjectPage/:id",
-        name: "subjectPage",
-        component: SubjectPage
-    }, {
-        path: "/employeeList",
-        name: "employeeList",
-        component: Employees
-    }, {
-        path: "/calendar",
-        name: "calendar",
-        component: Calendar
-    }]
+  mode: 'history',
+  base: process.env.BASE_URL,
+  routes: [{
+    path: "/",
+    name: "index",
+    component: Index
+  }, {
+    path: "/account",
+    name: "account",
+    component: Account
+  }, {
+    path: "/subjects",
+    name: "subjects",
+    component: Subjects
+  }, {
+    path: "/subjectPage/:id",
+    name: "subject-page",
+    component: SubjectPage
+  }, {
+    path: "/employeeList",
+    name: "employeeList",
+    component: Employees
+  }, {
+    path: "/calendar",
+    name: "calendar",
+    component: Calendar
+  }, {
+    path: "/login",
+    name: "login",
+    component: Login      
+  }]
 })

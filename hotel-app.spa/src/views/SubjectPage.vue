@@ -2,9 +2,10 @@
   <div>
     <v-dialog v-model="dialog" max-width="400">
       <v-card class="mx-auto">
-        <v-img class="white--text" :src="selectedItem.JMBAG !== null ? require(`../assets/TVZ/studenti/${selectedItem.JMBAG}.jpg`) : '' ">
+        <!--<v-img class="white--text" :src="selectedItem.JMBAG !== null ? require(`../assets/TVZ/studenti/${selectedItem.JMBAG}.jpg`) : '' ">
           <v-card-title class="align-end fill-height display-1">{{ selectedItem.Naziv }}</v-card-title>
         </v-img>
+        -->
       </v-card>
     </v-dialog>
     <v-row no-gutters>
@@ -241,9 +242,9 @@
                         </v-col>
                       </template>
                       <template v-slot:item.picture="{ item }">
-                        <v-avatar size="40" class="my-1" @click="showInfo(item)">
+                        <!--<v-avatar size="40" class="my-1" @click="showInfo(item)">
                           <v-img :src="require(`../assets/TVZ/studenti/${item.JMBAG}.jpg`)" />
-                        </v-avatar>
+                        </v-avatar>-->
                       </template>
                     </v-data-table>
                   </v-col>
@@ -317,9 +318,9 @@
                                 <v-list-item-content>
                                   <v-data-table :headers="headers" :items="studenti" class="elevation-1">
                                     <template v-slot:item.picture="{ item }">
-                                      <v-avatar size="40">
+                                      <!--<v-avatar size="40">
                                         <v-img :src="require(`../assets/TVZ/studenti/${item.JMBAG}.jpg`)"></v-img>
-                                      </v-avatar>
+                                      </v-avatar>-->
                                     </template>
                                     <template v-slot:no-data>
                                       <v-btn color="primary" @click="initialize">Reset</v-btn>
@@ -356,7 +357,7 @@
                                   <v-data-table :headers="headers" :items="studenti" class="elevation-1">
                                     <template v-slot:item.picture="{ item }">
                                       <v-avatar size="40">
-                                        <v-img :src="require(`../assets/TVZ/studenti/${item.JMBAG}.jpg`)"></v-img>
+                                        <!--<v-img :src="require(`../assets/TVZ/studenti/${item.JMBAG}.jpg`)"></v-img>-->
                                       </v-avatar>
                                     </template>
                                     <template v-slot:no-data>

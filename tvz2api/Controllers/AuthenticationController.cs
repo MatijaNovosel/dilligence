@@ -13,7 +13,7 @@ using tvz2api.Models.DTO;
 using tvz2api.Models;
 
 namespace tvz2api.Controllers {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController: ControllerBase {
         private readonly IAuthRepository _repo;

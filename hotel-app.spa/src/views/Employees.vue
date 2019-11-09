@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-parallax src="../assets/banner.jpg" class="mt-n5" height="300" />
+    <!--<v-parallax src="../assets/banner.jpg" class="mt-n5" height="300" />-->
     <v-row no-gutters>
       <v-col>
         <v-row class="mt-10" justify="center">

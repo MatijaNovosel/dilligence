@@ -111,7 +111,7 @@ export default {
     }
   },
   watch: {
-    chipSelection: function(value) {
+    chipSelection: function() {
       this.getData();
     }
   }
