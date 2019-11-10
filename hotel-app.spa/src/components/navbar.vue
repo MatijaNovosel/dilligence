@@ -7,7 +7,7 @@
             <v-img src="../assets/matija.png"></v-img>
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title>Matija Novosel</v-list-item-title>
+            <v-list-item-title>{{ user.username }}</v-list-item-title>
             <v-list-item-subtitle>Information technologies</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -27,7 +27,7 @@
       </v-list>
       <template v-slot:append>
         <div class="pa-3">
-          <v-btn class="primary" block>
+          <v-btn class="primary" block @click="click()">
             Sign out 
             <v-icon class="ml-3"> mdi-logout </v-icon> 
           </v-btn>
@@ -68,6 +68,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 
 export default { 
   data() {
@@ -123,6 +124,19 @@ export default {
           { title: 'Calendar', link: "/calendar" }
         ]
       }]
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'user'
+    ])
+  },
+  methods: {
+    click() {
+      console.log(this.user.username);  
+    },
+    logout() {
+      //  
     }
   }
 };

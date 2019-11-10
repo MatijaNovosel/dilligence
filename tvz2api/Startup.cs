@@ -33,15 +33,12 @@ namespace tvz2api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<tvz2Context>();
+            services.AddCors();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
               .AddJsonOptions(opt => {
                   opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
               });
-            services.AddDbContext<tvz2Context>();
-            services.AddCors(o => o.AddPolicy("EVERYTHING", builder =>
-            {
-                builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-            }));
             services.AddAutoMapper(typeof(AutoMapperProfile));
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
@@ -65,7 +62,7 @@ namespace tvz2api
                 app.UseHsts();
             }
 
-            app.UseCors("EVERYTHING");
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();
