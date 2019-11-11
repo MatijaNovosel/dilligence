@@ -9,7 +9,7 @@
       </v-container>
     </v-content>
     <!-- Notifications -->
-    <notifications group="notification" class="mt-2" />
+    <notifications position="bottom right" group="notification" class="mt-2" />
   </v-app>
 </template>
 
