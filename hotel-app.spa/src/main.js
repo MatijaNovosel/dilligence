@@ -4,7 +4,9 @@ import vuetify from './plugins/vuetify';
 import VueResource from 'vue-resource';
 import router from './router';
 import store from './store/store';
+import Notifications from 'vue-notification'
 
+Vue.use(Notifications)
 Vue.use(VueResource);
 Vue.config.productionTip = false
 

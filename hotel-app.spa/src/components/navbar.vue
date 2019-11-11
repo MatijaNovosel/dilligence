@@ -27,7 +27,7 @@
       </v-list>
       <template v-slot:append>
         <div class="pa-3">
-          <v-btn class="primary" block @click="click()">
+          <v-btn class="primary" block @click="logout()">
             Sign out 
             <v-icon class="ml-3"> mdi-logout </v-icon> 
           </v-btn>
@@ -69,6 +69,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import AuthService from '../services/api/auth';
 
 export default { 
   data() {
@@ -132,11 +133,10 @@ export default {
     ])
   },
   methods: {
-    click() {
-      console.log(this.user.username);  
-    },
     logout() {
-      //  
+      this.drawer = false;
+      AuthService.logout();
+      this.$router.push("login");
     }
   }
 };

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { RoutingInformation } from '@/constants/routingInformation';
+import jwt_decode from 'jwt-decode';
 
 export default {
   async login(model) {
@@ -13,5 +14,18 @@ export default {
       Username: model.Username,
       Password: model.Password
     });
+  },
+  loggedIn() {
+    const token = localStorage.getItem('token');
+    const decoded = jwt_decode(token);
+    const exp = decoded.exp * 1000; // Expires at (EXP)
+    if(new Date().getTime() > exp) {
+      return false;
+    }
+    return true;
+  },
+  logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
   }
 }
