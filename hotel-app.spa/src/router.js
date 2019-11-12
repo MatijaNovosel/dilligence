@@ -1,45 +1,21 @@
-import Vue from 'vue';
-import Router from 'vue-router';
-import Index from './views/Index.vue';
-import Account from './views/Account.vue';
-import Subjects from './views/Subjects.vue';
-import Employees from './views/Employees.vue';
-import Calendar from './views/Calendar.vue';
-import SubjectPage from './views/SubjectPage.vue';
-import Login from './views/Login/Login.vue';
+import VueRouter from 'vue-router';
+import routes from './routes';
+import goTo from 'vuetify/es5/services/goto';
 
-Vue.use(Router);
-
-export default new Router ({
+const router = new VueRouter({
+  routes,
   mode: 'history',
   base: process.env.BASE_URL,
-  routes: [{
-    path: "/",
-    name: "index",
-    component: Index
-  }, {
-    path: "/account",
-    name: "account",
-    component: Account
-  }, {
-    path: "/subjects",
-    name: "subjects",
-    component: Subjects
-  }, {
-    path: "/subjectPage/:id",
-    name: "subject-page",
-    component: SubjectPage
-  }, {
-    path: "/employeeList",
-    name: "employeeList",
-    component: Employees
-  }, {
-    path: "/calendar",
-    name: "calendar",
-    component: Calendar
-  }, {
-    path: "/login",
-    name: "login",
-    component: Login      
-  }]
-})
+  linkExactActiveClass: 'nav-item active',
+  scrollBehavior(to, from, savedPosition) {
+    let scrollTo = 0;
+    if (to.hash) {
+      scrollTo = to.hash;
+    } else if (savedPosition) {
+      scrollTo = savedPosition.y;
+    }
+    return goTo(scrollTo);
+  }
+});
+
+export default router;

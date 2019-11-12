@@ -74,7 +74,7 @@ export default {
   methods: {
     getData() {
       this.loading = true;
-      KolegijService.getKolegijBySmjerID([ this.chipSelection ], 0, null)
+      KolegijService.getKolegijBySmjerID(this.chipSelection, 0, null)
       .then(({ data }) => {
         this.subjects = data.results;
         this.replacementSubjects = data.results;

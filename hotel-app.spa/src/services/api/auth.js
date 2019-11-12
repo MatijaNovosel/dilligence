@@ -1,12 +1,15 @@
 import axios from 'axios';
 import { RoutingInformation } from '@/constants/routingInformation';
 import jwt_decode from 'jwt-decode';
+import NotificationService from '../notification';
 
 export default {
   async login(model) {
     return await axios.post(`${RoutingInformation.baseRoute}auth/login`, {
       Username: model.Username,
       Password: model.Password
+    }).catch(error => {
+      NotificationService.error(`${error.name}: ${error.message}`, 'Unable to log in!');
     });
   },
   async register(model) {

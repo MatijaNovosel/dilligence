@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using tvz2api.Data;
 using tvz2api.Models.DTO;
 using tvz2api.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace tvz2api.Controllers {
     [Route("api/auth")]
@@ -65,7 +66,7 @@ namespace tvz2api.Controllers {
             // Create the token
             var tokenDescriptor = new SecurityTokenDescriptor() {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(1),
+                Expires = DateTime.Now.AddDays(3),
                 SigningCredentials = credentials
             };
             
