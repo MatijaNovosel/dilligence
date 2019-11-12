@@ -12,7 +12,8 @@ export default new Vuex.Store({
     user: {
       id: null,
       username: null,
-      token: null
+      token: null,
+      DBName: null
     },
     decodedToken: null
   },
@@ -27,7 +28,8 @@ export default new Vuex.Store({
       state.user = {
         id: null,
         username: null,
-        token: null  
+        token: null,
+        DBName: null
       };
     }
   },
