@@ -1,30 +1,17 @@
 <template>
   <v-app v-bind:class="{ bg: this.$router.currentRoute.name == 'login' }">
-    <!-- Navbar -->
-    <Navbar v-show="this.$router.currentRoute.name != 'login'"> </Navbar>
-    <!-- Content -->
-    <v-content>
-      <v-container fluid>
-        <router-view />
-      </v-container>
-    </v-content>
-    <!-- Notifications -->
-    <notifications position="bottom right" group="notification" class="mt-2" />
+      <router-view />
   </v-app>
 </template>
 
 <script>
-import Navbar from './components/navbar.vue';
-
 export default {
   name: 'App',
-  components: {
-    Navbar
-  },
-  data() {
-    return { }
+  data () {
+    return {
+    }
   }
-};
+}
 </script>
 
 <style>
