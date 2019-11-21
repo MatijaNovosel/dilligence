@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-navigation-drawer disable-route-watcher app clipped v-model="drawer" disable-resize-watcher>
-      <v-list dense>
+      <v-list dense nav>
         <v-list-item to="/account">
           <v-list-item-avatar>
             <v-img src="../assets/matija.png"></v-img>
@@ -11,28 +11,31 @@
             <v-list-item-subtitle>Information technologies</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
-        <v-divider class="my-2" />
-        <v-list-group v-for="item in drawerItems" :key="item.title" v-model="item.active" :prepend-icon="item.action" no-action>
+        <v-list-group v-for="link in links" :key="link.text" no-action>
           <template v-slot:activator>
-            <v-list-item-content>
-              <v-list-item-title v-text="item.title"></v-list-item-title>
-            </v-list-item-content>
+            <v-list-item active-class="highlighted" class="px-0">
+              <v-list-item-action>
+                <v-icon>{{ link.icon }}</v-icon>
+              </v-list-item-action>
+              <v-list-item-content class="ml-n5">
+                <v-list-item-title>{{ link.text }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
           </template>
-          <v-list-item v-for="subItem in item.items" :key="subItem.title" router :to="subItem.link">
-            <v-list-item-title>
-              <v-list-item-title v-text="subItem.title"></v-list-item-title>
-            </v-list-item-title>
+          <v-list-item v-for="sublink in link.sublinks" 
+            :key="sublink.text" 
+            nav 
+            @click="sublink.route != null ? goToUrl(sublink.route) : ''" 
+            active-class="highlighted" 
+            :class="sublink.route != null && sublink.route.name === $route.name ? 'highlighted' : ''"
+          >
+            <v-list-item-content>
+              <v-list-item-title>{{ sublink.text }}</v-list-item-title>
+            </v-list-item-content>
           </v-list-item>
         </v-list-group>
+        <v-divider class="my-2" />
       </v-list>
-      <template v-slot:append>
-        <div class="pa-3">
-          <v-btn class="primary" block @click="logout()">
-            Sign out 
-            <v-icon class="ml-3"> mdi-logout </v-icon> 
-          </v-btn>
-        </div>
-      </template>
     </v-navigation-drawer>
     <v-app-bar app clipped-left>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
@@ -45,14 +48,9 @@
       <v-spacer></v-spacer>
       <v-menu offset-y>
         <template v-slot:activator="{ on }">
-          <v-badge class="mt-3 mb-1" color="cyan" left overlap>
           <v-btn icon color="grey" v-on="on">
-            <v-icon large>mdi-bell</v-icon>
+            <v-icon size="30">mdi-bell</v-icon>
           </v-btn>
-          <template v-slot:badge>
-            <span>{{ notifications.length }}</span>
-          </template>
-        </v-badge>
         </template>
         <v-list>
           <v-list-item v-for="(item, i) in notifications" :key="i" router to="/notification">
@@ -62,7 +60,15 @@
             </v-list-item-action>
           </v-list-item>
         </v-list>
-      </v-menu>      
+      </v-menu>   
+      <v-tooltip v-model="show" bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn icon @click="logout()" v-on="on" class="mx-3">
+            <v-icon color="red" size="30"> mdi-power </v-icon> 
+          </v-btn>
+        </template>
+        <span> Log out </span>
+      </v-tooltip>
     </v-app-bar>
   </div>
 </template>
@@ -75,54 +81,37 @@ export default {
   data() {
     return { 
       drawer: false,
+      show: false,
       notifications: [
         { title: 'Baze podataka - nova vijest' },
         { title: 'Baze podataka - novi privitak' },
         { title: 'Nova obavijest studentske referade' }
       ],
-      routeItems: [
-        { title: 'Home', icon: 'mdi-home', route: '/' },
-        { title: 'Music', icon: 'mdi-music', route: '/music' }
-      ],
-      drawerItems: [{
-        action: "mdi-home",
-        title: "General",
-        items: [
-          { title: 'Home', link: "/" },
-          { title: 'Student notifications', link: "/studentNotifications" },
-          { title: 'Electronic services', link: "/electronicServices" },
-          { title: 'Literature search', link: "/literatureSearch" },
-          { title: 'Quality', link: "/quality" },
-          { title: 'Employee list', link: "/employeeList" },
-          { title: 'Webmail', link: "/webmail" }
+      links: [{
+        icon: 'mdi-bullhorn',
+        text: 'General',
+        route: { name: "/" },
+        sublinks: [{
+          text: 'Home',
+          route: { name: "home" }
+        }]
+      }, {
+        icon: 'mdi-file-document',
+        text: 'Subjects',
+        route: { name: "subjects" },
+        sublinks: [{
+            text: 'Subjects',
+            route: { name: "subjects" }
+          }
         ]
       }, {
-        action: "mdi-pencil",
-        title: "Personal",
-        items: [
-          { title: 'Deadlines', link: "/deadlines" },
-          { title: 'News', link: "/news" },
-          { title: 'Subjects', link: "/subjects" },
-          { title: 'Change personal info', link: "/personalInfo" },
-          { title: 'Daily spendings', link: "/calendar" },
-          { title: 'My data', link: "/myData" }
-        ]
-      }, {
-        action: "mdi-gesture-tap",
-        title: "Actions",
-        items: [
-          { title: 'Choose a mentor', link: "/mentor" },
-          { title: 'Scholarship calculator', link: "/scholarship" },
-          { title: 'Make a request', link: "/request" }
-        ]
-      }, {
-        action: "mdi-school",
-        title: "Schooling",
-        items: [
-          { title: 'About', link: "/about" },
-          { title: 'Goals', link: "/goals" },
-          { title: 'Student council', link: "/studentCouncilAnnouncements" },
-          { title: 'Calendar', link: "/calendar" }
+        icon: 'mdi-test-tube',
+        text: 'Exams',
+        route: { name: "exams" },
+        sublinks: [{
+            text: 'Exams',
+            route: { name: "exams" }
+          }
         ]
       }]
     }
@@ -137,6 +126,13 @@ export default {
       this.drawer = false;
       AuthService.logout();
       this.$router.push("login");
+    },
+    goToUrl(route) {
+      if(this.$router.currentRoute.name == route.name) {
+        return;
+      }
+      this.drawer = false;
+      this.$router.push(route);
     }
   }
 };

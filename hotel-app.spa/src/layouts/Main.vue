@@ -5,7 +5,10 @@
     <!-- Content -->
     <v-content>
       <v-container fluid>
-        <router-view />
+        <keep-alive>
+          <router-view v-if="$route.meta.keepAlive" />
+        </keep-alive>
+        <router-view v-if="!$route.meta.keepAlive" />
       </v-container>
     </v-content>
     <!-- Notifications -->
