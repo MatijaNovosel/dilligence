@@ -2,6 +2,7 @@ import Login from '@/views/Login/Login.vue';
 import MainLayout from '@/layouts/Main.vue';
 import Index from '@/views/Index.vue';
 import Subjects from '@/views/Subjects.vue';
+import Exams from '@/views/Exams.vue';
 
 let commonPages = {
   path: '/',
@@ -33,12 +34,14 @@ let examPages = {
   children: [{
     path: '',
     name: 'exams',
+    component: Exams
   }]
 };
 
 const routes = [
   commonPages,
   subjectPages,
+  examPages,
   {
     path: '*',
     redirect: "/home"
