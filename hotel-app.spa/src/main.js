@@ -6,10 +6,14 @@ import VueRouter from 'vue-router';
 import store from './store/store';
 import router from './router';
 import Notifications from 'vue-notification';
+import VueCodeHighlight from 'vue-code-highlight';
+
+require('../node_modules/vue-code-highlight/themes/prism-twilight.css');
 
 Vue.use(Notifications);
 Vue.use(VueResource);
 Vue.use(VueRouter);
+Vue.use(VueCodeHighlight);
 
 Vue.config.productionTip = false;
 
