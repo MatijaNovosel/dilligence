@@ -37,7 +37,7 @@
           </v-row>
           <v-row align-content="center" align="center">
             <v-spacer />
-            <v-btn @click="submit()" :disabled="$v.$invalid" color="primary">Sign in</v-btn>
+            <v-btn @click="submit" :disabled="$v.$invalid" color="primary">Sign in</v-btn>
             <v-spacer />
           </v-row>
         </v-col>
@@ -56,8 +56,16 @@ import NotificationService from '../../services/notification';
 export default { 
   mixins: [validationMixin],
   validations: {
-    username: { required, maxLength: maxLength(10), minLength: minLength(4) },
-    password: { required, maxLength: maxLength(10), minLength: minLength(4) }
+    username: { 
+      required, 
+      maxLength: maxLength(10), 
+      minLength: minLength(4) 
+    },
+    password: { 
+      required, 
+      maxLength: maxLength(10), 
+      minLength: minLength(4) 
+    }
   },
   data() {
     return {
@@ -74,8 +82,7 @@ export default {
       AuthService.login({ 
         Username: this.username, 
         Password: this.password 
-      })
-      .then(response => {
+      }).then(response => {
         const resp = response;
         if(resp.status == 200) {
           var user = {

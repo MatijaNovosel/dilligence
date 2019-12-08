@@ -16,6 +16,8 @@ export default {
    return await axios.post(`${RoutingInformation.baseRoute}auth/register`, {
       Username: model.Username,
       Password: model.Password
+    }).catch(error => {
+      NotificationService.error(`${error.name}: ${error.message}`, 'Unable to register!');
     });
   },
   loggedIn() {

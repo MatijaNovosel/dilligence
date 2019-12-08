@@ -25,8 +25,8 @@
               <v-divider></v-divider>
               <template v-for="(item, i) in subjects">
                 <v-list-item :key="item.id" router :to="{ name: 'subjectPage', params: { id: item.id }}">
-                  <v-list-item-avatar size="50" :color="randColor()" class="justify-center">
-                    <span class="white--text headline"> {{ acronym(item.naziv) }} </span>
+                  <v-list-item-avatar size="50" :color="Helper.randColor()" class="justify-center">
+                    <span class="white--text headline"> {{ Helper.acronym(item.naziv) }} </span>
                   </v-list-item-avatar>
                   <v-list-item-content>
                     <v-list-item-title v-html="item.naziv"></v-list-item-title>
@@ -50,6 +50,7 @@
 <script>
 import KolegijService from '../services/api/kolegij'; 
 import { SmjerInformation } from '../constants/smjerInformation';
+import { Helper } from '../helpers/helpers.js';
 
 export default { 
   data() {
@@ -83,35 +84,16 @@ export default {
         this.loading = false;
       });
     },
-    acronym: function(s) {
-        var words, acronym, nextWord;
-        words = s.split(' ');
-        acronym = "";
-        var index = 0;
-        while(index < words.length) {
-          nextWord = words[index];
-          acronym = acronym + nextWord.charAt(0);
-          index++;
-        }
-        return acronym.slice(0, 2).toUpperCase();
-    },
-    randInt: function(min, max) {
-      return Math.floor(Math.random() * (max - min + 1) ) + min;
-    },
-    randColor: function() {
-      var color = `rgb(${this.randInt(0, 255)}, ${this.randInt(0, 255)}, ${this.randInt(0, 255)})`;
-      return color;
-    },
-    buildPath: function(name) {
+    buildPath(name) {
       return require(`../assets/TVZ/subjects/${name}.png`);
     },
-    showInfo: function(item) {
+    showInfo(item) {
       this.selectedItem = item;
       this.dialog = !this.dialog;
     }
   },
   watch: {
-    chipSelection: function() {
+    chipSelection() {
       this.getData();
     }
   }
