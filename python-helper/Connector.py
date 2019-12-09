@@ -6,6 +6,7 @@ from Credentials import CREDENTIALS
 class Connector:
   def __init__(self):
     self.session = requests.session()
+    self.token = None
   def connect(self):
     response = self.session.get("https://moj.tvz.hr/")
     soupParser = BeautifulSoup(response.text, "lxml")
@@ -17,3 +18,4 @@ class Connector:
       "login": CREDENTIALS["username"],
       "passwd": CREDENTIALS["password"]
     })
+    self.token = token
