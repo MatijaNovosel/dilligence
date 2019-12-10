@@ -14,20 +14,19 @@ class Manager:
     # URL -> https://moj.tvz.hr/studij<KRATICA>/prikaz/mojpred?TVZ=<TOKEN>
     for kratica in KRATICE_SMJEROVA["REDOVNO"].values():
       response = self.connector.session.get(f"https://moj.tvz.hr/studij{kratica}/prikaz/mojpred?TVZ={self.connector.token}")
-      
-      soup = BeautifulSoup(response.text, "lxml", from_encoding = "windows-1250")
-      print(soup.original_encoding)
+      response.encoding = response.apparent_encoding
+      text = response.text.replace("è", "č")
 
+      soup = BeautifulSoup(text, "lxml")
       select = soup.find("select", {
         "name": "nesto1"
       })
+
       selectValues = [ 
-        (x["value"], x.text, kratica) 
+        Kolegij(x.text, None, kratica, x["value"])
         for x in select.find_all("option") 
         if x.get("value") not in ['120015', '0', '140010']
       ]
-      for x in selectValues:
-        print(x)
 
     return kolegiji
 
