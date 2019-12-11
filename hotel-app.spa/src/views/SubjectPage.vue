@@ -546,9 +546,6 @@ export default {
       placeholder: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer elit nulla, fermentum rutrum mi suscipit, tempus ornare est. Quisque rutrum convallis metus, a lobortis ipsum placerat quis. Proin elementum lectus eu ex elementum, in viverra eros semper. Nam dignissim augue justo, nec tincidunt risus viverra ut. Proin quis lacinia justo. Nullam volutpat, urna vitae pharetra mollis, leo velit feugiat sapien, quis elementum sem enim at nisl. Proin in ultricies nulla.Cras et pulvinar eros, quis pretium elit. Donec non ligula nec libero luctus suscipit malesuada vitae purus. Duis facilisis egestas ligula ac tincidunt. Fusce ex urna, venenatis non justo et, congue tempus nisi. In rutrum at leo sit amet hendrerit. Ut viverra ultrices maximus. Vestibulum quis gravida justo, eu fringilla dolor. Fusce a diam in eros porta volutpat et eget leo. Phasellus ante erat, venenatis sit amet tempus eu, finibus vel neque. Vestibulum est nibh, molestie eu venenatis in, aliquam sit amet nunc. Suspendisse potenti. Aliquam iaculis eleifend malesuada. Vestibulum magna diam, interdum sed condimentum eu, maximus ac ante. Aenean tempor non risus nec egestas. Nam ante diam, tristique quis mauris non, lobortis semper tortor.",
     }
   },
-  created () {
-    this.getData();
-  },
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.getData(to.params.id);
