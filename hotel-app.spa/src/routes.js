@@ -3,6 +3,7 @@ import MainLayout from '@/layouts/Main.vue';
 import Index from '@/views/Index.vue';
 import Subjects from '@/views/Subjects.vue';
 import Exams from '@/views/Exams.vue';
+import SubjectPage from '@/views/SubjectPage.vue';
 
 let commonPages = {
   path: '/',
@@ -25,6 +26,10 @@ let subjectPages = {
     path: '',
     name: 'subjects',
     component: Subjects
+  }, {
+    path: 'details/:id',
+    name: 'subject-details',
+    component: SubjectPage
   }]
 };
 
