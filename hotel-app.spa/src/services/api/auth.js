@@ -8,8 +8,6 @@ export default {
     return await axios.post(`${RoutingInformation.baseRoute}auth/login`, {
       Username: model.Username,
       Password: model.Password
-    }).catch(error => {
-      NotificationService.error(`${error.name}: ${error.message}`, 'Unable to log in!');
     });
   },
   async register(model) {
@@ -17,6 +15,7 @@ export default {
       Username: model.Username,
       Password: model.Password
     }).catch(error => {
+      console.log(error);
       NotificationService.error(`${error.name}: ${error.message}`, 'Unable to register!');
     });
   },

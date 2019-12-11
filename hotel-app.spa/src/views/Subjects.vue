@@ -24,7 +24,7 @@
             <v-list three-line subheader>
               <v-divider></v-divider>
               <template v-for="(item, i) in subjects">
-                <v-list-item :key="item.id" router :to="{ name: 'subjectPage', params: { id: item.id }}">
+                <v-list-item :key="item.id" router :to="{ name: 'subject-details', params: { id: item.id }}">
                   <v-list-item-avatar size="50" :color="Helper.randColor()" class="justify-center">
                     <span class="white--text headline"> {{ Helper.acronym(item.naziv) }} </span>
                   </v-list-item-avatar>
@@ -60,10 +60,12 @@ export default {
       loading: true,
       chipSelection: [ SmjerInformation.inf ],
       replacementSubjects: [],
-      tags: []
+      tags: [],
+      Helper: null
     }
   },
   mounted() {
+    this.Helper = Helper;
     this.getData();
     for(let prop in SmjerInformation) {
       this.tags.push({
