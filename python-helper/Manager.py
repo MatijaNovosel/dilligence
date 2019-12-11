@@ -1,8 +1,10 @@
 from Connector import Connector
 from Models import Kolegij
+from Models import Student
 from Constants import KRATICE_SMJEROVA
 from bs4 import BeautifulSoup
 from typing import Dict, List, Tuple
+import pyodbc
 
 class Manager:
   def __init__(self):
@@ -29,6 +31,36 @@ class Manager:
       ]
 
     return kolegiji
+  def getStudentList(self, kraticaSmjera = "inf") -> List[Student]:
+    studenti = [ Student("Matija", "Novosel", "0246073749", "INF") ]
+    kolegiji = self.getKolegijList()
 
-manager = Manager()
-manager.getKolegijList()
+    return studenti
+  def insertStudenti(self):
+    '''
+
+      [Student]
+        ID
+        JMBAG
+        Ime
+        Prezime
+        ImagePath
+        Email
+        SmjerID
+
+    '''
+    studenti = self.getStudentList()
+
+    dbConnection = pyodbc.connect("Driver={SQL Server Native Client 11.0};Server=.;Database=tvz2;Trusted_Connection=yes;")
+    cursor = dbConnection.cursor()
+
+    for student in studenti:
+      cursor.execute("INSERT INTO Student VALUES (?, ?, ?, ?, ?, ?)", 
+        student.JMBAG, 
+        student.Ime, 
+        student.Prezime, 
+        None, 
+        None, 
+        None
+      )
+      cursor.commit()
