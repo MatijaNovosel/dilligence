@@ -9,6 +9,10 @@ let commonPages = {
   path: '/',
   component: MainLayout,
   children: [{
+    path: '',
+    name: '',
+    component: Index
+  }, {
     path: 'home',
     name: 'home',
     component: Index

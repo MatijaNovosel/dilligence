@@ -72,6 +72,7 @@ namespace tvz2api.Controllers
                 _mapper.Map<List<Kolegij>,
                 List<KolegijDTO>>(
                     kolegiji
+                    .Where(x => smjerIDs.Contains((SmjerEnum)x.SmjerId))
                     .Skip(skip)
                     .Take(take ?? kolegiji.Count)
                     .ToList()
