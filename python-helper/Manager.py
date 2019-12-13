@@ -19,7 +19,7 @@ class Manager:
       URL = f"https://moj.tvz.hr/studij{kratica}/prikaz/mojpred?TVZ={self.connector.token}"
       response = self.connector.session.get(URL)
       response.encoding = response.apparent_encoding
-      text = response.text.replace("è", "č").replace("æ", "ć")
+      text = response.text.replace("è", "č").replace("æ", "ć").replace("Æ", "Ć")
 
       soup = BeautifulSoup(text, "lxml")
       select = soup.find("select", {
@@ -42,7 +42,7 @@ class Manager:
       URL = f"https://moj.tvz.hr/studij{kratica}/prikaz/mojpred?TVZ={self.connector.token}"
       response = self.connector.session.get(URL)
       response.encoding = response.apparent_encoding
-      text = response.text.replace("è", "č").replace("æ", "ć")
+      text = response.text.replace("è", "č").replace("æ", "ć").replace("Æ", "Ć")
 
       soup = BeautifulSoup(text, "lxml")
       select = soup.find("select", {
@@ -69,7 +69,7 @@ class Manager:
         "TVZ": self.connector.token
       })
       response.encoding = response.apparent_encoding
-      text = response.text.replace("è", "č").replace("æ", "ć")
+      text = response.text.replace("è", "č").replace("æ", "ć").replace("Æ", "Ć")
 
       soup = BeautifulSoup(text, "lxml")
       table = soup.find("table", {
