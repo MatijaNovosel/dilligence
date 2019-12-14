@@ -9,18 +9,18 @@ export default {
   async getKolegiji(skip, take) {
     return await axios.get(`${RoutingInformation.baseRoute}Kolegij`, {
       params: {
-        skip: skip,
-        take: take
+        skip,
+        take
       }
     });
   },
 
-  async getKolegijBySmjerID(smjerIDArray, skip, take) {
+  async getKolegijBySmjerID(smjerIDs, skip, take) {
     return await axios.get(`${RoutingInformation.baseRoute}Kolegij/bySmjerID`, {
       params: {
-        smjerIDArray: smjerIDArray,
-        skip: skip,
-        take: take
+        smjerIDs,
+        skip,
+        take
       }
     });
   }

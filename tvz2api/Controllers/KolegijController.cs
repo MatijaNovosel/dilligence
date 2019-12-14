@@ -30,7 +30,7 @@ namespace tvz2api.Controllers
         [HttpGet]
         public async Task<ActionResult<ResponseDataWrapper<List<KolegijDTO>>>> GetKolegij(int skip = 0, int? take = null)
         {
-            List<Kolegij> kolegiji = await _context.Kolegij.ToListAsync();
+            var kolegiji = await _context.Kolegij.ToListAsync();
             return new ResponseDataWrapper<List<KolegijDTO>>(
                 _mapper.Map<List<Kolegij>, 
                 List<KolegijDTO>>(
@@ -65,9 +65,9 @@ namespace tvz2api.Controllers
         /// <returns> A ResponseDataWrapper object with the type of List<KolegijDTO> </returns>
         // GET: api/Kolegij/bySmjerID
         [HttpGet("bySmjerID")]
-        public async Task<ActionResult<ResponseDataWrapper<List<KolegijDTO>>>> GetKolegijBySmjerID([FromQuery] List<SmjerEnum> smjerIDs, int skip = 0, int? take = null)
+        public async Task<ActionResult<ResponseDataWrapper<List<KolegijDTO>>>> GetKolegijBySmjerID([FromQuery(Name = "smjerIDs[]")] List<SmjerEnum> smjerIDs, int skip = 0, int? take = null)
         {
-            List<Kolegij> kolegiji = await _context.Kolegij.ToListAsync();
+            var kolegiji = await _context.Kolegij.ToListAsync();
             return new ResponseDataWrapper<List<KolegijDTO>>(
                 _mapper.Map<List<Kolegij>,
                 List<KolegijDTO>>(

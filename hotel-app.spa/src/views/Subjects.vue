@@ -23,9 +23,9 @@
             </v-toolbar>
             <v-list three-line subheader>
               <v-divider></v-divider>
-              <template v-for="(item, i) in subjects">
+              <template v-for="item in subjects">
                 <v-list-item :key="item.id" router :to="{ name: 'subject-details', params: { id: item.id }}">
-                  <v-list-item-avatar size="50" :color="Helper.randColor()" class="justify-center">
+                  <v-list-item-avatar size="50" color="primary" class="justify-center">
                     <span class="white--text headline"> {{ Helper.acronym(item.naziv) }} </span>
                   </v-list-item-avatar>
                   <v-list-item-content>
@@ -37,7 +37,9 @@
                     <v-icon>mdi-eye</v-icon>
                   </v-list-item-action>
                 </v-list-item>
+                <!--
                 <v-divider :key="i + subjects.length + 1" v-if="i < subjects.length - 1" />
+                -->
               </template>
             </v-list>
           </v-card>
@@ -64,20 +66,20 @@ export default {
       Helper: null
     }
   },
-  mounted() {
+  created() {
     this.Helper = Helper;
-    this.getData();
     for(let prop in SmjerInformation) {
       this.tags.push({
         "name": prop,
         "value": SmjerInformation[prop]
       });
     }
+    this.getData();
   },
   methods: {
     getData() {
       this.loading = true;
-      KolegijService.getKolegijBySmjerID(this.chipSelection, 0, null)
+      KolegijService.getKolegijBySmjerID(this.chipSelection.map(x => x + 1), 0, null)
       .then(({ data }) => {
         this.subjects = data.results;
         this.replacementSubjects = data.results;
@@ -95,8 +97,13 @@ export default {
     }
   },
   watch: {
-    chipSelection() {
-      this.getData();
+    chipSelection: {
+      handler: function(val) {
+        if(val) {
+          this.getData();
+        }
+      },
+      deep: true
     }
   }
 };
