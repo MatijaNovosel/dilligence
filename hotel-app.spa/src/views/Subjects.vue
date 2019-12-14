@@ -19,13 +19,43 @@
               <v-icon dark class="mr-2">
                 mdi-text-subject
               </v-icon>
-              <v-toolbar-title> Subjects </v-toolbar-title>
+              <v-toolbar-title> Kolegiji </v-toolbar-title>
+              <v-spacer> </v-spacer>
+              <v-btn icon @click="searchEnabled = !searchEnabled">
+                <v-icon> mdi-filter-menu </v-icon>
+              </v-btn>
+              <v-btn icon class="mr-4">
+                <v-icon> mdi-filter-remove </v-icon>
+              </v-btn>
             </v-toolbar>
+            <v-expand-transition>
+              <v-row class="mx-3 my-2" justify="center" v-show="searchEnabled">
+                <v-col>
+                  <v-text-field label="Ime kolegija" 
+                                v-model="subjectName"> 
+                  </v-text-field>
+                </v-col>
+                <v-col>
+                  <v-text-field label="ISVU" 
+                                v-model="ISVU"> 
+                  </v-text-field>
+                </v-col>
+                <v-col>              
+                  <v-range-slider v-model="ECTS"
+                            label="ECTS"
+                            min="1"
+                            max="6"
+                            class="mt-6"
+                            thumb-label="always">
+                  </v-range-slider>
+                </v-col>
+              </v-row>
+             </v-expand-transition>
             <v-list three-line subheader>
               <v-divider></v-divider>
-              <template v-for="item in subjects">
-                <v-list-item :key="item.id" router :to="{ name: 'subject-details', params: { id: item.id }}">
-                  <v-list-item-avatar size="50" color="primary" class="justify-center">
+              <template v-for="(item, i) in subjects">
+                <v-list-item :key="item.naziv + item.id">
+                  <v-list-item-avatar @click="redirectToKolegijDetails(item)" size="50" color="primary" class="justify-center">
                     <span class="white--text headline"> {{ Helper.acronym(item.naziv) }} </span>
                   </v-list-item-avatar>
                   <v-list-item-content>
@@ -34,12 +64,10 @@
                     <v-list-item-subtitle><b>ISVU: </b>{{ item.isvu }}</v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action class="mt-8 mr-5">
-                    <v-icon>mdi-eye</v-icon>
+                    <v-checkbox color="primary" class="mt-1"> </v-checkbox>
                   </v-list-item-action>
                 </v-list-item>
-                <!--
-                <v-divider :key="i + subjects.length + 1" v-if="i < subjects.length - 1" />
-                -->
+                <v-divider :key="i" v-if="i < subjects.length - 1" />
               </template>
             </v-list>
           </v-card>
@@ -63,7 +91,11 @@ export default {
       chipSelection: [ SmjerInformation.inf ],
       replacementSubjects: [],
       tags: [],
-      Helper: null
+      searchEnabled: false,
+      Helper: null,
+      ECTS: [1, 6],
+      ISVU: null,
+      subjectName: null
     }
   },
   created() {
@@ -94,6 +126,9 @@ export default {
     showInfo(item) {
       this.selectedItem = item;
       this.dialog = !this.dialog;
+    },
+    redirectToKolegijDetails(item) {
+      this.$router.push({ name: 'subject-details', params: { id: item.id } });
     }
   },
   watch: {
@@ -109,3 +144,10 @@ export default {
 };
 
 </script>
+
+<style scoped>
+  .v-avatar:hover {
+    cursor: pointer;
+    background-color: #292826 !important;
+  }
+</style>
