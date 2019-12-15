@@ -10,11 +10,10 @@ class Manager:
   def __init__(self):
     self.connector = Connector()
     self.connector.connect()
-    self.blackList = ['120015', '0', '140010']
+    
   def getKolegijURLList(self) -> List[str]:
     URLList = []
-
-    # URL -> https://moj.tvz.hr/studij<KRATICA>/prikaz/mojpred?TVZ=<TOKEN>
+    
     for kratica in KRATICE_SMJEROVA["REDOVNO"].values():
       URL = f"https://moj.tvz.hr/studij{kratica}/prikaz/mojpred?TVZ={self.connector.token}"
       response = self.connector.session.get(URL)
@@ -26,15 +25,12 @@ class Manager:
         "name": "nesto1"
       })
 
-      selectValues = [ 
-        KolegijURL(x["value"], kratica)
-        for x in select.find_all("option") 
-        if x.get("value") not in self.blackList
-      ]
+      selectValues = [ KolegijURL(x["value"], kratica) for x in select.find_all("option")]
 
       URLList.extend(selectValues)
 
     return URLList
+    
   def getKolegijList(self) -> List[Kolegij]:
     kolegiji = []
 
@@ -49,18 +45,15 @@ class Manager:
         "name": "nesto1"
       })
 
-      selectValues = [ 
-        Kolegij(x.text, None, kratica, x["value"])
-        for x in select.find_all("option") 
-        if x.get("value") not in self.blackList
-      ]
+      selectValues = [ Kolegij(x.text, None, kratica, x["value"]) for x in select.find_all("option") ]
 
       kolegiji.extend(selectValues)
 
     return kolegiji
+    
   def getStudentList(self, kolegijURLList: List[KolegijURL], kraticaSmjera: str = "inf") -> List[Student]:
     kolegijURLList = list(filter(lambda x: (x.KraticaSmjera == kraticaSmjera), kolegijURLList))
-    studenti = [ ]
+    studenti = set()
 
     for KolegijURL in kolegijURLList:
       URL = f"https://moj.tvz.hr/studij{kraticaSmjera}/predmet/22418?TVZ={self.connector.token}"
@@ -75,33 +68,22 @@ class Manager:
       table = soup.find("table", {
         "id": "podaci"
       })
-
-      if table is not None:
+      
+      try:
         tableRows = table.findAll("tr")
         for tableRow in tableRows[1:]:
-          '''
-
-              Jmbag
-              Ime
-              Prezime
-              Email
-
-          '''
-
           rowCells = [ 
             x.text 
             for x in tableRow.findAll("td")[2:-1] 
             if x.text not in [ 'Organizacija i informatizacija ureda', 'Elektroničko poslovanje', 'Informatički dizajn' ] 
           ]
-
           student = Student(rowCells[1], rowCells[2], rowCells[0], rowCells[3], kraticaSmjera)
-          if student not in studenti:
-            studenti.append(student)
-          
-    for student in studenti:
-      print(student)
+          studenti.add(student)
+      except:
+          continue
 
-    return studenti
+    return list(studenti)
+    
   def insertStudenti(self):
     '''
 
@@ -129,4 +111,7 @@ class Manager:
       self.connector.commit()
 
 manager = Manager()
-manager.getStudentList(manager.getKolegijURLList())
+studenti = manager.getStudentList(manager.getKolegijURLList())
+
+for student in studenti:
+  print(student)
