@@ -6,19 +6,14 @@ export default {
     return await axios.get(`${RoutingInformation.baseRoute}Kolegij/${id}`);
   },
 
-  async getKolegiji(skip, take) {
+  async getKolegiji(smjerIDs, name, minECTS, maxECTS, isvu, skip, take) {
     return await axios.get(`${RoutingInformation.baseRoute}Kolegij`, {
       params: {
-        skip,
-        take
-      }
-    });
-  },
-
-  async getKolegijBySmjerID(smjerIDs, skip, take) {
-    return await axios.get(`${RoutingInformation.baseRoute}Kolegij/bySmjerID`, {
-      params: {
         smjerIDs,
+        name,
+        minECTS,
+        maxECTS,
+        isvu,
         skip,
         take
       }

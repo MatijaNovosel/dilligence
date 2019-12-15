@@ -3,7 +3,7 @@
     <v-row no-gutters>
       <v-col>
         <v-row class="mt-2" justify="center">
-          <v-chip-group v-model="chipSelection" mandatory multiple column active-class="white--text blue darken-2">
+          <v-chip-group v-model="searchData.smjerIDs" mandatory multiple column active-class="white--text blue darken-2">
             <v-chip v-for="item in tags" :key="item.value">
               {{ item.name }}
             </v-chip>
@@ -24,24 +24,27 @@
               <v-btn icon @click="searchEnabled = !searchEnabled">
                 <v-icon> mdi-filter-menu </v-icon>
               </v-btn>
-              <v-btn icon class="mr-4">
+              <v-btn icon @click="resetForm">
                 <v-icon> mdi-filter-remove </v-icon>
+              </v-btn>
+              <v-btn icon @click="getData" class="mr-4">
+                <v-icon> mdi-magnify </v-icon>
               </v-btn>
             </v-toolbar>
             <v-expand-transition>
               <v-row class="mx-3 my-2" justify="center" v-show="searchEnabled">
                 <v-col>
                   <v-text-field label="Ime kolegija" 
-                                v-model="subjectName"> 
+                                v-model="searchData.name"> 
                   </v-text-field>
                 </v-col>
                 <v-col>
                   <v-text-field label="ISVU" 
-                                v-model="ISVU"> 
+                                v-model="searchData.ISVU"> 
                   </v-text-field>
                 </v-col>
                 <v-col>              
-                  <v-range-slider v-model="ECTS"
+                  <v-range-slider v-model="searchData.ECTS"
                             label="ECTS"
                             min="1"
                             max="6"
@@ -87,15 +90,16 @@ export default {
     return {
       subjects: [],
       totalSubjects: 0,
-      loading: true,
-      chipSelection: [ SmjerInformation.inf ],
-      replacementSubjects: [],
+      loading: null,
       tags: [],
       searchEnabled: false,
       Helper: null,
-      ECTS: [1, 6],
-      ISVU: null,
-      subjectName: null
+      searchData: {
+        smjerIDs: [ SmjerInformation.inf ],
+        name: null,
+        ECTS: [ 1, 6 ],
+        ISVU: null 
+      }
     }
   },
   created() {
@@ -111,10 +115,9 @@ export default {
   methods: {
     getData() {
       this.loading = true;
-      KolegijService.getKolegijBySmjerID(this.chipSelection.map(x => x + 1), 0, null)
+      KolegijService.getKolegiji(this.searchData.smjerIDs.map(x => x + 1), this.searchData.name, this.searchData.ECTS[0], this.searchData.ECTS[1], this.searchData.ISVU, 0, null)
       .then(({ data }) => {
         this.subjects = data.results;
-        this.replacementSubjects = data.results;
         this.totalSubjects = data.total;
       }).finally(() => {
         this.loading = false;
@@ -129,16 +132,15 @@ export default {
     },
     redirectToKolegijDetails(item) {
       this.$router.push({ name: 'subject-details', params: { id: item.id } });
-    }
-  },
-  watch: {
-    chipSelection: {
-      handler: function(val) {
-        if(val) {
-          this.getData();
-        }
-      },
-      deep: true
+    },
+    resetForm() {
+      this.searchData = {
+        smjerIDs: [ SmjerInformation.inf ],
+        name: null,
+        ECTS: [ 1, 6 ],
+        ISVU: null 
+      };
+      this.getData();
     }
   }
 };

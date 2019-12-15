@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace tvz2api
 {
+    #pragma warning disable CS1591
     public class Program
     {
         public static void Main(string[] args)
@@ -21,4 +22,5 @@ namespace tvz2api
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>();
     }
+    #pragma warning disable CS1591
 }

@@ -22,13 +22,11 @@
               </v-list-item-content>
             </v-list-item>
           </template>
-          <v-list-item v-for="sublink in link.sublinks" 
-            :key="sublink.text" 
-            nav 
-            @click="sublink.route != null ? goToUrl(sublink.route) : ''" 
-            active-class="highlighted" 
-            :class="sublink.route != null && sublink.route.name === $route.name ? 'highlighted' : ''"
-          >
+          <v-list-item v-for="sublink in link.sublinks" :key="sublink.text" 
+                                                        nav 
+                                                        @click="sublink.route != null ? goToUrl(sublink.route) : ''" 
+                                                        active-class="highlighted" 
+                                                        :class="sublink.route != null && sublink.route.name === $route.name ? 'highlighted' : ''">
             <v-list-item-content>
               <v-list-item-title>{{ sublink.text }}</v-list-item-title>
             </v-list-item-content>
@@ -63,7 +61,7 @@
       </v-menu>   
       <v-tooltip v-model="show" bottom>
         <template v-slot:activator="{ on }">
-          <v-btn icon @click="logout()" v-on="on" class="mx-3">
+          <v-btn icon @click="logout" v-on="on" class="mx-3">
             <v-icon color="red" size="30"> mdi-power </v-icon> 
           </v-btn>
         </template>
@@ -125,7 +123,7 @@ export default {
     logout() {
       this.drawer = false;
       AuthService.logout();
-      this.$router.push("login");
+      this.$router.push("/login");
     },
     goToUrl(route) {
       if(this.$router.currentRoute.name == route.name) {
