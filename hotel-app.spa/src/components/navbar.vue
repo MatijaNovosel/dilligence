@@ -92,6 +92,9 @@ export default {
         sublinks: [{
           text: 'Home',
           route: { name: "home" }
+        }, {
+          text: 'Employees',
+          route: { name: 'employees' }
         }]
       }, {
         icon: 'mdi-file-document',

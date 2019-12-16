@@ -10,7 +10,10 @@
     </v-row>
     <v-row no-gutters class="mt-5">
       <v-col>
-        <v-data-table :loading="loading" :headers="headers" :items="employees" class="elevation-1">
+        <v-data-table :loading="loading" 
+                      :headers="headers" 
+                      :items="employees" 
+                      class="elevation-1">
         </v-data-table>
       </v-col>
     </v-row>
@@ -19,12 +22,21 @@
 
 <script>
 
-import axios from 'axios';
+import KolegijService from '../services/api/zaposlenik';
 
 export default { 
   data() {
     return {
+      skip: 0,
+      take: null,
+      searchData: {
+        name: null,
+        surname: null,
+        vrstaZaposljenja: null,
+        odjel: null
+      },
       employees: [],
+      totalEmployees: null,
       loading: true,
       headers: [
         { text: 'ID', value: 'ID', sortable: false },
@@ -38,14 +50,20 @@ export default {
       ]
     }
   },
-  mounted() {
-    axios.get("http://localhost/tvz2/api/Zaposlenik/").then(({ data }) => {
-      this.employees = data;
-    }).finally(() => {
-      this.loading = false;
-    });
+  created() {
+    this.getData();
   },
-  methods: { }
+  methods: {
+    getData() {
+      this.loading = true;
+      KolegijService.getZaposlenici(this.searchData.name, this.searchData.surname, this.searchData.odjel, this.searchData.vrstaZaposljenja, this.skip, this.take).then(({ data }) => {
+        this.employees = data.results;
+        this.totalEmployees = data.total;
+      }).finally(() => {
+        this.loading = false;
+      });
+    }
+  }
 };
 
 </script>
