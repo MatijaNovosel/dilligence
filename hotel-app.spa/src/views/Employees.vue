@@ -8,14 +8,39 @@
         </v-row>
       </v-col>
     </v-row>
-    <v-row no-gutters class="mt-5">
-      <v-col>
-        <v-data-table :loading="loading" 
-                      :headers="headers" 
-                      :items="employees" 
-                      class="elevation-1">
-        </v-data-table>
-      </v-col>
+    <v-row no-gutters class="mt-5" justify="center">
+      <template v-for="item in employees">
+        <v-card :key="item.ime + item.prezime + item.id" max-width="225" class="ma-3">
+          <v-avatar size="135" class="ml-12">
+            <v-img src="../assets/TVZ/djelatnici/kova.png"> </v-img>
+          </v-avatar>
+          <v-row justify="center" class="my-3">
+            <h4 class="subtitle-1 font-weight-light">Željko Kovačević</h4>
+            <h4 class="caption font-weight-light">struč.spec.ing.techn.inf.</h4>
+          </v-row>
+          <v-divider></v-divider>
+          <v-list two-line>
+            <v-list-item class="mb-n6 mt-n3">
+              <v-list-item-icon>
+                <v-icon color="indigo" class="pt-3">mdi-phone</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content class="ml-n3">
+                <v-list-item-title>099/6542365</v-list-item-title>
+                <v-list-item-subtitle>Mobile</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item class="my-n4">
+              <v-list-item-icon>
+                <v-icon color="indigo" class="pt-3">mdi-email</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content class="ml-n3">
+                <v-list-item-title>zkovacevic@tvz.hr</v-list-item-title>
+                <v-list-item-subtitle>Email</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </template>
     </v-row>
   </div>
 </template>
@@ -28,7 +53,7 @@ export default {
   data() {
     return {
       skip: 0,
-      take: null,
+      take: 25,
       searchData: {
         name: null,
         surname: null,
@@ -39,14 +64,13 @@ export default {
       totalEmployees: null,
       loading: true,
       headers: [
-        { text: 'ID', value: 'ID', sortable: false },
-        { text: 'Titula ispred', value: 'TitulaIspred', sortable: false },
-        { text: 'Ime', value: 'Ime', sortable: false },
-        { text: 'Prezime', value: 'Prezime', sortable: false },
-        { text: 'Titula iza', value: 'TitulaIza', sortable: false },
-        { text: 'Email', value: 'Email', sortable: false },
-        { text: 'Vrsta zaposljenja', value: 'VrstaZaposljenja', sortable: false },
-        { text: 'Odjel', value: 'Odjel', sortable: false },
+        { text: 'Titula ispred', value: 'titulaIspred', sortable: false },
+        { text: 'Ime', value: 'ime', sortable: false },
+        { text: 'Prezime', value: 'prezime', sortable: false },
+        { text: 'Titula iza', value: 'titulaIza', sortable: false },
+        { text: 'Email', value: 'email', sortable: false },
+        { text: 'Vrsta zaposljenja', value: 'vrstaZaposljenja', sortable: false },
+        { text: 'Odjel', value: 'odjel', sortable: false },
       ]
     }
   },
