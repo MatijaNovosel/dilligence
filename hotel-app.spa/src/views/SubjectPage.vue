@@ -1,17 +1,9 @@
 <template>
   <div>
-    <v-dialog v-model="dialog" max-width="400">
-      <v-card class="mx-auto">
-        <!--<v-img class="white--text" :src="selectedItem.JMBAG !== null ? require(`../assets/TVZ/studenti/${selectedItem.JMBAG}.jpg`) : '' ">
-          <v-card-title class="align-end fill-height display-1">{{ selectedItem.Naziv }}</v-card-title>
-        </v-img>
-        -->
-      </v-card>
-    </v-dialog>
     <v-row no-gutters>
       <v-col cols="9">
         <v-row class="mt-2 mx-2" justify="center">
-          <h1 class="display-1 mb-4"> <v-chip color="primary">Baze podataka</v-chip> </h1>
+          <h1 class="headline font-weight-light mb-4"> {{ subject.naziv }} </h1>
            <v-col cols="12" class="px-0">
             <v-tabs grow hide-slider centered v-model="tabs" class="elevation-1 mt-n2">
               <v-tab>
@@ -25,15 +17,6 @@
               </v-tab>
               <v-tab>
                 Studenti
-              </v-tab>
-              <v-tab>
-                Arhiva
-              </v-tab>
-              <v-tab>
-                Raspored
-              </v-tab>
-              <v-tab>
-                Rezervacija labosa
               </v-tab>
             </v-tabs>
             <v-tabs-items v-model="tabs">
@@ -250,182 +233,12 @@
                   </v-col>
                 </v-row>
               </v-tab-item>
-              <!-- Arhiva  -->
-              <v-tab-item class="elevation-1">
-                <v-row class="ml-3">
-                  <v-col>
-                    <v-card width="98%">
-                      <v-app-bar dense dark color="blue darken-1">
-                        <v-toolbar-title class="subtitle-1">Stara vijest</v-toolbar-title>
-                        <div class="flex-grow-1"></div>
-                      </v-app-bar>
-                      <v-container fluid>
-                        <v-row>
-                          <v-col>
-                            <v-list dense class="my-n5">
-                              <v-list-item>
-                                <v-list-item-content>
-                                  <v-list-item-title>Tin Kramberger</v-list-item-title>
-                                  <v-list-item-subtitle>02/09/2019</v-list-item-subtitle>
-                                  <p class="mt-2">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus a elit eu massa convallis sagittis elementum eget purus. Quisque eros nisi, feugiat sed vehicula id, placerat et leo. Duis tempus a neque nec condimentum. Quisque non mauris nec orci fringilla ultrices in auctor felis. Aliquam felis dui, maximus a placerat eget, egestas eu sapien. Ut ac ligula turpis. Fusce eros felis, varius quis urna sed, iaculis tincidunt nunc. Vivamus quis feugiat arcu, vitae tincidunt justo. Nulla bibendum rhoncus ex sollicitudin dictum. Vivamus in accumsan justo. Duis eu nunc vel dui aliquam pharetra. Vivamus sed aliquam arcu, a placerat nibh. Quisque nisl felis, feugiat at congue et, lacinia sed augue. Mauris a accumsan eros, sed dignissim dui.
-                                    Suspendisse sed condimentum ligula, quis sollicitudin ex. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed lacinia velit ac sapien consectetur finibus. Pellentesque vel mi eu augue scelerisque vestibulum. Vestibulum hendrerit ullamcorper orci, a congue ante. Duis rhoncus, turpis et pellentesque tristique, ante ligula faucibus nisi, ut porttitor ipsum tortor id arcu. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin tempus erat et feugiat facilisis. Vestibulum elementum lobortis purus ac condimentum.
-                                  </p>
-                                </v-list-item-content>
-                                <v-list-item-avatar size="60">
-                                  <v-img src="../assets/TVZ/djelatnici/tin.png"></v-img>
-                                </v-list-item-avatar>
-                              </v-list-item>
-                            </v-list>
-                          </v-col>
-                        </v-row>
-                      </v-container>
-                    </v-card>
-                  </v-col>
-                </v-row>
-              </v-tab-item>
-              <!-- Raspored -->
-              <v-tab-item class="elevation-1">
-                <v-row class="ml-3">
-                  <v-col>
-                  </v-col>
-                </v-row>
-              </v-tab-item>
-              <!-- Rezervacija labosa -->
-              <v-tab-item class="elevation-1">
-                <v-row class="ml-3">
-                  <v-col>
-                    <v-card width="98%">
-                      <v-app-bar dense dark color="blue darken-2">
-                        <v-toolbar-title class="subtitle-1">
-                          <v-icon class="mt-n1 mr-3">mdi-clock-alert-outline</v-icon>
-                          [Ponedjeljak] 7:00 - 8:00
-                        </v-toolbar-title>
-                        <div class="flex-grow-1"></div>
-                        <v-menu>
-                          <template v-slot:activator="{ on }">
-                            <v-btn class="info" v-on="on">
-                              Join
-                            </v-btn>
-                          </template>
-                        </v-menu>
-                      </v-app-bar>
-                      <v-container fluid>
-                        <v-row>
-                          <v-col>
-                            <v-list dense class="my-n5">
-                              <v-list-item>
-                                <v-list-item-content>
-                                  <v-data-table :headers="headers" :items="studenti" class="elevation-1">
-                                    <template v-slot:item.picture="{ item }">
-                                      <!--<v-avatar size="40">
-                                        <v-img :src="require(`../assets/TVZ/studenti/${item.JMBAG}.jpg`)"></v-img>
-                                      </v-avatar>-->
-                                    </template>
-                                    <template v-slot:no-data>
-                                      <v-btn color="primary" @click="initialize">Reset</v-btn>
-                                    </template>
-                                  </v-data-table>
-                                </v-list-item-content>
-                              </v-list-item>
-                            </v-list>
-                          </v-col>
-                        </v-row>
-                      </v-container>
-                    </v-card>
-                    <v-card class="mt-5" width="98%">
-                      <v-app-bar dense dark color="blue darken-2">
-                        <v-toolbar-title class="subtitle-1">
-                          <v-icon class="mt-n1 mr-3">mdi-clock-alert-outline</v-icon>
-                          [Srijeda] 14:00 - 15:00
-                        </v-toolbar-title>
-                        <div class="flex-grow-1"></div>
-                        <v-menu>
-                          <template v-slot:activator="{ on }">
-                            <v-btn class="info" v-on="on">
-                              Join
-                            </v-btn>
-                          </template>
-                        </v-menu>
-                      </v-app-bar>
-                      <v-container fluid>
-                        <v-row>
-                          <v-col>
-                            <v-list dense class="my-n5">
-                              <v-list-item>
-                                <v-list-item-content>
-                                  <v-data-table :headers="headers" :items="studenti" class="elevation-1">
-                                    <template v-slot:item.picture="{ item }">
-                                      <v-avatar size="40">
-                                        <!--<v-img :src="require(`../assets/TVZ/studenti/${item.JMBAG}.jpg`)"></v-img>-->
-                                      </v-avatar>
-                                    </template>
-                                    <template v-slot:no-data>
-                                      <v-btn color="primary" @click="initialize">Reset</v-btn>
-                                    </template>
-                                  </v-data-table>
-                                </v-list-item-content>
-                              </v-list-item>
-                            </v-list>
-                          </v-col>
-                        </v-row>
-                      </v-container>
-                    </v-card>
-                  </v-col>
-                </v-row>
-              </v-tab-item>
             </v-tabs-items>
           </v-col>
         </v-row>
       </v-col>
       <v-col cols="3">
-        <v-row class="mt-4" justify="center">
-          <v-card class="mx-auto" width="85%">
-            <v-app-bar dense dark color="pink elevation-2">
-              <v-toolbar-title class="subtitle-1">Pravila kolegija</v-toolbar-title>
-              <div class="flex-grow-1"></div>
-            </v-app-bar>
-            <v-container fluid>
-              <v-row>
-                <v-col>
-                  <v-list dense class="my-n5">
-                    <v-list-item v-for="item in pravila" :key="item.title" @click="clicky()">
-                      <v-list-item-icon class="mt-3">
-                        <v-icon color="red">{{ item.icon }}</v-icon>
-                      </v-list-item-icon>
-                      <v-list-item-content>
-                        <v-list-item-title v-text="item.title"></v-list-item-title>
-                        <v-list-item-subtitle v-text="item.date"></v-list-item-subtitle>
-                      </v-list-item-content>
-                    </v-list-item>
-                  </v-list>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-card>
-          <v-card class="mx-auto mt-5" width="85%">
-            <v-app-bar dense dark color="blue darken-2 elevation-2">
-              <v-toolbar-title class="subtitle-1">Knjiga iz kolegija</v-toolbar-title>
-              <div class="flex-grow-1"></div>
-            </v-app-bar>
-            <v-container fluid>
-              <v-row>
-                <v-col>
-                  <v-list dense class="my-n5">
-                    <v-list-item v-for="item in knjige" :key="item.title" @click="clicky()">
-                      <v-list-item-icon class="mt-3">
-                        <v-icon :color="item.color">{{ item.icon }}</v-icon>
-                      </v-list-item-icon>
-                      <v-list-item-content>
-                        <v-list-item-title v-text="item.title"></v-list-item-title>
-                        <v-list-item-subtitle v-text="item.date"></v-list-item-subtitle>
-                      </v-list-item-content>
-                    </v-list-item>
-                  </v-list>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-card>
+        <v-row justify="center">
           <v-card class="mx-auto mt-5" width="85%">
             <v-app-bar dense dark color="indigo darken-2 elevation-2">
               <v-toolbar-title class="subtitle-1">Predavanja</v-toolbar-title>
@@ -449,29 +262,6 @@
               </v-row>
             </v-container>
           </v-card>
-          <v-card class="mx-auto mt-5" width="85%">
-            <v-app-bar dense dark color="amber darken-2 elevation-2">
-              <v-toolbar-title class="subtitle-1">Neobavezne pripreme</v-toolbar-title>
-              <div class="flex-grow-1"></div>
-            </v-app-bar>
-            <v-container fluid>
-              <v-row>
-                <v-col>
-                  <v-list dense class="my-n5">
-                    <v-list-item v-for="item in pripreme" :key="item.title" @click="clicky()">
-                      <v-list-item-icon class="mt-3">
-                        <v-icon :color="item.color">{{ item.icon }}</v-icon>
-                      </v-list-item-icon>
-                      <v-list-item-content>
-                        <v-list-item-title v-text="item.title"></v-list-item-title>
-                        <v-list-item-subtitle v-text="item.date"></v-list-item-subtitle>
-                      </v-list-item-content>
-                    </v-list-item>
-                  </v-list>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-card>
         </v-row>
       </v-col>
     </v-row>
@@ -479,7 +269,8 @@
 </template>
 
 <script>
-import axios from 'axios';
+
+import KolegijService from '../services/api/kolegij';
 
 export default { 
   data() {
@@ -487,14 +278,6 @@ export default {
       tabs: null,
       studentLoading: true,
       totalStudents: 0,
-      pravila: [
-        { title: 'Pravila kolegija', date: "25/09/2019", icon: "mdi-file-pdf-box", color: "red" },
-      ],
-      knjige: [
-        { title: 'Knjiga - pdf', date: "25/09/2019", icon: "mdi-file-pdf-box", color: "red" },
-        { title: 'Knjiga - epub', date: "25/09/2019", icon: "mdi-link-variant", color: "grey" },
-        { title: 'Knjiga - mobi', date: "25/09/2019", icon: "mdi-link-variant", color: "grey" },
-      ],
       predavanja: [
         { title: '01 - Uvod, DBMS, PK, FK, Dizajn', date: "25/09/2019", icon: "mdi-file-pdf-box", color: "red" },
         { title: '01 - Uvod, DBMS, PK, FK, Dizajn - primjeri', date: "25/09/2019", icon: "mdi-database", color: "grey" },
@@ -504,16 +287,6 @@ export default {
         { title: '03 - DDL, DML, WHERE - primjeri', date: "25/09/2019", icon: "mdi-database", color: "grey" },
         { title: '04 - Funkcije', date: "25/09/2019", icon: "mdi-file-pdf-box", color: "red" },
         { title: '04 - Funkcije - primjeri', date: "25/09/2019", icon: "mdi-database", color: "grey" }
-      ],
-      pripreme: [
-        { title: '01 - Laboratorijska vježba', date: "22/09/2019", icon: "mdi-file-pdf-box", color: "red" },
-        { title: '01 - Laboratorijska vježba - Rješenja', date: "21/09/2019", icon: "mdi-zip-box", color: "purple" },
-        { title: '02 - Laboratorijska vježba', date: "22/09/2019", icon: "mdi-file-pdf-box", color: "red" },
-        { title: '02 - Laboratorijska vježba - Rješenja', date: "21/09/2019", icon: "mdi-zip-box", color: "purple" },
-        { title: '03 - Laboratorijska vježba', date: "22/09/2019", icon: "mdi-file-pdf-box", color: "red" },
-        { title: '03 - Laboratorijska vježba - Rješenja', date: "21/09/2019", icon: "mdi-zip-box", color: "purple" },
-        { title: '04 - Laboratorijska vježba', date: "22/09/2019", icon: "mdi-file-pdf-box", color: "red" },
-        { title: '04 - Laboratorijska vježba - Rješenja', date: "21/09/2019", icon: "mdi-zip-box", color: "purple" },
       ],
       dialog: false,
       headers: [
@@ -540,10 +313,8 @@ export default {
         Ime: null,
         JMBAG: null
       },
-      subjects: [],
       loading: true,
-      studentSearch: "",
-      placeholder: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer elit nulla, fermentum rutrum mi suscipit, tempus ornare est. Quisque rutrum convallis metus, a lobortis ipsum placerat quis. Proin elementum lectus eu ex elementum, in viverra eros semper. Nam dignissim augue justo, nec tincidunt risus viverra ut. Proin quis lacinia justo. Nullam volutpat, urna vitae pharetra mollis, leo velit feugiat sapien, quis elementum sem enim at nisl. Proin in ultricies nulla.Cras et pulvinar eros, quis pretium elit. Donec non ligula nec libero luctus suscipit malesuada vitae purus. Duis facilisis egestas ligula ac tincidunt. Fusce ex urna, venenatis non justo et, congue tempus nisi. In rutrum at leo sit amet hendrerit. Ut viverra ultrices maximus. Vestibulum quis gravida justo, eu fringilla dolor. Fusce a diam in eros porta volutpat et eget leo. Phasellus ante erat, venenatis sit amet tempus eu, finibus vel neque. Vestibulum est nibh, molestie eu venenatis in, aliquam sit amet nunc. Suspendisse potenti. Aliquam iaculis eleifend malesuada. Vestibulum magna diam, interdum sed condimentum eu, maximus ac ante. Aenean tempor non risus nec egestas. Nam ante diam, tristique quis mauris non, lobortis semper tortor.",
+      subject: {}
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -557,34 +328,19 @@ export default {
       this.dialog = !this.dialog;
     },
     getData(id) {
-      this.studentLoading = true;
-      axios.get("http://localhost/tvz2/api/Kolegij/" + id).then(({ data }) => {
-        this.studenti = data.Studenti;
-        this.studenti.sort((a, b) => a.Prezime.localeCompare(b.Prezime));
-        this.originalStudenti = this.studenti;
-        this.totalStudents = this.studenti.length;
-      }).finally(() => {
-        this.studentLoading = false;
+      /*
+
+        ects: 5
+        id: 147
+        isvu: "25066/185288"
+        naziv: "3D modeliranje"
+        smjer: 1
+        url: "185288"
+
+      */
+      KolegijService.getKolegij(id).then(({ data }) => {
+        this.subject = data;
       });
-    },
-    clicky: function() {
-      console.log("Click!");
-    }
-  },
-  watch: {
-    studentSearch: function (value) {
-      this.studenti = this.originalStudenti;
-      if(!value) {
-        this.studenti = this.originalStudenti;
-        return;
-      }
-      setTimeout(() => {
-        this.studenti = this.studenti.filter(x => {
-          if(x.Ime.includes(value)) {
-            return x;
-          }
-        });
-      }, 300);
     }
   }
 };
