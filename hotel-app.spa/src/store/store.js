@@ -10,9 +10,10 @@ export default new Vuex.Store({
   state: {
     user: {
       id: null,
-      username: null,
       token: null,
-      DBName: null
+      name: null,
+      surname: null,
+      JMBAG: null
     },
     decodedToken: null
   },
@@ -26,9 +27,10 @@ export default new Vuex.Store({
     REMOVE_USER_DATA(state) {
       state.user = {
         id: null,
-        username: null,
         token: null,
-        DBName: null
+        name: null,
+        surname: null,
+        JMBAG: null
       };
     }
   },

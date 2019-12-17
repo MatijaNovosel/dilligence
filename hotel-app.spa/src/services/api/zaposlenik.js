@@ -1,13 +1,13 @@
 import axios from 'axios';
-import { RoutingInformation } from '@/constants/routingInformation';
+import { Routing } from '@/constants/Routing';
 
 export default {
   async getZaposlenik(id) {
-    return await axios.get(`${RoutingInformation.baseRoute}Zaposlenik/${id}`);
+    return await axios.get(`${Routing.baseRoute}Zaposlenik/${id}`);
   },
 
   async getZaposlenici(name, surname, odjel, vrstaZaposljenja, skip, take) {
-    return await axios.get(`${RoutingInformation.baseRoute}Zaposlenik`, {
+    return await axios.get(`${Routing.baseRoute}Zaposlenik`, {
       params: {
         name,
         surname,

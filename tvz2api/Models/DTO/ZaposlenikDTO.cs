@@ -15,5 +15,7 @@ namespace tvz2api.Models.DTO
         public string Email { get; set; }
         public string VrstaZaposljenja { get; set; }
         public string Odjel { get; set; }
+        public int? OdjelId { get; set; }
+        public int? VrstaZaposljenjaId { get; set; }
     }
 }

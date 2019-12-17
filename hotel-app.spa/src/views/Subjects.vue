@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-row no-gutters>
-      <v-col>
+    <v-row no-gutters justify="center">
+      <v-col cols="5">
         <v-row class="mt-2" justify="center">
           <v-chip-group v-model="searchData.smjerIDs" mandatory multiple column active-class="white--text blue darken-2">
             <v-chip v-for="item in tags" :key="item.value">
@@ -15,7 +15,7 @@
       <v-col>
         <v-row class="mt-5">
           <v-card width="75%" class="mx-auto" :loading="loading">
-            <v-toolbar dark flat color="primary">
+            <v-toolbar dark flat dense color="primary">
               <v-icon dark class="mr-2">
                 mdi-text-subject
               </v-icon>
@@ -32,7 +32,7 @@
               </v-btn>
             </v-toolbar>
             <v-expand-transition>
-              <v-row class="mx-3 my-2" justify="center" v-show="searchEnabled">
+              <v-row class="mx-3 mt-4" justify="center" v-show="searchEnabled">
                 <v-col>
                   <v-text-field label="Ime kolegija" 
                                 v-model="searchData.name"> 
@@ -55,7 +55,7 @@
               </v-row>
              </v-expand-transition>
             <v-list three-line subheader>
-              <v-divider></v-divider>
+              <v-divider />
               <template v-for="(item, i) in subjects">
                 <v-list-item :key="item.naziv + item.id">
                   <v-list-item-avatar @click="redirectToKolegijDetails(item)" size="50" color="primary" class="justify-center">
@@ -64,7 +64,7 @@
                   <v-list-item-content>
                     <v-list-item-title v-html="item.naziv"></v-list-item-title>
                     <v-list-item-subtitle><b>ECTS: </b>{{ item.ects }}</v-list-item-subtitle>
-                    <v-list-item-subtitle><b>ISVU: </b>{{ item.isvu }}</v-list-item-subtitle>
+                    <v-list-item-subtitle><b>Smjer: </b>{{ getSubjectNameFromID(item.smjer) }}</v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action class="mt-8 mr-5">
                     <v-checkbox color="primary" class="mt-1"> </v-checkbox>
@@ -82,12 +82,14 @@
 
 <script>
 import KolegijService from '../services/api/kolegij'; 
-import { SmjerInformation } from '../constants/smjerInformation';
+import { Smjer } from '../constants/Smjer';
 import { Helper } from '../helpers/helpers.js';
+import { mapGetters } from 'vuex';
 
 export default { 
   data() {
     return {
+      subscriptions: [],
       subjects: [],
       totalSubjects: 0,
       loading: null,
@@ -95,7 +97,7 @@ export default {
       searchEnabled: false,
       Helper: null,
       searchData: {
-        smjerIDs: [ SmjerInformation.inf ],
+        smjerIDs: [ Smjer["Informatika"] - 1 ],
         name: null,
         ECTS: [ 1, 6 ],
         ISVU: null 
@@ -104,10 +106,10 @@ export default {
   },
   created() {
     this.Helper = Helper;
-    for(let prop in SmjerInformation) {
+    for(let prop in Smjer) {
       this.tags.push({
         "name": prop,
-        "value": SmjerInformation[prop]
+        "value": Smjer[prop]
       });
     }
     this.getData();
@@ -135,13 +137,21 @@ export default {
     },
     resetForm() {
       this.searchData = {
-        smjerIDs: [ SmjerInformation.inf ],
+        smjerIDs: [ Smjer["Informatika"] - 1 ],
         name: null,
         ECTS: [ 1, 6 ],
         ISVU: null 
       };
       this.getData();
+    },
+    getSubjectNameFromID(id) {
+      return Object.keys(Smjer).find(key => Smjer[key] === id);
     }
+  },
+  computed: {
+    ...mapGetters([
+      'user'
+    ])
   }
 };
 

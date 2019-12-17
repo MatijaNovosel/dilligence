@@ -7,10 +7,11 @@
             <v-img src="../assets/matija.png"></v-img>
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title>{{ user.username }}</v-list-item-title>
-            <v-list-item-subtitle>Information technologies</v-list-item-subtitle>
+            <v-list-item-title> {{ `${user.name} ${user.surname}` }} </v-list-item-title>
+            <v-list-item-subtitle> {{ `JMBAG: ${user.jmbag}` }} </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
+        <v-divider />
         <v-list-group v-for="link in links" :key="link.text" no-action>
           <template v-slot:activator>
             <v-list-item active-class="highlighted" class="px-0">
@@ -87,27 +88,27 @@ export default {
       ],
       links: [{
         icon: 'mdi-bullhorn',
-        text: 'General',
+        text: 'Generalno',
         route: { name: "/" },
         sublinks: [{
-          text: 'Home',
+          text: 'Početna stranica',
           route: { name: "home" }
         }, {
-          text: 'Employees',
+          text: 'Popis zaposlenika',
           route: { name: 'employees' }
         }]
       }, {
         icon: 'mdi-file-document',
-        text: 'Subjects',
+        text: 'Kolegiji',
         route: { name: "subjects" },
         sublinks: [{
-            text: 'Subjects',
+            text: 'Popis kolegija',
             route: { name: "subjects" }
           }
         ]
       }, {
         icon: 'mdi-test-tube',
-        text: 'Exams',
+        text: 'Zadatci',
         route: { name: "exams" },
         sublinks: [{
             text: 'Exams',

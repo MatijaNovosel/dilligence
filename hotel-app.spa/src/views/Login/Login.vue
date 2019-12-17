@@ -56,6 +56,7 @@
   import { validationMixin } from 'vuelidate'
   import { required, maxLength, minLength } from 'vuelidate/lib/validators'
   import AuthService from '../../services/api/auth';
+  import StudentService from '../../services/api/student';
   import { mapActions } from 'vuex';
   import NotificationService from '../../services/notification';
   import KeyListener from '../../components/KeyListener';
@@ -93,31 +94,28 @@
           Username: this.username, 
           Password: this.password 
         }).then((response) => {
-          console.log(response);
           if(response.status == 200) {
-            var user = {
-              id: response.data.user.id,
-              username: response.data.user.username,
-              token: response.data.token
-            };
-            localStorage.setItem('token', response.data.token);
-            localStorage.setItem('user', JSON.stringify(user));
-            this.setUserData(user);
-            NotificationService.success("Login successful", "You were successfully logged in!");
-            this.$router.push('/');
+            const id = response.data.user.id;
+            const token = response.data.token;
+
+            StudentService.getStudent(id).then(( response ) => {
+              var user = {
+                id,
+                name: response.data.ime,
+                surname: response.data.prezime,
+                jmbag: response.data.jmbag,
+                token
+              };
+
+              localStorage.setItem('token', token);
+              localStorage.setItem('user', JSON.stringify(user));
+              this.setUserData(user);
+              NotificationService.success("Login successful", "You were successfully logged in!");
+              this.$router.push('/');
+            });
           }
-        }).catch(error => {
-          switch(error.response.status) {
-            case 401:
-              NotificationService.error('Unauthorized', 'Unable to log in!');
-              break;
-            case 404:
-              NotificationService.error('Network error', 'Unable to log in!');
-              break;
-            default:
-              NotificationService.error('General error', 'Unable to log in!');
-              break;
-          }
+        }).catch(() => {
+          NotificationService.error('Error', 'Unable to log in!');
         });
       },
       submit() {

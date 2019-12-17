@@ -1,40 +1,39 @@
 <template>
   <div>
-    <!--<v-parallax src="../assets/banner.jpg" class="mt-n5" height="300" />-->
     <v-row no-gutters>
       <v-col>
         <v-row class="mt-10" justify="center">
-          <h1 class="display-1"> Employees </h1>
+          <h1 class="display-1"> Zaposlenici </h1>
         </v-row>
       </v-col>
     </v-row>
     <v-row no-gutters class="mt-5" justify="center">
       <template v-for="item in employees">
-        <v-card :key="item.ime + item.prezime + item.id" max-width="225" class="ma-3">
-          <v-avatar size="135" class="ml-12">
-            <v-img src="../assets/TVZ/djelatnici/kova.png"> </v-img>
+        <v-card :key="item.ime + item.prezime + item.id" width="225" class="ma-3">
+          <v-avatar size="135" class="ml-11">
+            <v-img v-if="item.ime + item.prezime == 'Željko Kovačević'" src="../assets/TVZ/djelatnici/kova.png" />
+            <v-img v-else src="../assets/default-user.jpg" />
           </v-avatar>
-          <v-row justify="center" class="my-3">
-            <h4 class="subtitle-1 font-weight-light">Željko Kovačević</h4>
-            <h4 class="caption font-weight-light">struč.spec.ing.techn.inf.</h4>
+          <v-btn icon class="gore-desno">
+            <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
+          <v-row justify="center" class="mt-3">
+            <h4 class="caption font-weight-light"> {{ item.titulaIspred || '-' }} </h4>
+          </v-row>
+          <v-row justify="center">
+            <h4 class="subtitle-1 font-weight-light"> {{ `${item.ime} ${item.prezime}` }} </h4>
+          </v-row>
+          <v-row justify="center" class="mb-3">
+            <h4 class="caption font-weight-light"> {{ item.titulaIza || '-' }} </h4>
           </v-row>
           <v-divider></v-divider>
           <v-list two-line>
-            <v-list-item class="mb-n6 mt-n3">
-              <v-list-item-icon>
-                <v-icon color="indigo" class="pt-3">mdi-phone</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content class="ml-n3">
-                <v-list-item-title>099/6542365</v-list-item-title>
-                <v-list-item-subtitle>Mobile</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
             <v-list-item class="my-n4">
               <v-list-item-icon>
                 <v-icon color="indigo" class="pt-3">mdi-email</v-icon>
               </v-list-item-icon>
               <v-list-item-content class="ml-n3">
-                <v-list-item-title>zkovacevic@tvz.hr</v-list-item-title>
+                <v-list-item-title> {{ item.email }}</v-list-item-title>
                 <v-list-item-subtitle>Email</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
@@ -91,3 +90,11 @@ export default {
 };
 
 </script>
+
+<style scoped>
+  .gore-desno {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+  }
+</style>

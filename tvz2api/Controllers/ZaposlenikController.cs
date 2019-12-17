@@ -30,7 +30,7 @@ namespace tvz2api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ZaposlenikDTO>> GetZaposlenik(int id)
         {
-            var zaposlenik = await _context.Zaposlenik.FindAsync(id);
+            var zaposlenik = await _context.Zaposlenik.Include(x => x.Odjel).Include(x => x.VrstaZaposljenja).FirstOrDefaultAsync(x => x.Id == id);
 
             if (zaposlenik == null)
             {
@@ -47,8 +47,9 @@ namespace tvz2api.Controllers
           int? vrstaZaposljenja = null,
           int? odjel = null,
           int skip = 0,
-          int? take = null) {
-            var zaposlenici = await _context.Zaposlenik.ToListAsync();
+          int? take = null) 
+        {
+            var zaposlenici = await _context.Zaposlenik.Include(x => x.VrstaZaposljenja).Include(x => x.Odjel).ToListAsync();
             return new ResponseDataWrapper<List<ZaposlenikDTO>>(
                 _mapper.Map<List<Zaposlenik>,
                 List<ZaposlenikDTO>>(

@@ -1,17 +1,17 @@
 import axios from 'axios';
-import { RoutingInformation } from '@/constants/routingInformation';
+import { Routing } from '@/constants/Routing';
 import jwt_decode from 'jwt-decode';
 import NotificationService from '../notification';
 
 export default {
   async login(model) {
-    return await axios.post(`${RoutingInformation.baseRoute}auth/login`, {
+    return await axios.post(`${Routing.baseRoute}auth/login`, {
       Username: model.Username,
       Password: model.Password
     });
   },
   async register(model) {
-   return await axios.post(`${RoutingInformation.baseRoute}auth/register`, {
+   return await axios.post(`${Routing.baseRoute}auth/register`, {
       Username: model.Username,
       Password: model.Password
     }).catch(error => {

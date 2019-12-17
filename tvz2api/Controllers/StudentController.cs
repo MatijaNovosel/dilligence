@@ -26,11 +26,25 @@ namespace tvz2api.Controllers
             _mapper = mapper;
         }
 
+        // GET: api/Student/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<StudentDTO>> GetStudent(int id)
+        {
+            var student = await _context.Student.Include(x => x.Smjer).FirstOrDefaultAsync(x => x.Id == id);
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            return _mapper.Map<Student, StudentDTO>(student);
+        }
+
         // GET: api/Student
         [HttpGet]
         public async Task<ActionResult<ResponseDataWrapper<List<StudentDTO>>>> GetStudent(int skip = 0, int? take = null)
         {
-            List<Student> studenti = await _context.Student.ToListAsync();
+            List<Student> studenti = await _context.Student.Include(x => x.Smjer).ToListAsync();
             return new ResponseDataWrapper<List<StudentDTO>>(
                 _mapper.Map<List<Student>,
                 List<StudentDTO>>(
@@ -40,20 +54,6 @@ namespace tvz2api.Controllers
                     .ToList()
                 )
             );
-        }
-
-        // GET: api/Student/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<StudentDTO>> GetStudent(int id)
-        {
-            var student = await _context.Student.FindAsync(id);
-
-            if (student == null)
-            {
-                return NotFound();
-            }
-
-            return _mapper.Map<Student, StudentDTO>(student);
         }
     }
 }

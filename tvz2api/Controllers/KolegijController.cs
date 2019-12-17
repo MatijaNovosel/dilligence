@@ -48,7 +48,8 @@ namespace tvz2api.Controllers
           int maxECTS = 6,
           string isvu = null,
           int skip = 0,
-          int? take = null) {
+          int? take = null) 
+        {
             var kolegiji = await _context.Kolegij.ToListAsync();
             return new ResponseDataWrapper<List<KolegijDTO>>(
                 _mapper.Map<List<Kolegij>,

@@ -1,13 +1,13 @@
 import axios from 'axios';
-import { RoutingInformation } from '@/constants/routingInformation';
+import { Routing } from '@/constants/Routing';
 
 export default {
   async getKolegij(id) {
-    return await axios.get(`${RoutingInformation.baseRoute}Kolegij/${id}`);
+    return await axios.get(`${Routing.baseRoute}Kolegij/${id}`);
   },
 
   async getKolegiji(smjerIDs, name, minECTS, maxECTS, isvu, skip, take) {
-    return await axios.get(`${RoutingInformation.baseRoute}Kolegij`, {
+    return await axios.get(`${Routing.baseRoute}Kolegij`, {
       params: {
         smjerIDs,
         name,
