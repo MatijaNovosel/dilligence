@@ -1,88 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace tvz2api.Models
+namespace tvz2api
 {
     public partial class Kolegij
     {
         public Kolegij()
         {
             Izvrsitelj = new HashSet<Izvrsitelj>();
+            Pretplata = new HashSet<Pretplata>();
             SidebarContent = new HashSet<SidebarContent>();
             StudentKolegij = new HashSet<StudentKolegij>();
             Vijest = new HashSet<Vijest>();
         }
 
-        [Column("ID")]
         public int Id { get; set; }
-        [StringLength(255)]
         public string Naziv { get; set; }
-        [Column("ISVU")]
-        [StringLength(50)]
         public string Isvu { get; set; }
-        [Column("ECTS")]
         public int? Ects { get; set; }
-        [StringLength(50)]
-        public string AkademskaGodina { get; set; }
-        [StringLength(255)]
-        public string Status { get; set; }
-        [StringLength(255)]
-        public string IzvedbaNastave { get; set; }
-        [StringLength(255)]
-        public string Cilj { get; set; }
-        [StringLength(255)]
-        public string Ishodi { get; set; }
-        [StringLength(255)]
-        public string NacinIzvodenjaPredavanja { get; set; }
-        [StringLength(255)]
-        public string NacinIzvodenjaAuditornih { get; set; }
-        [StringLength(255)]
-        public string NacinIzvodenjaLaboratorijskih { get; set; }
-        [StringLength(255)]
-        public string SadrzajPredavanja { get; set; }
-        [StringLength(255)]
-        public string SadrzajAuditornih { get; set; }
-        [StringLength(255)]
-        public string SadrzajLaboratorijskih { get; set; }
-        [StringLength(255)]
-        public string MaterijalniUvjeti { get; set; }
-        [StringLength(255)]
-        public string Literatura { get; set; }
-        [StringLength(255)]
-        public string Uvjet { get; set; }
-        [StringLength(255)]
-        public string ProvjeraZnanja { get; set; }
-        [StringLength(255)]
-        public string NaciniPolaganja { get; set; }
-        [StringLength(255)]
-        public string PracenjeRada { get; set; }
-        [StringLength(255)]
-        public string Napomena { get; set; }
-        [StringLength(255)]
-        public string Preduvjeti { get; set; }
-        [Column("ISVUEkvivalencije")]
-        [StringLength(255)]
-        public string Isvuekvivalencije { get; set; }
-        [Column("IzradioID")]
-        public int? IzradioId { get; set; }
-        [Column("SmjerID")]
-        public int? SmjerId { get; set; }
-        [Column("URL")]
-        [StringLength(50)]
         public string Url { get; set; }
+        public string AkademskaGodina { get; set; }
+        public string Status { get; set; }
+        public string IzvedbaNastave { get; set; }
+        public string Cilj { get; set; }
+        public string Ishodi { get; set; }
+        public string NacinIzvodenjaPredavanja { get; set; }
+        public string NacinIzvodenjaAuditornih { get; set; }
+        public string NacinIzvodenjaLaboratorijskih { get; set; }
+        public string SadrzajPredavanja { get; set; }
+        public string SadrzajAuditornih { get; set; }
+        public string SadrzajLaboratorijskih { get; set; }
+        public string MaterijalniUvjeti { get; set; }
+        public string Literatura { get; set; }
+        public string Uvjet { get; set; }
+        public string ProvjeraZnanja { get; set; }
+        public string NaciniPolaganja { get; set; }
+        public string PracenjeRada { get; set; }
+        public string Napomena { get; set; }
+        public string Preduvjeti { get; set; }
+        public string Isvuekvivalencije { get; set; }
+        public int? IzradioId { get; set; }
+        public int? SmjerId { get; set; }
 
-        [ForeignKey("SmjerId")]
-        [InverseProperty("Kolegij")]
         public virtual Smjer Smjer { get; set; }
-        [InverseProperty("Kolegij")]
         public virtual ICollection<Izvrsitelj> Izvrsitelj { get; set; }
-        [InverseProperty("Kolegij")]
+        public virtual ICollection<Pretplata> Pretplata { get; set; }
         public virtual ICollection<SidebarContent> SidebarContent { get; set; }
-        [InverseProperty("Kolegij")]
         public virtual ICollection<StudentKolegij> StudentKolegij { get; set; }
-        [InverseProperty("Kolegij")]
         public virtual ICollection<Vijest> Vijest { get; set; }
     }
 }

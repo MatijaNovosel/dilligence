@@ -22,6 +22,8 @@ namespace tvz2api.AutoMapper
             // Kolegij
             CreateMap<Kolegij, KolegijDTO>()
                 .ForMember(dest => dest.Smjer, opts => opts.MapFrom(src => src.SmjerId));
+            // Pretplata
+            CreateMap<Pretplata, PretplataDTO>();
             CreateMap<Korisnik, UserForListDto>();
             CreateMap<Korisnik, KorisnikDTO>();
         }

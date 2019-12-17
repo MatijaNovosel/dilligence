@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace tvz2api.Models
+namespace tvz2api
 {
     public partial class Pretplata
     {

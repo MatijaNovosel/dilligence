@@ -67,7 +67,7 @@
                     <v-list-item-subtitle><b>Smjer: </b>{{ getSubjectNameFromID(item.smjer) }}</v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action class="mt-8 mr-5">
-                    <v-checkbox color="primary" class="mt-1"> </v-checkbox>
+                    <v-checkbox v-model="item.subscribed" color="primary" />
                   </v-list-item-action>
                 </v-list-item>
                 <v-divider :key="i" v-if="i < subjects.length - 1" />
@@ -82,6 +82,7 @@
 
 <script>
 import KolegijService from '../services/api/kolegij'; 
+import PretplataService from '../services/api/pretplata';
 import { Smjer } from '../constants/Smjer';
 import { Helper } from '../helpers/helpers.js';
 import { mapGetters } from 'vuex';
@@ -89,7 +90,7 @@ import { mapGetters } from 'vuex';
 export default { 
   data() {
     return {
-      subscriptions: [],
+      subscriptions: null,
       subjects: [],
       totalSubjects: 0,
       loading: null,
@@ -121,6 +122,14 @@ export default {
       .then(({ data }) => {
         this.subjects = data.results;
         this.totalSubjects = data.total;
+
+        PretplataService.getPretplata(this.user.id).then((response) => {
+          var subscriptions = response.data;
+          this.subjects.forEach(x => {
+            x.subscribed = subscriptions.includes(x.id) ? true : false;
+          });
+        });
+
       }).finally(() => {
         this.loading = false;
       });
@@ -152,6 +161,14 @@ export default {
     ...mapGetters([
       'user'
     ])
+  },
+  watch: {
+    subjects: {
+      immediate: true,
+      handler(val) {
+        console.log(val);
+      }
+    }
   }
 };
 

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace tvz2api.Models
+namespace tvz2api
 {
     public partial class tvz2Context : DbContext
     {
@@ -19,6 +19,7 @@ namespace tvz2api.Models
         public virtual DbSet<Kolegij> Kolegij { get; set; }
         public virtual DbSet<Korisnik> Korisnik { get; set; }
         public virtual DbSet<Odjel> Odjel { get; set; }
+        public virtual DbSet<Pretplata> Pretplata { get; set; }
         public virtual DbSet<SidebarContent> SidebarContent { get; set; }
         public virtual DbSet<SidebarContentFile> SidebarContentFile { get; set; }
         public virtual DbSet<Smjer> Smjer { get; set; }
@@ -43,6 +44,14 @@ namespace tvz2api.Models
 
             modelBuilder.Entity<Izvrsitelj>(entity =>
             {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.KolegijId).HasColumnName("KolegijID");
+
+                entity.Property(e => e.UlogaIzvrsiteljaId).HasColumnName("UlogaIzvrsiteljaID");
+
+                entity.Property(e => e.ZaposlenikId).HasColumnName("ZaposlenikID");
+
                 entity.HasOne(d => d.Kolegij)
                     .WithMany(p => p.Izvrsitelj)
                     .HasForeignKey(d => d.KolegijId)
@@ -61,51 +70,108 @@ namespace tvz2api.Models
 
             modelBuilder.Entity<Kolegij>(entity =>
             {
-                entity.Property(e => e.AkademskaGodina).IsUnicode(false);
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.Cilj).IsUnicode(false);
+                entity.Property(e => e.AkademskaGodina)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Ishodi).IsUnicode(false);
+                entity.Property(e => e.Cilj)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Isvu).IsUnicode(false);
+                entity.Property(e => e.Ects).HasColumnName("ECTS");
 
-                entity.Property(e => e.Isvuekvivalencije).IsUnicode(false);
+                entity.Property(e => e.Ishodi)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.IzvedbaNastave).IsUnicode(false);
+                entity.Property(e => e.Isvu)
+                    .HasColumnName("ISVU")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Literatura).IsUnicode(false);
+                entity.Property(e => e.Isvuekvivalencije)
+                    .HasColumnName("ISVUEkvivalencije")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.MaterijalniUvjeti).IsUnicode(false);
+                entity.Property(e => e.IzradioId).HasColumnName("IzradioID");
 
-                entity.Property(e => e.NacinIzvodenjaAuditornih).IsUnicode(false);
+                entity.Property(e => e.IzvedbaNastave)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.NacinIzvodenjaLaboratorijskih).IsUnicode(false);
+                entity.Property(e => e.Literatura)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.NacinIzvodenjaPredavanja).IsUnicode(false);
+                entity.Property(e => e.MaterijalniUvjeti)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.NaciniPolaganja).IsUnicode(false);
+                entity.Property(e => e.NacinIzvodenjaAuditornih)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Napomena).IsUnicode(false);
+                entity.Property(e => e.NacinIzvodenjaLaboratorijskih)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Naziv).IsUnicode(false);
+                entity.Property(e => e.NacinIzvodenjaPredavanja)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.PracenjeRada).IsUnicode(false);
+                entity.Property(e => e.NaciniPolaganja)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Preduvjeti).IsUnicode(false);
+                entity.Property(e => e.Napomena)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ProvjeraZnanja).IsUnicode(false);
+                entity.Property(e => e.Naziv)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.SadrzajAuditornih).IsUnicode(false);
+                entity.Property(e => e.PracenjeRada)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.SadrzajLaboratorijskih).IsUnicode(false);
+                entity.Property(e => e.Preduvjeti)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.SadrzajPredavanja).IsUnicode(false);
+                entity.Property(e => e.ProvjeraZnanja)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Status).IsUnicode(false);
+                entity.Property(e => e.SadrzajAuditornih)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Url).IsUnicode(false);
+                entity.Property(e => e.SadrzajLaboratorijskih)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Uvjet).IsUnicode(false);
+                entity.Property(e => e.SadrzajPredavanja)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SmjerId).HasColumnName("SmjerID");
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Url)
+                    .HasColumnName("URL")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Uvjet)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Smjer)
                     .WithMany(p => p.Kolegij)
@@ -115,17 +181,54 @@ namespace tvz2api.Models
 
             modelBuilder.Entity<Korisnik>(entity =>
             {
-                entity.Property(e => e.Username).IsUnicode(false);
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.PasswordHash).HasMaxLength(255);
+
+                entity.Property(e => e.PasswordSalt).HasMaxLength(255);
+
+                entity.Property(e => e.Username)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Odjel>(entity =>
             {
-                entity.Property(e => e.Naziv).IsUnicode(false);
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Naziv)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Pretplata>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.KolegijId).HasColumnName("KolegijID");
+
+                entity.Property(e => e.StudentId).HasColumnName("StudentID");
+
+                entity.HasOne(d => d.Kolegij)
+                    .WithMany(p => p.Pretplata)
+                    .HasForeignKey(d => d.KolegijId)
+                    .HasConstraintName("FK__Pretplata__Koleg__5CD6CB2B");
+
+                entity.HasOne(d => d.Student)
+                    .WithMany(p => p.Pretplata)
+                    .HasForeignKey(d => d.StudentId)
+                    .HasConstraintName("FK__Pretplata__Stude__5BE2A6F2");
             });
 
             modelBuilder.Entity<SidebarContent>(entity =>
             {
-                entity.Property(e => e.Naslov).IsUnicode(false);
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.KolegijId).HasColumnName("KolegijID");
+
+                entity.Property(e => e.Naslov)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Kolegij)
                     .WithMany(p => p.SidebarContent)
@@ -135,9 +238,17 @@ namespace tvz2api.Models
 
             modelBuilder.Entity<SidebarContentFile>(entity =>
             {
-                entity.Property(e => e.Naziv).IsUnicode(false);
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.Path).IsUnicode(false);
+                entity.Property(e => e.Naziv)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Path)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SidebarContentId).HasColumnName("SidebarContentID");
 
                 entity.HasOne(d => d.SidebarContent)
                     .WithMany(p => p.SidebarContentFile)
@@ -147,24 +258,45 @@ namespace tvz2api.Models
 
             modelBuilder.Entity<Smjer>(entity =>
             {
-                entity.Property(e => e.Naziv).IsUnicode(false);
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.SkraceniNaziv).IsUnicode(false);
+                entity.Property(e => e.Naziv)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SkraceniNaziv)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Vanredno).HasDefaultValueSql("((0))");
             });
 
             modelBuilder.Entity<Student>(entity =>
             {
-                entity.Property(e => e.Email).IsUnicode(false);
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.ImagePath).IsUnicode(false);
+                entity.Property(e => e.Email)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Ime).IsUnicode(false);
+                entity.Property(e => e.ImagePath)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Jmbag).IsUnicode(false);
+                entity.Property(e => e.Ime)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Prezime).IsUnicode(false);
+                entity.Property(e => e.Jmbag)
+                    .HasColumnName("JMBAG")
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Prezime)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SmjerId).HasColumnName("SmjerID");
 
                 entity.HasOne(d => d.Smjer)
                     .WithMany(p => p.Student)
@@ -174,6 +306,12 @@ namespace tvz2api.Models
 
             modelBuilder.Entity<StudentKolegij>(entity =>
             {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.KolegijId).HasColumnName("KolegijID");
+
+                entity.Property(e => e.StudentId).HasColumnName("StudentID");
+
                 entity.HasOne(d => d.Kolegij)
                     .WithMany(p => p.StudentKolegij)
                     .HasForeignKey(d => d.KolegijId)
@@ -187,14 +325,30 @@ namespace tvz2api.Models
 
             modelBuilder.Entity<UlogaIzvrsitelja>(entity =>
             {
-                entity.Property(e => e.Naziv).IsUnicode(false);
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Naziv)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Vijest>(entity =>
             {
-                entity.Property(e => e.Naslov).IsUnicode(false);
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.Opis).IsUnicode(false);
+                entity.Property(e => e.Datum).HasColumnType("date");
+
+                entity.Property(e => e.KolegijId).HasColumnName("KolegijID");
+
+                entity.Property(e => e.Naslov)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ObjavioId).HasColumnName("ObjavioID");
+
+                entity.Property(e => e.Opis)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Kolegij)
                     .WithMany(p => p.Vijest)
@@ -209,22 +363,44 @@ namespace tvz2api.Models
 
             modelBuilder.Entity<VrstaZaposljenja>(entity =>
             {
-                entity.Property(e => e.Naziv).IsUnicode(false);
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Naziv)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Zaposlenik>(entity =>
             {
-                entity.Property(e => e.Email).IsUnicode(false);
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.ImagePath).IsUnicode(false);
+                entity.Property(e => e.Email)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Ime).IsUnicode(false);
+                entity.Property(e => e.ImagePath)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Prezime).IsUnicode(false);
+                entity.Property(e => e.Ime)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.TitulaIspred).IsUnicode(false);
+                entity.Property(e => e.OdjelId).HasColumnName("OdjelID");
 
-                entity.Property(e => e.TitulaIza).IsUnicode(false);
+                entity.Property(e => e.Prezime)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TitulaIspred)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TitulaIza)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.VrstaZaposljenjaId).HasColumnName("VrstaZaposljenjaID");
 
                 entity.HasOne(d => d.Odjel)
                     .WithMany(p => p.Zaposlenik)
