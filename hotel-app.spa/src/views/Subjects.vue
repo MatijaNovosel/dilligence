@@ -31,29 +31,27 @@
                 <v-icon> mdi-magnify </v-icon>
               </v-btn>
             </v-toolbar>
-            <v-expand-transition>
-              <v-row class="mx-3 mt-4" justify="center" v-show="searchEnabled">
-                <v-col>
-                  <v-text-field label="Ime kolegija" 
-                                v-model="searchData.name"> 
-                  </v-text-field>
-                </v-col>
-                <v-col>
-                  <v-text-field label="ISVU" 
-                                v-model="searchData.ISVU"> 
-                  </v-text-field>
-                </v-col>
-                <v-col>              
-                  <v-range-slider v-model="searchData.ECTS"
-                            label="ECTS"
-                            min="1"
-                            max="6"
-                            class="mt-6"
-                            thumb-label="always">
-                  </v-range-slider>
-                </v-col>
-              </v-row>
-             </v-expand-transition>
+            <v-row class="mx-3 mt-4" justify="center" v-show="searchEnabled">
+              <v-col>
+                <v-text-field label="Ime kolegija" 
+                              v-model="searchData.name"> 
+                </v-text-field>
+              </v-col>
+              <v-col>
+                <v-text-field label="ISVU" 
+                              v-model="searchData.ISVU"> 
+                </v-text-field>
+              </v-col>
+              <v-col>              
+                <v-range-slider v-model="searchData.ECTS"
+                          label="ECTS"
+                          min="1"
+                          max="6"
+                          class="mt-6"
+                          thumb-label="always">
+                </v-range-slider>
+              </v-col>
+            </v-row>
             <v-list three-line subheader>
               <v-divider />
               <template v-for="(item, i) in subjects">
@@ -90,12 +88,11 @@ import { mapGetters } from 'vuex';
 export default { 
   data() {
     return {
-      subscriptions: null,
       subjects: [],
       totalSubjects: 0,
       loading: null,
       tags: [],
-      searchEnabled: false,
+      searchEnabled: true,
       Helper: null,
       searchData: {
         smjerIDs: [ Smjer["Informatika"] - 1 ],

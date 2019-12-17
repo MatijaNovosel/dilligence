@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace tvz2api
+namespace tvz2api.Models
 {
     public partial class tvz2Context : DbContext
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace tvz2api
+namespace tvz2api.Models
 {
     public partial class Izvrsitelj
     {

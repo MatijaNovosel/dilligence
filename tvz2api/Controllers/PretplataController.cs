@@ -34,5 +34,24 @@ namespace tvz2api.Controllers
             List<int?> kolegijIDs = pretplate.Select(x => x.KolegijId).ToList();
             return kolegijIDs;
         }
+
+        // POST: api/Pretplata
+        [HttpPost]
+        public async Task<ActionResult<IActionResult>> PostaviPretplatu(int studentId, List<int?> kolegijIDs)
+        {
+            List<Pretplata> pretplate = await _context.Pretplata.Where(x => x.StudentId == studentId && kolegijIDs.Any(y => y == x.KolegijId)).ToListAsync();
+            _context.RemoveRange(pretplate);
+
+            kolegijIDs.ForEach(x => {
+                _context.Add(new Pretplata {
+                    KolegijId = x,
+                    StudentId = studentId
+                });
+            });
+
+            _context.SaveChanges();
+
+            return Ok();
+        }
     }
 }
