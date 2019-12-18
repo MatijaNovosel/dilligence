@@ -23,10 +23,18 @@ export default {
   async getKolegijNews(kolegijId, skip, take) {
     return await axios.get(`${Routing.baseRoute}Kolegij/Vijesti/${kolegijId}`, {
       params: {
-        kolegijId,
         skip,
         take
       }
     });
+  },
+
+  async getKolegijStudents(kolegijId, skip, take) {
+    return await axios.get(`${Routing.baseRoute}Kolegij/Students/${kolegijId}`, {
+      params: {
+        skip,
+        take
+      }
+    })
   }
 }

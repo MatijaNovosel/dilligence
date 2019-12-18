@@ -185,17 +185,6 @@
                       :loading="studentLoading" 
                       :items="studenti" 
                       class="elevation-1">
-                      <template v-slot:top>
-                        <v-col cols="9">
-                          <v-text-field
-                            v-model.lazy="studentSearch"
-                            class="mt-2 mb-n7 pa-3"
-                            outlined
-                            label="Search"
-                            append-outer-icon="mdi-magnify"
-                          ></v-text-field>
-                        </v-col>
-                      </template>
                       <template v-slot:item.picture="{ item }">
                         <!--<v-avatar size="40" class="my-1" @click="showInfo(item)">
                           <v-img :src="require(`../assets/TVZ/studenti/${item.JMBAG}.jpg`)" />
@@ -263,10 +252,10 @@ export default {
       dialog: false,
       headers: [
         { text: 'Slika', value: 'picture', sortable: false, align: 'center' },
-        { text: 'JMBAG', value: 'JMBAG', sortable: false },
-        { text: 'Ime', value: 'Ime', sortable: false },
-        { text: 'Prezime', value: 'Prezime', sortable: false },
-        { text: 'Email', value: 'Email', sortable: false }
+        { text: 'JMBAG', value: 'jmbag', sortable: false },
+        { text: 'Ime', value: 'ime', sortable: false },
+        { text: 'Prezime', value: 'prezime', sortable: false },
+        { text: 'Email', value: 'email', sortable: false }
       ],
       information: {
         sifraISVU: "23079/85254",
@@ -287,13 +276,15 @@ export default {
       },
       loading: true,
       subject: {},
-      news: []
+      news: [],
+      studenti: []
     }
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.getData(to.params.id);
       vm.getNews(to.params.id);
+      vm.getStudents(to.params.id);
     });
   },
   methods: {
@@ -302,13 +293,25 @@ export default {
       this.dialog = !this.dialog;
     },
     getData(id) {
-      KolegijService.getKolegij(id).then(({ data }) => {
+      KolegijService.getKolegij(id)
+      .then(({ data }) => {
         this.subject = data;
       });
     },
     getNews(id) {
-      KolegijService.getKolegijNews(id).then(({ data }) => {
+      KolegijService.getKolegijNews(id)
+      .then(({ data }) => {
         this.news = data.results;
+      });
+    },
+    getStudents(id) {
+      this.studentLoading = true;
+      KolegijService.getKolegijStudents(id)
+      .then(({ data }) => {
+        this.studenti = data.results;
+      })
+      .finally(() => {
+        this.studentLoading = false;
       });
     }
   }
