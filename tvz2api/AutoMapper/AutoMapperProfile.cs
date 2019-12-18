@@ -12,20 +12,18 @@ namespace tvz2api.AutoMapper
     {
         public AutoMapperProfile()
         {
-            // Student
             CreateMap<Student, StudentDTO>()
                 .ForMember(dest => dest.Smjer, opts => opts.MapFrom(src => src.Smjer.Naziv));
-            // Zaposlenik
             CreateMap<Zaposlenik, ZaposlenikDTO>()
                 .ForMember(dest => dest.Odjel, opts => opts.MapFrom(src => src.Odjel.Naziv))
                 .ForMember(dest => dest.VrstaZaposljenja, opts => opts.MapFrom(src => src.VrstaZaposljenja.Naziv));
-            // Kolegij
             CreateMap<Kolegij, KolegijDTO>()
                 .ForMember(dest => dest.Smjer, opts => opts.MapFrom(src => src.SmjerId));
-            // Pretplata
             CreateMap<Pretplata, PretplataDTO>();
             CreateMap<Korisnik, UserForListDto>();
             CreateMap<Korisnik, KorisnikDTO>();
+            CreateMap<Vijest, VijestDTO>()
+                .ForMember(dest => dest.Objavio, opts => opts.MapFrom(src => String.Format("{0} {1}", src.Objavio.Ime, src.Objavio.Prezime)));
         }
     }
 }

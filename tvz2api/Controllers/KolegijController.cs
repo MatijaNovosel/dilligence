@@ -67,5 +67,20 @@ namespace tvz2api.Controllers
                 )
             );
         }
+
+        [HttpGet("Vijesti/{kolegijId}")]
+        public async Task<ActionResult<ResponseDataWrapper<List<VijestDTO>>>> GetVijesti(int kolegijId, int skip = 0, int? take = null) {
+            var vijesti = await _context.Vijest.Include(x => x.Objavio).ToListAsync();
+            return new ResponseDataWrapper<List<VijestDTO>>(
+                _mapper.Map<List<Vijest>,
+                List<VijestDTO>>(
+                    vijesti
+                    .Where(x => x.KolegijId == kolegijId)
+                    .Skip(skip)
+                    .Take(take ?? vijesti.Count)
+                    .ToList()
+                )
+            ); 
+        }
     }
 }

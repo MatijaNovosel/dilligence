@@ -24,62 +24,34 @@
               <v-tab-item class="elevation-1">
                 <v-row class="ml-3">
                   <v-col>
-                    <v-card width="98%">
-                      <v-app-bar dense dark color="blue darken-1">
-                        <v-toolbar-title class="subtitle-1">Gost predavač</v-toolbar-title>
-                        <div class="flex-grow-1"></div>
-                      </v-app-bar>
-                      <v-container fluid>
-                        <v-row>
-                          <v-col>
-                            <v-list dense class="my-n5">
-                              <v-list-item>
-                                <v-list-item-content>
-                                  <v-list-item-title>Tin Kramberger</v-list-item-title>
-                                  <v-list-item-subtitle>16/09/2019</v-list-item-subtitle>
-                                  <p class="mt-2">
-                                    U srijedu 05.06. nam kao gost predavač dolazi Vladimir Manzin koji je freelance istraživač, a glavno područje istraživanja mu je umjetna inteligencija i neuronske mreže.
-                                    Održati će nam predavanje na temu umjetne inteligencije s naglaskom na posljednje aktualnosti u tom području.
-                                    Dolazak na predavanje je obvezan, te će se popisivati studenti.
-                                    Nitko od vas nije bez grijeha, sve što radite je naprotiv Bogu.
-                                  </p>
-                                </v-list-item-content>
-                                <v-list-item-avatar size="60">
-                                  <v-img src="../assets/TVZ/djelatnici/tin.png"></v-img>
-                                </v-list-item-avatar>
-                              </v-list-item>
-                            </v-list>
-                          </v-col>
-                        </v-row>
-                      </v-container>
-                    </v-card>
-                    <v-card width="98%" class="mt-5">
-                      <v-app-bar dense dark color="red">
-                        <v-toolbar-title class="subtitle-1">Uvodna riječ</v-toolbar-title>
-                        <div class="flex-grow-1"></div>
-                      </v-app-bar>
-                      <v-container fluid>
-                        <v-row>
-                          <v-col>
-                            <v-list dense class="my-n5">
-                              <v-list-item>
-                                <v-list-item-content>
-                                  <v-list-item-title>Matija Novosel</v-list-item-title>
-                                  <v-list-item-subtitle>21/09/2019</v-list-item-subtitle>
-                                  <p class="mt-2">
-                                    U srednjoj sam počeo trčati jer mi je išlo na živce kako glupi trener iz tjelesnog kaže "1 krug zagrijavanja, pa onda 5 krugova (200 m)), a ja realno mogu istrčati 1,5 krugova". I zbog pičaka. Long story short, nabrijo sam se na nogomet i sportove i teretanu i one debilne motivacijske spike, i "grajndao" sam ko crnac neki i smršavio 30+ kg u jednoj godini. To me katapultiralo iz F ranga u B rang kod pičaka, pa su me počele oblijetavati i štipati za guzu (omg, sexual assault, zovite centar za prevenciju silovanja. xD). I tako sam se malo zafrkavao s njima, ali nikad nisam niti jednu poljubio jer sam u duši još bio beta, i nikad nisam neku pofukao jer sam uvijek pričao o igricama i glupostima. Jedna je bila jako zainteresirana i vjerojatno bi dala i bili smo na par "dejtova", i totalno mi se sviđala, ali sva sreća da sam uzeo korak unatrag i sagledao situaciju objektivno - da nemamo ništa zajedničkog, da je objektivno ružna iznutra i izvana, i da je jedini razlog zbog kojeg mi se sviđa to što moje tjelo proizvodi hormone koji služe da me izmanipuliraju da napravim loš potez. Tog dana sam postao vocel/incel i ne želim imati posla sa djevojkama. Tim više nakon one epidemije lažnih prijava silovanja i američkih feministkinja. Svu izgubljenu težinu sam brzo dobio natrag jer sam pao u depresiju jer me lik iz biologije jebo i nije mi htio 2 dati pa je bilo biti ili ne biti, i počeo sam igrati igrice po 12 sati na dan i uopće ne izlaziti iz sobe.
-                                    Sad dajem savjete ljudima na internetu u slobodno vrijeme.
-                                  </p>
-                                </v-list-item-content>
-                                <v-list-item-avatar size="60">
-                                  <v-img src="../assets/matija.png"></v-img>
-                                </v-list-item-avatar>
-                              </v-list-item>
-                            </v-list>
-                          </v-col>
-                        </v-row>
-                      </v-container>
-                    </v-card>
+                    <template v-for="item in news">
+                      <v-card :key="item.id + item.objavio" width="98%">
+                        <v-app-bar dense flat dark color="blue darken-1">
+                          <v-toolbar-title class="subtitle-1"> {{ item.naslov }} </v-toolbar-title>
+                          <div class="flex-grow-1"></div>
+                        </v-app-bar>
+                        <v-container fluid>
+                          <v-row>
+                            <v-col>
+                              <v-list dense class="my-n5">
+                                <v-list-item>
+                                  <v-list-item-content>
+                                    <v-list-item-title>  {{ item.objavio }} </v-list-item-title>
+                                    <v-list-item-subtitle> {{ item.datum }} </v-list-item-subtitle>
+                                    <p class="mt-2">
+                                      {{ item.opis }}
+                                    </p>
+                                  </v-list-item-content>
+                                  <v-list-item-avatar size="60">
+                                    <v-img src="../assets/TVZ/djelatnici/tin.png"></v-img>
+                                  </v-list-item-avatar>
+                                </v-list-item>
+                              </v-list>
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                      </v-card>
+                    </template>
                   </v-col>
                 </v-row>
               </v-tab-item>
@@ -314,12 +286,14 @@ export default {
         JMBAG: null
       },
       loading: true,
-      subject: {}
+      subject: {},
+      news: []
     }
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.getData(to.params.id);
+      vm.getNews(to.params.id);
     });
   },
   methods: {
@@ -328,18 +302,13 @@ export default {
       this.dialog = !this.dialog;
     },
     getData(id) {
-      /*
-
-        ects: 5
-        id: 147
-        isvu: "25066/185288"
-        naziv: "3D modeliranje"
-        smjer: 1
-        url: "185288"
-
-      */
       KolegijService.getKolegij(id).then(({ data }) => {
         this.subject = data;
+      });
+    },
+    getNews(id) {
+      KolegijService.getKolegijNews(id).then(({ data }) => {
+        this.news = data.results;
       });
     }
   }

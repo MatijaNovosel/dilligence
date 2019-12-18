@@ -18,5 +18,15 @@ export default {
         take
       }
     });
+  },
+
+  async getKolegijNews(kolegijId, skip, take) {
+    return await axios.get(`${Routing.baseRoute}Kolegij/Vijesti/${kolegijId}`, {
+      params: {
+        kolegijId,
+        skip,
+        take
+      }
+    });
   }
 }
