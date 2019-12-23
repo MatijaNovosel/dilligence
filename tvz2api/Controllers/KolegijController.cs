@@ -111,5 +111,55 @@ namespace tvz2api.Controllers
                 )
             ); 
         }
+
+        // GET: api/Kolegij/Extended/5
+        [HttpGet("Extended/{id}")]
+        public async Task<ActionResult<KolegijExtendedDTO>> GetExtendedKolegij(int id)
+        {
+            var kolegij = await _context
+                .Kolegij
+                .Include(x => x.Vijest)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            
+            if (kolegij == null)
+            {
+                return NotFound();
+            }
+
+            KolegijExtendedDTO kolegijExtended = _mapper.Map<Kolegij, KolegijExtendedDTO>(kolegij);
+
+            kolegijExtended.Studenti = _mapper.Map<List<Student>, List<StudentDTO>>((
+                from k in _context.Kolegij
+                join sk in _context.StudentKolegij on k.Id equals sk.KolegijId
+                join s in _context.Student on sk.StudentId equals s.Id
+                where sk.KolegijId == id
+                select new Student {
+                    Id = s.Id,
+                    Email = s.Email,
+                    ImagePath = s.ImagePath,
+                    Ime = s.Ime,
+                    Jmbag = s.Jmbag,
+                    Pretplata = s.Pretplata,
+                    Prezime = s.Prezime,
+                    Smjer = s.Smjer,
+                    SmjerId = s.SmjerId,
+                    StudentKolegij = s.StudentKolegij
+                }).ToList()
+            );
+
+            kolegijExtended.Vijesti = _mapper.Map<List<Vijest>, List<VijestDTO>>((
+                from v in _context.Vijest
+                join k in _context.Kolegij on v.KolegijId equals k.Id
+                where k.Id == id
+                select new Vijest {
+                    Naslov = v.Naslov,
+                    Datum = v.Datum,
+                    Objavio = v.Objavio,
+                    Opis = v.Opis
+                }).ToList()
+            );
+
+            return kolegijExtended;
+        }
     }
 }

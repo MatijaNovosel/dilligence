@@ -24,7 +24,7 @@
               <v-tab-item class="elevation-1">
                 <v-row class="ml-3">
                   <v-col>
-                    <template v-for="item in news">
+                    <template v-for="item in subject.vijesti">
                       <v-card :key="item.id + item.objavio" width="98%">
                         <v-app-bar dense flat dark color="blue darken-1">
                           <v-toolbar-title class="subtitle-1"> {{ item.naslov }} </v-toolbar-title>
@@ -183,7 +183,7 @@
                     <v-data-table dense
                       :headers="headers" 
                       :loading="studentLoading" 
-                      :items="studenti" 
+                      :items="subject.studenti" 
                       class="elevation-1">
                       <template v-slot:item.picture="{ item }">
                         <!--<v-avatar size="40" class="my-1" @click="showInfo(item)">
@@ -237,8 +237,6 @@ export default {
   data() {
     return {
       tabs: null,
-      studentLoading: true,
-      totalStudents: 0,
       predavanja: [
         { title: '01 - Uvod, DBMS, PK, FK, Dizajn', date: "25/09/2019", icon: "mdi-file-pdf-box", color: "red" },
         { title: '01 - Uvod, DBMS, PK, FK, Dizajn - primjeri', date: "25/09/2019", icon: "mdi-database", color: "grey" },
@@ -268,23 +266,17 @@ export default {
         ciljPredmeta: "Studenti trebaju upoznati koncept, mogućnosti i ulogu baze podataka i sustava za pretraživanje informacija u informacijskom sustavu. Praktičan rad sa sustavom za upravljanje bazom podataka omogućit će studentu da upozna i ovlada različitim metodama rukovanja s bazom.",
         ishodiUcenja: "1. Konstruirati model baze podataka"
       },
-      studenti: null,
-      originalStudenti: null,
       selectedItem: { 
         Ime: null,
         JMBAG: null
       },
       loading: true,
-      subject: {},
-      news: [],
-      studenti: []
+      subject: {}
     }
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.getData(to.params.id);
-      vm.getNews(to.params.id);
-      vm.getStudents(to.params.id);
     });
   },
   methods: {
@@ -293,25 +285,9 @@ export default {
       this.dialog = !this.dialog;
     },
     getData(id) {
-      KolegijService.getKolegij(id)
+      KolegijService.getKolegijExtended(id)
       .then(({ data }) => {
         this.subject = data;
-      });
-    },
-    getNews(id) {
-      KolegijService.getKolegijNews(id)
-      .then(({ data }) => {
-        this.news = data.results;
-      });
-    },
-    getStudents(id) {
-      this.studentLoading = true;
-      KolegijService.getKolegijStudents(id)
-      .then(({ data }) => {
-        this.studenti = data.results;
-      })
-      .finally(() => {
-        this.studentLoading = false;
       });
     }
   }

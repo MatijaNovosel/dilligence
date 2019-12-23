@@ -19,6 +19,8 @@ namespace tvz2api.AutoMapper
                 .ForMember(dest => dest.VrstaZaposljenja, opts => opts.MapFrom(src => src.VrstaZaposljenja.Naziv));
             CreateMap<Kolegij, KolegijDTO>()
                 .ForMember(dest => dest.Smjer, opts => opts.MapFrom(src => src.SmjerId));
+            CreateMap<Kolegij, KolegijExtendedDTO>()
+                .ForMember(dest => dest.Smjer, opts => opts.MapFrom(src => src.SmjerId));
             CreateMap<Pretplata, PretplataDTO>();
             CreateMap<Korisnik, UserForListDto>();
             CreateMap<Korisnik, KorisnikDTO>();
