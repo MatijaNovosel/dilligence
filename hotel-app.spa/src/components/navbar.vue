@@ -4,7 +4,7 @@
       <v-list dense nav>
         <v-list-item to="/account">
           <v-list-item-avatar>
-            <v-img src="../assets/matija.png"></v-img>
+            <v-img src="../assets/default-user.jpg"></v-img>
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title> {{ `${user.name} ${user.surname}` }} </v-list-item-title>

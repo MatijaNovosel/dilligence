@@ -65,7 +65,9 @@
                     <v-list-item-subtitle><b>Smjer: </b>{{ getSubjectNameFromID(item.smjer) }}</v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action class="mt-8 mr-5">
-                    <v-checkbox v-model="item.subscribed" color="primary" />
+                    <v-checkbox v-model="item.subscribed" 
+                                color="primary"
+                                @change="handleChange($event, item.id)" />
                   </v-list-item-action>
                 </v-list-item>
                 <v-divider :key="i" v-if="i < subjects.length - 1" />
@@ -79,101 +81,115 @@
 </template>
 
 <script>
-import KolegijService from '../services/api/kolegij'; 
-import PretplataService from '../services/api/pretplata';
-import { Smjer } from '../constants/Smjer';
-import { Helper } from '../helpers/helpers.js';
-import { mapGetters } from 'vuex';
+  import KolegijService from '../services/api/kolegij'; 
+  import PretplataService from '../services/api/pretplata';
+  import NotificationService from '../services/notification';
+  import { Smjer } from '../constants/Smjer';
+  import { Helper } from '../helpers/helpers.js';
+  import { mapGetters } from 'vuex';
 
-export default { 
-  data() {
-    return {
-      subjects: [],
-      totalSubjects: 0,
-      loading: null,
-      tags: [],
-      searchEnabled: true,
-      Helper: null,
-      searchData: {
-        smjerIDs: [ Smjer["Informatika"] - 1 ],
-        name: null,
-        ECTS: [ 1, 6 ],
-        ISVU: null 
+  export default { 
+    data() {
+      return {
+        subscriptions: [],
+        subjects: [],
+        totalSubjects: 0,
+        loading: null,
+        tags: [],
+        searchEnabled: true,
+        Helper: null,
+        searchData: {
+          smjerIDs: [ Smjer["Informatika"] - 1 ],
+          name: null,
+          ECTS: [ 1, 6 ],
+          ISVU: null 
+        }
       }
-    }
-  },
-  created() {
-    this.Helper = Helper;
-    for(let prop in Smjer) {
-      this.tags.push({
-        "name": prop,
-        "value": Smjer[prop]
-      });
-    }
-    this.getData();
-  },
-  methods: {
-    getData() {
-      this.loading = true;
-      KolegijService.getKolegiji(this.searchData.smjerIDs.map(x => x + 1), this.searchData.name, this.searchData.ECTS[0], this.searchData.ECTS[1], this.searchData.ISVU, 0, null)
-      .then(({ data }) => {
-        this.subjects = data.results;
-        this.totalSubjects = data.total;
-
-        PretplataService.getPretplata(this.user.id).then((response) => {
-          var subscriptions = response.data;
-          this.subjects.forEach(x => {
-            x.subscribed = subscriptions.includes(x.id) ? true : false;
-          });
+    },
+    created() {
+      this.Helper = Helper;
+      for(let prop in Smjer) {
+        this.tags.push({
+          "name": prop,
+          "value": Smjer[prop]
         });
-
-      }).finally(() => {
-        this.loading = false;
-      });
-    },
-    buildPath(name) {
-      return require(`../assets/TVZ/subjects/${name}.png`);
-    },
-    showInfo(item) {
-      this.selectedItem = item;
-      this.dialog = !this.dialog;
-    },
-    redirectToKolegijDetails(item) {
-      this.$router.push({ name: 'subject-details', params: { id: item.id } });
-    },
-    resetForm() {
-      this.searchData = {
-        smjerIDs: [ Smjer["Informatika"] - 1 ],
-        name: null,
-        ECTS: [ 1, 6 ],
-        ISVU: null 
-      };
+      }
       this.getData();
     },
-    getSubjectNameFromID(id) {
-      return Object.keys(Smjer).find(key => Smjer[key] === id);
-    }
-  },
-  computed: {
-    ...mapGetters([
-      'user'
-    ])
-  },
-  watch: {
-    subjects: {
-      immediate: true,
-      handler(val) {
-        console.log(val);
+    methods: {
+      getData() {
+        this.loading = true;
+
+        PretplataService.getPretplata(this.user.id).then((response) => {
+          let subscriptions = response.data;
+          this.subscriptions = subscriptions;
+          KolegijService.getKolegiji(this.searchData.smjerIDs.map(x => x + 1), this.searchData.name, this.searchData.ECTS[0], this.searchData.ECTS[1], this.searchData.ISVU, 0, null)
+          .then(({ data }) => {
+            data.results.forEach(x => {
+              x.subscribed = subscriptions.includes(x.id) ? true : false;
+            });
+            this.subjects = data.results;
+            this.totalSubjects = data.total;
+          }).finally(() => {
+            this.loading = false;
+          });
+        });
+      },
+      buildPath(name) {
+        return require(`../assets/TVZ/subjects/${name}.png`);
+      },
+      showInfo(item) {
+        this.selectedItem = item;
+        this.dialog = !this.dialog;
+      },
+      redirectToKolegijDetails(item) {
+        this.$router.push({ name: 'subject-details', params: { id: item.id } });
+      },
+      resetForm() {
+        this.searchData = {
+          smjerIDs: [ Smjer["Informatika"] - 1 ],
+          name: null,
+          ECTS: [ 1, 6 ],
+          ISVU: null 
+        };
+        this.getData();
+      },
+      getSubjectNameFromID(id) {
+        return Object.keys(Smjer).find(key => Smjer[key] === id);
+      },
+      handleChange(e, id) {
+        if(e) {
+          this.subscriptions.push(id);
+        } else {
+          this.subscriptions = this.subscriptions.filter(x => x != id);
+        }
+      }
+    },
+    computed: {
+      ...mapGetters([
+        'user'
+      ])
+    },
+    watch: {
+      subscriptions: {
+        immediate: false,
+        handler(val, oldVal) {
+          PretplataService.postPreplata(this.user.id, val)
+          .then(() => {
+            NotificationService.success("Pretplata", "Pretplata uspjesno promijenjena!");
+          });
+        }
       }
     }
-  }
-};
+  };
 
 </script>
 
 <style scoped>
+
   .v-avatar:hover {
     cursor: pointer;
     background-color: #292826 !important;
   }
+  
 </style>

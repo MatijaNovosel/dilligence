@@ -74,10 +74,10 @@ namespace tvz2api.Controllers {
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var user = _mapper.Map<Korisnik, UserForListDto>(userFromRepo);
             
-            return(Ok(new {
+            return Ok(new {
                 token = tokenHandler.WriteToken(token),
                 user
-            }));
+            });
         }
     }
 }
