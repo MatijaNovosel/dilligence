@@ -119,7 +119,6 @@
     methods: {
       getData() {
         this.loading = true;
-
         PretplataService.getPretplata(this.user.id).then((response) => {
           let subscriptions = response.data;
           this.subscriptions = subscriptions;
@@ -173,7 +172,9 @@
     watch: {
       subscriptions: {
         immediate: false,
-        handler(val, oldVal) {
+        deep: true,
+        handler(val) {
+          console.log(val);
           PretplataService.postPreplata(this.user.id, val)
           .then(() => {
             NotificationService.success("Pretplata", "Pretplata uspjesno promijenjena!");

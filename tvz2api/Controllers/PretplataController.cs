@@ -39,19 +39,15 @@ namespace tvz2api.Controllers
         [HttpPost]
         public async Task<IActionResult> PostaviPretplatu(PretplataPOSTDTO obj)
         {
-            List<Pretplata> pretplate = await _context.Pretplata.Where(x => x.StudentId == obj.StudentId && obj.PretplataIDs.Any(y => y == x.KolegijId)).ToListAsync();
-            _context.RemoveRange(pretplate);
+            List<Pretplata> pretplate = await _context.Pretplata.Where(x => x.StudentId == obj.StudentId).ToListAsync();
+            _context.Pretplata.RemoveRange(pretplate);
 
-            obj.PretplataIDs.ForEach(x => {
-                _context.Add(new Pretplata {
-                    KolegijId = x,
-                    StudentId = obj.StudentId
-                });
-            });
+            List<Pretplata> pretplateToBeAdded = obj.PretplataIDs.Select(x => new Pretplata { KolegijId = x, StudentId = obj.StudentId }).ToList();
 
-            _context.SaveChanges();
+            await _context.Pretplata.AddRangeAsync(pretplateToBeAdded);
+            await _context.SaveChangesAsync();
 
-            return Ok("It's a good yes");
+            return Ok("Ok");
         }
     }
 }
