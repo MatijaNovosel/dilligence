@@ -3,7 +3,11 @@
     <v-row no-gutters justify="center">
       <v-col cols="5">
         <v-row class="mt-2" justify="center">
-          <v-chip-group v-model="searchData.smjerIDs" mandatory multiple column active-class="white--text blue darken-2">
+          <v-chip-group v-model="searchData.smjerIDs" 
+                        mandatory 
+                        multiple 
+                        column 
+                        active-class="white--text blue darken-2">
             <v-chip v-for="item in tags" :key="item.value">
               {{ item.name }}
             </v-chip>
@@ -61,8 +65,12 @@
                   </v-list-item-avatar>
                   <v-list-item-content>
                     <v-list-item-title v-html="item.naziv"></v-list-item-title>
-                    <v-list-item-subtitle><b>ECTS: </b>{{ item.ects }}</v-list-item-subtitle>
-                    <v-list-item-subtitle><b>Smjer: </b>{{ getSubjectNameFromID(item.smjer) }}</v-list-item-subtitle>
+                    <v-list-item-subtitle>
+                      <b>ECTS: </b>{{ item.ects }}
+                    </v-list-item-subtitle>
+                    <v-list-item-subtitle>
+                      <b>Smjer: </b>{{ getSubjectNameFromID(item.smjer) }}
+                    </v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action class="mt-8 mr-5">
                     <v-checkbox v-model="item.subscribed" 
@@ -142,7 +150,10 @@
         this.dialog = !this.dialog;
       },
       redirectToKolegijDetails(item) {
-        this.$router.push({ name: 'subject-details', params: { id: item.id } });
+        this.$router.push({ 
+          name: 'subject-details', 
+          params: { id: item.id } 
+        });
       },
       resetForm() {
         this.searchData = {
@@ -162,35 +173,24 @@
         } else {
           this.subscriptions = this.subscriptions.filter(x => x != id);
         }
+        PretplataService.postPreplata(this.user.id, this.subscriptions)
+        .then(() => {
+          NotificationService.success("Pretplata", "Pretplata uspjesno promijenjena!");
+        });
       }
     },
     computed: {
       ...mapGetters([
         'user'
       ])
-    },
-    watch: {
-      subscriptions: {
-        immediate: false,
-        deep: true,
-        handler(val) {
-          console.log(val);
-          PretplataService.postPreplata(this.user.id, val)
-          .then(() => {
-            NotificationService.success("Pretplata", "Pretplata uspjesno promijenjena!");
-          });
-        }
-      }
     }
   };
 
 </script>
 
 <style scoped>
-
   .v-avatar:hover {
     cursor: pointer;
     background-color: #292826 !important;
   }
-  
 </style>
