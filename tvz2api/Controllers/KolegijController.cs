@@ -144,7 +144,7 @@ namespace tvz2api.Controllers
                     Smjer = s.Smjer,
                     SmjerId = s.SmjerId,
                     StudentKolegij = s.StudentKolegij
-                }).ToList()
+                }).OrderBy(x => x.Prezime).ToList()
             );
 
             kolegijExtended.Vijesti = _mapper.Map<List<Vijest>, List<VijestDTO>>((

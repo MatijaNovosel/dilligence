@@ -49,7 +49,10 @@ namespace tvz2api.Controllers
           int skip = 0,
           int? take = null) 
         {
-            var zaposlenici = await _context.Zaposlenik.Include(x => x.VrstaZaposljenja).Include(x => x.Odjel).ToListAsync();
+            var zaposlenici = await _context.Zaposlenik
+              .Include(x => x.VrstaZaposljenja)
+              .Include(x => x.Odjel)
+              .ToListAsync();
             return new ResponseDataWrapper<List<ZaposlenikDTO>>(
                 _mapper.Map<List<Zaposlenik>,
                 List<ZaposlenikDTO>>(

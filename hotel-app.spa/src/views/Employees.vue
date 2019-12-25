@@ -11,30 +11,45 @@
       <template v-for="item in employees">
         <v-card :key="item.ime + item.prezime + item.id" width="225" class="ma-3">
           <v-avatar size="135" class="ml-11">
-            <v-img v-if="item.ime + item.prezime == 'Željko Kovačević'" src="../assets/TVZ/djelatnici/kova.png" />
+            <v-img v-if="item.ime + ' ' + item.prezime == 'Željko Kovacevic'" src="../assets/TVZ/djelatnici/kova.png" />
+            <v-img v-else-if="item.ime + ' ' + item.prezime == 'Tin Kramberger'" src="../assets/TVZ/djelatnici/tin.png" />
             <v-img v-else src="../assets/default-user.jpg" />
           </v-avatar>
           <v-btn icon class="gore-desno">
-            <v-icon>mdi-dots-vertical</v-icon>
+            <v-icon>
+              mdi-dots-vertical
+            </v-icon>
           </v-btn>
           <v-row justify="center" class="mt-3">
-            <h4 class="caption font-weight-light"> {{ item.titulaIspred || '-' }} </h4>
+            <h4 class="caption font-weight-light"> 
+              {{ item.titulaIspred || '-' }} 
+            </h4>
           </v-row>
           <v-row justify="center">
-            <h4 class="subtitle-1 font-weight-light"> {{ `${item.ime} ${item.prezime}` }} </h4>
+            <h4 class="subtitle-1 font-weight-light"> 
+              {{ `${item.ime} ${item.prezime}` }} 
+            </h4>
           </v-row>
           <v-row justify="center" class="mb-3">
-            <h4 class="caption font-weight-light"> {{ item.titulaIza || '-' }} </h4>
+            <h4 class="caption font-weight-light"> 
+              {{ item.titulaIza || '-' }} 
+            </h4>
           </v-row>
-          <v-divider></v-divider>
+          <v-divider />
           <v-list two-line>
             <v-list-item class="my-n4">
               <v-list-item-icon>
-                <v-icon color="indigo" class="pt-3">mdi-email</v-icon>
+                <v-icon color="indigo" class="pt-3">
+                  mdi-email
+                </v-icon>
               </v-list-item-icon>
               <v-list-item-content class="ml-n3">
-                <v-list-item-title> {{ item.email }}</v-list-item-title>
-                <v-list-item-subtitle>Email</v-list-item-subtitle>
+                <v-list-item-title> 
+                  {{ item.email }}
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                  Email
+                </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </v-list>
@@ -46,13 +61,13 @@
 
 <script>
 
-import KolegijService from '../services/api/zaposlenik';
+import ZaposlenikService from '../services/api/zaposlenik';
 
 export default { 
   data() {
     return {
       skip: 0,
-      take: 25,
+      take: null,
       searchData: {
         name: null,
         surname: null,
@@ -79,7 +94,7 @@ export default {
   methods: {
     getData() {
       this.loading = true;
-      KolegijService.getZaposlenici(this.searchData.name, this.searchData.surname, this.searchData.odjel, this.searchData.vrstaZaposljenja, this.skip, this.take).then(({ data }) => {
+      ZaposlenikService.getZaposlenici(this.searchData.name, this.searchData.surname, 1, this.searchData.vrstaZaposljenja, this.skip, this.take).then(({ data }) => {
         this.employees = data.results;
         this.totalEmployees = data.total;
       }).finally(() => {

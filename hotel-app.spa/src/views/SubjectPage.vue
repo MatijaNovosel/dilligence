@@ -36,14 +36,18 @@
                               <v-list dense class="my-n5">
                                 <v-list-item>
                                   <v-list-item-content>
-                                    <v-list-item-title>  {{ item.objavio }} </v-list-item-title>
-                                    <v-list-item-subtitle> {{ item.datum }} </v-list-item-subtitle>
+                                    <v-list-item-title>  
+                                      {{ item.objavio }} 
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle> 
+                                      {{ item.datum }} 
+                                    </v-list-item-subtitle>
                                     <p class="mt-2">
                                       {{ item.opis }}
                                     </p>
                                   </v-list-item-content>
                                   <v-list-item-avatar size="60">
-                                    <v-img src="../assets/TVZ/djelatnici/tin.png"></v-img>
+                                    <v-img src="../assets/TVZ/djelatnici/tin.png" />
                                   </v-list-item-avatar>
                                 </v-list-item>
                               </v-list>
@@ -62,14 +66,22 @@
                      <v-list two-line>
                       <v-list-item>
                         <v-list-item-content>
-                          <v-list-item-title>Ime predmeta</v-list-item-title>
-                          <p class="mt-2 font-weight-light"> Baze podataka </p>
+                          <v-list-item-title>
+                            Ime predmeta
+                          </v-list-item-title>
+                          <p class="mt-2 font-weight-light"> 
+                            Baze podataka 
+                          </p>
                         </v-list-item-content>
                       </v-list-item>
                       <v-list-item>
                         <v-list-item-content>
-                          <v-list-item-title>Show your status</v-list-item-title>
-                          <v-list-item-subtitle>Your status is visible to everyone</v-list-item-subtitle>
+                          <v-list-item-title>
+                            Show your status
+                          </v-list-item-title>
+                          <v-list-item-subtitle>
+                            Your status is visible to everyone
+                          </v-list-item-subtitle>
                         </v-list-item-content>
                       </v-list-item>
                     </v-list>
@@ -82,8 +94,10 @@
                   <v-col>
                     <v-card width="98%">
                       <v-app-bar dense dark color="blue darken-1">
-                        <v-toolbar-title class="subtitle-1">Predavanja</v-toolbar-title>
-                        <div class="flex-grow-1"></div>
+                        <v-toolbar-title class="subtitle-1">
+                          Predavanja
+                        </v-toolbar-title>
+                        <div class="flex-grow-1" />
                       </v-app-bar>
                       <v-container fluid>
                         <v-row>
@@ -91,11 +105,15 @@
                             <v-card outlined>
                               <v-list-item three-line>
                                 <v-list-item-content>
-                                  <v-list-item-title class="headline mb-1">Tin Kramberger</v-list-item-title>
-                                  <v-list-item-subtitle>struč. spec. tehn. inf. ing.</v-list-item-subtitle>
+                                  <v-list-item-title class="headline mb-1">
+                                    Tin Kramberger
+                                  </v-list-item-title>
+                                  <v-list-item-subtitle>
+                                    struč. spec. tehn. inf. ing.
+                                  </v-list-item-subtitle>
                                 </v-list-item-content>
                                 <v-list-item-avatar tile size="80" color="grey">
-                                  <v-img src="../assets/TVZ/djelatnici/tin.png"></v-img>
+                                  <v-img src="../assets/TVZ/djelatnici/tin.png" />
                                 </v-list-item-avatar>
                               </v-list-item>
                             </v-card>
@@ -105,8 +123,10 @@
                     </v-card>
                     <v-card width="98%" class="mt-3">
                       <v-app-bar dense dark color="blue darken-1">
-                        <v-toolbar-title class="subtitle-1">Auditorne vježbe</v-toolbar-title>
-                        <div class="flex-grow-1"></div>
+                        <v-toolbar-title class="subtitle-1">
+                          Auditorne vježbe
+                        </v-toolbar-title>
+                        <div class="flex-grow-1" />
                       </v-app-bar>
                       <v-container fluid>
                         <v-row>
@@ -114,11 +134,15 @@
                             <v-card outlined>
                               <v-list-item three-line>
                                 <v-list-item-content>
-                                  <v-list-item-title class="headline mb-1">Tin Kramberger</v-list-item-title>
-                                  <v-list-item-subtitle>struč. spec. tehn. inf. ing.</v-list-item-subtitle>
+                                  <v-list-item-title class="headline mb-1">
+                                    Tin Kramberger
+                                  </v-list-item-title>
+                                  <v-list-item-subtitle>
+                                    struč. spec. tehn. inf. ing.
+                                  </v-list-item-subtitle>
                                 </v-list-item-content>
                                 <v-list-item-avatar tile size="80" color="grey">
-                                  <v-img src="../assets/TVZ/djelatnici/tin.png"></v-img>
+                                  <v-img src="../assets/TVZ/djelatnici/tin.png" />
                                 </v-list-item-avatar>
                               </v-list-item>
                             </v-card>
@@ -128,8 +152,10 @@
                     </v-card>
                     <v-card width="98%" class="mt-3">
                       <v-app-bar dense dark color="blue darken-1">
-                        <v-toolbar-title class="subtitle-1">Laboratorijske vježbe</v-toolbar-title>
-                        <div class="flex-grow-1"></div>
+                        <v-toolbar-title class="subtitle-1">
+                          Laboratorijske vježbe
+                        </v-toolbar-title>
+                        <div class="flex-grow-1" />
                       </v-app-bar>
                       <v-container fluid>
                         <v-row>
@@ -137,11 +163,15 @@
                             <v-card outlined>
                               <v-list-item three-line>
                                 <v-list-item-content>
-                                  <v-list-item-title class="headline mb-1">Tin Kramberger</v-list-item-title>
-                                  <v-list-item-subtitle>struč. spec. tehn. inf. ing.</v-list-item-subtitle>
+                                  <v-list-item-title class="headline mb-1">
+                                    Tin Kramberger
+                                  </v-list-item-title>
+                                  <v-list-item-subtitle>
+                                    struč. spec. tehn. inf. ing.
+                                  </v-list-item-subtitle>
                                 </v-list-item-content>
                                 <v-list-item-avatar tile size="80" color="grey">
-                                  <v-img src="../assets/TVZ/djelatnici/tin.png"></v-img>
+                                  <v-img src="../assets/TVZ/djelatnici/tin.png" />
                                 </v-list-item-avatar>
                               </v-list-item>
                             </v-card>
@@ -150,8 +180,12 @@
                             <v-card outlined>
                               <v-list-item three-line>
                                 <v-list-item-content>
-                                  <v-list-item-title class="headline mb-1">Renata Kovačević</v-list-item-title>
-                                  <v-list-item-subtitle>struč. spec. tehn. inf. ing.</v-list-item-subtitle>
+                                  <v-list-item-title class="headline mb-1">
+                                    Renata Kovačević
+                                  </v-list-item-title>
+                                  <v-list-item-subtitle>
+                                    struč. spec. tehn. inf. ing.
+                                  </v-list-item-subtitle>
                                 </v-list-item-content>
                                 <v-list-item-avatar tile size="80" color="grey">
                                 </v-list-item-avatar>
@@ -162,8 +196,12 @@
                             <v-card outlined>
                               <v-list-item three-line>
                                 <v-list-item-content>
-                                  <v-list-item-title class="headline mb-1">Briggita Cafuta</v-list-item-title>
-                                  <v-list-item-subtitle>asistent </v-list-item-subtitle>
+                                  <v-list-item-title class="headline mb-1">
+                                    Briggita Cafuta
+                                  </v-list-item-title>
+                                  <v-list-item-subtitle>
+                                    asistent 
+                                  </v-list-item-subtitle>
                                 </v-list-item-content>
                                 <v-list-item-avatar tile size="80" color="grey">
                                 </v-list-item-avatar>
@@ -181,14 +219,14 @@
                 <v-row class="ml-3">
                   <v-col>
                     <v-data-table dense
-                      :headers="headers" 
-                      :loading="studentLoading" 
-                      :items="subject.studenti" 
-                      class="elevation-1">
+                                  :headers="headers" 
+                                  :items="subject.studenti"
+                                  :items-per-page="studentOptions.pages"
+                                  class="elevation-1">
                       <template v-slot:item.picture="{ item }">
-                        <!--<v-avatar size="40" class="my-1" @click="showInfo(item)">
-                          <v-img :src="require(`../assets/TVZ/studenti/${item.JMBAG}.jpg`)" />
-                        </v-avatar>-->
+                        <v-avatar size="40" class="my-1" @click="showInfo(item)">
+                          <v-img :src="require(`../assets/default-user.jpg`)" />
+                        </v-avatar>
                       </template>
                     </v-data-table>
                   </v-col>
@@ -211,7 +249,9 @@
                   <v-list dense class="my-n5">
                     <v-list-item v-for="item in predavanja" :key="item.title" @click="clicky()">
                       <v-list-item-icon class="mt-3">
-                        <v-icon :color="item.color">{{ item.icon }}</v-icon>
+                        <v-icon :color="item.color">
+                          {{ item.icon }}
+                        </v-icon>
                       </v-list-item-icon>
                       <v-list-item-content>
                         <v-list-item-title v-text="item.title"></v-list-item-title>
@@ -250,10 +290,10 @@ export default {
       dialog: false,
       headers: [
         { text: 'Slika', value: 'picture', sortable: false, align: 'center' },
-        { text: 'JMBAG', value: 'jmbag', sortable: false },
-        { text: 'Ime', value: 'ime', sortable: false },
-        { text: 'Prezime', value: 'prezime', sortable: false },
-        { text: 'Email', value: 'email', sortable: false }
+        { text: 'JMBAG', value: 'jmbag', sortable: false, align: 'center' },
+        { text: 'Ime', value: 'ime', sortable: false, align: 'center' },
+        { text: 'Prezime', value: 'prezime', sortable: false, align: 'center' },
+        { text: 'Email', value: 'email', sortable: false, align: 'center' }
       ],
       information: {
         sifraISVU: "23079/85254",
@@ -271,7 +311,10 @@ export default {
         JMBAG: null
       },
       loading: true,
-      subject: {}
+      subject: {},
+      studentOptions: {
+        pages: 15
+      }
     }
   },
   beforeRouteEnter(to, from, next) {
