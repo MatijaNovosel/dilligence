@@ -37,6 +37,7 @@
             <v-spacer />
             <v-btn @click="submit" 
                   :disabled="$v.$invalid" 
+                  :loading="loading"
                   color="primary">
                   Sign in
             </v-btn>
@@ -82,7 +83,8 @@
       return {
         username: null,
         password: null,
-        valid: false
+        valid: false,
+        loading: false
       }
     },
     methods: {
@@ -123,7 +125,9 @@
         if(this.$v.$invalid) {
           NotificationService.error("Empty input", "Please enter valid data into the form.");
         } else {
+          this.loading = true;
           this.login();
+          this.loading = false;
         }
       },
     },

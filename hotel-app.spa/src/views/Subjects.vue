@@ -61,7 +61,9 @@
               <template v-for="(item, i) in subjects">
                 <v-list-item :key="item.naziv + item.id">
                   <v-list-item-avatar @click="redirectToKolegijDetails(item)" size="50" color="primary" class="justify-center">
-                    <span class="white--text headline"> {{ Helper.acronym(item.naziv) }} </span>
+                    <span class="white--text headline"> 
+                      {{ acronym(item.naziv) }} 
+                    </span>
                   </v-list-item-avatar>
                   <v-list-item-content>
                     <v-list-item-title v-html="item.naziv"></v-list-item-title>
@@ -93,7 +95,7 @@
   import PretplataService from '../services/api/pretplata';
   import NotificationService from '../services/notification';
   import { Smjer } from '../constants/Smjer';
-  import { Helper } from '../helpers/helpers.js';
+  import { acronym } from '../helpers/helpers.js';
   import { mapGetters } from 'vuex';
 
   export default { 
@@ -105,7 +107,6 @@
         loading: null,
         tags: [],
         searchEnabled: true,
-        Helper: null,
         searchData: {
           smjerIDs: [ Smjer["Informatika"] - 1 ],
           name: null,
@@ -115,7 +116,6 @@
       }
     },
     created() {
-      this.Helper = Helper;
       for(let prop in Smjer) {
         this.tags.push({
           "name": prop,
@@ -125,6 +125,7 @@
       this.getData();
     },
     methods: {
+      acronym,
       getData() {
         this.loading = true;
         PretplataService.getPretplata(this.user.id).then((response) => {

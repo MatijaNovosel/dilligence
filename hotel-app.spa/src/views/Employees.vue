@@ -44,8 +44,13 @@
                 </v-icon>
               </v-list-item-icon>
               <v-list-item-content class="ml-n3">
-                <v-list-item-title> 
-                  {{ item.email }}
+                <v-list-item-title>
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                      <span v-on="on"> {{ item.email }} </span>
+                    </template>
+                    <span> {{ item.email }} </span>
+                  </v-tooltip>
                 </v-list-item-title>
                 <v-list-item-subtitle>
                   Email
@@ -67,7 +72,7 @@ export default {
   data() {
     return {
       skip: 0,
-      take: null,
+      take: 15,
       searchData: {
         name: null,
         surname: null,
