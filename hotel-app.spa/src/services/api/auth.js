@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Routing } from '@/constants/Routing';
 import jwt_decode from 'jwt-decode';
 import NotificationService from '../notification';
+import store from '../../store/store';
 
 export default {
   async login(model) {
@@ -10,6 +11,7 @@ export default {
       Password: model.Password
     });
   },
+  
   async register(model) {
    return await axios.post(`${Routing.baseRoute}auth/register`, {
       Username: model.Username,
@@ -19,7 +21,8 @@ export default {
       NotificationService.error(`${error.name}: ${error.message}`, 'Unable to register!');
     });
   },
-  loggedIn() {
+  
+  async loggedIn() {
     const token = localStorage.getItem('token');
     const decoded = jwt_decode(token);
     const exp = decoded.exp * 1000; // Expires at (EXP)
@@ -28,8 +31,8 @@ export default {
     }
     return true;
   },
-  logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+  
+  async logout() {
+    store.dispatch('removeUserData');
   }
 }

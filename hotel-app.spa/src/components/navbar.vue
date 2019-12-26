@@ -1,14 +1,22 @@
 <template>
   <div>
-    <v-navigation-drawer disable-route-watcher app clipped v-model="drawer" disable-resize-watcher>
+    <v-navigation-drawer disable-route-watcher 
+                        app 
+                        clipped 
+                        v-model="drawer" 
+                        disable-resize-watcher>
       <v-list dense nav>
         <v-list-item to="/account">
           <v-list-item-avatar>
-            <v-img src="../assets/default-user.jpg"></v-img>
+            <v-img src="../assets/default-user.jpg" />
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title> {{ `${user.name} ${user.surname}` }} </v-list-item-title>
-            <v-list-item-subtitle> {{ `JMBAG: ${user.jmbag}` }} </v-list-item-subtitle>
+            <v-list-item-title> 
+              {{ `${user.name} ${user.surname}` }} 
+            </v-list-item-title>
+            <v-list-item-subtitle> 
+              {{ `JMBAG: ${user.jmbag}` }} 
+            </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-divider />
@@ -16,10 +24,14 @@
           <template v-slot:activator>
             <v-list-item active-class="highlighted" class="px-0">
               <v-list-item-action>
-                <v-icon>{{ link.icon }}</v-icon>
+                <v-icon>
+                  {{ link.icon }}
+                </v-icon>
               </v-list-item-action>
               <v-list-item-content class="ml-n5">
-                <v-list-item-title>{{ link.text }}</v-list-item-title>
+                <v-list-item-title>
+                  {{ link.text }}
+                </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </template>
@@ -29,7 +41,9 @@
                                                         active-class="highlighted" 
                                                         :class="sublink.route != null && sublink.route.name === $route.name ? 'highlighted' : ''">
             <v-list-item-content>
-              <v-list-item-title>{{ sublink.text }}</v-list-item-title>
+              <v-list-item-title>
+                {{ sublink.text }}
+              </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list-group>
@@ -40,22 +54,30 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title class="mt-1">
         <v-avatar size="40" class="mr-5">
-          <v-img src="../assets/tvz-logo.svg"></v-img>
+          <v-img src="../assets/tvz-logo.svg" />
         </v-avatar>
-        <span class="title">Moj TVZ</span>
+        <span class="title">
+          Moj TVZ
+        </span>
       </v-toolbar-title>
-      <v-spacer></v-spacer>
+      <v-spacer />
       <v-menu offset-y>
         <template v-slot:activator="{ on }">
           <v-btn icon color="grey" v-on="on">
-            <v-icon size="30">mdi-bell</v-icon>
+            <v-icon size="30">
+              mdi-bell
+            </v-icon>
           </v-btn>
         </template>
         <v-list>
           <v-list-item v-for="(item, i) in notifications" :key="i" router to="/notification">
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-list-item-title>
+              {{ item.title }}
+            </v-list-item-title>
             <v-list-item-action>
-              <v-icon color="blue">mdi-information</v-icon>
+              <v-icon color="blue">
+                mdi-information
+              </v-icon>
             </v-list-item-action>
           </v-list-item>
         </v-list>
@@ -63,10 +85,14 @@
       <v-tooltip v-model="show" bottom>
         <template v-slot:activator="{ on }">
           <v-btn icon @click="logout" v-on="on" class="mx-3">
-            <v-icon color="red" size="30"> mdi-power </v-icon> 
+            <v-icon color="red" size="30"> 
+              mdi-power 
+            </v-icon> 
           </v-btn>
         </template>
-        <span> Log out </span>
+        <span> 
+          Log out 
+        </span>
       </v-tooltip>
     </v-app-bar>
   </div>
@@ -124,9 +150,9 @@ export default {
     ])
   },
   methods: {
-    logout() {
+    async logout() {
       this.drawer = false;
-      AuthService.logout();
+      await AuthService.logout();
       this.$router.push("/login");
     },
     goToUrl(route) {

@@ -14,15 +14,11 @@ export default new Vuex.Store({
       name: null,
       surname: null,
       JMBAG: null
-    },
-    decodedToken: null
+    }
   },
   mutations: {
     SET_USER_DATA(state, user) {
       state.user = user;
-    },
-    SET_DECODED_TOKEN(state, token) {
-      state.decodedToken = token;
     },
     REMOVE_USER_DATA(state) {
       state.user = {
@@ -38,19 +34,15 @@ export default new Vuex.Store({
     setUserData({ commit }, user) {
       commit('SET_USER_DATA', user);
     },
-    setDecodedToken({ commit }, token) {
-      commit('SET_DECODED_TOKEN', token);  
-    },
     removeUserData({ commit }) {
       commit('REMOVE_USER_DATA');  
     }
   },
   getters: {
-    user: state => state.user,
-    decodedToken: state => state.decodedToken
+    user: state => state.user
   },
   strict: debug,
   plugins: [
     createPersistedState()
   ]
-})
+});

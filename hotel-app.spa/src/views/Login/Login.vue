@@ -36,6 +36,7 @@
           <v-row align-content="center" align="center">
             <v-spacer />
             <v-btn @click="submit" 
+                  class="ma-2"
                   :disabled="$v.$invalid" 
                   :loading="loading"
                   color="primary">
@@ -56,9 +57,9 @@
 <script>
   import { validationMixin } from 'vuelidate'
   import { required, maxLength, minLength } from 'vuelidate/lib/validators'
+  import { mapActions } from 'vuex';
   import AuthService from '../../services/api/auth';
   import StudentService from '../../services/api/student';
-  import { mapActions } from 'vuex';
   import NotificationService from '../../services/notification';
   import KeyListener from '../../components/KeyListener';
 
@@ -108,9 +109,7 @@
                 jmbag: response.data.jmbag,
                 token
               };
-
-              localStorage.setItem('token', token);
-              localStorage.setItem('user', JSON.stringify(user));
+              
               this.setUserData(user);
               NotificationService.success("Login successful", "You were successfully logged in!");
               this.$router.push('/');
@@ -118,6 +117,7 @@
           }
         }).catch(() => {
           NotificationService.error('Error', 'Unable to log in!');
+          this.loading = false;
         });
       },
       submit() {
@@ -127,7 +127,6 @@
         } else {
           this.loading = true;
           this.login();
-          this.loading = false;
         }
       },
     },

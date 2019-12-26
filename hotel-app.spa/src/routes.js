@@ -5,6 +5,7 @@ import Subjects from '@/views/Subjects.vue';
 import Exams from '@/views/Exams.vue';
 import SubjectPage from '@/views/SubjectPage.vue';
 import Employees from '@/views/Employees.vue';
+import MySubjects from '@/views/MySubjects.vue';
 
 let commonPages = {
   path: '/',
@@ -12,15 +13,24 @@ let commonPages = {
   children: [{
     path: '',
     name: '',
-    component: Index
+    component: Index,
+    meta: { 
+      requiresAuth: true
+    }
   }, {
     path: 'home',
     name: 'home',
-    component: Index
+    component: Index,
+    meta: { 
+      requiresAuth: true
+    }
   }, {
     path: 'login',
     name: 'login',
-    component: Login
+    component: Login,
+    meta: { 
+      guest: true
+    }
   }]
 };
 
@@ -30,7 +40,10 @@ let employeePages = {
   children: [{
     path: '',
     name: 'employees',
-    component: Employees
+    component: Employees,
+    meta: { 
+      requiresAuth: true
+    }
   }]
 };
 
@@ -40,11 +53,24 @@ let subjectPages = {
   children: [{
     path: '',
     name: 'subjects',
-    component: Subjects
+    component: Subjects,
+    meta: { 
+      requiresAuth: true
+    }
   }, {
     path: 'details/:id',
     name: 'subject-details',
-    component: SubjectPage
+    component: SubjectPage,
+    meta: { 
+      requiresAuth: true
+    }
+  }, {
+    path: 'my',
+    name: 'my-subjects',
+    component: MySubjects,
+    meta: { 
+      requiresAuth: true
+    }
   }]
 };
 
@@ -54,7 +80,10 @@ let examPages = {
   children: [{
     path: '',
     name: 'exams',
-    component: Exams
+    component: Exams,
+    meta: { 
+      requiresAuth: true
+    }
   }]
 };
 
