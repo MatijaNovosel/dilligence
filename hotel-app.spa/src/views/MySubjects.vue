@@ -1,6 +1,10 @@
 <template>
   <div>
-    
+    <template v-for="subscription in subscriptions">
+      <div :key="subscription">
+        {{ subscription }}
+      </div>
+    </template>
   </div>
 </template>
 
@@ -11,16 +15,17 @@
   export default { 
     data() {
       return {
-        
+        subscriptions: []
       }
     },
     created() {
-      PretplataService.getPretplata().then((response) => {
-        console.log(response);
+      PretplataService.getPretplata(this.user.id)
+      .then((response) => {
+        this.subscriptions = response.data;
       }); 
     },
     methods: {
-          
+      
     },
     computed: {
       ...mapGetters([

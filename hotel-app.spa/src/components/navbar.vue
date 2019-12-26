@@ -128,10 +128,12 @@ export default {
         text: 'Kolegiji',
         route: { name: "subjects" },
         sublinks: [{
-            text: 'Popis kolegija',
-            route: { name: "subjects" }
-          }
-        ]
+          text: 'Popis kolegija',
+          route: { name: "subjects" }
+        }, {
+          text: 'Moji kolegiji',
+          route: { name: 'my-subjects' }
+        }]
       }, {
         icon: 'mdi-test-tube',
         text: 'Zadatci',
