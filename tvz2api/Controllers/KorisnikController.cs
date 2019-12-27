@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using tvz2api.Enumerations;
 using tvz2api.Helpers;
 using tvz2api.Models;
 using tvz2api.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace tvz2api.Controllers
 {
@@ -43,9 +45,15 @@ namespace tvz2api.Controllers
         }
 
         // GET: api/Korisnik/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<KorisnikDTO>> GetKorisnik(int id)
         {
+            if(id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) 
+            {
+                return(Unauthorized());
+            }
+          
             var korisnik = await _context.Korisnik.FindAsync(id);
 
             if (korisnik == null)
