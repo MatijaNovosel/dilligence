@@ -27,8 +27,10 @@
                     <template v-for="item in subject.vijesti">
                       <v-card :key="item.id + item.objavio" width="98%">
                         <v-app-bar dense flat dark color="blue darken-1">
-                          <v-toolbar-title class="subtitle-1"> {{ item.naslov }} </v-toolbar-title>
-                          <div class="flex-grow-1"></div>
+                          <v-toolbar-title class="subtitle-1"> 
+                            {{ item.naslov }} 
+                          </v-toolbar-title>
+                          <div class="flex-grow-1" />
                         </v-app-bar>
                         <v-container fluid>
                           <v-row>
@@ -240,8 +242,10 @@
         <v-row justify="center">
           <v-card class="mx-auto mt-5" width="85%">
             <v-app-bar dense dark color="indigo darken-2 elevation-2">
-              <v-toolbar-title class="subtitle-1">Predavanja</v-toolbar-title>
-              <div class="flex-grow-1"></div>
+              <v-toolbar-title class="subtitle-1">
+                Predavanja
+              </v-toolbar-title>
+              <div class="flex-grow-1" />
             </v-app-bar>
             <v-container fluid>
               <v-row>
@@ -254,8 +258,10 @@
                         </v-icon>
                       </v-list-item-icon>
                       <v-list-item-content>
-                        <v-list-item-title v-text="item.title"></v-list-item-title>
-                        <v-list-item-subtitle v-text="item.date"></v-list-item-subtitle>
+                        <v-list-item-title v-text="item.title">
+                        </v-list-item-title>
+                        <v-list-item-subtitle v-text="item.date">
+                        </v-list-item-subtitle>
                       </v-list-item-content>
                     </v-list-item>
                   </v-list>
@@ -328,7 +334,7 @@ export default {
       this.dialog = !this.dialog;
     },
     getData(id) {
-      KolegijService.getKolegijExtended(id)
+      KolegijService.getKolegij(id)
       .then(({ data }) => {
         this.subject = data;
       });

@@ -11,13 +11,6 @@ let commonPages = {
   path: '/',
   component: MainLayout,
   children: [{
-    path: '',
-    name: '',
-    component: Index,
-    meta: { 
-      requiresAuth: true
-    }
-  }, {
     path: 'home',
     name: 'home',
     component: Index,

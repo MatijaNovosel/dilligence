@@ -6,10 +6,6 @@ export default {
     return await axios.get(`${Routing.baseRoute}Kolegij/${id}`);
   },
 
-  async getKolegijExtended(id) {
-    return await axios.get(`${Routing.baseRoute}Kolegij/Extended/${id}`);
-  },
-
   async getKolegiji(smjerIDs, name, minECTS, maxECTS, isvu, skip, take) {
     return await axios.get(`${Routing.baseRoute}Kolegij`, {
       params: {
@@ -40,5 +36,9 @@ export default {
         take
       }
     })
+  },
+  
+  async getKolegijByPreplate(studentId) {
+    return await axios.get(`${Routing.baseRoute}Kolegij/my/${studentId}`)  
   }
 }

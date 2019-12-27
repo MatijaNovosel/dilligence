@@ -1,27 +1,28 @@
 <template>
   <div>
-    <template v-for="subscription in subscriptions">
-      <div :key="subscription">
-        {{ subscription }}
+    <template v-for="subject in subjects">
+      <div :key="subject.id + subject.naziv">
+        <p> {{ subject.naziv }} </p>
       </div>
     </template>
   </div>
 </template>
 
 <script>
-  import PretplataService from '../services/api/pretplata';
+  import KolegijService from '../services/api/kolegij';
   import { mapGetters } from 'vuex';
   
   export default { 
     data() {
       return {
-        subscriptions: []
+        subscriptions: [],
+        subjects: []
       }
     },
     created() {
-      PretplataService.getPretplata(this.user.id)
+      KolegijService.getKolegijByPreplate(this.user.id)
       .then((response) => {
-        this.subscriptions = response.data;
+        this.subjects = response.data.results;
       }); 
     },
     methods: {

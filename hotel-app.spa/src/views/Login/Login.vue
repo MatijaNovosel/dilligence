@@ -112,7 +112,7 @@
               
               this.setUserData(user);
               NotificationService.success("Login successful", "You were successfully logged in!");
-              this.$router.push('/');
+              this.$router.push('/home');
             });
           }
         }).catch(() => {
