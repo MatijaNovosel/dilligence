@@ -5,4 +5,4 @@ Unofficial redesign of the outdated faculty website, refurbished with Vue JS and
 
 ![Front page](https://i.imgur.com/WxHjHJk.png)
 
-![Subject page](https://i.imgur.com/c3ehhlS.png)
+![Subject page](https://i.imgur.com/oQ1Wuuk.png)
