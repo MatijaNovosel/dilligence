@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Navbar -->
-    <navbar v-show="this.$router.currentRoute.name != 'login'"> </navbar>
+    <Navbar v-show="this.$router.currentRoute.name != 'login'"> </Navbar>
     <!-- Content -->
     <v-content>
       <v-container fluid>
@@ -17,11 +17,11 @@
 </template>
 
 <script>
-  import navbar from "@/components/navbar.vue";
+  import Navbar from "@/components/Navbar.vue";
 
   export default {
     components: {
-      navbar
+      Navbar
     },
     data() {
       return { }

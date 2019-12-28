@@ -7,6 +7,7 @@ import SubjectPage from '@/views/SubjectPage.vue';
 import Employees from '@/views/Employees.vue';
 import MySubjects from '@/views/MySubjects.vue';
 import AuthTest from '@/views/AuthTest.vue';
+import Account from '@/views/Account.vue';
 
 let commonPages = {
   path: '/',
@@ -29,6 +30,13 @@ let commonPages = {
     path: 'authTest',
     name: 'auth-test',
     component: AuthTest,
+    meta: {
+      requiresAuth: true  
+    }
+  }, {
+    path: 'account',
+    name: 'account',
+    component: Account,
     meta: {
       requiresAuth: true  
     }

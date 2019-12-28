@@ -3,7 +3,7 @@
       <v-row no-gutters>
         <v-col>
           <v-row class="mt-10" justify="center">
-            <h1> Dobrodošli na intranet stranice Tehničkog veleučilišta u Zagrebu </h1>
+            <h1> Auth test </h1>
           </v-row>
         </v-col>
       </v-row>
