@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace tvz2api.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class StudentController : ControllerBase
@@ -43,6 +42,7 @@ namespace tvz2api.Controllers
         }
 
         // GET: api/Student
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<ResponseDataWrapper<List<StudentDTO>>>> GetStudent(int skip = 0, int? take = null)
         {

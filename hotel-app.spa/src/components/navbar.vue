@@ -6,8 +6,8 @@
                         v-model="drawer" 
                         disable-resize-watcher>
       <v-list dense nav>
-        <v-list-item to="/account">
-          <v-list-item-avatar>
+        <v-list-item @click="$router.push('/account')">
+          <v-list-item-avatar class="avatar-border">
             <v-img src="../assets/default-user.jpg" />
           </v-list-item-avatar>
           <v-list-item-content>
@@ -171,3 +171,9 @@ export default {
 };
 
 </script>
+
+<style>
+  .avatar-border {
+    border: 1px solid #d1d1c2;  
+  }
+</style>

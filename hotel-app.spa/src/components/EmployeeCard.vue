@@ -6,11 +6,22 @@
         <v-img v-else-if="employeeData.ime + ' ' + employeeData.prezime == 'Tin Kramberger'" src="../assets/TVZ/djelatnici/tin.png" />
         <v-img v-else src="../assets/default-user.jpg" />
       </v-avatar>
-      <v-btn icon class="gore-desno">
-        <v-icon>
-          mdi-dots-vertical
-        </v-icon>
-      </v-btn>
+      <v-menu bottom left allow-overflow>
+        <template v-slot:activator="{ on }">
+          <v-btn icon v-on="on" class="gore-desno" >
+            <v-icon>
+              mdi-dots-vertical
+            </v-icon>
+          </v-btn>
+        </template>
+        <v-list dense>
+          <v-list-item @click="$router.push(`/employee-details/${employeeData.id}`)" class="my-n2">
+            <v-list-item-title>
+              Vidi detalje
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
       <v-row justify="center" class="mt-3">
         <h4 class="caption font-weight-light"> 
           {{ employeeData.titulaIspred || '-' }} 
@@ -59,7 +70,9 @@ export default {
   props: [ 'employeeData' ],
   data() {
     return {
-      
+      items: [
+        { title: 'Click Me' }
+      ]
     }
   },
   methods: {

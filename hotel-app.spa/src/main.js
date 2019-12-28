@@ -15,10 +15,9 @@ Vue.use(VueRouter);
 Vue.config.productionTip = false;
 
 axios.interceptors.request.use((config) => {
-  config.withCredentials = config.url == "/token";
   config.mode = "cors";
   
-  if (config.withCredentials == false) {
+  if(store.getters.user.token != null) {
     config.headers.common['Authorization'] = `Bearer ${store.getters.user.token}`;
   }
 

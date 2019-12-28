@@ -116,8 +116,8 @@
             });
           }
         }).catch(() => {
-          NotificationService.error('Error', 'Unable to log in!');
           this.loading = false;
+          NotificationService.error('Error', 'Unable to log in!');
         });
       },
       submit() {
