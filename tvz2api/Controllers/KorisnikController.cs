@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace tvz2api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class KorisnikController : ControllerBase
@@ -45,15 +46,9 @@ namespace tvz2api.Controllers
         }
 
         // GET: api/Korisnik/5
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<KorisnikDTO>> GetKorisnik(int id)
         {
-            if(id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) 
-            {
-                return(Unauthorized());
-            }
-          
             var korisnik = await _context.Korisnik.FindAsync(id);
 
             if (korisnik == null)

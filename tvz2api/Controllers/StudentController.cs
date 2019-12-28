@@ -10,9 +10,11 @@ using Microsoft.EntityFrameworkCore;
 using tvz2api.Helpers;
 using tvz2api.Models;
 using tvz2api.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace tvz2api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class StudentController : ControllerBase

@@ -6,6 +6,7 @@ import Exams from '@/views/Exams.vue';
 import SubjectPage from '@/views/SubjectPage.vue';
 import Employees from '@/views/Employees.vue';
 import MySubjects from '@/views/MySubjects.vue';
+import AuthTest from '@/views/AuthTest.vue';
 
 let commonPages = {
   path: '/',
@@ -23,6 +24,13 @@ let commonPages = {
     component: Login,
     meta: { 
       guest: true
+    }
+  }, {
+    path: 'authTest',
+    name: 'auth-test',
+    component: AuthTest,
+    meta: {
+      requiresAuth: true  
     }
   }]
 };
