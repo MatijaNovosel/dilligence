@@ -3,6 +3,6 @@ Unofficial redesign of the outdated faculty website, refurbished with Vue JS and
 
 # Comparison screenshots:
 
-![Front page](https://i.imgur.com/WxHjHJk.png)
+![Front page](https://i.imgur.com/1acw3qZ.png)
 
 ![Subject page](https://i.imgur.com/oQ1Wuuk.png)
