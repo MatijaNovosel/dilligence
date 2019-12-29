@@ -1,13 +1,13 @@
 import axios from 'axios';
-import { Routing } from '@/constants/Routing';
+import { ROUTING } from '@/constants/Routing';
 
 export default {
   async getKolegij(id) {
-    return await axios.get(`${Routing.baseRoute}Kolegij/${id}`);
+    return await axios.get(`${ROUTING.baseRoute}Kolegij/${id}`);
   },
 
   async getKolegiji(smjerIDs, name, minECTS, maxECTS, isvu, skip, take) {
-    return await axios.get(`${Routing.baseRoute}Kolegij`, {
+    return await axios.get(`${ROUTING.baseRoute}Kolegij`, {
       params: {
         smjerIDs,
         name,
@@ -21,7 +21,7 @@ export default {
   },
 
   async getKolegijNews(kolegijId, skip, take) {
-    return await axios.get(`${Routing.baseRoute}Kolegij/Vijesti/${kolegijId}`, {
+    return await axios.get(`${ROUTING.baseRoute}Kolegij/Vijesti/${kolegijId}`, {
       params: {
         skip,
         take
@@ -30,7 +30,7 @@ export default {
   },
 
   async getKolegijStudents(kolegijId, skip, take) {
-    return await axios.get(`${Routing.baseRoute}Kolegij/Students/${kolegijId}`, {
+    return await axios.get(`${ROUTING.baseRoute}Kolegij/Students/${kolegijId}`, {
       params: {
         skip,
         take
@@ -39,6 +39,6 @@ export default {
   },
   
   async getKolegijByPreplate(studentId) {
-    return await axios.get(`${Routing.baseRoute}Kolegij/my/${studentId}`)  
+    return await axios.get(`${ROUTING.baseRoute}Kolegij/my/${studentId}`)  
   }
 }

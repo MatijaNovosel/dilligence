@@ -14,7 +14,13 @@ export default new Vuex.Store({
       name: null,
       surname: null,
       JMBAG: null
-    }
+    },
+    QUESTION_TYPES: Object.freeze({
+      RADIO: 1,
+      CHECKBOX: 2,
+      FILL: 3,
+      TEXT: 4
+    })
   },
   mutations: {
     SET_USER_DATA(state, user) {
@@ -39,7 +45,8 @@ export default new Vuex.Store({
     }
   },
   getters: {
-    user: state => state.user
+    user: state => state.user,
+    QUESTION_TYPES: state => state.QUESTION_TYPES
   },
   strict: debug,
   plugins: [

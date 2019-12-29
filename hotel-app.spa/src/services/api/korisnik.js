@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { Routing } from '@/constants/Routing';
+import { ROUTING } from '@/constants/Routing';
 
 export default {
   async getKorisnik(id) {
-    return await axios.get(`${Routing.baseRoute}Korisnik/${id}`);
+    return await axios.get(`${ROUTING.baseRoute}Korisnik/${id}`);
   }
 }

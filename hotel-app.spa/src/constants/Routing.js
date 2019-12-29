@@ -1,3 +1,3 @@
-export const Routing = Object.freeze({
+export const ROUTING = Object.freeze({
   baseRoute: "http://localhost:5000/api/"
 });

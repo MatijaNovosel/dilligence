@@ -1,13 +1,13 @@
 import axios from 'axios';
-import { Routing } from '@/constants/Routing';
+import { ROUTING } from '@/constants/Routing';
 
 export default {
   async getPretplata(studentId) {
-    return await axios.get(`${Routing.baseRoute}Pretplata/${studentId}`);
+    return await axios.get(`${ROUTING.baseRoute}Pretplata/${studentId}`);
   },
 
   async postPreplata(studentId, pretplataIDs) {
-    return await axios.post(`${Routing.baseRoute}Pretplata`, {
+    return await axios.post(`${ROUTING.baseRoute}Pretplata`, {
       studentId,
       pretplataIDs
     });
