@@ -32,13 +32,12 @@ namespace tvz2api.Controllers
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> UploadFile([FromForm(Name = "file")] IFormFile file)  
         {  
-            if (file == null || file.Length == 0) {
+            if (file == null || file.Length == 0) 
+            {
               return Content("File not selected!");  
             }
-        
-            var filePath = Path.GetFileName("Files");
 
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            using (var stream = new FileStream(Path.Combine("Files", file.FileName), FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
