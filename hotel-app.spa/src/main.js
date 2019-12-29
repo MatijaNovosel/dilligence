@@ -20,6 +20,13 @@ axios.interceptors.request.use((config) => {
   if(store.getters.user.token != null) {
     config.headers.common['Authorization'] = `Bearer ${store.getters.user.token}`;
   }
+  
+  /*
+  if(config.url.includes("File")) {
+    config.headers.common['Accept'] = "multipart/form-data";  
+    config.headers.common['Content-Type'] = "multipart/form-data";
+  }
+  */
 
   return config;
 }, function (error) {

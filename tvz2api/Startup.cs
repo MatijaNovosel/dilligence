@@ -15,6 +15,7 @@ using System;
 using System.Reflection;
 using System.IO;
 using System.Collections.Generic;
+using Microsoft.Extensions.FileProviders;
 
 namespace tvz2api
 {
@@ -42,7 +43,8 @@ namespace tvz2api
               .AddJsonOptions(opt => 
               {
                   opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-              });
+              }
+            );
             services.AddAutoMapper(typeof(AutoMapperProfile));
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => 

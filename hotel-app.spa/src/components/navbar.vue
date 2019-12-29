@@ -123,8 +123,8 @@ export default {
           text: 'Popis zaposlenika',
           route: { name: 'employees' }
         }, {
-          text: 'Auth test',
-          route: { name: 'auth-test' }  
+          text: 'Test',
+          route: { name: 'test' }  
         }]
       }, {
         icon: 'mdi-file-document',
