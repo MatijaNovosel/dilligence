@@ -76,21 +76,16 @@ export default {
     upload() {
       FileService.upload(this.file);
     },
-    saveScreenshot(canvas) {
-      let fileName = "image"
-      const link = document.createElement('a');
-      link.download = fileName + '.png';
-      console.log(canvas)
-      canvas.toBlob(function(blob) {
-        console.log(blob)
-        link.href = URL.createObjectURL(blob);
-        link.click();
-      });
-    },
     download(item) {
       item.downloading = true;
       
-      console.log(item.data);
+      var element = document.createElement('a');
+      element.setAttribute('href', `data:${item.contentType};base64, ${item.data}`);
+      element.setAttribute('download', item.naziv);
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
       
       item.downloading = false;
     }
@@ -109,8 +104,8 @@ export default {
 
 <style>
 
-  .v-list-item--dense.v-list-item--two-line, .v-list--dense .v-list-item.v-list-item--two-line:hover {
-    background-color: #f6f6f6 !important;  
-  }
+.v-list-item--dense.v-list-item--two-line, .v-list--dense .v-list-item.v-list-item--two-line:hover {
+  background-color: #f6f6f6 !important;  
+}
 
 </style>

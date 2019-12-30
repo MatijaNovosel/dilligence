@@ -36,33 +36,23 @@ namespace tvz2api.Controllers
             if(file == null || file.Length == 0) {
               return Content("File not selected!");  
             }
-          
-            byte[] bytes = null;
             
             var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-            using (var reader = new StreamReader(file.OpenReadStream()))
+            using (var ms = new MemoryStream())
             {
-              string contentAsString = reader.ReadToEnd();
-              bytes = Convert.FromBase64String(contentAsString);
+              file.CopyTo(ms);
+              var fileBytes = ms.ToArray();
+              _context.SidebarContentFile.Add(new SidebarContentFile
+              {
+                  Naziv = Path.GetFileName(file.FileName),
+                  ContentType = file.ContentType,
+                  Data = fileBytes,
+                  SidebarContentId = 1
+              });
             }
-            
-            _context.SidebarContentFile.Add(new SidebarContentFile
-            {
-                Naziv = Path.GetFileName(file.FileName),
-                ContentType = file.ContentType,
-                Data = bytes,
-                SidebarContentId = 1
-            });
             
             await _context.SaveChangesAsync();
             return Ok("File uploaded");
-        }
-        
-        [HttpPost("Download")]
-        public async Task<IActionResult> Download(int? id) 
-        {
-            SidebarContentFile file = await _context.SidebarContentFile.FirstOrDefaultAsync(x => x.Id == id);
-            return Ok(File(Convert.ToBase64String(file.Data), file.ContentType, file.Naziv));
         }
     }
 }
