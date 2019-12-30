@@ -7,6 +7,7 @@ namespace tvz2api.Models
     {
         public Kolegij()
         {
+            Exam = new HashSet<Exam>();
             Izvrsitelj = new HashSet<Izvrsitelj>();
             Pretplata = new HashSet<Pretplata>();
             SidebarContent = new HashSet<SidebarContent>();
@@ -43,6 +44,7 @@ namespace tvz2api.Models
         public int? SmjerId { get; set; }
 
         public virtual Smjer Smjer { get; set; }
+        public virtual ICollection<Exam> Exam { get; set; }
         public virtual ICollection<Izvrsitelj> Izvrsitelj { get; set; }
         public virtual ICollection<Pretplata> Pretplata { get; set; }
         public virtual ICollection<SidebarContent> SidebarContent { get; set; }
