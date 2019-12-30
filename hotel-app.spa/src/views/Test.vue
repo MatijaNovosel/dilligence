@@ -23,37 +23,7 @@
         </v-btn>
       </v-col>
       <v-col cols="12">
-        <v-card class="mx-auto my-6" max-width="40%" tile>
-          <v-list dense v-if="sidebarContent != null">
-            <v-row justify="center" class="mb-4 mt-3">
-              {{ sidebarContent.naslov }}
-            </v-row>
-            <v-divider />
-            <v-list-item two-line v-for="file in sidebarContent.files" :key="file.id + file.naziv">
-              <v-list-item-icon class="mt-4">
-                <v-icon size="25">
-                  {{ fileIcon(file.naziv.slice(file.naziv.lastIndexOf(".") + 1)) }}
-                </v-icon>
-              </v-list-item-icon>
-              <v-divider class="ml-n4 mr-4" vertical />
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ file.naziv }} 
-                </v-list-item-title>
-                <v-list-item-subtitle> 
-                  {{ file.contentType }} 
-                </v-list-item-subtitle>
-              </v-list-item-content>
-              <v-list-item-action>
-                <v-btn icon text :loading="file.downloading" @click="download(file)">
-                  <v-icon color="primary">
-                    mdi-download
-                  </v-icon>
-                </v-btn>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list>
-        </v-card>
+        <file-cabinet :content="sidebarContent" headerColor="primary" />
       </v-col>
     </v-row>
   </div>
@@ -63,9 +33,10 @@
 
 import FileService from '../services/api/file';
 import KolegijService from '../services/api/kolegij';
-import { fileIcon } from '../helpers/helpers.js';
+import FileCabinet from '../components/FileCabinet';
 
 export default { 
+  components: { FileCabinet },
   data() {
     return {
       file: null,
@@ -73,7 +44,6 @@ export default {
     }
   },
   methods: {
-    fileIcon,
     getData() {
       KolegijService.getKolegijSidebarContent(147)
       .then((response) => {
@@ -88,19 +58,6 @@ export default {
       .then(() => {
         this.getData();
       });
-    },
-    download(item) {
-      item.downloading = true;
-      
-      var element = document.createElement('a');
-      element.setAttribute('href', `data:${item.contentType};base64, ${item.data}`);
-      element.setAttribute('download', item.naziv);
-      element.style.display = 'none';
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
-      
-      setTimeout(() => item.downloading = false, 500)
     }
   },
   created() {

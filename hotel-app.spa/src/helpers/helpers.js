@@ -43,9 +43,52 @@ function fileIcon(fileExtension) {
       return 'mdi-language-javascript';
     case 'py':
       return 'mdi-language-python';
+    case 'pdf':
+      return 'mdi-file-pdf';
+    case 'php':
+      return 'mdi-language-php';
+    case 'ts':
+      return 'mdi-language-typescript';
+    case 'xlsx':
+    case 'xslm':
+    case 'xltx':
+    case 'xltm':
+      return 'mdi-file-excel';
+    case 'pptx':
+    case 'ppt':
+      return 'mdi-file-powerpoint';
+    case 'mp3':
+    case 'avi':
+    case 'ogg':    
+      return 'mdi-file-music';
+    case 'zip':
+    case 'rar':
+    case '7zip':
+      return 'mdi-zip-box-outline';
+    case 'doc':
+    case 'docx':
+    case 'docm':
+    case 'dotx':
+    case 'docb':
+      return 'mdi-file-word';
+    case 'mp4':
+    case 'flv':
+      return 'mdi-video-vintage';
+    case 'txt':
+      return 'mdi-text';
     default:
       return 'mdi-file';
   }
 }
 
-export { randInt, randColor, acronym, fileIcon };
+function download(contentType, base64Data, name) {
+  var element = document.createElement('a');
+  element.setAttribute('href', `data:${contentType};base64, ${base64Data}`);
+  element.setAttribute('download', name);
+  element.style.display = 'none';
+  document.body.appendChild(element);
+  element.click();
+  document.body.removeChild(element);
+}
+
+export { randInt, randColor, acronym, fileIcon, download };
