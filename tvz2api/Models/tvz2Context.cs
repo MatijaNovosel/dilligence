@@ -34,7 +34,7 @@ namespace tvz2api.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=.\\;Database=tvz2;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=.;Database=tvz2;Trusted_Connection=True;");
             }
         }
 
@@ -65,7 +65,7 @@ namespace tvz2api.Models
                 entity.HasOne(d => d.Zaposlenik)
                     .WithMany(p => p.Izvrsitelj)
                     .HasForeignKey(d => d.ZaposlenikId)
-                    .HasConstraintName("FK__Izvrsitel__Zapos__5070F446");
+                    .HasConstraintName("FK__Izvrsitel__Zapos__534D60F1");
             });
 
             modelBuilder.Entity<Kolegij>(entity =>
@@ -176,7 +176,7 @@ namespace tvz2api.Models
                 entity.HasOne(d => d.Smjer)
                     .WithMany(p => p.Kolegij)
                     .HasForeignKey(d => d.SmjerId)
-                    .HasConstraintName("FK__Kolegij__SmjerID__3E52440B");
+                    .HasConstraintName("FK__Kolegij__SmjerID__5441852A");
             });
 
             modelBuilder.Entity<Korisnik>(entity =>
@@ -212,12 +212,12 @@ namespace tvz2api.Models
                 entity.HasOne(d => d.Kolegij)
                     .WithMany(p => p.Pretplata)
                     .HasForeignKey(d => d.KolegijId)
-                    .HasConstraintName("FK__Pretplata__Koleg__5CD6CB2B");
+                    .HasConstraintName("FK__Pretplata__Koleg__5535A963");
 
                 entity.HasOne(d => d.Student)
                     .WithMany(p => p.Pretplata)
                     .HasForeignKey(d => d.StudentId)
-                    .HasConstraintName("FK__Pretplata__Stude__5BE2A6F2");
+                    .HasConstraintName("FK__Pretplata__Stude__5629CD9C");
             });
 
             modelBuilder.Entity<SidebarContent>(entity =>
@@ -233,18 +233,18 @@ namespace tvz2api.Models
                 entity.HasOne(d => d.Kolegij)
                     .WithMany(p => p.SidebarContent)
                     .HasForeignKey(d => d.KolegijId)
-                    .HasConstraintName("FK__SidebarCo__Koleg__48CFD27E");
+                    .HasConstraintName("FK__SidebarCo__Koleg__571DF1D5");
             });
 
             modelBuilder.Entity<SidebarContentFile>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.Naziv)
+                entity.Property(e => e.ContentType)
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Path)
+                entity.Property(e => e.Naziv)
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
@@ -253,7 +253,7 @@ namespace tvz2api.Models
                 entity.HasOne(d => d.SidebarContent)
                     .WithMany(p => p.SidebarContentFile)
                     .HasForeignKey(d => d.SidebarContentId)
-                    .HasConstraintName("FK__SidebarCo__Sideb__4BAC3F29");
+                    .HasConstraintName("FK__SidebarCo__Sideb__5812160E");
             });
 
             modelBuilder.Entity<Smjer>(entity =>
@@ -301,7 +301,7 @@ namespace tvz2api.Models
                 entity.HasOne(d => d.Smjer)
                     .WithMany(p => p.Student)
                     .HasForeignKey(d => d.SmjerId)
-                    .HasConstraintName("FK__Student__SmjerID__5535A963");
+                    .HasConstraintName("FK__Student__SmjerID__59063A47");
             });
 
             modelBuilder.Entity<StudentKolegij>(entity =>
@@ -315,12 +315,12 @@ namespace tvz2api.Models
                 entity.HasOne(d => d.Kolegij)
                     .WithMany(p => p.StudentKolegij)
                     .HasForeignKey(d => d.KolegijId)
-                    .HasConstraintName("FK__StudentKo__Koleg__59063A47");
+                    .HasConstraintName("FK__StudentKo__Koleg__59FA5E80");
 
                 entity.HasOne(d => d.Student)
                     .WithMany(p => p.StudentKolegij)
                     .HasForeignKey(d => d.StudentId)
-                    .HasConstraintName("FK__StudentKo__Stude__5812160E");
+                    .HasConstraintName("FK__StudentKo__Stude__5AEE82B9");
             });
 
             modelBuilder.Entity<UlogaIzvrsitelja>(entity =>
@@ -353,12 +353,12 @@ namespace tvz2api.Models
                 entity.HasOne(d => d.Kolegij)
                     .WithMany(p => p.Vijest)
                     .HasForeignKey(d => d.KolegijId)
-                    .HasConstraintName("FK__Vijest__KolegijI__44FF419A");
+                    .HasConstraintName("FK__Vijest__KolegijI__5BE2A6F2");
 
                 entity.HasOne(d => d.Objavio)
                     .WithMany(p => p.Vijest)
                     .HasForeignKey(d => d.ObjavioId)
-                    .HasConstraintName("FK__Vijest__ObjavioI__45F365D3");
+                    .HasConstraintName("FK__Vijest__ObjavioI__5CD6CB2B");
             });
 
             modelBuilder.Entity<VrstaZaposljenja>(entity =>
@@ -405,12 +405,12 @@ namespace tvz2api.Models
                 entity.HasOne(d => d.Odjel)
                     .WithMany(p => p.Zaposlenik)
                     .HasForeignKey(d => d.OdjelId)
-                    .HasConstraintName("FK__Zaposleni__Odjel__4222D4EF");
+                    .HasConstraintName("FK__Zaposleni__Odjel__5DCAEF64");
 
                 entity.HasOne(d => d.VrstaZaposljenja)
                     .WithMany(p => p.Zaposlenik)
                     .HasForeignKey(d => d.VrstaZaposljenjaId)
-                    .HasConstraintName("FK__Zaposleni__Vrsta__412EB0B6");
+                    .HasConstraintName("FK__Zaposleni__Vrsta__5EBF139D");
             });
         }
     }
