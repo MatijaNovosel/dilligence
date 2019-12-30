@@ -22,6 +22,39 @@
           </v-icon>
         </v-btn>
       </v-col>
+      <v-col cols="12">
+        <v-card class="mx-auto my-6" max-width="40%" tile>
+          <v-list dense v-if="sidebarContent != null">
+            <v-row justify="center" class="mb-4 mt-3">
+              {{ sidebarContent.naslov }}
+            </v-row>
+            <v-divider />
+            <v-list-item two-line v-for="file in sidebarContent.files" :key="file.id + file.naziv">
+              <v-list-item-icon class="mt-4">
+                <v-icon size="25">
+                  {{ FILE_ICONS[file.naziv.slice(file.naziv.lastIndexOf(".") + 1)] }}
+                </v-icon>
+              </v-list-item-icon>
+              <v-divider class="ml-n4 mr-4" vertical />
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ file.naziv }} 
+                </v-list-item-title>
+                <v-list-item-subtitle> 
+                  {{ file.contentType }} 
+                </v-list-item-subtitle>
+              </v-list-item-content>
+              <v-list-item-action>
+                <v-btn icon text :loading="file.downloading" @click="download(file)">
+                  <v-icon color="primary">
+                    mdi-download
+                  </v-icon>
+                </v-btn>
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-col>
     </v-row>
   </div>
 </template>
@@ -29,18 +62,55 @@
 <script>
 
 import FileService from '../services/api/file';
+import KolegijService from '../services/api/kolegij';
+import FILE_ICONS from '../constants/FileIcons';
 
 export default { 
   data() {
     return {
-      file: null
+      file: null,
+      sidebarContent: null
     }
   },
   methods: {
     upload() {
       FileService.upload(this.file);
+    },
+    saveScreenshot(canvas) {
+      let fileName = "image"
+      const link = document.createElement('a');
+      link.download = fileName + '.png';
+      console.log(canvas)
+      canvas.toBlob(function(blob) {
+        console.log(blob)
+        link.href = URL.createObjectURL(blob);
+        link.click();
+      });
+    },
+    download(item) {
+      item.downloading = true;
+      
+      console.log(item.data);
+      
+      item.downloading = false;
     }
+  },
+  created() {
+    KolegijService.getKolegijSidebarContent(147)
+    .then((response) => {
+      response.data.results[0].files.forEach(x => x.downloading = false);
+      this.sidebarContent = response.data.results[0];
+    });
+    this.FILE_ICONS = FILE_ICONS;
   }
 };
 
 </script>
+
+<style>
+
+  .v-list-item--dense.v-list-item--two-line, .v-list--dense .v-list-item.v-list-item--two-line:hover {
+    background-color: #f6f6f6 !important;  
+  }
+
+</style>

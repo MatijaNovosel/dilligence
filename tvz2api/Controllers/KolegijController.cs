@@ -170,5 +170,14 @@ namespace tvz2api.Controllers
                 )
             ); 
         }
+        
+        [HttpGet("SidebarContent/{kolegijId}")]
+        public async Task<ActionResult<ResponseDataWrapper<List<SidebarContentDTO>>>> GetSidebarContent(int kolegijId) 
+        {
+            var sidebarContent = await _context.SidebarContent.Include(x => x.SidebarContentFile).ToListAsync();
+            return new ResponseDataWrapper<List<SidebarContentDTO>>(
+                _mapper.Map<List<SidebarContent>, List<SidebarContentDTO>>(sidebarContent)
+            ); 
+        }
     }
 }

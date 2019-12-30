@@ -13,6 +13,7 @@ using tvz2api.Models;
 using tvz2api.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using System.IO;
+using System.Net.Http.Headers;
 
 namespace tvz2api.Controllers
 {
@@ -28,21 +29,40 @@ namespace tvz2api.Controllers
             _mapper = mapper;
         }
         
-        [HttpPost("Upload")]  
-        [Consumes("multipart/form-data")]
-        public async Task<IActionResult> UploadFile([FromForm(Name = "file")] IFormFile file)  
-        {  
-            if (file == null || file.Length == 0) 
-            {
+        [HttpPost("Upload")]
+        [DisableRequestSizeLimit]
+        public async Task<IActionResult> Upload(IFormFile file)
+        {
+            if(file == null || file.Length == 0) {
               return Content("File not selected!");  
             }
-
-            using (var stream = new FileStream(Path.Combine("Files", file.FileName), FileMode.Create))
+          
+            byte[] bytes = null;
+            
+            var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+            using (var reader = new StreamReader(file.OpenReadStream()))
             {
-                await file.CopyToAsync(stream);
+              string contentAsString = reader.ReadToEnd();
+              bytes = Convert.FromBase64String(contentAsString);
             }
+            
+            _context.SidebarContentFile.Add(new SidebarContentFile
+            {
+                Naziv = Path.GetFileName(file.FileName),
+                ContentType = file.ContentType,
+                Data = bytes,
+                SidebarContentId = 1
+            });
+            
+            await _context.SaveChangesAsync();
+            return Ok("File uploaded");
+        }
         
-            return Ok("File uploaded!");
+        [HttpPost("Download")]
+        public async Task<IActionResult> Download(int? id) 
+        {
+            SidebarContentFile file = await _context.SidebarContentFile.FirstOrDefaultAsync(x => x.Id == id);
+            return Ok(File(Convert.ToBase64String(file.Data), file.ContentType, file.Naziv));
         }
     }
 }

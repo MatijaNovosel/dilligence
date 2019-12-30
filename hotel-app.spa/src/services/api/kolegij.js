@@ -40,5 +40,9 @@ export default {
   
   async getKolegijByPreplate(studentId) {
     return await axios.get(`${ROUTING.baseRoute}Kolegij/my/${studentId}`)  
+  },
+  
+  async getKolegijSidebarContent(kolegijId) {
+    return await axios.get(`${ROUTING.baseRoute}Kolegij/SidebarContent/${kolegijId}`)  
   }
 }

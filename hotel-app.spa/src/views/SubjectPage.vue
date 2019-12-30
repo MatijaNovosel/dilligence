@@ -3,8 +3,10 @@
     <v-row no-gutters>
       <v-col cols="9">
         <v-row class="mt-2 mx-2" justify="center">
-          <h1 class="headline font-weight-light mb-4"> {{ subject.naziv }} </h1>
-           <v-col cols="12" class="px-0">
+          <h1 class="headline font-weight-light mb-4"> 
+            {{ subject.naziv }} 
+          </h1>
+          <v-col cols="12" class="px-0">
             <v-tabs grow hide-slider centered v-model="tabs" class="elevation-1 mt-n2">
               <v-tab>
                 Oglasna ploča
@@ -251,7 +253,7 @@
               <v-row>
                 <v-col>
                   <v-list dense class="my-n5">
-                    <v-list-item v-for="item in predavanja" :key="item.title" @click="clicky()">
+                    <v-list-item v-for="item in predavanja" :key="item.title">
                       <v-list-item-icon class="mt-3">
                         <v-icon :color="item.color">
                           {{ item.icon }}

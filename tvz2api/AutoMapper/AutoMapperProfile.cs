@@ -26,6 +26,9 @@ namespace tvz2api.AutoMapper
             CreateMap<Korisnik, KorisnikDTO>();
             CreateMap<Vijest, VijestDTO>()
                 .ForMember(dest => dest.Objavio, opts => opts.MapFrom(src => String.Format("{0} {1}", src.Objavio.Ime, src.Objavio.Prezime)));
+            CreateMap<SidebarContent, SidebarContentDTO>()
+                .ForMember(dest => dest.Files, opts => opts.MapFrom(src => src.SidebarContentFile));
+            CreateMap<SidebarContentFile, SidebarContentFileDTO>();
         }
     }
 }
