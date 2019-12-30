@@ -8,8 +8,8 @@
         <v-file-input v-model="file"
                       color="primary"
                       counter
-                      label="File input"
-                      placeholder="Select your files"
+                      label="Single file upload"
+                      placeholder="Select your file"
                       prepend-icon="mdi-paperclip"
                       outlined
                       :show-size="1000">
@@ -32,7 +32,7 @@
             <v-list-item two-line v-for="file in sidebarContent.files" :key="file.id + file.naziv">
               <v-list-item-icon class="mt-4">
                 <v-icon size="25">
-                  {{ FILE_ICONS[file.naziv.slice(file.naziv.lastIndexOf(".") + 1)] }}
+                  {{ fileIcon(file.naziv.slice(file.naziv.lastIndexOf(".") + 1)) }}
                 </v-icon>
               </v-list-item-icon>
               <v-divider class="ml-n4 mr-4" vertical />
@@ -63,7 +63,7 @@
 
 import FileService from '../services/api/file';
 import KolegijService from '../services/api/kolegij';
-import FILE_ICONS from '../constants/FileIcons';
+import { fileIcon } from '../helpers/helpers.js';
 
 export default { 
   data() {
@@ -73,8 +73,21 @@ export default {
     }
   },
   methods: {
+    fileIcon,
+    getData() {
+      KolegijService.getKolegijSidebarContent(147)
+      .then((response) => {
+        response.data.results[0].files.forEach(x => x.downloading = false);
+        this.sidebarContent = response.data.results[0];
+      });
+    },
     upload() {
-      FileService.upload(this.file);
+      var formData = new FormData();
+      formData.append("file", this.file);
+      FileService.upload(formData)
+      .then(() => {
+        this.getData();
+      });
     },
     download(item) {
       item.downloading = true;
@@ -87,16 +100,11 @@ export default {
       element.click();
       document.body.removeChild(element);
       
-      item.downloading = false;
+      setTimeout(() => item.downloading = false, 500)
     }
   },
   created() {
-    KolegijService.getKolegijSidebarContent(147)
-    .then((response) => {
-      response.data.results[0].files.forEach(x => x.downloading = false);
-      this.sidebarContent = response.data.results[0];
-    });
-    this.FILE_ICONS = FILE_ICONS;
+    this.getData();
   }
 };
 

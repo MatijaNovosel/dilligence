@@ -37,14 +37,17 @@ namespace tvz2api.Controllers
               return Content("File not selected!");  
             }
             
-            var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
             using (var ms = new MemoryStream())
             {
               file.CopyTo(ms);
               var fileBytes = ms.ToArray();
+              
+              var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+              fileName = fileName.Substring(0, fileName.LastIndexOf(".")) + fileName.Substring(fileName.LastIndexOf(".")).ToLower();
+              
               _context.SidebarContentFile.Add(new SidebarContentFile
               {
-                  Naziv = Path.GetFileName(file.FileName),
+                  Naziv = Path.GetFileName(fileName),
                   ContentType = file.ContentType,
                   Data = fileBytes,
                   SidebarContentId = 1

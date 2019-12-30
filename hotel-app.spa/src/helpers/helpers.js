@@ -19,4 +19,33 @@ function acronym(s) {
   return acronym.slice(0, 2).toUpperCase();
 }
 
-export { randInt, randColor, acronym };
+function fileIcon(fileExtension) {
+  switch(fileExtension) {
+    case 'png':
+    case 'jpg':
+    case 'jpeg':
+      return 'mdi-image';
+    case 'sql':
+      return 'mdi-database';
+    case 'cpp':
+      return 'mdi-language-cpp';
+    case 'c':
+      return 'mdi-language-c';
+    case 'cs':
+      return 'mdi-language-csharp';
+    case 'css':
+      return 'mdi-language-css3';
+    case 'html':
+      return 'mdi-language-html5';
+    case 'java':
+      return 'mdi-language-java';
+    case 'js':
+      return 'mdi-language-javascript';
+    case 'py':
+      return 'mdi-language-python';
+    default:
+      return 'mdi-file';
+  }
+}
+
+export { randInt, randColor, acronym, fileIcon };
