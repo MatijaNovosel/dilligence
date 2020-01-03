@@ -29,6 +29,11 @@ namespace tvz2api.AutoMapper
             CreateMap<SidebarContent, SidebarContentDTO>()
                 .ForMember(dest => dest.Files, opts => opts.MapFrom(src => src.SidebarContentFile));
             CreateMap<SidebarContentFile, SidebarContentFileDTO>();
+            CreateMap<Exam, ExamDTO>()
+                .ForMember(dest => dest.Questions, opts => opts.MapFrom(src => src.Question));
+            CreateMap<Question, QuestionDTO>()
+                .ForMember(dest => dest.Answers, opts => opts.MapFrom(src => src.Answer));
+            CreateMap<Answer, AnswerDTO>();
         }
     }
 }

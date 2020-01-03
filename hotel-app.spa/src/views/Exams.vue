@@ -23,11 +23,24 @@
               </v-col>
               <v-col cols="12">
                 <v-chip-group column v-model="selectedQuestion" mandatory>
-                  <v-chip v-for="n in [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]" :key="n" color="primary" text-color="white">
+                  <v-chip v-for="n in [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]" 
+                          :key="n" 
+                          :class="{ 
+                            odgovoreno: answeredQuestions.includes(n - 1),
+                            notOdgovoreno: !answeredQuestions.includes(n - 1) 
+                          }">
                     {{ n }}
                   </v-chip>
                 </v-chip-group>
               </v-col>
+            </v-row>
+          </v-card-actions>
+          <v-divider />
+          <v-card-actions class="px-4">
+            <v-row justify="center" class="my-3">
+              <v-btn class="primary" @click="finishExamDialog = true">
+                Finish exam
+              </v-btn>
             </v-row>
           </v-card-actions>
         </v-card>
@@ -39,8 +52,13 @@
               {{ centerQuestion ? 'mdi-lock' : 'mdi-lock-open' }}
             </v-icon>
           </v-btn>
+          <v-btn icon text class="gore-desno mr-12" @click="_resetAnswer">
+            <v-icon>
+              mdi-autorenew
+            </v-icon>
+          </v-btn>
           <v-card-title class="text-center">
-            {{ questionInfo[selectedQuestion].title }}
+            Question {{ `${this.selectedQuestion + 1} - ${questionInfo[selectedQuestion].title}` }}
           </v-card-title>
           <v-divider />
           <v-card-text>
@@ -54,13 +72,39 @@
             </v-row>
           </v-card-text>
           <v-divider />
-          <v-card-actions class="px-8">
-            <radio-footer v-if="questionInfo[selectedQuestion].type == questionTypes.RADIO" v-bind:answers="questionInfo[selectedQuestion].answers" />
-            <checkbox-footer v-else-if="questionInfo[selectedQuestion].type == questionTypes.CHECKBOX" v-bind:answers="questionInfo[selectedQuestion].answers" />
+          <v-card-actions class="px-8 mb-n2">
+            <radio-footer @answerChanged="answerChanged"
+                          :selectedAnswers="selectedAnswers"
+                          :reset="resetAnswer" 
+                          v-if="questionInfo[selectedQuestion].type == questionTypes.RADIO" 
+                          :answers="questionInfo[selectedQuestion].answers" />
+            <checkbox-footer @answerChanged="answerChanged" 
+                            :selectedAnswers="selectedAnswers"
+                            :reset="resetAnswer" 
+                            v-else-if="questionInfo[selectedQuestion].type == questionTypes.CHECKBOX" 
+                            :answers="questionInfo[selectedQuestion].answers" />
           </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
+    <v-dialog v-model="finishExamDialog" persistent max-width="500">
+      <v-card>
+        <v-system-bar color="primary" />
+        <v-card-text class="text-center mt-8">
+          Are you sure? You still have {{ timeLeft }} of time left!
+        </v-card-text>
+        <v-card-actions class="pb-5">
+          <v-spacer />
+          <v-btn color="green" class="white--text" @click="finishExamDialog = false">
+            Yes
+          </v-btn>
+          <v-btn color="red" class="white--text" @click="finishExamDialog = false">
+            No
+          </v-btn>
+          <v-spacer />
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -79,38 +123,52 @@ export default {
   },
   data() {
     return { 
+      finishExamDialog: false,
+      confirmed: false,
       centerQuestion: true,
       questionCols: 9,
       timeLeft: null,
       selectedQuestion: 0,
+      selectedAnswers: null,
+      selectedAnswer: null,
       questionTypes: null,
+      resetAnswer: null,
+      answeredQuestions: [],
       questionInfo: [{
-        title: "Question 1 - Javascript",
+        title: "Javascript",
         question: "What is the output of this block of code?",
         content: `var numbers = [ 1, 2, 3, 4, 5 ];\nnumbers.sort((a, b) => { \n  if(a > b) return 1; \n  else return -1;\n});\nconsole.log(numbers);`,
         type: 1,
         answers:[{  
-          content: "I don't know"
+          content: "I don't know",
+          answered: false
         }, {
-          content: "Compilation error"  
+          content: "Compilation error",
+          answered: false
         }, {
-          content: "Array(1, 2, 3, 4, 5)"
+          content: "Array(1, 2, 3, 4, 5)",
+          answered: false
         }, {
-          content: "Array(5, 4, 3, 2, 1)"
+          content: "Array(5, 4, 3, 2, 1)",
+          answered: false
         }]
       }, {
-        title: "Question 2 - C++",
+        title: "C++",
         question: "How would One initialize an instance of this generic class?",
         content: `template <class T>\nclass Array {\npublic:\n\tT* array;\n\tint NumberOfElements;\n\tArray(int n);\n\t~Array() { delete[] array; }\n}\n\ntemplate <class T>\nArray<T>::Array(int n) {\n\tNumberOfElements = n;\n\tarray = new T[n];\n}`,
         type: 1,
         answers: [{  
-          content: "Array(double) P[50];"
+          content: "Array(double) P[50];",
+          answered: false
         }, {
-          content: "Array<double> P[50];"  
+          content: "Array<double> P[50];",
+          answered: false
         }, {
-          content: "Array P[50];"
+          content: "Array P[50];",
+          answered: false
         }, {
-          content: "Array<double> P[50];"
+          content: "Array<double> P[50];",
+          answered: false
         }]
       }]
     }
@@ -119,6 +177,17 @@ export default {
     hideInfoCard() {
       this.centerQuestion = !this.centerQuestion;
       this.questionCols = this.centerQuestion ? 9 : 12;
+    },
+    answerChanged(val) {
+      this.questionInfo[this.selectedQuestion].answers.forEach((x, i) => {
+        x.answered = (i == val) ? true : false;
+      });
+      this.answeredQuestions.push(this.selectedQuestion);
+    },
+    _resetAnswer() {
+      this.questionInfo[this.selectedQuestion].answers.map(x => x.answered = false);
+      this.resetAnswer = !this.resetAnswer;
+      this.answeredQuestions = this.answeredQuestions.filter(x => x != this.selectedQuestion);
     }
   },
   created() {
@@ -136,6 +205,19 @@ export default {
       this.timeLeft = `${minutes}:${seconds}`;
     }, 1000);
     this.questionTypes = store.getters.QUESTION_TYPES;
+  },
+  watch: {
+    selectedQuestion: {
+      immediate: false,
+      handler(val) {
+        this.confirmed = false;
+        let selection = [];
+        this.questionInfo[val].answers.forEach((x, i) => {
+          if(x.answered) selection.push(i);  
+        });
+        this.selectedAnswers = selection;
+      }
+    }
   }
 };
 
@@ -147,5 +229,12 @@ export default {
     top: 10px;
     right: 5px;
     margin: 5px;
+  }
+  .odgovoreno {
+    background-color: #f0f0f0 !important;
+  }
+  .notOdgovoreno {
+    background-color: #007bff !important;
+    color: white !important;
   }
 </style>

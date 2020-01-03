@@ -75,6 +75,7 @@ function fileIcon(fileExtension) {
     case 'flv':
       return 'mdi-video-vintage';
     case 'txt':
+    case 'md':
       return 'mdi-text';
     default:
       return 'mdi-file';

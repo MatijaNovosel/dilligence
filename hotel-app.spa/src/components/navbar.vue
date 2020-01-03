@@ -57,7 +57,10 @@
           <v-img src="../assets/tvz-logo.svg" />
         </v-avatar>
         <span class="title">
-          Moj TVZ
+          TVZ2
+        </span>
+        <span class="font-weight-light subtitle-2">
+          by Matija
         </span>
       </v-toolbar-title>
       <v-spacer />
