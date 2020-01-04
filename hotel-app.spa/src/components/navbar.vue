@@ -3,7 +3,7 @@
     <v-navigation-drawer disable-route-watcher 
                         app 
                         clipped 
-                        v-model="drawer" 
+                        v-model="drawer"
                         disable-resize-watcher>
       <v-list dense nav>
         <v-list-item @click="$router.push('/account')">
@@ -40,9 +40,9 @@
                                                         @click="sublink.route != null ? goToUrl(sublink.route) : ''" 
                                                         active-class="highlighted" 
                                                         :class="sublink.route != null && sublink.route.name === $route.name ? 'highlighted' : ''">
-            <v-list-item-content>
+            <v-list-item-content class="ml-n5">
               <v-list-item-title>
-                {{ sublink.text }}
+                <v-icon class="mr-2" size="15"> mdi-circle-slice-8 </v-icon> {{ sublink.text }}
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>

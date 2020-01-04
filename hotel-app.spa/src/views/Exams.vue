@@ -182,12 +182,12 @@ export default {
       this.questionInfo[this.selectedQuestion].answers.forEach((x, i) => {
         x.answered = (i == val) ? true : false;
       });
-      this.answeredQuestions.push(this.selectedQuestion);
+      this.answeredQuestions.push(this.selectedQuestion - 1);
     },
     _resetAnswer() {
       this.questionInfo[this.selectedQuestion].answers.map(x => x.answered = false);
       this.resetAnswer = !this.resetAnswer;
-      this.answeredQuestions = this.answeredQuestions.filter(x => x != this.selectedQuestion);
+      this.answeredQuestions = this.answeredQuestions.filter(x => x != this.selectedQuestion - 1);
     }
   },
   created() {
@@ -212,7 +212,7 @@ export default {
       handler(val) {
         this.confirmed = false;
         let selection = [];
-        this.questionInfo[val].answers.forEach((x, i) => {
+        this.questionInfo[val - 1].answers.forEach((x, i) => {
           if(x.answered) selection.push(i);  
         });
         this.selectedAnswers = selection;
