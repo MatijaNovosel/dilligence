@@ -179,4 +179,14 @@ export default {
   .avatar-border {
     border: 1px solid #d1d1c2;  
   }
+  .v-navigation-drawer {
+    background-image: url("../assets/nav-bg.svg");
+    background-position: center left;
+  }
+  .v-list .v-list-item--active {
+    color: #007bff !important;
+  }
+  .v-list .v-list-item--active .v-icon {
+    color: #007bff !important;
+  }
 </style>

@@ -23,13 +23,13 @@
               </v-col>
               <v-col cols="12">
                 <v-chip-group column v-model="selectedQuestion" mandatory>
-                  <v-chip v-for="n in [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]" 
-                          :key="n" 
+                  <v-chip v-for="(item, index) in questionInfo" 
+                          :key="index" 
                           :class="{ 
-                            odgovoreno: answeredQuestions.includes(n - 1),
-                            notOdgovoreno: !answeredQuestions.includes(n - 1) 
+                            odgovoreno: answeredQuestions.includes(index - 1),
+                            notOdgovoreno: !answeredQuestions.includes(index - 1) 
                           }">
-                    {{ n }}
+                    {{ index + 1 }}
                   </v-chip>
                 </v-chip-group>
               </v-col>
