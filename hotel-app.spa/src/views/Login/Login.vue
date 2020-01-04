@@ -101,7 +101,7 @@
             const id = response.data.user.id;
             const token = response.data.token;
 
-            StudentService.getStudent(id).then(( response ) => {
+            StudentService.getStudent(1271).then(( response ) => {
               var user = {
                 id,
                 name: response.data.ime,

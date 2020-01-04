@@ -212,7 +212,7 @@ export default {
       handler(val) {
         this.confirmed = false;
         let selection = [];
-        this.questionInfo[val - 1].answers.forEach((x, i) => {
+        this.questionInfo[val].answers.forEach((x, i) => {
           if(x.answered) selection.push(i);  
         });
         this.selectedAnswers = selection;

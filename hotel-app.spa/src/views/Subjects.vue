@@ -35,7 +35,7 @@
                 <v-icon> mdi-magnify </v-icon>
               </v-btn>
             </v-toolbar>
-            <v-row class="mx-3 mt-4" justify="center" v-show="searchEnabled">
+            <v-row class="search-bg" justify="center" v-show="searchEnabled">
               <v-col>
                 <v-text-field label="Ime kolegija" 
                               v-model="searchData.name"> 
@@ -52,7 +52,8 @@
                           min="1"
                           max="6"
                           class="mt-6"
-                          thumb-label="always">
+                          thumb-label="always"
+                          thumb-size="24">
                 </v-range-slider>
               </v-col>
             </v-row>
@@ -193,5 +194,10 @@
   .v-avatar:hover {
     cursor: pointer;
     background-color: #292826 !important;
+  }
+  .search-bg {
+    background-color: #f5f2f2 !important;
+    margin-left: 0px;
+    margin-right: 0px;
   }
 </style>
