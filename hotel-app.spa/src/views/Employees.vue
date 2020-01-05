@@ -1,16 +1,29 @@
 <template>
   <div>
     <v-row no-gutters>
+      <v-switch class="gore-desno-switch" color="primary" label="Table view" v-model="tableView" />
       <v-col>
         <v-row class="mt-10" justify="center">
           <h1 class="display-1"> Zaposlenici </h1>
         </v-row>
       </v-col>
     </v-row>
-    <v-row no-gutters class="mt-5" justify="center">
+    <v-row v-if="!tableView" no-gutters class="mt-5" justify="center">
       <template v-for="item in employees">
         <employee-card :key="item.ime + item.prezime + item.id" :employeeData='item' />
       </template>
+    </v-row>
+    <v-row v-else no-gutters class="mt-5" justify="center">
+      <v-col>
+        <v-data-table dense
+                      class="elevation-2"
+                      :headers="headers"
+                      fixed-header
+                      :items="employees"
+                      :items-per-page="options.itemsPerPage">
+        
+        </v-data-table>
+      </v-col>
     </v-row>
   </div>
 </template>
@@ -28,6 +41,12 @@ export default {
     return {
       skip: 0,
       take: 15,
+      tableView: false,
+      headers: [
+        { text: 'Ime', value: 'ime', sortable: false, align: 'center' },
+        { text: 'Prezime', value: 'prezime', sortable: false, align: 'center' },
+        { text: 'Email', value: 'email', sortable: false, align: 'center' }
+      ],
       searchData: {
         name: null,
         surname: null,
@@ -36,7 +55,10 @@ export default {
       },
       employees: [],
       totalEmployees: null,
-      loading: true
+      loading: true,
+      options: {
+        itemsPerPage: 10
+      }
     }
   },
   created() {
@@ -62,5 +84,10 @@ export default {
     position: absolute;
     right: 5px;
     top: 5px;
+  }
+  .gore-desno-switch {
+    position: absolute;
+    right: 15px;
+    top: 15px;  
   }
 </style>

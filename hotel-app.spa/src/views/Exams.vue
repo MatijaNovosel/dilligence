@@ -47,18 +47,36 @@
       </v-col>
       <v-col :cols="questionCols">
         <v-card class="mx-auto">
-          <v-btn icon text class="gore-desno" @click="hideInfoCard">
-            <v-icon>
-              {{ centerQuestion ? 'mdi-lock' : 'mdi-lock-open' }}
-            </v-icon>
-          </v-btn>
-          <v-btn icon text class="gore-desno mr-12" @click="_resetAnswer">
-            <v-icon>
-              mdi-autorenew
-            </v-icon>
-          </v-btn>
           <v-card-title class="text-center">
-            Question {{ `${this.selectedQuestion + 1} - ${questionInfo[selectedQuestion].title}` }}
+            Question {{ `${selectedQuestion + 1} - ${questionInfo[selectedQuestion].title}` }}
+            <v-spacer />
+            <v-btn icon text @click="selectedQuestion = selectedQuestion - 1 < 0 ? selectedQuestion : --selectedQuestion">
+              <v-icon>
+                mdi-chevron-left
+              </v-icon>
+            </v-btn>
+            <v-btn icon text @click="hideInfoCard">
+              <v-icon>
+                {{ centerQuestion ? 'mdi-lock' : 'mdi-lock-open' }}
+              </v-icon>
+            </v-btn>
+            <v-tooltip v-model="show" bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn v-on="on" icon text @click="_resetAnswer">
+                  <v-icon>
+                    mdi-autorenew
+                  </v-icon>
+                </v-btn>
+              </template>
+              <span> 
+                Reset question
+              </span>
+            </v-tooltip>
+            <v-btn icon text @click="selectedQuestion = selectedQuestion + 1 >= questionInfo.length ? selectedQuestion : ++selectedQuestion">
+              <v-icon>
+                mdi-chevron-right
+              </v-icon>
+            </v-btn>
           </v-card-title>
           <v-divider />
           <v-card-text>
@@ -123,6 +141,7 @@ export default {
   },
   data() {
     return { 
+      show: false,
       finishExamDialog: false,
       confirmed: false,
       centerQuestion: true,

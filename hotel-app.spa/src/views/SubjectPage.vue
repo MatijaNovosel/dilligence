@@ -3,9 +3,13 @@
     <v-row no-gutters>
       <v-col cols="9">
         <v-row class="mt-2 mx-2" justify="center">
-          <h1 class="headline font-weight-light mb-4"> 
-            {{ subject.naziv }} 
-          </h1>
+          <v-col cols="12" class="text-center">
+            <v-skeleton-loader class="mx-auto" max-width="50%" type="text" :loading="subject.naziv == null">
+              <h1 class="headline font-weight-light mb-4"> 
+                {{ subject.naziv }} 
+              </h1>
+            </v-skeleton-loader>
+          </v-col>
           <v-col cols="12" class="px-0">
             <v-tabs grow hide-slider centered v-model="tabs" class="elevation-1 mt-n2">
               <v-tab>
@@ -345,3 +349,9 @@ export default {
 };
 
 </script>
+
+<style>
+  .v-skeleton-loader__text {
+    height: 30px !important;  
+  }
+</style>

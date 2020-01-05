@@ -22,8 +22,10 @@
           </v-icon>
         </v-btn>
       </v-col>
-      <v-col cols="12">
-        <file-cabinet :content="sidebarContent" headerColor="primary" />
+      <v-col cols="12" class="my-4">
+        <v-skeleton-loader class="mx-auto" type="card" max-width="40%" :loading="sidebarContent == null">
+          <file-cabinet :content="sidebarContent" headerColor="primary" />
+        </v-skeleton-loader>
       </v-col>
     </v-row>
   </div>
