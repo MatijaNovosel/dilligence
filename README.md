@@ -1,10 +1,8 @@
 # tvz2
-Unofficial redesign of the outdated faculty website, refurbished with Vue JS and .NET Core
-
-# Comparison screenshots:
+Unofficial redesign of the outdated TVZ faculty website, refurbished with Vue JS and .NET Core
 
 ![Front page](https://i.imgur.com/1acw3qZ.png)
 
-![Subject page](https://i.imgur.com/oQ1Wuuk.png)
+![Subject page](https://i.imgur.com/H2Dozrt.png)
 
-![Exams](https://i.imgur.com/1lu2WC7.png)
+![Exams](https://i.imgur.com/5jOb8SF.png)
