@@ -181,7 +181,11 @@ export default {
   }
   .v-navigation-drawer {
     background-image: url("../assets/nav-bg.svg");
-    background-position: center left;
+    background-position: center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
   }
   .v-list .v-list-item--active {
     color: #007bff !important;
