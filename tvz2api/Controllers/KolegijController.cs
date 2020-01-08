@@ -97,7 +97,7 @@ namespace tvz2api.Controllers
                       smjerIDs.Contains((SmjerEnum)x.SmjerId)
                       && x.Ects >= minECTS 
                       && x.Ects <= maxECTS 
-                      && (name == null ? true : x.Naziv.Contains(name))
+                      && (name == null ? true : x.Naziv.ToLower().Contains(name.ToLower()))
                     )
                     .Skip(skip)
                     .Take(take ?? kolegiji.Count)

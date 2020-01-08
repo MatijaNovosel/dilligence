@@ -42,14 +42,3 @@
   }
   
 </script>
-
-<style scoped>
-
-  .gore-desno {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    margin: 5px;
-  }
-  
-</style>

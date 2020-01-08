@@ -67,7 +67,8 @@ export default {
   methods: {
     getData() {
       this.loading = true;
-      ZaposlenikService.getZaposlenici(this.searchData.name, this.searchData.surname, 1, this.searchData.vrstaZaposljenja, this.skip, this.take).then(({ data }) => {
+      ZaposlenikService.getZaposlenici(this.searchData.name, this.searchData.surname, 1, this.searchData.vrstaZaposljenja, this.skip, this.take)
+      .then(({ data }) => {
         this.employees = data.results;
         this.totalEmployees = data.total;
       }).finally(() => {

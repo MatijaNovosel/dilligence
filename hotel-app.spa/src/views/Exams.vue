@@ -143,7 +143,6 @@ export default {
     return { 
       show: false,
       finishExamDialog: false,
-      confirmed: false,
       centerQuestion: true,
       questionCols: 9,
       timeLeft: null,
@@ -189,6 +188,36 @@ export default {
           content: "Array<double> P[50];",
           answered: false
         }]
+      }, {
+        title: 'C++ 2',
+        question: "What is the output of this block of code?",
+        content: `template\nclass A\n{\nprotected:\n\tT x;\npublic:\n\tA(T x) { this->x = x; }\n\tvoid print()\n\t{\n\t\tcout << x << " ";\n\t}\n};\n\nint main()\n{\n\tA a('A');\n\tA b('A');\n\ta.print(); b.print();\n}`,
+        type: 2,
+        answers: [{
+          content: "It outputs nothing because it is not possible to use char values instead of integer ones",
+          answered: false
+        }, {
+          content: "65 65",
+          answered: false
+        }, {
+          content: "A A",
+          answered: false
+        }, {
+          content: "A 65",
+          answered: false
+        }, {
+          content: "65 A",
+          answered: false
+        }]
+      }, {
+        title: 'C++ 3',
+        question: "What is the output of this block of code? Type X if there is a compilation error and ? if it outputs unpredictable values.",
+        content: `template void Ispis(T* x)\n{\n\tcout << *x << endl;\n}\nint _tmain(int argc, TCHAR* argv[])\n{\n\tint x = 9;\n\tIspis(x);\n\treturn 0;\n}`,
+        type: 2,
+        answers: [{
+          content: "Heyyy",
+          answered: false
+        }]
       }]
     }
   },
@@ -198,9 +227,16 @@ export default {
       this.questionCols = this.centerQuestion ? 9 : 12;
     },
     answerChanged(val) {
-      this.questionInfo[this.selectedQuestion].answers.forEach((x, i) => {
-        x.answered = (i == val) ? true : false;
-      });
+      if(this.questionInfo[this.selectedQuestion].type == this.questionTypes.CHECKBOX) {
+        this.questionInfo[this.selectedQuestion].answers.forEach((x, i) => {
+          x.answered = (val.includes(i)) ? true : false;
+        });  
+      } else {
+        this.questionInfo[this.selectedQuestion].answers.forEach((x, i) => {
+          x.answered = (i == val) ? true : false;
+        });
+      }
+
       this.answeredQuestions.push(this.selectedQuestion - 1);
     },
     _resetAnswer() {
@@ -229,7 +265,6 @@ export default {
     selectedQuestion: {
       immediate: false,
       handler(val) {
-        this.confirmed = false;
         let selection = [];
         this.questionInfo[val].answers.forEach((x, i) => {
           if(x.answered) selection.push(i);  
