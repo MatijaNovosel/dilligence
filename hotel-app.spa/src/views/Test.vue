@@ -48,9 +48,9 @@ export default {
   methods: {
     getData() {
       KolegijService.getKolegijSidebarContent(147)
-      .then((response) => {
-        response.data.results[0].files.forEach(x => x.downloading = false);
-        this.sidebarContent = response.data.results[0];
+      .then(({ data }) => {
+        data.results[0].files.forEach(x => x.downloading = false);
+        this.sidebarContent = data.results[0];
       });
     },
     upload() {

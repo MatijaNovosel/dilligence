@@ -40,8 +40,7 @@
 
 <script>
 
-  import { download } from '../helpers/helpers';
-  import { fileIcon } from '../helpers/helpers';
+  import { download, fileIcon } from '../helpers/helpers';
 
   export default {
     props: [ 'content', 'headerColor' ], 

@@ -101,12 +101,12 @@
             const id = response.data.user.id;
             const token = response.data.token;
 
-            StudentService.getStudent(1271).then(( response ) => {
+            StudentService.getStudent(1271).then(({ data }) => {
               var user = {
                 id,
-                name: response.data.ime,
-                surname: response.data.prezime,
-                jmbag: response.data.jmbag,
+                name: data.ime,
+                surname: data.prezime,
+                jmbag: data.jmbag,
                 token
               };
               
