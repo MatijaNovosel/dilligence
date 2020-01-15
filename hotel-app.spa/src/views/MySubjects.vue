@@ -3,11 +3,13 @@
     <v-row justify="center">
       <v-col cols="6">
         <v-row>
-          <v-col cols="6" :key="subject.id + subject.naziv" v-for="subject in subjects">
-            <v-skeleton-loader class="mx-auto" type="card" :loading="cardsLoading">
-              <subject-card :subject="subject" />
-            </v-skeleton-loader>
-          </v-col>
+          <template v-for="subject in subjects">
+            <v-col cols="6" :key="subject.id + subject.naziv">
+              <v-skeleton-loader class="mx-auto" type="card" :loading="cardsLoading">
+                <subject-card :subject="subject" />
+              </v-skeleton-loader>
+            </v-col>
+          </template>
         </v-row>
       </v-col>
       <v-col cols="6">

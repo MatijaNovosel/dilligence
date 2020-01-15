@@ -109,10 +109,18 @@ namespace tvz2api.Controllers
         [HttpGet("SidebarContent/{kolegijId}")]
         public async Task<ActionResult<ResponseDataWrapper<List<SidebarContentDTO>>>> GetSidebarContent(int kolegijId) 
         {
-            var sidebarContent = await _context.SidebarContent.Include(x => x.SidebarContentFile).ToListAsync();
-            return new ResponseDataWrapper<List<SidebarContentDTO>>(
-                _mapper.Map<List<SidebarContent>, List<SidebarContentDTO>>(sidebarContent)
-            ); 
+            var sidebarContent = _mapper.Map<List<SidebarContent>, List<SidebarContentDTO>>(
+                await _context
+                .SidebarContent
+                .Where(x => x.KolegijId == kolegijId)
+                .Include(x => x.SidebarContentFile)
+                .ThenInclude(x => x.File)
+                .ToListAsync()
+            );
+
+            sidebarContent.ForEach(x => x.Files = x.SidebarContentFile.Select(y => y.File));
+
+            return new ResponseDataWrapper<List<SidebarContentDTO>>(sidebarContent); 
         }
     }
 }

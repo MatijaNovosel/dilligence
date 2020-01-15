@@ -33,7 +33,8 @@ namespace tvz2api.Controllers
         [DisableRequestSizeLimit]
         public async Task<IActionResult> Upload(IFormFile file)
         {
-            if(file == null || file.Length == 0) {
+            if(file == null || file.Length == 0) 
+            {
               return Content("File not selected!");  
             }
             
@@ -45,12 +46,11 @@ namespace tvz2api.Controllers
               var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
               fileName = fileName.Substring(0, fileName.LastIndexOf(".")) + fileName.Substring(fileName.LastIndexOf(".")).ToLower();
               
-              _context.SidebarContentFile.Add(new SidebarContentFile
+              _context.File.Add(new tvz2api.Models.File
               {
                   Naziv = Path.GetFileName(fileName),
                   ContentType = file.ContentType,
-                  Data = fileBytes,
-                  SidebarContentId = 1
+                  Data = fileBytes
               });
             }
             
