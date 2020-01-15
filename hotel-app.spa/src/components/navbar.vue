@@ -64,6 +64,20 @@
         </span>
       </v-toolbar-title>
       <v-spacer />
+      <v-col cols="2">
+        <v-menu nudge-bottom="40" bottom origin="center center" v-model="searchMenu">
+          <template v-slot:activator="{  }">
+            <v-text-field dense class="mt-7 mr-5 txt-fld" outlined v-model="searchText" />
+          </template>
+        <v-list flat dense>
+          <v-list-item v-for="(item, i) in [ 1, 2, 3, 4 ]" :key="i">
+            <v-list-item-title>
+              {{ item }}
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+      </v-col>
       <v-menu offset-y>
         <template v-slot:activator="{ on }">
           <v-btn icon color="grey" v-on="on">
@@ -109,6 +123,8 @@ export default {
   data() {
     return { 
       drawer: false,
+      searchMenu: false,
+      searchText: null,
       show: false,
       notifications: [
         { title: 'Baze podataka - nova vijest' },
@@ -170,6 +186,21 @@ export default {
       this.drawer = false;
       this.$router.push(route);
     }
+  },
+  watch: {
+    searchText: {
+      immediate: false,
+      handler(val) {
+        if(val == null || val == "") {
+          this.searchMenu = false;
+          return;
+        }
+        setTimeout(() => {
+          this.searchMenu = true;
+          
+        }, 300)
+      }
+    }
   }
 };
 
@@ -189,5 +220,8 @@ export default {
   }
   .v-list .v-list-item--active .v-icon {
     color: #007bff !important;
+  }
+  .v-menu__content {
+    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 2px rgba(0, 0, 0, 0.12);
   }
 </style>
