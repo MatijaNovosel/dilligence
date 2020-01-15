@@ -66,18 +66,23 @@
       <v-spacer />
       <v-col cols="2">
         <v-menu nudge-bottom="40" bottom origin="center center" v-model="searchMenu">
-          <template v-slot:activator="{  }">
-            <v-text-field dense class="mt-7 mr-5 txt-fld" outlined v-model="searchText" />
+          <template v-slot:activator="{ }">
+            <v-text-field dense class="mt-7 txt-fld" outlined v-model="searchText" />
           </template>
         <v-list flat dense>
-          <v-list-item v-for="(item, i) in [ 1, 2, 3, 4 ]" :key="i">
+          <v-list-item v-for="subject in subjects" :key="subject.id + subject.naziv">
             <v-list-item-title>
-              {{ item }}
+              {{ subject.naziv }}
             </v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
       </v-col>
+      <v-btn icon color="grey" @click="searchSubjects">
+        <v-icon size="30">
+          mdi-magnify
+        </v-icon>
+      </v-btn>
       <v-menu offset-y>
         <template v-slot:activator="{ on }">
           <v-btn icon color="grey" v-on="on">
@@ -112,20 +117,30 @@
         </span>
       </v-tooltip>
     </v-app-bar>
+    <key-listener keyCode="27" 
+                  event="keydown" 
+                  @pressed="searchMenu = false"> 
+    </key-listener>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import AuthService from '../services/api/auth';
+import KolegijService from '../services/api/kolegij';
+import KeyListener from '../components/KeyListener';
 
 export default { 
+  components: {
+    KeyListener
+  },
   data() {
     return { 
       drawer: false,
       searchMenu: false,
       searchText: null,
       show: false,
+      subjects: null,
       notifications: [
         { title: 'Baze podataka - nova vijest' },
         { title: 'Baze podataka - novi privitak' },
@@ -185,21 +200,23 @@ export default {
       }
       this.drawer = false;
       this.$router.push(route);
-    }
-  },
-  watch: {
-    searchText: {
-      immediate: false,
-      handler(val) {
-        if(val == null || val == "") {
-          this.searchMenu = false;
-          return;
-        }
-        setTimeout(() => {
-          this.searchMenu = true;
-          
-        }, 300)
-      }
+    },
+    getSubjectData() {
+      KolegijService.getKolegiji(
+        null,
+        this.searchText, 
+        null,
+        null,
+        null,
+        0, 
+        null
+      ).then(({ data }) => {
+        this.subjects = data.results;
+      });
+    },
+    searchSubjects() {
+      this.searchMenu = true;
+      this.getSubjectData();
     }
   }
 };

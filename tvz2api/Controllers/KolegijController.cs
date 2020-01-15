@@ -48,7 +48,7 @@ namespace tvz2api.Controllers
         
         [HttpGet]
         public async Task<ActionResult<ResponseDataWrapper<List<KolegijDTO>>>> Get(
-          [FromQuery(Name = "smjerIDs[]")] List<SmjerEnum> smjerIDs,
+          [FromQuery(Name = "smjerIDs[]")] List<SmjerEnum> smjerIDs = null,
           string name = null,
           int minECTS = 1,
           int maxECTS = 6,
@@ -62,7 +62,7 @@ namespace tvz2api.Controllers
                 List<KolegijDTO>>(
                     kolegiji
                     .Where(x => 
-                      smjerIDs.Contains((SmjerEnum)x.SmjerId)
+                      (smjerIDs == null || smjerIDs.Count == 0 ? true : smjerIDs.Contains((SmjerEnum)x.SmjerId))
                       && x.Ects >= minECTS 
                       && x.Ects <= maxECTS 
                       && (name == null ? true : x.Naziv.ToLower().Contains(name.ToLower()))
