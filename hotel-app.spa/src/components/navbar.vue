@@ -67,7 +67,7 @@
       <v-col cols="2">
         <v-menu nudge-bottom="40" bottom origin="center center" v-model="searchMenu">
           <template v-slot:activator="{ }">
-            <v-text-field dense class="mt-7 txt-fld" outlined v-model="searchText" />
+            <v-text-field dense class="mt-7 txt-fld" outlined v-model="searchText" clearable />
           </template>
         <v-list flat dense>
           <v-list-item v-for="subject in subjects" :key="subject.id + subject.naziv">

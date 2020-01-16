@@ -137,7 +137,8 @@ export default {
     },
     uploadMultiple() {
       var formData = new FormData();
-      formData.append("files", this.files);
+      formData.set("files", null);
+      this.files.forEach(x => formData.append("files", x))
       FileService.uploadMultiple(formData);
     }
   }
