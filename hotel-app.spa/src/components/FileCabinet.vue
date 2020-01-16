@@ -112,6 +112,7 @@
 
 import { download, fileIcon } from '../helpers/helpers'
 import FileService from '../services/api/file';
+import KolegijService from '../services/api/kolegij';
 
 export default {
   props: [ 'content', 'headerColor' ], 
@@ -139,7 +140,10 @@ export default {
       var formData = new FormData();
       formData.set("files", null);
       this.files.forEach(x => formData.append("files", x))
-      FileService.uploadMultiple(formData);
+      FileService.uploadMultiple(formData)
+      .then(({ data }) => {
+        KolegijService.connectSidebarFile(1, data);
+      });
     }
   }
 }

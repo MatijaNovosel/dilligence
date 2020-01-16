@@ -122,5 +122,21 @@ namespace tvz2api.Controllers
 
             return new ResponseDataWrapper<List<SidebarContentDTO>>(sidebarContent); 
         }
+
+        [HttpPost("ConnectSidebarFile")]
+        public async Task<IActionResult> ConnectSidebarFile(ConnectSidebarFileDTO model) 
+        {
+            foreach(var id in model.FileIDs) 
+            {
+                await _context.SidebarContentFile.AddAsync(new SidebarContentFile {
+                    FileId = id,
+                    SidebarContentId = model.SidebarContentId
+                });
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok("Connected!");
+        }
     }
 }

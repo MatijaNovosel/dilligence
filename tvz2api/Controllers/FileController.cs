@@ -37,6 +37,8 @@ namespace tvz2api.Controllers
             {
               return Content("File not selected!");  
             }
+
+            tvz2api.Models.File newFile = null;
             
             using (var ms = new MemoryStream())
             {
@@ -46,16 +48,18 @@ namespace tvz2api.Controllers
               var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
               fileName = fileName.Substring(0, fileName.LastIndexOf(".")) + fileName.Substring(fileName.LastIndexOf(".")).ToLower();
               
-              _context.File.Add(new tvz2api.Models.File
-              {
-                  Naziv = Path.GetFileName(fileName),
-                  ContentType = file.ContentType,
-                  Data = fileBytes
-              });
+                newFile = new tvz2api.Models.File
+                {
+                    Naziv = Path.GetFileName(fileName),
+                    ContentType = file.ContentType,
+                    Data = fileBytes
+                };
             }
-            
+
+            await _context.File.AddAsync(newFile);
             await _context.SaveChangesAsync();
-            return Ok("File uploaded");
+
+            return Ok(newFile.Id);
         }
 
         [HttpPost("UploadMultiple")]
@@ -66,6 +70,8 @@ namespace tvz2api.Controllers
             {
               return Content("Files not selected!");  
             }
+
+            List<tvz2api.Models.File> newFiles = new List<tvz2api.Models.File>();
             
             foreach(var file in files)
             {
@@ -77,7 +83,7 @@ namespace tvz2api.Controllers
                     var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
                     fileName = fileName.Substring(0, fileName.LastIndexOf(".")) + fileName.Substring(fileName.LastIndexOf(".")).ToLower();
                     
-                    _context.File.Add(new tvz2api.Models.File
+                    newFiles.Add(new tvz2api.Models.File
                     {
                         Naziv = Path.GetFileName(fileName),
                         ContentType = file.ContentType,
@@ -86,8 +92,10 @@ namespace tvz2api.Controllers
                 }
             }
             
+            await _context.File.AddRangeAsync(newFiles);
             await _context.SaveChangesAsync();
-            return Ok("File uploaded");
+
+            return Ok(new List<int>(newFiles.Select(x => x.Id)));
         }
     }
 }
