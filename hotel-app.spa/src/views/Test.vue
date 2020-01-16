@@ -4,25 +4,7 @@
       <v-col cols="12" class="text-center">
         <h1> Upload test </h1>
       </v-col>
-      <v-col cols="6" class="mt-6">
-        <v-file-input v-model="file"
-                      color="primary"
-                      counter
-                      label="Single file upload"
-                      placeholder="Select your file"
-                      prepend-icon="mdi-paperclip"
-                      outlined
-                      :show-size="1000">
-        </v-file-input>
-      </v-col>
-      <v-col cols="1" class="ml-3 mt-6">
-        <v-btn icon text class="mt-2" @click="upload">
-          <v-icon>
-            mdi-upload
-          </v-icon>
-        </v-btn>
-      </v-col>
-      <v-col cols="12" class="my-4">
+      <v-col cols="12">
         <v-skeleton-loader class="mx-auto" type="card" max-width="40%" :loading="sidebarContent == null">
           <file-cabinet :content="sidebarContent" headerColor="primary" />
         </v-skeleton-loader>
@@ -33,7 +15,6 @@
 
 <script>
 
-import FileService from '../services/api/file';
 import KolegijService from '../services/api/kolegij';
 import FileCabinet from '../components/FileCabinet';
 
@@ -41,7 +22,6 @@ export default {
   components: { FileCabinet },
   data() {
     return {
-      file: null,
       sidebarContent: null
     }
   },
@@ -51,14 +31,6 @@ export default {
       .then(({ data }) => {
         data.results[0].files.forEach(x => x.downloading = false);
         this.sidebarContent = data.results[0];
-      });
-    },
-    upload() {
-      var formData = new FormData();
-      formData.append("file", this.file);
-      FileService.upload(formData)
-      .then(() => {
-        this.getData();
       });
     }
   },

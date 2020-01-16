@@ -57,5 +57,37 @@ namespace tvz2api.Controllers
             await _context.SaveChangesAsync();
             return Ok("File uploaded");
         }
+
+        [HttpPost("UploadMultiple")]
+        [DisableRequestSizeLimit]
+        public async Task<IActionResult> UploadMultiple(List<IFormFile> files)
+        {
+            if(files == null || files.Count == 0) 
+            {
+              return Content("Files not selected!");  
+            }
+            
+            foreach(var file in files)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    file.CopyTo(ms);
+                    var fileBytes = ms.ToArray();
+                    
+                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    fileName = fileName.Substring(0, fileName.LastIndexOf(".")) + fileName.Substring(fileName.LastIndexOf(".")).ToLower();
+                    
+                    _context.File.Add(new tvz2api.Models.File
+                    {
+                        Naziv = Path.GetFileName(fileName),
+                        ContentType = file.ContentType,
+                        Data = fileBytes
+                    });
+                }
+            }
+            
+            await _context.SaveChangesAsync();
+            return Ok("File uploaded");
+        }
     }
 }
