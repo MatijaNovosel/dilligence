@@ -5,8 +5,8 @@
         <h1> Upload test </h1>
       </v-col>
       <v-col cols="12">
-        <v-skeleton-loader class="mx-auto" type="card" max-width="40%" :loading="sidebarContent == null">
-          <file-cabinet :content="sidebarContent" headerColor="primary" />
+        <v-skeleton-loader class="mx-auto" type="card" max-width="40%" :loading="loading">
+          <file-cabinet @doneUploading="getData" :content="sidebarContent" headerColor="primary" />
         </v-skeleton-loader>
       </v-col>
     </v-row>
@@ -22,16 +22,24 @@ export default {
   components: { FileCabinet },
   data() {
     return {
-      sidebarContent: null
+      sidebarContent: null,
+      loading: null
     }
   },
   methods: {
     getData() {
+      this.loading = true;
       KolegijService.getKolegijSidebarContent(147)
       .then(({ data }) => {
         data.results[0].files.forEach(x => x.downloading = false);
         this.sidebarContent = data.results[0];
+      })
+      .finally(() => {
+        this.loading = false;
       });
+    },
+    loadingFinished() {
+      this.loading = false;
     }
   },
   created() {
@@ -40,11 +48,3 @@ export default {
 };
 
 </script>
-
-<style>
-
-.v-list-item--dense.v-list-item--two-line, .v-list--dense .v-list-item.v-list-item--two-line:hover {
-  background-color: #f6f6f6 !important;  
-}
-
-</style>

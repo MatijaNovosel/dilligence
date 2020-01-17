@@ -17,7 +17,7 @@
           </v-sheet>
         </div>
         <v-divider />
-        <v-list-item two-line v-for="file in content.files" :key="file.id + file.naziv">
+        <v-list-item two-line v-for="(file, index) in content.files" :key="file.id + file.naziv" :class="{ shaded: index % 2, nonShaded: !(index % 2) }">
           <v-list-item-icon class="mt-4">
             <v-icon size="25">
               {{ fileIcon(file.naziv.slice(file.naziv.lastIndexOf(".") + 1)) }}
@@ -46,6 +46,19 @@
               </v-btn>
             </v-row>
           </v-list-item-action>
+        </v-list-item>
+        <v-list-item v-show="itemUploading">
+          <v-list-item-icon class="my-4 skeleton-icon">
+            <v-skeleton-loader type="avatar">
+            </v-skeleton-loader>
+          </v-list-item-icon>
+          <v-divider class="ml-n4 mr-4" vertical />
+          <v-list-item-content>
+            <v-list-item-title>
+              <v-skeleton-loader type="sentences">
+              </v-skeleton-loader>
+            </v-list-item-title>
+          </v-list-item-content>
         </v-list-item>
       </v-list>
     </v-card>
@@ -120,7 +133,8 @@ export default {
     return {
       addFileDialog: false,
       file: null,
-      files: null
+      files: null,
+      itemUploading: false
     }
   },
   methods: {
@@ -137,12 +151,17 @@ export default {
       FileService.upload(formData);
     },
     uploadMultiple() {
+      this.itemUploading = true;
       var formData = new FormData();
       formData.set("files", null);
       this.files.forEach(x => formData.append("files", x))
       FileService.uploadMultiple(formData)
       .then(({ data }) => {
         KolegijService.connectSidebarFile(1, data);
+      })
+      .finally(() => {
+        this.$emit("doneUploading");
+        this.itemUploading = false;
       });
     }
   }
@@ -158,5 +177,20 @@ export default {
     position: absolute;
     right: 20px;
     top: 5px;
+  }
+  .nonShaded:hover {
+    background-color: #ebebeb;  
+  }
+  .shaded {
+    background-color: #f6f6f6;  
+  }
+  .shaded:hover {
+    background-color: #e6e6e6;  
+  }
+  .skeleton-icon {
+    width: 20px;
+  }
+  .v-skeleton-loader__text {
+    height: 16px !important;
   }
 </style>
