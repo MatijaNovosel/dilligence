@@ -64,6 +64,25 @@
         </span>
       </v-toolbar-title>
       <v-spacer />
+      <v-col cols="2">
+        <v-menu nudge-bottom="40" bottom origin="center center" v-model="searchMenu">
+          <template v-slot:activator="{ }">
+            <v-text-field dense class="mt-7 txt-fld" outlined v-model="searchText" clearable />
+          </template>
+        <v-list flat dense>
+          <v-list-item v-for="subject in subjects" :key="subject.id + subject.naziv">
+            <v-list-item-title>
+              {{ subject.naziv }}
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+      </v-col>
+      <v-btn icon color="grey" @click="searchSubjects">
+        <v-icon size="30">
+          mdi-magnify
+        </v-icon>
+      </v-btn>
       <v-menu offset-y>
         <template v-slot:activator="{ on }">
           <v-btn icon color="grey" v-on="on">
@@ -98,18 +117,30 @@
         </span>
       </v-tooltip>
     </v-app-bar>
+    <key-listener keyCode="27" 
+                  event="keydown" 
+                  @pressed="searchMenu = false"> 
+    </key-listener>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import AuthService from '../services/api/auth';
+import KolegijService from '../services/api/kolegij';
+import KeyListener from '../components/KeyListener';
 
 export default { 
+  components: {
+    KeyListener
+  },
   data() {
     return { 
       drawer: false,
+      searchMenu: false,
+      searchText: null,
       show: false,
+      subjects: null,
       notifications: [
         { title: 'Baze podataka - nova vijest' },
         { title: 'Baze podataka - novi privitak' },
@@ -169,6 +200,23 @@ export default {
       }
       this.drawer = false;
       this.$router.push(route);
+    },
+    getSubjectData() {
+      KolegijService.getKolegiji(
+        null,
+        this.searchText, 
+        null,
+        null,
+        null,
+        0, 
+        null
+      ).then(({ data }) => {
+        this.subjects = data.results;
+      });
+    },
+    searchSubjects() {
+      this.searchMenu = true;
+      this.getSubjectData();
     }
   }
 };
@@ -182,9 +230,6 @@ export default {
   .v-navigation-drawer {
     background-image: url("../assets/nav-bg.svg");
     background-position: center center;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
     background-size: cover;
   }
   .v-list .v-list-item--active {
@@ -192,5 +237,8 @@ export default {
   }
   .v-list .v-list-item--active .v-icon {
     color: #007bff !important;
+  }
+  .v-menu__content {
+    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 2px rgba(0, 0, 0, 0.12);
   }
 </style>

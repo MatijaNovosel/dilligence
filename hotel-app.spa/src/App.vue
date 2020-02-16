@@ -20,5 +20,7 @@ export default {
   }
   .bg {
     background: url('https://i.imgur.com/gn9elxg.png') !important;
+    background-position: center center !important;
+    background-size: cover !important;
   }
 </style>

@@ -129,11 +129,18 @@
       acronym,
       getData() {
         this.loading = true;
-        PretplataService.getPretplata(this.user.id).then((response) => {
-          let subscriptions = response.data;
-          this.subscriptions = subscriptions;
-          KolegijService.getKolegiji(this.searchData.smjerIDs.map(x => x + 1), this.searchData.name, this.searchData.ECTS[0], this.searchData.ECTS[1], this.searchData.ISVU, 0, null)
-          .then(({ data }) => {
+        PretplataService.getPretplata(this.user.id).then(({ data }) => {
+          let subscriptions = data;
+          this.subscriptions = data;
+          KolegijService.getKolegiji(
+            this.searchData.smjerIDs.map(x => x + 1), 
+            this.searchData.name, 
+            this.searchData.ECTS[0], 
+            this.searchData.ECTS[1], 
+            this.searchData.ISVU, 
+            0, 
+            null
+          ).then(({ data }) => {
             data.results.forEach(x => {
               x.subscribed = subscriptions.includes(x.id) ? true : false;
             });

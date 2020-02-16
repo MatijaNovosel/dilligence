@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card width="225" class="ma-3">
+    <v-card width="225" class="ma-3" outlined>
       <v-avatar size="135" class="ml-11 avatar-border">
         <v-img v-if="employeeData.ime + ' ' + employeeData.prezime == 'Željko Kovacevic'" src="../assets/TVZ/djelatnici/kova.png" />
         <v-img v-else-if="employeeData.ime + ' ' + employeeData.prezime == 'Tin Kramberger'" src="../assets/TVZ/djelatnici/tin.png" />

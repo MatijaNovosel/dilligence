@@ -33,9 +33,12 @@ namespace tvz2api.Controllers
         [DisableRequestSizeLimit]
         public async Task<IActionResult> Upload(IFormFile file)
         {
-            if(file == null || file.Length == 0) {
+            if(file == null || file.Length == 0) 
+            {
               return Content("File not selected!");  
             }
+
+            tvz2api.Models.File newFile = null;
             
             using (var ms = new MemoryStream())
             {
@@ -45,17 +48,54 @@ namespace tvz2api.Controllers
               var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
               fileName = fileName.Substring(0, fileName.LastIndexOf(".")) + fileName.Substring(fileName.LastIndexOf(".")).ToLower();
               
-              _context.SidebarContentFile.Add(new SidebarContentFile
-              {
-                  Naziv = Path.GetFileName(fileName),
-                  ContentType = file.ContentType,
-                  Data = fileBytes,
-                  SidebarContentId = 1
-              });
+                newFile = new tvz2api.Models.File
+                {
+                    Naziv = Path.GetFileName(fileName),
+                    ContentType = file.ContentType,
+                    Data = fileBytes
+                };
+            }
+
+            await _context.File.AddAsync(newFile);
+            await _context.SaveChangesAsync();
+
+            return Ok(newFile.Id);
+        }
+
+        [HttpPost("UploadMultiple")]
+        [DisableRequestSizeLimit]
+        public async Task<IActionResult> UploadMultiple(List<IFormFile> files)
+        {
+            if(files == null || files.Count == 0) 
+            {
+              return Content("Files not selected!");  
+            }
+
+            List<tvz2api.Models.File> newFiles = new List<tvz2api.Models.File>();
+            
+            foreach(var file in files)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    file.CopyTo(ms);
+                    var fileBytes = ms.ToArray();
+                    
+                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    fileName = fileName.Substring(0, fileName.LastIndexOf(".")) + fileName.Substring(fileName.LastIndexOf(".")).ToLower();
+                    
+                    newFiles.Add(new tvz2api.Models.File
+                    {
+                        Naziv = Path.GetFileName(fileName),
+                        ContentType = file.ContentType,
+                        Data = fileBytes
+                    });
+                }
             }
             
+            await _context.File.AddRangeAsync(newFiles);
             await _context.SaveChangesAsync();
-            return Ok("File uploaded");
+
+            return Ok(new List<int>(newFiles.Select(x => x.Id)));
         }
     }
 }

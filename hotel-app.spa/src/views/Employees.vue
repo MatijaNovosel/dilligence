@@ -10,7 +10,9 @@
     </v-row>
     <v-row v-if="!tableView" no-gutters class="mt-5" justify="center">
       <template v-for="item in employees">
-        <employee-card :key="item.ime + item.prezime + item.id" :employeeData='item' />
+        <v-skeleton-loader type="card" :loading="employeesLoading" :key="item.ime + item.prezime + item.id">
+          <employee-card :employeeData="item" />
+        </v-skeleton-loader>
       </template>
     </v-row>
     <v-row v-else no-gutters class="mt-5" justify="center">
@@ -21,7 +23,6 @@
                       fixed-header
                       :items="employees"
                       :items-per-page="options.itemsPerPage">
-        
         </v-data-table>
       </v-col>
     </v-row>
@@ -42,6 +43,7 @@ export default {
       skip: 0,
       take: 15,
       tableView: false,
+      employeesLoading: false,
       headers: [
         { text: 'Ime', value: 'ime', sortable: false, align: 'center' },
         { text: 'Prezime', value: 'prezime', sortable: false, align: 'center' },
@@ -55,7 +57,6 @@ export default {
       },
       employees: [],
       totalEmployees: null,
-      loading: true,
       options: {
         itemsPerPage: 10
       }
@@ -66,13 +67,13 @@ export default {
   },
   methods: {
     getData() {
-      this.loading = true;
+      this.employeesLoading = true;
       ZaposlenikService.getZaposlenici(this.searchData.name, this.searchData.surname, 1, this.searchData.vrstaZaposljenja, this.skip, this.take)
       .then(({ data }) => {
         this.employees = data.results;
         this.totalEmployees = data.total;
       }).finally(() => {
-        this.loading = false;
+        this.employeesLoading = false;
       });
     }
   }
