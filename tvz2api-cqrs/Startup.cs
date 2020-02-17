@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using tvz2api_cqrs.Implementation.CommandHandlers;
+using tvz2api_cqrs.Implementation.Commands;
+using tvz2api_cqrs.Implementation.Messaging;
+using tvz2api_cqrs.Implementation.QueryHandlers;
 
 namespace tvz2api_cqrs
 {
@@ -22,13 +24,12 @@ namespace tvz2api_cqrs
 
     public IConfiguration Configuration { get; }
 
-    // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddControllers();
+      ConfigureAdditionalServices(services);
     }
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
       if (env.IsDevelopment())
@@ -42,6 +43,14 @@ namespace tvz2api_cqrs
       {
         endpoints.MapControllers();
       });
+    }
+
+    public void ConfigureAdditionalServices(IServiceCollection services)
+    {
+      services.AddScoped<ICommandBus, CommandBus>();
+      services.AddScoped<IEventBus, EventBus>();
+      services.AddScoped<IQueryBus, QueryBus>();
+      services.AddScoped<IQueryHandlerAsync<TestQuery, List<TestModel>>, TestQueryHandler>();
     }
   }
 }
