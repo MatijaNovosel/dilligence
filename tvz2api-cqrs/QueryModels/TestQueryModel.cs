@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace tvz2api_cqrs.QueryModels
 {
-    public class TestModel
+    public class TestQueryModel
     {
         public string Field { get; set; }
     }

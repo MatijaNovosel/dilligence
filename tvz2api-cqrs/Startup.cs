@@ -12,6 +12,8 @@ using tvz2api_cqrs.Implementation.CommandHandlers;
 using tvz2api_cqrs.Implementation.Commands;
 using tvz2api_cqrs.Implementation.Messaging;
 using tvz2api_cqrs.Implementation.QueryHandlers;
+using tvz2api_cqrs.Queries;
+using tvz2api_cqrs.QueryModels;
 
 namespace tvz2api_cqrs
 {
