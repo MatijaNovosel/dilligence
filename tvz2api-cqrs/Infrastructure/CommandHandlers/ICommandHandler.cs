@@ -1,9 +1,8 @@
 using tvz2api_cqrs.Infrastructure.Commands;
-using System.Threading.Tasks;
 
 namespace tvz2api_cqrs.Infrastructure.CommandHandlers
 {
-  public interface ICommandHandler<TCommand> where TCommand : ICommand
+    public interface ICommandHandler<TCommand> where TCommand : ICommand
   {
     void Handle(TCommand command);
   }

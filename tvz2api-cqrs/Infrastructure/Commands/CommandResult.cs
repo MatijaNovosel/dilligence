@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace tvz2api_cqrs.Infrastructure.Commands
 {
-  public interface ICommandResult<TResult>
+    public interface ICommandResult<TResult>
   {
     TResult Payload { get; }
     bool IsSuccess { get; }

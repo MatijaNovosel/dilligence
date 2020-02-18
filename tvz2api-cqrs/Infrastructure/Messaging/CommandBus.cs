@@ -1,16 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using FluentValidation;
-using System.Linq;
 using tvz2api_cqrs.Infrastructure.Commands;
 using tvz2api_cqrs.Infrastructure.CommandHandlers;
 using tvz2api_cqrs.Exceptions;
 
 namespace tvz2api_cqrs.Infrastructure.Messaging
 {
-  public class CommandBus : ICommandBus
+    public class CommandBus : ICommandBus
   {
     IServiceProvider _serviceProvider;
 

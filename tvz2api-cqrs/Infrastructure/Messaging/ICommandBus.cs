@@ -1,9 +1,8 @@
-using System.Threading.Tasks;
 using tvz2api_cqrs.Infrastructure.Commands;
 
 namespace tvz2api_cqrs.Infrastructure.Messaging
 {
-  public interface ICommandBus
+    public interface ICommandBus
   {
     void Execute<TCommand>(TCommand command) where TCommand : ICommand;
     Task ExecuteAsync<TCommand>(TCommand command) where TCommand : ICommand;

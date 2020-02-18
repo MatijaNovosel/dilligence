@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace tvz2api_cqrs.QueryModels
 {
-  public class KolegijQueryModel
+    public class KolegijQueryModel
   {
     public int Id { get; set; }
     public string Naziv { get; set; }

@@ -1,11 +1,7 @@
-using tvz2api_cqrs.Common;
 using tvz2api_cqrs.Models;
 using tvz2api_cqrs.Implementation.Queries;
 using tvz2api_cqrs.QueryModels;
 using tvz2api_cqrs.Infrastructure.QueryHandlers;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace tvz2api_cqrs.Implementation.QueryHandlers
 {
