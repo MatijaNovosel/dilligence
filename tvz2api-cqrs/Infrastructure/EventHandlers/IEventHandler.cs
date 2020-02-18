@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using tvz2api_cqrs.Implementation.Events;
+using tvz2api_cqrs.Infrastructure.Events;
 using System.Threading.Tasks;
 
-namespace tvz2api_cqrs.Implementation.EventHandlers
+namespace tvz2api_cqrs.Infrastructure.EventHandlers
 {
   public interface IEventHandlerAsync<TEvent> where TEvent : IEvent
   {

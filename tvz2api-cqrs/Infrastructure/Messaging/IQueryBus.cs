@@ -1,7 +1,7 @@
-using tvz2api_cqrs.Implementation.Queries;
+using tvz2api_cqrs.Infrastructure.Queries;
 using System.Threading.Tasks;
 
-namespace tvz2api_cqrs.Implementation.Messaging
+namespace tvz2api_cqrs.Infrastructure.Messaging
 {
   public interface IQueryBus
   {

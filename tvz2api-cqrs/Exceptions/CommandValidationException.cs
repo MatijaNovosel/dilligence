@@ -1,4 +1,4 @@
-using tvz2api_cqrs.Implementation.Commands;
+using tvz2api_cqrs.Infrastructure.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,10 +1,10 @@
-using tvz2api_cqrs.Implementation.Queries;
-using tvz2api_cqrs.Implementation.QueryHandlers;
+using tvz2api_cqrs.Infrastructure.Queries;
+using tvz2api_cqrs.Infrastructure.QueryHandlers;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
-namespace tvz2api_cqrs.Implementation.Messaging
+namespace tvz2api_cqrs.Infrastructure.Messaging
 {
   public class QueryBus : IQueryBus
   {

@@ -8,12 +8,14 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using tvz2api_cqrs.Implementation.CommandHandlers;
-using tvz2api_cqrs.Implementation.Commands;
-using tvz2api_cqrs.Implementation.Messaging;
+using tvz2api_cqrs.Infrastructure.CommandHandlers;
+using tvz2api_cqrs.Infrastructure.Commands;
+using tvz2api_cqrs.Infrastructure.Messaging;
+using tvz2api_cqrs.Infrastructure.QueryHandlers;
+using tvz2api_cqrs.Implementation.Queries;
 using tvz2api_cqrs.Implementation.QueryHandlers;
-using tvz2api_cqrs.Queries;
 using tvz2api_cqrs.QueryModels;
+using tvz2api_cqrs.Models;
 
 namespace tvz2api_cqrs
 {
@@ -28,6 +30,7 @@ namespace tvz2api_cqrs
 
     public void ConfigureServices(IServiceCollection services)
     {
+      services.AddDbContext<tvz2Context>();
       services.AddControllers();
       ConfigureAdditionalServices(services);
     }
@@ -52,7 +55,7 @@ namespace tvz2api_cqrs
       services.AddScoped<ICommandBus, CommandBus>();
       services.AddScoped<IEventBus, EventBus>();
       services.AddScoped<IQueryBus, QueryBus>();
-      services.AddScoped<IQueryHandlerAsync<TestQuery, List<TestModel>>, TestQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<KolegijQuery, List<KolegijQueryModel>>, KolegijQueryHandler>();
     }
   }
 }

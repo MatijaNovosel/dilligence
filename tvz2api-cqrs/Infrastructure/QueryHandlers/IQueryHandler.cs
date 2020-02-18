@@ -1,8 +1,8 @@
-using tvz2api_cqrs.Implementation.Commands;
-using tvz2api_cqrs.Implementation.Queries;
+using tvz2api_cqrs.Infrastructure.Commands;
+using tvz2api_cqrs.Infrastructure.Queries;
 using System.Threading.Tasks;
 
-namespace tvz2api_cqrs.Implementation.QueryHandlers
+namespace tvz2api_cqrs.Infrastructure.QueryHandlers
 {
   public interface IQueryHandler<TQuery, TResult> where TQuery : IQuery<TResult>
   {

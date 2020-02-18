@@ -1,4 +1,4 @@
-namespace tvz2api_cqrs.Implementation.Events
+namespace tvz2api_cqrs.Infrastructure.Events
 {
   public interface IEvent { }
 }

@@ -1,8 +1,8 @@
 using System;
-using tvz2api_cqrs.Implementation.Events;
+using tvz2api_cqrs.Infrastructure.Events;
 using System.Threading.Tasks;
 
-namespace tvz2api_cqrs.Implementation.Messaging
+namespace tvz2api_cqrs.Infrastructure.Messaging
 {
   public interface IEventBus
   {

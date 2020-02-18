@@ -1,7 +1,7 @@
-using tvz2api_cqrs.Implementation.Commands;
+using tvz2api_cqrs.Infrastructure.Commands;
 using System.Threading.Tasks;
 
-namespace tvz2api_cqrs.Implementation.CommandHandlers
+namespace tvz2api_cqrs.Infrastructure.CommandHandlers
 {
   public interface ICommandHandler<TCommand> where TCommand : ICommand
   {

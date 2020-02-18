@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace tvz2api_cqrs.Implementation.Commands
+namespace tvz2api_cqrs.Infrastructure.Commands
 {
   public class ValidationResult
   {

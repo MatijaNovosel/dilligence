@@ -1,11 +1,11 @@
-using tvz2api_cqrs.Implementation.Events;
-using tvz2api_cqrs.Implementation.EventHandlers;
+using tvz2api_cqrs.Infrastructure.Events;
+using tvz2api_cqrs.Infrastructure.EventHandlers;
 using System.Threading.Tasks;
-using tvz2api_cqrs.Implementation.Messaging;
+using tvz2api_cqrs.Infrastructure.Messaging;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace tvz2api_cqrs.Implementation.Messaging
+namespace tvz2api_cqrs.Infrastructure.Messaging
 {
   public class EventBus : IEventBus
   {

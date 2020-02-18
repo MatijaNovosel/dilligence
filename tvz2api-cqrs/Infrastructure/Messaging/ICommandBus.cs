@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using tvz2api_cqrs.Implementation.Commands;
+using tvz2api_cqrs.Infrastructure.Commands;
 
-namespace tvz2api_cqrs.Implementation.Messaging
+namespace tvz2api_cqrs.Infrastructure.Messaging
 {
   public interface ICommandBus
   {
