@@ -31,7 +31,7 @@ namespace tvz2api_cqrs.Controllers
         {
             // var queryOptions = QueryOptionsExtensions.GetFromRequest(Request);
             var result = await _queryBus.ExecuteAsync(new KolegijQuery());
-            // var count = await _queryBus.ExecuteAsync(new KolegijTotalQuery());
+            var count = await _queryBus.ExecuteAsync(new KolegijTotalQuery());
             return Ok(new PageableCollection<KolegijQueryModel>() { 
               Results = result, 
               Total = 1 

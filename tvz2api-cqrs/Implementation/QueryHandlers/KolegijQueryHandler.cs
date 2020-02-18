@@ -9,7 +9,9 @@ using System.Collections.Generic;
 
 namespace tvz2api_cqrs.Implementation.QueryHandlers
 {
-  public class KolegijQueryHandler : IQueryHandlerAsync<KolegijQuery, List<KolegijQueryModel>>
+  public class KolegijQueryHandler : 
+    IQueryHandlerAsync<KolegijQuery, List<KolegijQueryModel>>, 
+    IQueryHandlerAsync<KolegijTotalQuery, int>
   {
     private readonly tvz2Context _context;
 
