@@ -1,5 +1,8 @@
 using tvz2api_cqrs.Infrastructure.Queries;
 using tvz2api_cqrs.Infrastructure.QueryHandlers;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace tvz2api_cqrs.Infrastructure.Messaging
 {

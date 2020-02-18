@@ -1,4 +1,5 @@
 using tvz2api_cqrs.Infrastructure.Events;
+using System.Threading.Tasks;
 
 namespace tvz2api_cqrs.Infrastructure.Messaging
 {

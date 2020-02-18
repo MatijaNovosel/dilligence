@@ -1,9 +1,12 @@
 using tvz2api_cqrs.Infrastructure.Events;
 using tvz2api_cqrs.Infrastructure.EventHandlers;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace tvz2api_cqrs.Infrastructure.Messaging
 {
-    public class EventBus : IEventBus
+  public class EventBus : IEventBus
   {
     IServiceProvider _serviceProvider;
 

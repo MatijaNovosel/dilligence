@@ -1,4 +1,6 @@
 using tvz2api_cqrs.Infrastructure.Commands;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace tvz2api_cqrs.Infrastructure.CommandHandlers
 {

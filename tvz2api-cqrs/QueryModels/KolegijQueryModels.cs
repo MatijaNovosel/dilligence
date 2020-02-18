@@ -1,6 +1,6 @@
 namespace tvz2api_cqrs.QueryModels
 {
-    public class KolegijQueryModel
+  public class KolegijQueryModel
   {
     public int Id { get; set; }
     public string Naziv { get; set; }
