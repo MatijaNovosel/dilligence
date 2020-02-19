@@ -7,5 +7,8 @@ export default {
   },
   async uploadMultiple(files) {
     return await axios.post(`${ROUTING.baseRoute}File/UploadMultiple`, files);
+  },
+  async deleteFile(id) {
+    return await axios.delete(`${ROUTING.baseRoute}File/Delete/${id}`);
   }
 }

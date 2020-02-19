@@ -27,7 +27,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         {
           Id = t.Id,
           Naziv = t.Naziv,
-          Ects = t.Ects
+          Ects = t.Ects,
+          SmjerID = t.SmjerID
         }).ToListAsync();
       return kolegiji;
     }
