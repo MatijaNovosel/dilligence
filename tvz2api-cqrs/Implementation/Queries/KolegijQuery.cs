@@ -1,3 +1,4 @@
+using System.Security.AccessControl;
 using tvz2api_cqrs.Common;
 using tvz2api_cqrs.QueryModels;
 using tvz2api_cqrs.Infrastructure.Queries;
@@ -15,8 +16,35 @@ namespace tvz2api_cqrs.Implementation.Queries
     public QueryOptions QueryOptions { get; set; }
   }
 
+  public class KolegijDetailsQuery : IQuery<KolegijDetailsQueryModel>
+  {
+    public KolegijDetailsQuery(int id)
+    {
+      Id = id;
+    }
+    public int Id { get; set; }
+  }
+
   public class KolegijTotalQuery : IQuery<int>
   {
     public KolegijTotalQuery() { }
+  }
+
+  public class StudentKolegijQuery : IQuery<List<StudentQueryModel>>
+  {
+    public StudentKolegijQuery(int id)
+    {
+      Id = id;
+    }
+    public int Id { get; set; }
+  }
+
+  public class StudentKolegijTotalQuery : IQuery<int>
+  {
+    public StudentKolegijTotalQuery(int id)
+    {
+      Id = id;
+    }
+    public int Id { get; set; }
   }
 }

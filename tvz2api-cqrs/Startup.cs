@@ -55,8 +55,12 @@ namespace tvz2api_cqrs
       services.AddScoped<ICommandBus, CommandBus>();
       services.AddScoped<IEventBus, EventBus>();
       services.AddScoped<IQueryBus, QueryBus>();
+
       services.AddScoped<IQueryHandlerAsync<KolegijQuery, List<KolegijQueryModel>>, KolegijQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<KolegijTotalQuery, int>, KolegijQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<StudentKolegijQuery, List<StudentQueryModel>>, KolegijQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<StudentKolegijTotalQuery, int>, KolegijQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<KolegijDetailsQuery, KolegijDetailsQueryModel>, KolegijQueryHandler>();
     }
   }
 }

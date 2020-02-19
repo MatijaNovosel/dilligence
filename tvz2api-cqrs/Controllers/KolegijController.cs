@@ -25,14 +25,28 @@ namespace tvz2api_cqrs.Controllers
             _queryBus = queryBus;
         }
 
-        [Route("")]
-        [HttpGet]
+        [HttpGet("")]
         public async Task<IActionResult> Get()
         {
             // var queryOptions = QueryOptionsExtensions.GetFromRequest(Request);
             var result = await _queryBus.ExecuteAsync(new KolegijQuery());
             var count = await _queryBus.ExecuteAsync(new KolegijTotalQuery());
             return Ok(new PageableCollection<KolegijQueryModel>() { Results = result, Total = count });
+        }
+
+        [HttpGet("studenti/{id}")]
+        public async Task<IActionResult> GetStudenti(int id)
+        {
+          var result = await _queryBus.ExecuteAsync(new StudentKolegijQuery(id));
+          var count = await _queryBus.ExecuteAsync(new StudentKolegijTotalQuery(id));
+          return Ok(new PageableCollection<StudentQueryModel>() { Results = result, Total = count });
+        }
+
+        [HttpGet("details/{id}")]
+        public async Task<IActionResult> GetDetails(int id)
+        {
+          var result = await _queryBus.ExecuteAsync(new KolegijDetailsQuery(id));
+          return Ok(result);
         }
     }
 }
