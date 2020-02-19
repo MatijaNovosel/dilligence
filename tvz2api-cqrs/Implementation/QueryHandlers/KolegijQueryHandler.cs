@@ -35,14 +35,22 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Ects = t.Ects,
           Smjer = t.Smjer.Naziv,
           Studenti = _context.Student
-            .Where(t => t.StudentKolegij.Any(x => x.KolegijId == query.Id))
-            .Select(t => new StudentDTO
+            .Where(x => x.StudentKolegij.Any(y => y.KolegijId == query.Id))
+            .Select(x => new StudentDTO
             {
-              Id = t.Id,
-              Jmbag = t.Jmbag,
-              Ime = t.Ime,
-              Prezime = t.Prezime,
-              Email = t.Email
+              Id = x.Id,
+              Jmbag = x.Jmbag,
+              Ime = x.Ime,
+              Prezime = x.Prezime,
+              Email = x.Email
+            })
+            .ToList(),
+          SidebarContents = t.SidebarContent
+            .Where(x => x.KolegijId == query.Id)
+            .Select(x => new SidebarContentDTO {
+              Id = x.Id,
+              Naslov = x.Naslov,
+              Files = null
             })
             .ToList()
         })
