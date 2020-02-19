@@ -10,5 +10,10 @@ export default {
   },
   async deleteFile(id) {
     return await axios.delete(`${ROUTING.baseRoute}File/Delete/${id}`);
+  },
+  async uploadCQRS(files) {
+    return await axios.post(`${ROUTING.baseRoute}File/upload`, {
+      Files: files
+    });
   }
 }

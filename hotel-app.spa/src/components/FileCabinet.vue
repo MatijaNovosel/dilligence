@@ -139,7 +139,7 @@ export default {
       var formData = new FormData();
       formData.set("files", null);
       this.files.forEach(x => formData.append("files", x));
-      FileService.uploadMultiple(formData)
+      FileService.uploadCQRS(formData)
         .then(({ data }) => {
           KolegijService.connectSidebarFile(1, data);
         })

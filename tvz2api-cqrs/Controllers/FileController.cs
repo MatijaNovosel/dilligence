@@ -28,11 +28,17 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPost("upload")]
-    [DisableRequestSizeLimit]
     public async Task<IActionResult> UploadFiles(FileUploadCommand command)
     {
       var uploadedFileIds = await _commandBus.ExecuteAsync<List<int>>(command);
       return Ok(uploadedFileIds);
+    }
+
+    [HttpGet("sidebar/{id}")]
+    public async Task<IActionResult> GetFiles(int id)
+    {
+      var files = await _queryBus.ExecuteAsync(new FileQuery(id));
+      return Ok(files);
     }
   }
 }
