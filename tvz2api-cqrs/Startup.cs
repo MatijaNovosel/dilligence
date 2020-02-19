@@ -14,12 +14,19 @@ using tvz2api_cqrs.Infrastructure.Messaging;
 using tvz2api_cqrs.Infrastructure.QueryHandlers;
 using tvz2api_cqrs.Implementation.Queries;
 using tvz2api_cqrs.Implementation.QueryHandlers;
+using tvz2api_cqrs.Implementation.CommandHandlers;
+using tvz2api_cqrs.Implementation.Commands;
 using tvz2api_cqrs.Models;
 using tvz2api_cqrs.QueryModels;
+using System.IO;
+using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Models;
 
 namespace tvz2api_cqrs
 {
-    public class Startup
+  public class Startup
   {
     public Startup(IConfiguration configuration)
     {
@@ -33,6 +40,10 @@ namespace tvz2api_cqrs
       ConfigureAdditionalServices(services);
       services.AddDbContext<tvz2Context>();
       services.AddControllers();
+      services.AddSwaggerGen(c =>
+      {
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "tvz2cqrs", Version = "v1" });
+      });
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -42,6 +53,11 @@ namespace tvz2api_cqrs
         app.UseDeveloperExceptionPage();
       }
       app.UseHttpsRedirection();
+      app.UseSwagger();
+      app.UseSwaggerUI(c =>
+      {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "tvz2cqrs");
+      });
       app.UseRouting();
       app.UseAuthorization();
       app.UseEndpoints(endpoints =>
@@ -61,6 +77,8 @@ namespace tvz2api_cqrs
       services.AddScoped<IQueryHandlerAsync<StudentKolegijQuery, List<StudentQueryModel>>, KolegijQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<StudentKolegijTotalQuery, int>, KolegijQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<KolegijDetailsQuery, KolegijDetailsQueryModel>, KolegijQueryHandler>();
+
+      services.AddScoped<ICommandHandlerAsync<FileUploadCommand, List<int>>, FileCommandHandler>();
     }
   }
 }

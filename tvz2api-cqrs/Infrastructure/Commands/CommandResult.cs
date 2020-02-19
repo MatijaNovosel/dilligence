@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace tvz2api_cqrs.Infrastructure.Commands
 {
-    public interface ICommandResult<TResult>
+  public interface ICommandResult<TResult>
   {
     TResult Payload { get; }
     bool IsSuccess { get; }
