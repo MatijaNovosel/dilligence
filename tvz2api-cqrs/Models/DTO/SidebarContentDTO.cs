@@ -9,6 +9,6 @@ namespace tvz2api_cqrs.Models.DTO
   {
     public int Id { get; set; }
     public string Naslov { get; set; }
-    public List<IFormFile> Files { get; set; }
+    public List<FileDTO> Files { get; set; }
   }
 }

@@ -34,28 +34,34 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Naziv = t.Naziv,
           Ects = t.Ects,
           Smjer = t.Smjer.Naziv,
-          Studenti = _context.Student
-            .Where(x => x.StudentKolegij.Any(y => y.KolegijId == query.Id))
+          Studenti = t.StudentKolegij
             .Select(x => new StudentDTO
             {
-              Id = x.Id,
-              Jmbag = x.Jmbag,
-              Ime = x.Ime,
-              Prezime = x.Prezime,
-              Email = x.Email
+              Ime = x.Student.Ime,
+              Prezime = x.Student.Prezime
             })
             .ToList(),
           SidebarContents = t.SidebarContent
             .Where(x => x.KolegijId == query.Id)
-            .Select(x => new SidebarContentDTO {
+            .Select(x => new SidebarContentDTO
+            {
               Id = x.Id,
               Naslov = x.Naslov,
-              Files = null
+              Files = _context.File
+                .Where(y => y.SidebarContentFile.Any(z => z.SidebarContentId == x.Id))
+                .Select(y => new FileDTO
+                {
+                  Id = y.Id,
+                  Naziv = y.Naziv,
+                  ContentType = y.ContentType,
+                  Data = y.Data
+                })
+                .ToList()
             })
             .ToList()
         })
         .FirstOrDefaultAsync();
-      return kolegij;
+      return null;
     }
 
     public async Task<List<StudentQueryModel>> HandleAsync(StudentKolegijQuery query)

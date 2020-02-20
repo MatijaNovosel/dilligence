@@ -42,7 +42,7 @@ namespace tvz2api_cqrs.Controllers
           return Ok(new PageableCollection<StudentQueryModel>() { Results = result, Total = count });
         }
 
-        [HttpGet("details/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetDetails(int id)
         {
           var result = await _queryBus.ExecuteAsync(new KolegijDetailsQuery(id));
