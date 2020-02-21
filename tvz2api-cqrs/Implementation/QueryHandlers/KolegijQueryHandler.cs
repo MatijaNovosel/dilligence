@@ -15,7 +15,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     IQueryHandlerAsync<KolegijTotalQuery, int>,
     IQueryHandlerAsync<StudentKolegijTotalQuery, int>,
     IQueryHandlerAsync<StudentKolegijQuery, List<StudentQueryModel>>,
-    IQueryHandlerAsync<KolegijDetailsQuery, KolegijDetailsQueryModel>
+    IQueryHandlerAsync<KolegijDetailsQuery, KolegijDetailsQueryModel>,
+    IQueryHandlerAsync<KolegijSidebarQuery, List<SidebarContentDTO>>
   {
     private readonly tvz2Context _context;
 
@@ -38,7 +39,10 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
             .Select(x => new StudentDTO
             {
               Ime = x.Student.Ime,
-              Prezime = x.Student.Prezime
+              Prezime = x.Student.Prezime,
+              Jmbag = x.Student.Jmbag,
+              ImagePath = x.Student.ImagePath,
+              Email = x.Student.Email
             })
             .ToList(),
           SidebarContents = t.SidebarContent
@@ -47,21 +51,44 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
             {
               Id = x.Id,
               Naslov = x.Naslov,
-              Files = _context.File
-                .Where(y => y.SidebarContentFile.Any(z => z.SidebarContentId == x.Id))
+              Files = x.SidebarContentFile
+                .Where(y => y.SidebarContentId == x.Id)
                 .Select(y => new FileDTO
                 {
-                  Id = y.Id,
-                  Naziv = y.Naziv,
-                  ContentType = y.ContentType,
-                  Data = y.Data
+                  Id = y.File.Id,
+                  Naziv = y.File.Naziv,
+                  ContentType = y.File.ContentType,
+                  Data = y.File.Data
                 })
                 .ToList()
             })
             .ToList()
         })
         .FirstOrDefaultAsync();
-      return null;
+      return kolegij;
+    }
+
+    public async Task<List<SidebarContentDTO>> HandleAsync(KolegijSidebarQuery query)
+    {
+      var sidebarContent = await _context.SidebarContent
+        .Where(x => x.KolegijId == query.Id)
+        .Select(x => new SidebarContentDTO
+        {
+          Id = x.Id,
+          Naslov = x.Naslov,
+          Files = x.SidebarContentFile
+            .Where(y => y.SidebarContentId == x.Id)
+            .Select(y => new FileDTO
+            {
+              Id = y.File.Id,
+              Naziv = y.File.Naziv,
+              ContentType = y.File.ContentType,
+              Data = y.File.Data
+            })
+            .ToList()
+        })
+        .ToListAsync();
+      return sidebarContent;
     }
 
     public async Task<List<StudentQueryModel>> HandleAsync(StudentKolegijQuery query)

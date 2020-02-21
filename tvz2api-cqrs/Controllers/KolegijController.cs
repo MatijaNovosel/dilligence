@@ -12,41 +12,48 @@ using System.Threading.Tasks;
 
 namespace tvz2api_cqrs.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class KolegijController : ControllerBase
+  [Route("api/[controller]")]
+  [ApiController]
+  public class KolegijController : ControllerBase
+  {
+    private readonly ICommandBus _commandBus;
+    private readonly IQueryBus _queryBus;
+
+    public KolegijController(ICommandBus commandBus, IQueryBus queryBus)
     {
-        private readonly ICommandBus _commandBus;
-        private readonly IQueryBus _queryBus;
-
-        public KolegijController(ICommandBus commandBus, IQueryBus queryBus)
-        {
-            _commandBus = commandBus;
-            _queryBus = queryBus;
-        }
-
-        [HttpGet("")]
-        public async Task<IActionResult> Get()
-        {
-            // var queryOptions = QueryOptionsExtensions.GetFromRequest(Request);
-            var result = await _queryBus.ExecuteAsync(new KolegijQuery());
-            var count = await _queryBus.ExecuteAsync(new KolegijTotalQuery());
-            return Ok(new PageableCollection<KolegijQueryModel>() { Results = result, Total = count });
-        }
-
-        [HttpGet("studenti/{id}")]
-        public async Task<IActionResult> GetStudenti(int id)
-        {
-          var result = await _queryBus.ExecuteAsync(new StudentKolegijQuery(id));
-          var count = await _queryBus.ExecuteAsync(new StudentKolegijTotalQuery(id));
-          return Ok(new PageableCollection<StudentQueryModel>() { Results = result, Total = count });
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetDetails(int id)
-        {
-          var result = await _queryBus.ExecuteAsync(new KolegijDetailsQuery(id));
-          return Ok(result);
-        }
+      _commandBus = commandBus;
+      _queryBus = queryBus;
     }
+
+    [HttpGet("")]
+    public async Task<IActionResult> Get()
+    {
+      // var queryOptions = QueryOptionsExtensions.GetFromRequest(Request);
+      var result = await _queryBus.ExecuteAsync(new KolegijQuery());
+      var count = await _queryBus.ExecuteAsync(new KolegijTotalQuery());
+      return Ok(new PageableCollection<KolegijQueryModel>() { Results = result, Total = count });
+    }
+
+    [HttpGet("studenti/{id}")]
+    public async Task<IActionResult> GetStudenti(int id)
+    {
+      var result = await _queryBus.ExecuteAsync(new StudentKolegijQuery(id));
+      var count = await _queryBus.ExecuteAsync(new StudentKolegijTotalQuery(id));
+      return Ok(new PageableCollection<StudentQueryModel>() { Results = result, Total = count });
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetDetails(int id)
+    {
+      var result = await _queryBus.ExecuteAsync(new KolegijDetailsQuery(id));
+      return Ok(result);
+    }
+
+    [HttpGet("sidebar/{id}")]
+    public async Task<IActionResult> GetSidebarContents(int id)
+    {
+      var result = await _queryBus.ExecuteAsync(new KolegijSidebarQuery(id));
+      return Ok(result);
+    }
+  }
 }

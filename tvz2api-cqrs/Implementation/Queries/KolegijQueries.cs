@@ -3,6 +3,7 @@ using tvz2api_cqrs.Common;
 using tvz2api_cqrs.QueryModels;
 using tvz2api_cqrs.Infrastructure.Queries;
 using System.Collections.Generic;
+using tvz2api_cqrs.Models.DTO;
 
 namespace tvz2api_cqrs.Implementation.Queries
 {
@@ -19,6 +20,15 @@ namespace tvz2api_cqrs.Implementation.Queries
   public class KolegijDetailsQuery : IQuery<KolegijDetailsQueryModel>
   {
     public KolegijDetailsQuery(int id)
+    {
+      Id = id;
+    }
+    public int Id { get; set; }
+  }
+
+  public class KolegijSidebarQuery : IQuery<List<SidebarContentDTO>>
+  {
+    public KolegijSidebarQuery(int id)
     {
       Id = id;
     }

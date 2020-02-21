@@ -8,10 +8,7 @@ namespace tvz2api_cqrs.Implementation.Commands
 {
   public class FileUploadCommand : ICommand<List<int>>
   {
-    public FileUploadCommand(List<IFormFile> files)
-    {
-      Files = files;
-    }
+    public FileUploadCommand() { }
     public List<IFormFile> Files { get; set; }
   }
 }

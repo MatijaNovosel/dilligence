@@ -28,7 +28,7 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPost("upload")]
-    public async Task<IActionResult> UploadFiles(FileUploadCommand command)
+    public async Task<IActionResult> UploadFiles([FromBody]FileUploadCommand command)
     {
       var uploadedFileIds = await _commandBus.ExecuteAsync<List<int>>(command);
       return Ok(uploadedFileIds);

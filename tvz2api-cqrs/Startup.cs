@@ -17,6 +17,7 @@ using tvz2api_cqrs.Implementation.QueryHandlers;
 using tvz2api_cqrs.Implementation.CommandHandlers;
 using tvz2api_cqrs.Implementation.Commands;
 using tvz2api_cqrs.Models;
+using tvz2api_cqrs.Models.DTO;
 using tvz2api_cqrs.QueryModels;
 using System.IO;
 using System.Net.Http.Headers;
@@ -44,6 +45,14 @@ namespace tvz2api_cqrs
       {
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "tvz2cqrs", Version = "v1" });
       });
+      services.AddCors(options =>
+      {
+        options.AddDefaultPolicy(
+        builder =>
+        {
+          builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+        });
+      });
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -52,6 +61,7 @@ namespace tvz2api_cqrs
       {
         app.UseDeveloperExceptionPage();
       }
+      app.UseCors();
       app.UseHttpsRedirection();
       app.UseSwagger();
       app.UseSwaggerUI(c =>
@@ -77,6 +87,7 @@ namespace tvz2api_cqrs
       services.AddScoped<IQueryHandlerAsync<StudentKolegijQuery, List<StudentQueryModel>>, KolegijQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<StudentKolegijTotalQuery, int>, KolegijQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<KolegijDetailsQuery, KolegijDetailsQueryModel>, KolegijQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<KolegijSidebarQuery, List<SidebarContentDTO>>, KolegijQueryHandler>();
 
       services.AddScoped<ICommandHandlerAsync<FileUploadCommand, List<int>>, FileCommandHandler>();
 
