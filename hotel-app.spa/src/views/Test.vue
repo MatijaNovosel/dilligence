@@ -5,16 +5,14 @@
 				<h1>Upload test</h1>
 			</v-col>
 			<v-col cols="12">
-				<v-skeleton-loader class="mx-auto" type="card" max-width="40%" :loading="loading">
-					<template v-for="content in sidebarContent">
-						<file-cabinet
-							:key="content.id"
-							@doneUploading="getData"
-							:content="content"
-							headerColor="primary"
-						/>
-					</template>
-				</v-skeleton-loader>
+				<template v-for="content in sidebarContent">
+					<file-cabinet
+						:key="content.id"
+						@doneUploading="getData"
+						:content="content"
+						headerColor="primary"
+					/>
+				</template>
 			</v-col>
 		</v-row>
 	</div>
@@ -36,17 +34,17 @@ export default {
 	},
 	methods: {
 		getData() {
-      this.loading = true;
+			this.loading = true;
 			KolegijService.getKolegijSidebar(147)
 				.then(({ data }) => {
 					data.forEach(sidebar =>
-						sidebar.files.forEach(file => (file.downloading = false))
+						sidebar.files.forEach(file => (file.downloading = file.deleting = false))
 					);
 					this.sidebarContent = data;
 				})
 				.finally(() => {
-          this.loading = false;
-        });
+					this.loading = false;
+				});
 		},
 		loadingFinished() {
 			this.loading = false;

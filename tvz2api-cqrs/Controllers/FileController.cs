@@ -28,14 +28,36 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPost("upload")]
-    public async Task<IActionResult> UploadFiles([FromBody]FileUploadCommand command)
+    public async Task<IActionResult> UploadFiles(List<IFormFile> files)
     {
-      var uploadedFileIds = await _commandBus.ExecuteAsync<List<int>>(command);
+      if (files == null || files.Count == 0)
+      {
+        throw new Exception("No files present!");
+      }
+      var uploadedFileIds = await _commandBus.ExecuteAsync<List<int>>(new FileUploadCommand(files));
       return Ok(uploadedFileIds);
     }
 
+    [HttpPost("uploadSidebar")]
+    public async Task<IActionResult> UploadFiles(List<IFormFile> files, int id)
+    {
+      if (files == null || files.Count == 0)
+      {
+        throw new Exception("No files present!");
+      }
+      var uploadedFileIds = await _commandBus.ExecuteAsync<List<int>>(new FileUploadSidebarCommand(id, files));
+      return Ok(uploadedFileIds);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+      await _commandBus.ExecuteAsync(new FileDeleteCommand(id));
+      return NoContent();
+    }
+
     [HttpGet("sidebar/{id}")]
-    public async Task<IActionResult> GetFiles(int id)
+    public async Task<IActionResult> Get(int id)
     {
       var files = await _queryBus.ExecuteAsync(new FileQuery(id));
       return Ok(files);

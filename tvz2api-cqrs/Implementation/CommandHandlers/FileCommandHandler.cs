@@ -21,7 +21,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace tvz2api_cqrs.Implementation.CommandHandlers
 {
   public class FileCommandHandler :
-    ICommandHandlerAsync<FileUploadCommand, List<int>>
+    ICommandHandlerAsync<FileUploadCommand, List<int>>,
+    ICommandHandlerAsync<FileDeleteCommand>,
+    ICommandHandlerAsync<FileUploadSidebarCommand, List<int>>
   {
     private readonly tvz2Context _context;
 
@@ -32,11 +34,6 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
     public async Task<ICommandResult<List<int>>> HandleAsync(FileUploadCommand command)
     {
-      if (command.Files == null || command.Files.Count == 0)
-      {
-        throw new Exception("No files present!");
-      }
-
       List<tvz2api_cqrs.Models.File> newFiles = new List<tvz2api_cqrs.Models.File>();
 
       foreach (var file in command.Files)
@@ -62,6 +59,57 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       await _context.SaveChangesAsync();
 
       return CommandResult<List<int>>.Success(new List<int>(newFiles.Select(x => x.Id)));
+    }
+
+    public async Task<ICommandResult<List<int>>> HandleAsync(FileUploadSidebarCommand command)
+    {
+      List<tvz2api_cqrs.Models.File> newFiles = new List<tvz2api_cqrs.Models.File>();
+
+      foreach (var file in command.Files)
+      {
+        using (var ms = new MemoryStream())
+        {
+          file.CopyTo(ms);
+          var fileBytes = ms.ToArray();
+
+          var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+          fileName = fileName.Substring(0, fileName.LastIndexOf(".")) + fileName.Substring(fileName.LastIndexOf(".")).ToLower();
+
+          newFiles.Add(new tvz2api_cqrs.Models.File
+          {
+            Naziv = Path.GetFileName(fileName),
+            ContentType = file.ContentType,
+            Data = fileBytes
+          });
+        }
+      }
+
+      await _context.File.AddRangeAsync(newFiles);
+      await _context.SaveChangesAsync();
+
+      newFiles.ForEach(x =>
+      {
+        _context.SidebarContentFile.Add(new SidebarContentFile()
+        {
+          SidebarContentId = command.SidebarId,
+          FileId = x.Id
+        });
+      });
+
+      await _context.SaveChangesAsync();
+
+      return CommandResult<List<int>>.Success(new List<int>(newFiles.Select(x => x.Id)));
+    }
+
+    public async Task HandleAsync(FileDeleteCommand command)
+    {
+      var sidebarContents = _context.SidebarContentFile.Where(x => x.FileId == command.Id);
+      _context.SidebarContentFile.RemoveRange(sidebarContents);
+
+      var file = await _context.File.Where(x => x.Id == command.Id).FirstOrDefaultAsync();
+      _context.File.Remove(file);
+
+      await _context.SaveChangesAsync();
     }
   }
 }

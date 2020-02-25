@@ -90,6 +90,8 @@ namespace tvz2api_cqrs
       services.AddScoped<IQueryHandlerAsync<KolegijSidebarQuery, List<SidebarContentDTO>>, KolegijQueryHandler>();
 
       services.AddScoped<ICommandHandlerAsync<FileUploadCommand, List<int>>, FileCommandHandler>();
+      services.AddScoped<ICommandHandlerAsync<FileUploadSidebarCommand, List<int>>, FileCommandHandler>();
+      services.AddScoped<ICommandHandlerAsync<FileDeleteCommand>, FileCommandHandler>();
 
       services.AddScoped<IQueryHandlerAsync<FileQuery, List<FileQueryModel>>, FileQueryHandler>();
     }

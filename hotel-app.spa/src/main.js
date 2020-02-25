@@ -16,13 +16,9 @@ Vue.config.productionTip = false;
 
 axios.interceptors.request.use((config) => {
   config.mode = "cors";
-  
-  if(store.getters.user.token != null) {
+
+  if (store.getters.user.token != null) {
     config.headers.common['Authorization'] = `Bearer ${store.getters.user.token}`;
-  }
-  
-  if(config.url.includes("File")) {
-    config.headers.common['Accept'] = "multipart/form-data";  
   }
 
   return config;
@@ -31,9 +27,9 @@ axios.interceptors.request.use((config) => {
 });
 
 Vue.filter('upper', function (value) {
-    if(!value) return;
-    value = value.toUpperCase();
-    return value;
+  if (!value) return;
+  value = value.toUpperCase();
+  return value;
 });
 
 new Vue({
