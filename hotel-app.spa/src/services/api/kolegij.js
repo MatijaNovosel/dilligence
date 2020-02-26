@@ -1,12 +1,11 @@
 import axios from 'axios';
-import { ROUTING } from '@/constants/Routing';
 
 export default {
   async getKolegij(id) {
-    return await axios.get(`${ROUTING.baseRoute}Kolegij/${id}`);
+    return await axios.get(`Kolegij/${id}`);
   },
   async getKolegiji(smjerIDs, name, minECTS, maxECTS, isvu, skip, take) {
-    return await axios.get(`${ROUTING.baseRoute}Kolegij`, {
+    return await axios.get('Kolegij', {
       params: {
         smjerIDs,
         name,
@@ -19,7 +18,7 @@ export default {
     });
   },
   async getKolegijNews(kolegijId, skip, take) {
-    return await axios.get(`${ROUTING.baseRoute}Kolegij/Vijesti/${kolegijId}`, {
+    return await axios.get(`Kolegij/Vijesti/${kolegijId}`, {
       params: {
         skip,
         take
@@ -27,7 +26,7 @@ export default {
     });
   },
   async getKolegijStudents(kolegijId, skip, take) {
-    return await axios.get(`${ROUTING.baseRoute}Kolegij/Students/${kolegijId}`, {
+    return await axios.get(`Kolegij/Students/${kolegijId}`, {
       params: {
         skip,
         take
@@ -35,13 +34,13 @@ export default {
     })
   },
   async getKolegijByPreplate(studentId) {
-    return await axios.get(`${ROUTING.baseRoute}Kolegij/my/${studentId}`);
+    return await axios.get(`Kolegij/my/${studentId}`);
   },
   async getKolegijSidebarContent(kolegijId) {
-    return await axios.get(`${ROUTING.baseRoute}Kolegij/SidebarContent/${kolegijId}`);
+    return await axios.get(`Kolegij/SidebarContent/${kolegijId}`);
   },
   async connectSidebarFile(sidebarContentId, fileIDs) {
-    return await axios.post(`${ROUTING.baseRoute}Kolegij/ConnectSidebarFile`, { 
+    return await axios.post('Kolegij/ConnectSidebarFile', { 
       sidebarContentId,
       fileIDs 
     });

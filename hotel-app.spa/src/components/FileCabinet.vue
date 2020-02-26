@@ -52,21 +52,21 @@
 			</v-list>
 		</v-card>
 		<v-dialog v-model="addFileDialog" max-width="600">
-			<v-toolbar dense dark flat color="primary">
+			<v-system-bar height="30" dark color="primary">
 				<v-spacer></v-spacer>
 				<v-btn icon @click="addFileDialog = false">
-					<v-icon dark>mdi-close</v-icon>
+					<v-icon small>mdi-close</v-icon>
 				</v-btn>
-			</v-toolbar>
+			</v-system-bar>
 			<v-card>
 				<v-card-text class="pb-none">
-					<v-row class="pt-2">
+					<v-row class="pt-2 mb-n5">
 						<v-col cols="11">
 							<v-file-input
 								v-model="files"
 								color="primary"
 								counter
-								label="Multiple file upload"
+								label="Upload files"
 								placeholder="Select your files"
 								prepend-icon="mdi-paperclip"
 								outlined
@@ -75,11 +75,18 @@
 							></v-file-input>
 						</v-col>
 						<v-col cols="1">
-							<v-btn icon text class="mt-3" @click="uploadMultiple">
+							<v-btn icon text class="mt-3" @click="uploadMultipleWithSidebar">
 								<v-icon>mdi-upload</v-icon>
 							</v-btn>
 						</v-col>
 					</v-row>
+					<v-checkbox
+						color="primary"
+						dense
+						class="mt-none"
+						v-model="closeAfterCompletion"
+						label="Close dialog after uploading"
+					/>
 				</v-card-text>
 			</v-card>
 		</v-dialog>
@@ -97,7 +104,8 @@ export default {
 			addFileDialog: false,
 			file: null,
 			files: null,
-			itemUploading: false
+			itemUploading: false,
+			closeAfterCompletion: false
 		};
 	},
 	methods: {
@@ -108,11 +116,11 @@ export default {
 			this.download(item.contentType, item.data, item.naziv);
 			setTimeout(() => (item.downloading = false), 500);
 		},
-		uploadMultiple() {
+		upload() {
 			this.itemUploading = true;
 			var formData = new FormData();
 			this.files.forEach(x => formData.append("files", x));
-			FileService.uploadCQRS(formData).finally(() => {
+			FileService.upload(formData).finally(() => {
 				this.$emit("doneUploading");
 				this.itemUploading = false;
 			});
@@ -124,6 +132,10 @@ export default {
 			FileService.uploadSidebar(formData, this.content.id).finally(() => {
 				this.$emit("doneUploading");
 				this.itemUploading = false;
+				if (this.closeAfterCompletion) {
+					this.addFileDialog = false;
+				}
+				this.files = null;
 			});
 		},
 		deleteFile(file) {
@@ -163,5 +175,9 @@ export default {
 }
 .v-dialog > .v-card > .v-card__text {
 	padding: 0 24px 0px;
+}
+.v-input--selection-controls {
+	margin-top: 0px;
+	padding-top: 0px;
 }
 </style>

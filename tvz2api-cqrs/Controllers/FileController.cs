@@ -38,8 +38,8 @@ namespace tvz2api_cqrs.Controllers
       return Ok(uploadedFileIds);
     }
 
-    [HttpPost("uploadSidebar")]
-    public async Task<IActionResult> UploadFiles(List<IFormFile> files, int id)
+    [HttpPost("uploadSidebar/{id}")]
+    public async Task<IActionResult> UploadFiles([FromForm]List<IFormFile> files, int id)
     {
       if (files == null || files.Count == 0)
       {

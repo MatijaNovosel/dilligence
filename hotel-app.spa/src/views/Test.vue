@@ -38,7 +38,9 @@ export default {
 			KolegijService.getKolegijSidebar(147)
 				.then(({ data }) => {
 					data.forEach(sidebar =>
-						sidebar.files.forEach(file => (file.downloading = file.deleting = false))
+						sidebar.files.forEach(
+							file => (file.downloading = file.deleting = false)
+						)
 					);
 					this.sidebarContent = data;
 				})
