@@ -26,9 +26,17 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpGet("")]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get(
+      [FromQuery(Name = "smjerIDs[]")] List<SmjerEnum> smjerIDs = null,
+      string name = null,
+      int minECTS = 1,
+      int maxECTS = 6,
+      string isvu = null,
+      int skip = 0,
+      int? take = null)
     {
       // var queryOptions = QueryOptionsExtensions.GetFromRequest(Request);
+      var specification = new KolegijSpecification(smjerIDs, name, minECTS, maxECTS, isvu);
       var result = await _queryBus.ExecuteAsync(new KolegijQuery());
       var count = await _queryBus.ExecuteAsync(new KolegijTotalQuery());
       return Ok(new PageableCollection<KolegijQueryModel>() { Results = result, Total = count });
