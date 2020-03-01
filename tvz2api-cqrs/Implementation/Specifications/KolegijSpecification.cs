@@ -1,5 +1,6 @@
 using tvz2api_cqrs.Models;
 using tvz2api_cqrs.Infrastructure;
+using tvz2api_cqrs.Enumerations;
 using LinqKit;
 using System;
 using System.Collections.Generic;
@@ -12,66 +13,43 @@ namespace tvz2api_cqrs.Implementation.Specifications
 {
   public class KolegijSpecification : ISpecification<Kolegij>
   {
-    public KolegijSpecification(string clientName, string clientId, string clientVAT, string objectIdExternal, int? statementTypeId, string barcode, List<StatementLifeCycleEnum> statusIds = null, bool onlyActiveStatements = false)
+    public KolegijSpecification(List<SmjerEnum> smjerIds = null, string name = null, int minEcts = 1, int maxEcts = 6, string isvu = null)
     {
-      smjerIDs = null,
-      name = null,
-      minECTS = 1,
-      maxECTS = 6,
-      isvu = null,
-      skip = 0,
-      take = null
+      SmjerIds = smjerIds;
+      Name = name;
+      MinEcts = minEcts;
+      MaxEcts = maxEcts;
+      Isvu = isvu;
     }
 
-    public List<StatementLifeCycleEnum> StatusIds { get; }
-    public bool OnlyActiveStatements { get; }
-    public string ClientName { get; }
-    public string ClientId { get; }
-    public string ClientVAT { get; }
-    public string ObjectIdExternal { get; }
-    public int? StatementTypeId { get; }
-    public string Barcode { get; }
+    public List<StatementLifeCycleEnum> SmjerIds { get; }
+    public string Name { get; }
+    public int MinEcts { get; }
+    public int MaxEcts { get; }
+    public string Isvu { get; }
 
-    public Expression<Func<Statement, bool>> Predicate
+    public Expression<Func<Kolegij, bool>> Predicate
     {
       get
       {
-        Expression<Func<Statement, bool>> predicate = t => true;
+        Expression<Func<Kolegij, bool>> predicate = t => true;
 
-        if (StatementTypeId.HasValue)
+        if (SmjerIds != null && SmjerIds.Count() > 0)
         {
-          predicate = predicate.And(t => t.StatementTypeID == StatementTypeId);
+          predicate = predicate.And(t => SmjerIds.Any(x => (int)x == t.SmjerId));
         }
 
-        if (StatusIds != null && StatusIds.Count() > 0)
+        if (!string.IsNullOrWhiteSpace(Name))
         {
-          predicate = predicate.And(t => StatusIds.Any(x => (int)x == t.LifeCycleID));
+          predicate = predicate.And(t => t.Name.ToLower().Contains(Name.ToLower()));
         }
 
-        if (!string.IsNullOrWhiteSpace(ClientName))
+        if (!string.IsNullOrWhiteSpace(Isvu))
         {
-          predicate = predicate.And(t => t.ClientName.ToLower().Contains(ClientName.ToLower()));
+          predicate = predicate.And(t => t.Isvu == Isvu);
         }
 
-        if (!string.IsNullOrWhiteSpace(ClientId))
-        {
-          predicate = predicate.And(t => t.ClientID == ClientId);
-        }
-
-        if (!string.IsNullOrWhiteSpace(ClientVAT))
-        {
-          predicate = predicate.And(t => t.ClientVAT == ClientVAT);
-        }
-
-        if (!string.IsNullOrWhiteSpace(ObjectIdExternal))
-        {
-          predicate = predicate.And(t => t.ObjectIDExternal == ObjectIdExternal);
-        }
-
-        if (!string.IsNullOrWhiteSpace(Barcode))
-        {
-          predicate = predicate.And(t => t.DocumentBarcode == Barcode);
-        }
+        predicate = predicate.And(t => t.Ects >= MinEcts && t.Ects <= MaxEcts);
 
         return predicate.Expand();
       }
