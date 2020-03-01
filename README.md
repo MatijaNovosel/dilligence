@@ -1,5 +1,5 @@
 # tvz2
-Unofficial redesign of the outdated TVZ faculty website, refurbished with Vue JS and .NET Core
+Learning management system made with Vue JS and .NET Core WebAPI.
 
 ![Front page](https://i.imgur.com/1acw3qZ.png)
 
