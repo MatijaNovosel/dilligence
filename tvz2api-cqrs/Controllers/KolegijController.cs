@@ -1,8 +1,10 @@
 using tvz2api_cqrs.Models;
 using tvz2api_cqrs.Infrastructure.Commands;
+using tvz2api_cqrs.Enumerations;
 using tvz2api_cqrs.Implementation.Queries;
 using tvz2api_cqrs.QueryModels;
 using tvz2api_cqrs.Infrastructure.Messaging;
+using tvz2api_cqrs.Implementation.Specifications;
 using Microsoft.AspNetCore.Mvc;
 using tvz2api_cqrs.Common;
 using System;

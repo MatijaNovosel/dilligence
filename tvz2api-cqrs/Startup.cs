@@ -24,6 +24,9 @@ using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace tvz2api_cqrs
 {
@@ -41,6 +44,16 @@ namespace tvz2api_cqrs
       ConfigureAdditionalServices(services);
       services.AddDbContext<tvz2Context>();
       services.AddControllers();
+      services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+      {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+          ValidateIssuerSigningKey = true,
+          IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+          ValidateIssuer = false,
+          ValidateAudience = false
+        };
+      });
       services.AddSwaggerGen(c =>
       {
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "tvz2cqrs", Version = "v1" });
@@ -94,6 +107,8 @@ namespace tvz2api_cqrs
       services.AddScoped<ICommandHandlerAsync<FileDeleteCommand>, FileCommandHandler>();
 
       services.AddScoped<IQueryHandlerAsync<FileQuery, List<FileQueryModel>>, FileQueryHandler>();
+
+      services.AddScoped<ICommandHandlerAsync<AuthenticationRegisterCommand>, AuthenticationCommandHandler>();
     }
   }
 }

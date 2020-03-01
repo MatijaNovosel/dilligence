@@ -1,6 +1,6 @@
 using tvz2api_cqrs.Models;
-using tvz2api_cqrs.Infrastructure;
 using tvz2api_cqrs.Enumerations;
+using tvz2api_cqrs.Infrastructure.Specifications;
 using LinqKit;
 using System;
 using System.Collections.Generic;
@@ -22,12 +22,12 @@ namespace tvz2api_cqrs.Implementation.Specifications
       Isvu = isvu;
     }
 
-    public List<StatementLifeCycleEnum> SmjerIds { get; }
+    public List<SmjerEnum> SmjerIds { get; }
     public string Name { get; }
     public int MinEcts { get; }
     public int MaxEcts { get; }
     public string Isvu { get; }
-
+    
     public Expression<Func<Kolegij, bool>> Predicate
     {
       get
@@ -41,7 +41,7 @@ namespace tvz2api_cqrs.Implementation.Specifications
 
         if (!string.IsNullOrWhiteSpace(Name))
         {
-          predicate = predicate.And(t => t.Name.ToLower().Contains(Name.ToLower()));
+          predicate = predicate.And(t => t.Naziv.ToLower().Contains(Name.ToLower()));
         }
 
         if (!string.IsNullOrWhiteSpace(Isvu))
