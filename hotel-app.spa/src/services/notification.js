@@ -1,7 +1,5 @@
 import Vue from 'vue'
 
-// warn, error, success
-
 export default {
   error(title, message) {
     Vue.notify({

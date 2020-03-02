@@ -110,6 +110,8 @@ namespace tvz2api_cqrs
 
       services.AddScoped<ICommandHandlerAsync<AuthenticationRegisterCommand>, AuthenticationCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<AuthenticationLoginCommand, LoginUserDTO>, AuthenticationCommandHandler>();
+
+      services.AddScoped<IQueryHandlerAsync<StudentDetailsQuery, StudentQueryModel>, StudentQueryHandler>();
     }
   }
 }

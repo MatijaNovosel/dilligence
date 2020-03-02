@@ -3,17 +3,17 @@ import NotificationService from '../notification';
 import store from '../../store/store';
 
 export default {
-  async login(model) {
+  async login(payload) {
     return await axios.post('auth/login', {
-      Username: model.Username,
-      Password: model.Password
+      Username: payload.Username,
+      Password: payload.Password
     });
   },
 
-  async register(model) {
+  async register(payload) {
     return await axios.post('auth/register', {
-      Username: model.Username,
-      Password: model.Password
+      Username: payload.Username,
+      Password: payload.Password
     }).catch(error => {
       NotificationService.error(`${error.name}: ${error.message}`, 'Unable to register!');
     });

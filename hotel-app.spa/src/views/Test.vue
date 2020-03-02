@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import KolegijService from "../services/api-cqrs/kolegij";
+import KolegijService from "../services/api/kolegij";
 import FileCabinet from "../components/FileCabinet";
 
 export default {
