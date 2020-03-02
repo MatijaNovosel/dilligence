@@ -1,5 +1,6 @@
 using tvz2api_cqrs.Models;
 using tvz2api_cqrs.Infrastructure.Commands;
+using tvz2api_cqrs.Implementation.Commands;
 using tvz2api_cqrs.Enumerations;
 using tvz2api_cqrs.Implementation.Queries;
 using tvz2api_cqrs.QueryModels;
@@ -19,10 +20,12 @@ namespace tvz2api_cqrs.Controllers
   public class StudentController : ControllerBase
   {
     private readonly IQueryBus _queryBus;
+    private readonly ICommandBus _commandBus;
 
-    public StudentController(IQueryBus queryBus)
+    public StudentController(IQueryBus queryBus, ICommandBus commandBus)
     {
       _queryBus = queryBus;
+      _commandBus = commandBus;
     }
 
     [HttpGet("{id}")]
@@ -30,6 +33,20 @@ namespace tvz2api_cqrs.Controllers
     {
       var result = await _queryBus.ExecuteAsync(new StudentDetailsQuery(id));
       return Ok(result);
+    }
+
+    [HttpGet("pretplata/{id}")]
+    public async Task<IActionResult> GetPretplata(int id)
+    {
+      var result = await _queryBus.ExecuteAsync(new StudentPretplataQuery(id));
+      return Ok(result);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(StudentUpdatePretplataCommand command)
+    {
+      await _commandBus.ExecuteAsync(command);
+      return NoContent();
     }
   }
 }

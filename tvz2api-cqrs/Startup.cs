@@ -105,13 +105,14 @@ namespace tvz2api_cqrs
       services.AddScoped<ICommandHandlerAsync<FileUploadCommand, List<int>>, FileCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<FileUploadSidebarCommand, List<int>>, FileCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<FileDeleteCommand>, FileCommandHandler>();
-
       services.AddScoped<IQueryHandlerAsync<FileQuery, List<FileQueryModel>>, FileQueryHandler>();
 
       services.AddScoped<ICommandHandlerAsync<AuthenticationRegisterCommand>, AuthenticationCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<AuthenticationLoginCommand, LoginUserDTO>, AuthenticationCommandHandler>();
 
       services.AddScoped<IQueryHandlerAsync<StudentDetailsQuery, StudentQueryModel>, StudentQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<StudentPretplataQuery, List<int>>, StudentQueryHandler>();
+      services.AddScoped<ICommandHandlerAsync<StudentUpdatePretplataCommand>, StudentCommandHandler>();
     }
   }
 }
