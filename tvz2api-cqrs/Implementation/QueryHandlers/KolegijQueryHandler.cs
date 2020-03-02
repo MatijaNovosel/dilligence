@@ -110,6 +110,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     public async Task<List<KolegijQueryModel>> HandleAsync(KolegijQuery query)
     {
       var kolegiji = await _context.Kolegij
+        .Where(query.Specification.Predicate)
         .Select(t => new KolegijQueryModel
         {
           Id = t.Id,
@@ -124,6 +125,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     public async Task<int> HandleAsync(KolegijTotalQuery query)
     {
       var count = await _context.Kolegij
+        .Where(query.Specification.Predicate)
         .Select(t => new KolegijQueryModel
         {
           Id = t.Id,

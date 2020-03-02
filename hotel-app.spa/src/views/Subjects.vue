@@ -71,8 +71,7 @@
 											{{ item.ects }}
 										</v-list-item-subtitle>
 										<v-list-item-subtitle>
-											<b>Smjer:</b>
-											{{ getSubjectNameFromID(item.smjer) }}
+											<b>Smjer:</b> {{ item.smjer }}
 										</v-list-item-subtitle>
 									</v-list-item-content>
 									<v-list-item-action class="mt-8 mr-5">
@@ -95,8 +94,8 @@
 
 <script>
 import KolegijService from "../services/api/kolegij";
-import PretplataService from "../services/api/pretplata";
-import NotificationService from "../services/notification";
+// import PretplataService from "../services/api/pretplata";
+// import NotificationService from "../services/notification";
 import { Smjer } from "../constants/Smjer";
 import { acronym } from "../helpers/helpers.js";
 import { mapGetters } from "vuex";
@@ -130,7 +129,19 @@ export default {
 	methods: {
 		acronym,
 		getData() {
-			this.loading = true;
+      this.loading = true;
+      KolegijService.get({ 
+        smjerIds: this.searchData.smjerIDs.map(x => x + 1),
+        name: this.searchData.name,
+        minEcts: this.searchData.ECTS[0],
+        maxEcts: this.searchData.ECTS[1],
+        isvu: this.ISVU
+      }).then(({ data }) => {
+        [ this.subjects, this.totalSubjects ] = [ data.results, data.total ];
+      }).finally(() => {
+        this.loading = false;
+      })
+      /*
 			PretplataService.getPretplata(this.user.id).then(({ data }) => {
 				let subscriptions = data;
 				this.subscriptions = data;
@@ -153,7 +164,8 @@ export default {
 					.finally(() => {
 						this.loading = false;
 					});
-			});
+      });
+      */
 		},
 		buildPath(name) {
 			return require(`../assets/TVZ/subjects/${name}.png`);
@@ -177,9 +189,7 @@ export default {
 			};
 			this.getData();
 		},
-		getSubjectNameFromID(id) {
-			return Object.keys(Smjer).find(key => Smjer[key] === id);
-		},
+    /*
 		handleChange(e, id) {
 			if (e) {
 				this.subscriptions.push(id);
@@ -194,7 +204,8 @@ export default {
 					);
 				}
 			);
-		}
+    }
+    */
 	},
 	computed: {
 		...mapGetters(["user"])

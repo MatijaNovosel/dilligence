@@ -114,7 +114,7 @@ export default {
 							this.$router.push("/home");
 						});
 					} else {
-						throw new Error("Error while authenticating!");
+						throw new Error();
 					}
 				})
 				.catch(() => {

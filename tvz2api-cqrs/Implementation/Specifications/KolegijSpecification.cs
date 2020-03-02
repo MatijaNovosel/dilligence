@@ -36,7 +36,13 @@ namespace tvz2api_cqrs.Implementation.Specifications
 
         if (SmjerIds != null && SmjerIds.Count() > 0)
         {
-          predicate = predicate.And(t => SmjerIds.Any(x => (int)x == t.SmjerId));
+          /*
+
+            Inace linija ide: predicate = predicate.And(t => SmjerIds.Any(x => (int)x == t.SmjerId));
+            EF ne moze prevesti taj query u SQL zbog problema na EFCore 3.1.0 (https://github.com/dotnet/efcore/issues/17342).
+
+          */
+          predicate = predicate.And(t => SmjerIds.Select(x => (int)x).Contains((int)t.SmjerId));
         }
 
         if (!string.IsNullOrWhiteSpace(Name))

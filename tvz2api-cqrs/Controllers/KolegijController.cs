@@ -39,8 +39,8 @@ namespace tvz2api_cqrs.Controllers
     {
       // var queryOptions = QueryOptionsExtensions.GetFromRequest(Request);
       var specification = new KolegijSpecification(smjerIDs, name, minECTS, maxECTS, isvu);
-      var result = await _queryBus.ExecuteAsync(new KolegijQuery());
-      var count = await _queryBus.ExecuteAsync(new KolegijTotalQuery());
+      var result = await _queryBus.ExecuteAsync(new KolegijQuery(specification));
+      var count = await _queryBus.ExecuteAsync(new KolegijTotalQuery(specification));
       return Ok(new PageableCollection<KolegijQueryModel>() { Results = result, Total = count });
     }
 
