@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using tvz2api_cqrs.Models.DTO;
 
 namespace tvz2api_cqrs.Controllers
 {
@@ -32,6 +33,13 @@ namespace tvz2api_cqrs.Controllers
     {
       await _commandBus.ExecuteAsync(command);
       return NoContent();
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Register(AuthenticationLoginCommand command)
+    {
+      var userInfo = await _commandBus.ExecuteAsync<LoginUserDTO>(command);
+      return Ok(userInfo);
     }
   }
 }

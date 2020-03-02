@@ -17,17 +17,26 @@ using System.IO;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.Extensions.Configuration;
+using tvz2api_cqrs.Models.DTO;
 
 namespace tvz2api_cqrs.Implementation.CommandHandlers
 {
   public class AuthenticationCommandHandler :
-    ICommandHandlerAsync<AuthenticationRegisterCommand>
+    ICommandHandlerAsync<AuthenticationRegisterCommand>,
+    ICommandHandlerAsync<AuthenticationLoginCommand, LoginUserDTO>
   {
     private readonly tvz2Context _context;
+    private readonly IConfiguration _config;
 
-    public AuthenticationCommandHandler(tvz2Context context)
+    public AuthenticationCommandHandler(tvz2Context context, IConfiguration config)
     {
       _context = context;
+      _config = config;
     }
 
     private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
@@ -37,6 +46,19 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         passwordSalt = hmac.Key;
         passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
       }
+    }
+
+    private bool verifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+    {
+      using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
+      {
+        var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+        for (int i = 0; i < computedHash.Length; i++)
+        {
+          if (computedHash[i] != passwordHash[i]) return false;
+        }
+      }
+      return true;
     }
 
     public async Task HandleAsync(AuthenticationRegisterCommand command)
@@ -55,6 +77,38 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
       await _context.Korisnik.AddAsync(newUser);
       await _context.SaveChangesAsync();
+    }
+
+    public async Task<ICommandResult<LoginUserDTO>> HandleAsync(AuthenticationLoginCommand command)
+    {
+      var user = await _context.Korisnik.FirstOrDefaultAsync(x => x.Username == command.Username);
+      if (user == null || !verifyPasswordHash(command.Password, user.PasswordHash, user.PasswordSalt))
+      {
+        throw new Exception("User credentials are wrong or the hashing integrity is faulty!");
+      }
+
+      // Token contains two claims, one is the ID and the other is the username
+      var claims = new[] {
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        new Claim(ClaimTypes.Name, user.Username)
+      };
+
+      // In order to make sure the claims are valid, created a key and hash it
+      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+      var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+      // Create the token
+      var tokenDescriptor = new SecurityTokenDescriptor()
+      {
+        Subject = new ClaimsIdentity(claims),
+        Expires = DateTime.Now.AddDays(3),
+        SigningCredentials = credentials
+      };
+
+      var tokenHandler = new JwtSecurityTokenHandler();
+      var token = tokenHandler.CreateToken(tokenDescriptor);
+
+      return CommandResult<LoginUserDTO>.Success(new LoginUserDTO(tokenHandler.WriteToken(token), user.Username, user.Id));
     }
   }
 }
