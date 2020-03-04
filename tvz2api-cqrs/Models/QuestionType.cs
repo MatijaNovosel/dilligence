@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 namespace tvz2api_cqrs.Models
 {
-  public partial class QuestionType
-  {
-    public QuestionType()
+    public partial class QuestionType
     {
-      Question = new HashSet<Question>();
+        public QuestionType()
+        {
+            Question = new HashSet<Question>();
+        }
+
+        public int Id { get; set; }
+        public string Name { get; set; }
+
+        public virtual ICollection<Question> Question { get; set; }
     }
-
-    public int Id { get; set; }
-    public string Name { get; set; }
-
-    public virtual ICollection<Question> Question { get; set; }
-  }
 }

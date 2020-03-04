@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 namespace tvz2api_cqrs.Models
 {
-  public partial class UlogaIzvrsitelja
-  {
-    public UlogaIzvrsitelja()
+    public partial class UlogaIzvrsitelja
     {
-      Izvrsitelj = new HashSet<Izvrsitelj>();
+        public UlogaIzvrsitelja()
+        {
+            Izvrsitelj = new HashSet<Izvrsitelj>();
+        }
+
+        public int Id { get; set; }
+        public string Naziv { get; set; }
+
+        public virtual ICollection<Izvrsitelj> Izvrsitelj { get; set; }
     }
-
-    public int Id { get; set; }
-    public string Naziv { get; set; }
-
-    public virtual ICollection<Izvrsitelj> Izvrsitelj { get; set; }
-  }
 }

@@ -5,7 +5,7 @@ export default {
     return await axios.get(`Student/${id}`);
   },
   async getPretplata(studentId) {
-    return await axios.get(`Pretplata/${studentId}`);
+    return await axios.get(`Student/pretplata/${studentId}`);
   },
   async postPreplata(studentId, pretplataIDs) {
     return await axios.post('Pretplata', {

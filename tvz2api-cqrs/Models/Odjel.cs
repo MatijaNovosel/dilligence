@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 namespace tvz2api_cqrs.Models
 {
-  public partial class Odjel
-  {
-    public Odjel()
+    public partial class Odjel
     {
-      Zaposlenik = new HashSet<Zaposlenik>();
+        public Odjel()
+        {
+            Zaposlenik = new HashSet<Zaposlenik>();
+        }
+
+        public int Id { get; set; }
+        public string Naziv { get; set; }
+
+        public virtual ICollection<Zaposlenik> Zaposlenik { get; set; }
     }
-
-    public int Id { get; set; }
-    public string Naziv { get; set; }
-
-    public virtual ICollection<Zaposlenik> Zaposlenik { get; set; }
-  }
 }

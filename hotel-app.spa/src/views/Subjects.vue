@@ -75,12 +75,13 @@
 											{{ item.smjer }}
 										</v-list-item-subtitle>
 									</v-list-item-content>
-									<v-list-item-action class="mt-8 mr-5">
-										<v-checkbox
-											v-model="item.subscribed"
-											color="primary"
-											@change="handleChange($event, item.id)"
-										/>
+									<v-list-item-action class="mt-8 mr-7" v-if="subscriptions.includes(item.id)">
+										<v-icon color="primary">mdi-bookmark-check</v-icon>
+									</v-list-item-action>
+									<v-list-item-action class="mt-7 mr-5" v-else>
+										<v-btn icon @click="subscriptionDialog = true">
+											<v-icon color="grey">mdi-bookmark-check</v-icon>
+										</v-btn>
 									</v-list-item-action>
 								</v-list-item>
 								<v-divider :key="i" v-if="i < subjects.length - 1" />
@@ -90,13 +91,37 @@
 				</v-row>
 			</v-col>
 		</v-row>
+		<v-dialog v-model="subscriptionDialog" width="50%" persistent>
+			<v-system-bar height="30" dark color="primary">
+				<v-spacer />
+				<v-btn icon @click="resetDialog">
+					<v-icon dark>mdi-close</v-icon>
+				</v-btn>
+			</v-system-bar>
+			<v-card>
+				<v-card-text>
+					<v-row class="justify-center pt-5">
+						To subscribe to this course, you need to know the password!
+					</v-row>
+          <v-row class="justify-center">
+            <v-col cols="6">
+              <v-text-field dense type="password" v-model="password" solo label="Password" />
+            </v-col>
+          </v-row>
+          <v-row class="justify-center pb-5">
+						<v-btn color="primary">
+              Confirm
+            </v-btn>
+					</v-row>
+				</v-card-text>
+			</v-card>
+		</v-dialog>
 	</div>
 </template>
 
 <script>
 import KolegijService from "../services/api/kolegij";
-// import PretplataService from "../services/api/pretplata";
-// import NotificationService from "../services/notification";
+import StudentService from "../services/api/student";
 import { Smjer } from "../constants/Smjer";
 import { acronym } from "../helpers/helpers.js";
 import { mapGetters } from "vuex";
@@ -104,10 +129,12 @@ import { mapGetters } from "vuex";
 export default {
 	data() {
 		return {
+			password: null,
 			subscriptions: [],
 			subjects: [],
 			totalSubjects: 0,
 			loading: null,
+			subscriptionDialog: false,
 			tags: [],
 			searchEnabled: true,
 			searchData: {
@@ -144,31 +171,9 @@ export default {
 				.finally(() => {
 					this.loading = false;
 				});
-			/*
-			PretplataService.getPretplata(this.user.id).then(({ data }) => {
-				let subscriptions = data;
+			StudentService.getPretplata(this.user.id).then(({ data }) => {
 				this.subscriptions = data;
-				KolegijService.getKolegiji(
-					this.searchData.smjerIDs.map(x => x + 1),
-					this.searchData.name,
-					this.searchData.ECTS[0],
-					this.searchData.ECTS[1],
-					this.searchData.ISVU,
-					0,
-					null
-				)
-					.then(({ data }) => {
-						data.results.forEach(x => {
-							x.subscribed = subscriptions.includes(x.id) ? true : false;
-						});
-						this.subjects = data.results;
-						this.totalSubjects = data.total;
-					})
-					.finally(() => {
-						this.loading = false;
-					});
-      });
-      */
+			});
 		},
 		buildPath(name) {
 			return require(`../assets/TVZ/subjects/${name}.png`);
@@ -191,24 +196,11 @@ export default {
 				ISVU: null
 			};
 			this.getData();
+		},
+		resetDialog() {
+			this.password = null;
+			this.subscriptionDialog = false;
 		}
-		/*
-		handleChange(e, id) {
-			if (e) {
-				this.subscriptions.push(id);
-			} else {
-				this.subscriptions = this.subscriptions.filter(x => x != id);
-			}
-			PretplataService.postPreplata(this.user.id, this.subscriptions).then(
-				() => {
-					NotificationService.success(
-						"Pretplata",
-						"Pretplata uspjesno promijenjena!"
-					);
-				}
-			);
-    }
-    */
 	},
 	computed: {
 		...mapGetters(["user"])
