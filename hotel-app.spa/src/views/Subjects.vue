@@ -109,7 +109,7 @@
             </v-col>
           </v-row>
           <v-row class="justify-center pb-5">
-						<v-btn color="primary">
+						<v-btn color="primary" @click="subscribe">
               Confirm
             </v-btn>
 					</v-row>
@@ -155,7 +155,10 @@ export default {
 		this.getData();
 	},
 	methods: {
-		acronym,
+    acronym,
+    subscribe(kolegijId) {
+      
+    },
 		getData() {
 			this.loading = true;
 			KolegijService.get({

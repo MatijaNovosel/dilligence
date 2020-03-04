@@ -9,12 +9,14 @@ namespace tvz2api_cqrs.Implementation.Commands
   public class StudentUpdatePretplataCommand : ICommand
   {
     public StudentUpdatePretplataCommand() { }
-    public StudentUpdatePretplataCommand(int id, List<int> kolegijIds)
+    public StudentUpdatePretplataCommand(int studentId, string password, int kolegijId)
     {
-      Id = id;
-      KolegijIds = kolegijIds;
+      StudentId = studentId;
+      Password = password;
+      KolegijId = kolegijId;
     }
-    public int Id { get; set; }
-    public List<int> KolegijIds { get; set; }
+    public int StudentId { get; set; }
+    public string Password { get; set; }
+    public int KolegijId { get; set; }
   }
 }

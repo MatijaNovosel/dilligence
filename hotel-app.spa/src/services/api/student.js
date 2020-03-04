@@ -7,10 +7,11 @@ export default {
   async getPretplata(studentId) {
     return await axios.get(`Student/pretplata/${studentId}`);
   },
-  async postPreplata(studentId, pretplataIDs) {
-    return await axios.post('Pretplata', {
+  async subscribe(password, studentId, kolegijId) {
+    return await axios.put('Pretplata', {
+      password,
       studentId,
-      pretplataIDs
+      kolegijId
     });
   }
 }

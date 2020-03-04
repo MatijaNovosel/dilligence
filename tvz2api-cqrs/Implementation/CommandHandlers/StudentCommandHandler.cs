@@ -32,16 +32,15 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
     public async Task HandleAsync(StudentUpdatePretplataCommand command)
     {
-      var oldSubscriptions = await _context.Pretplata.Where(x => x.StudentId == command.Id).ToListAsync();
-      _context.Pretplata.RemoveRange(oldSubscriptions);
-      List<Pretplata> newSubscriptions = command.KolegijIds
-        .Select(x => new Pretplata
-        {
-          StudentId = command.Id,
-          KolegijId = x
-        })
-        .ToList();
-      _context.Pretplata.AddRange(newSubscriptions);
+      if (_context.Kolegij.Where(x => x.Id == command.KolegijId).FirstOrDefault().Password != command.Password)
+      {
+        throw new Exception("Wrong password!");
+      }
+      await _context.Pretplata.AddAsync(new Pretplata()
+      {
+        KolegijId = command.KolegijId,
+        StudentId = command.StudentId
+      });
       await _context.SaveChangesAsync();
     }
   }
