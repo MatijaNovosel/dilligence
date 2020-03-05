@@ -8,10 +8,17 @@ import router from './router';
 import Notifications from 'vue-notification';
 import axios from 'axios';
 import { ROUTING } from '@/constants/Routing';
+import { Quasar, QEditor } from 'quasar';
+import './quasar'
 
 Vue.use(Notifications);
 Vue.use(VueResource);
 Vue.use(VueRouter);
+Vue.use(Quasar, {
+  components: {
+    QEditor
+  }
+});
 
 Vue.config.productionTip = false;
 
