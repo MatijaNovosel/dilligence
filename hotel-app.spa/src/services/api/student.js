@@ -8,7 +8,7 @@ export default {
     return await axios.get(`Student/pretplata/${studentId}`);
   },
   async subscribe(password, studentId, kolegijId) {
-    return await axios.put('Pretplata', {
+    return await axios.put('Student', {
       password,
       studentId,
       kolegijId

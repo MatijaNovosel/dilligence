@@ -42,7 +42,7 @@ namespace tvz2api_cqrs.Controllers
       return Ok(result);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("")]
     public async Task<IActionResult> Update(StudentUpdatePretplataCommand command)
     {
       await _commandBus.ExecuteAsync(command);

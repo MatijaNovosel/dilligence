@@ -79,7 +79,7 @@
 										<v-icon color="primary">mdi-bookmark-check</v-icon>
 									</v-list-item-action>
 									<v-list-item-action class="mt-7 mr-5" v-else>
-										<v-btn icon @click="subscriptionDialog = true">
+										<v-btn icon @click="openSubscriptionDialog(item.id)">
 											<v-icon color="grey">mdi-bookmark-check</v-icon>
 										</v-btn>
 									</v-list-item-action>
@@ -100,18 +100,27 @@
 			</v-system-bar>
 			<v-card>
 				<v-card-text>
-					<v-row class="justify-center pt-5">
-						To subscribe to this course, you need to know the password!
+					<v-row class="justify-center pt-5">To subscribe to this course, you need to know the password!</v-row>
+					<v-row class="justify-center">
+						<v-col cols="6">
+							<v-text-field
+								dense
+								:type="!showPassword ? 'password' : 'text'"
+								v-model="password"
+								solo
+								label="Password"
+								@click:append="showPassword = !showPassword"
+								:append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+							/>
+						</v-col>
 					</v-row>
-          <v-row class="justify-center">
-            <v-col cols="6">
-              <v-text-field dense type="password" v-model="password" solo label="Password" />
-            </v-col>
-          </v-row>
-          <v-row class="justify-center pb-5">
-						<v-btn color="primary" @click="subscribe">
-              Confirm
-            </v-btn>
+					<v-row class="justify-center pb-5">
+						<v-btn
+							color="primary"
+							:disabled="subscriptionLoading"
+							:loading="subscriptionLoading"
+							@click="subscribe"
+						>Confirm</v-btn>
 					</v-row>
 				</v-card-text>
 			</v-card>
@@ -122,6 +131,7 @@
 <script>
 import KolegijService from "../services/api/kolegij";
 import StudentService from "../services/api/student";
+import NotificationService from "../services/notification";
 import { Smjer } from "../constants/Smjer";
 import { acronym } from "../helpers/helpers.js";
 import { mapGetters } from "vuex";
@@ -129,6 +139,7 @@ import { mapGetters } from "vuex";
 export default {
 	data() {
 		return {
+			showPassword: false,
 			password: null,
 			subscriptions: [],
 			subjects: [],
@@ -136,7 +147,9 @@ export default {
 			loading: null,
 			subscriptionDialog: false,
 			tags: [],
+			subscriptionLoading: false,
 			searchEnabled: true,
+			selectedKolegijId: null,
 			searchData: {
 				smjerIDs: [Smjer["Informatika"] - 1],
 				name: null,
@@ -155,10 +168,28 @@ export default {
 		this.getData();
 	},
 	methods: {
-    acronym,
-    subscribe(kolegijId) {
-      
-    },
+		acronym,
+		openSubscriptionDialog(id) {
+			[this.subscriptionDialog, this.selectedKolegijId] = [true, id];
+		},
+		subscribe() {
+			this.subscriptionLoading = true;
+			StudentService.subscribe(
+				this.password,
+				this.user.id,
+				this.selectedKolegijId
+			)
+				.then(() => {
+					NotificationService.success("Success!", "Subscribed successfully!");
+					this.subscriptionDialog = false;
+				})
+				.catch(() => {
+					NotificationService.error("Error!", "Something went wrong!");
+				})
+				.finally(() => {
+					this.subscriptionLoading = false;
+				});
+		},
 		getData() {
 			this.loading = true;
 			KolegijService.get({
@@ -186,6 +217,9 @@ export default {
 			this.dialog = !this.dialog;
 		},
 		redirectToKolegijDetails(item) {
+			if (!this.subscriptions.includes(item.id)) {
+				return;
+			}
 			this.$router.push({
 				name: "subject-details",
 				params: { id: item.id }
@@ -201,6 +235,7 @@ export default {
 			this.getData();
 		},
 		resetDialog() {
+			this.showPassword = false;
 			this.password = null;
 			this.subscriptionDialog = false;
 		}
@@ -214,7 +249,7 @@ export default {
 <style scoped>
 .v-avatar:hover {
 	cursor: pointer;
-	background-color: #292826 !important;
+	filter: brightness(50%);
 }
 .search-bg {
 	background-color: #f5f2f2 !important;
