@@ -1,103 +1,102 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="leftDrawerOpen = !leftDrawerOpen"
-        />
-
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
-
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-      content-class="bg-grey-1"
-    >
-      <q-list>
-        <q-item-label
-          header
-          class="text-grey-8"
-        >
-          Essential Links
-        </q-item-label>
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer>
-
-    <q-page-container>
-      <router-view />
-    </q-page-container>
-  </q-layout>
+	<q-layout view="hHh lpR fff">
+		<q-header elevated>
+			<q-toolbar class="bg-white">
+				<q-btn
+					flat
+					dense
+					round
+					color="primary"
+					icon="menu"
+					aria-label="Menu"
+					@click="leftDrawerOpen = !leftDrawerOpen"
+				/>
+				<q-img class="navbar-img q-ml-md" src="../assets/tvz-logo.svg"></q-img>
+				<span class="text-black text-h6 q-ml-sm">LMS</span>
+				<span class="text-grey q-ml-xs">by Matija</span>
+				<q-toolbar-title>Quasar App</q-toolbar-title>
+				<div>Quasar v{{ $q.version }}</div>
+			</q-toolbar>
+		</q-header>
+		<q-drawer width="225" v-model="leftDrawerOpen" show-if-above bordered content-class="drawer-bg">
+			<div class="row justify-center q-my-lg">
+				<q-avatar size="62px">
+					<img src="https://i.kym-cdn.com/photos/images/newsfeed/001/336/309/b85.jpg" />
+				</q-avatar>
+			</div>
+			<q-list dense>
+				<q-item
+					active-class="text-red-7"
+					clickable
+					:to="link.route"
+					v-for="link in links"
+					:key="link.text"
+				>
+					<q-item-section avatar>
+						<q-icon :name="link.icon" />
+					</q-item-section>
+					<q-item-section>
+						<q-item-label>{{ link.text }}</q-item-label>
+					</q-item-section>
+				</q-item>
+			</q-list>
+		</q-drawer>
+		<q-page-container>
+			<router-view />
+		</q-page-container>
+	</q-layout>
 </template>
 
 <script>
-import EssentialLink from 'components/EssentialLink'
-
 export default {
-  name: 'MainLayout',
-
-  components: {
-    EssentialLink
-  },
-
-  data () {
-    return {
-      leftDrawerOpen: false,
-      essentialLinks: [
-        {
-          title: 'Docs',
-          caption: 'quasar.dev',
-          icon: 'school',
-          link: 'https://quasar.dev'
-        },
-        {
-          title: 'Github',
-          caption: 'github.com/quasarframework',
-          icon: 'code',
-          link: 'https://github.com/quasarframework'
-        },
-        {
-          title: 'Discord Chat Channel',
-          caption: 'chat.quasar.dev',
-          icon: 'chat',
-          link: 'https://chat.quasar.dev'
-        },
-        {
-          title: 'Forum',
-          caption: 'forum.quasar.dev',
-          icon: 'record_voice_over',
-          link: 'https://forum.quasar.dev'
-        },
-        {
-          title: 'Twitter',
-          caption: '@quasarframework',
-          icon: 'rss_feed',
-          link: 'https://twitter.quasar.dev'
-        },
-        {
-          title: 'Facebook',
-          caption: '@QuasarFramework',
-          icon: 'public',
-          link: 'https://facebook.quasar.dev'
-        }
-      ]
-    }
-  }
-}
+	name: "MainLayout",
+	data() {
+		return {
+			leftDrawerOpen: false,
+			links: [
+				{
+					text: "Home",
+					route: "/home",
+					icon: "mdi-home"
+				},
+				{
+					text: "Play",
+					route: "/play",
+					icon: "mdi-play"
+				},
+				{
+					text: "Tutorials",
+					route: "/tutorial",
+					icon: "mdi-school"
+				},
+				{
+					text: "My collection",
+					route: "/collection",
+					icon: "mdi-cards"
+				},
+				{
+					text: "Market",
+					route: "/market",
+					icon: "mdi-shopping"
+				},
+				{
+					text: "Account settings",
+					route: "/account",
+					icon: "mdi-cogs"
+				}
+			]
+		};
+	}
+};
 </script>
+
+<style lang="sass">
+.navbar-img
+  width: 40px
+  height: 40px
+.drawer-bg
+  background-image: url("../assets/nav-bg.svg") !important
+  background-position: center center
+  background-size: cover
+  overflow: hidden !important
+</style>
