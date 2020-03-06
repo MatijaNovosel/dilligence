@@ -19,26 +19,34 @@
 			</q-toolbar>
 		</q-header>
 		<q-drawer width="225" v-model="leftDrawerOpen" show-if-above bordered content-class="drawer-bg">
-			<div class="row justify-center q-my-lg">
-				<q-avatar size="62px">
-					<img src="https://i.kym-cdn.com/photos/images/newsfeed/001/336/309/b85.jpg" />
-				</q-avatar>
-			</div>
 			<q-list dense>
-				<q-item
-					active-class="text-red-7"
-					clickable
-					:to="link.route"
-					v-for="link in links"
-					:key="link.text"
-				>
+				<q-item class="q-my-md">
 					<q-item-section avatar>
-						<q-icon :name="link.icon" />
+						<q-avatar size="40px">
+							<img src="../assets/default-user.jpg" />
+						</q-avatar>
 					</q-item-section>
 					<q-item-section>
-						<q-item-label>{{ link.text }}</q-item-label>
+						<q-item-label lines="1">Matija Novosel</q-item-label>
+						<q-item-label caption lines="2">
+							<span class="text-weight-bold">JMBAG:</span> 0246073749
+						</q-item-label>
 					</q-item-section>
 				</q-item>
+				<q-separator />
+				<q-expansion-item
+					group="drawer"
+					dense
+					dense-toggle
+					class="text-weight-regular"
+					v-for="link in links"
+					:label="link.text"
+					:key="link.text"
+				>
+					<q-list :key="i" dense v-for="(sublink, i) in link.sublinks">
+						<q-item @click="$router.push(sublink.route)" class="text-caption" clickable v-ripple>{{ sublink.text }}</q-item>
+					</q-list>
+				</q-expansion-item>
 			</q-list>
 		</q-drawer>
 		<q-page-container>
@@ -55,34 +63,49 @@ export default {
 			leftDrawerOpen: false,
 			links: [
 				{
-					text: "Home",
-					route: "/home",
-					icon: "mdi-home"
+					icon: "mdi-bullhorn",
+					text: "Generalno",
+					route: { name: "/" },
+					sublinks: [
+						{
+							text: "Početna stranica",
+							route: { name: "home" }
+						},
+						{
+							text: "Popis zaposlenika",
+							route: { name: "employees" }
+						},
+						{
+							text: "Test",
+							route: { name: "test" }
+						}
+					]
 				},
 				{
-					text: "Play",
-					route: "/play",
-					icon: "mdi-play"
+					icon: "mdi-file-document",
+					text: "Kolegiji",
+					route: { name: "subjects" },
+					sublinks: [
+						{
+							text: "Popis kolegija",
+							route: { name: "subjects" }
+						},
+						{
+							text: "Moji kolegiji",
+							route: { name: "my-subjects" }
+						}
+					]
 				},
 				{
-					text: "Tutorials",
-					route: "/tutorial",
-					icon: "mdi-school"
-				},
-				{
-					text: "My collection",
-					route: "/collection",
-					icon: "mdi-cards"
-				},
-				{
-					text: "Market",
-					route: "/market",
-					icon: "mdi-shopping"
-				},
-				{
-					text: "Account settings",
-					route: "/account",
-					icon: "mdi-cogs"
+					icon: "mdi-test-tube",
+					text: "Zadatci",
+					route: { name: "exams" },
+					sublinks: [
+						{
+							text: "Exams",
+							route: { name: "exams" }
+						}
+					]
 				}
 			]
 		};
