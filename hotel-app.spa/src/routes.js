@@ -16,14 +16,14 @@ let commonPages = {
     path: 'home',
     name: 'home',
     component: Index,
-    meta: { 
+    meta: {
       requiresAuth: true
     }
   }, {
     path: 'login',
     name: 'login',
     component: Login,
-    meta: { 
+    meta: {
       guest: true
     }
   }, {
@@ -31,14 +31,14 @@ let commonPages = {
     name: 'test',
     component: Test,
     meta: {
-      requiresAuth: true  
+      requiresAuth: true
     }
   }, {
     path: 'account',
     name: 'account',
     component: Account,
     meta: {
-      requiresAuth: true  
+      requiresAuth: true
     }
   }]
 };
@@ -50,7 +50,7 @@ let employeePages = {
     path: '',
     name: 'employees',
     component: Employees,
-    meta: { 
+    meta: {
       requiresAuth: true
     }
   }]
@@ -63,21 +63,21 @@ let subjectPages = {
     path: '',
     name: 'subjects',
     component: Subjects,
-    meta: { 
+    meta: {
       requiresAuth: true
     }
   }, {
     path: 'details/:id',
     name: 'subject-details',
     component: SubjectPage,
-    meta: { 
+    meta: {
       requiresAuth: true
     }
   }, {
     path: 'my',
     name: 'my-subjects',
     component: MySubjects,
-    meta: { 
+    meta: {
       requiresAuth: true
     }
   }]
@@ -90,7 +90,7 @@ let examPages = {
     path: '',
     name: 'exams',
     component: Exams,
-    meta: { 
+    meta: {
       requiresAuth: true
     }
   }]

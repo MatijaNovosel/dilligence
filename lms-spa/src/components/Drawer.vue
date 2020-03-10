@@ -1,5 +1,5 @@
 <template>
-	<q-drawer :width="225" v-model="leftDrawerOpen" show-if-above bordered content-class="drawer-bg">
+	<q-drawer :width="225" v-model="drawerOpen" show-if-above bordered content-class="drawer-bg">
 		<q-list dense>
 			<q-item class="q-my-md">
 				<q-item-section avatar>
@@ -40,9 +40,10 @@
 <script>
 export default {
 	name: "Drawer",
-	props: ["leftDrawerOpen"],
+  props: ["drawerTrigger"],
 	data() {
 		return {
+      drawerOpen: false,
 			links: [
 				{
 					icon: "mdi-bullhorn",
@@ -91,6 +92,11 @@ export default {
 				}
 			]
 		};
-	}
+  },
+  watch: {
+    drawerTrigger() {
+      this.drawerOpen = !this.drawerOpen;
+    }
+  }
 };
 </script>

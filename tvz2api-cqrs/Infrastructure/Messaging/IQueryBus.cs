@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace tvz2api_cqrs.Infrastructure.Messaging
 {
-    public interface IQueryBus
+  public interface IQueryBus
   {
     TResult Execute<TResult>(IQuery<TResult> query);
     Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query);

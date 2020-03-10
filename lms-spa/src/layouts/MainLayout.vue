@@ -1,27 +1,28 @@
 <template>
 	<q-layout view="hHh lpR fff">
-		<Navbar @drawerState="leftDrawerOpen = !leftDrawerOpen" />
-    <Drawer :leftDrawerOpen="leftDrawerOpen" />
-		<q-page-container>
+    <div v-if="$router.currentRoute.path != '/login'">
+      <Navbar @drawerState="drawer = !drawer" />
+		  <Drawer :drawerTrigger="drawer" />
+    </div>
+		<q-page-container :class="{' drawer-bg': $router.currentRoute.path == '/login' }">
 			<router-view />
 		</q-page-container>
 	</q-layout>
 </template>
 
 <script>
-
-import Navbar from '../components/Navbar';
-import Drawer from '../components/Drawer';
+import Navbar from "../components/Navbar";
+import Drawer from "../components/Drawer";
 
 export default {
-  name: "MainLayout",
-  components: {
-    Navbar,
-    Drawer
+	name: "MainLayout",
+	components: {
+		Navbar,
+		Drawer
   },
 	data() {
 		return {
-			leftDrawerOpen: false
+			drawer: null
 		};
 	}
 };
