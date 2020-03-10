@@ -6,8 +6,17 @@
 			</q-card-section>
 			<q-card-section>
 				<q-form>
-          <q-input square dense filled label="Username" v-model="username" required />
-          <q-input square dense filled label="Password" v-model="password" type="password" required class="q-pt-sm" />
+					<q-input square dense filled label="Username" v-model="username" required />
+					<q-input
+						square
+						dense
+						filled
+						label="Password"
+						v-model="password"
+						type="password"
+						required
+						class="q-pt-sm"
+					/>
 				</q-form>
 			</q-card-section>
 			<q-card-actions class="justify-center">
@@ -18,6 +27,8 @@
 </template>
 
 <script>
+import { required, minLength } from "vuelidate/lib/validators";
+
 export default {
 	data() {
 		return {
@@ -26,6 +37,16 @@ export default {
 			valid: false,
 			loading: false
 		};
+	},
+	validations: {
+		username: {
+			required,
+			minLength: minLength(4)
+		},
+		password: {
+			required,
+			minLength: minLength(4)
+		}
 	},
 	methods: {
 		login() {
@@ -66,18 +87,14 @@ export default {
         */
 		},
 		submit() {
-			/*
 			this.$v.$touch();
 			if (this.$v.$invalid) {
-				NotificationService.error(
-					"Empty input",
-					"Please enter valid data into the form."
-				);
+        console.log(this.$v);
+        console.log("Invalid!");
 			} else {
-				this.loading = true;
-				this.login();
+				// this.loading = true;
+				// this.login();
       }
-      */
 		}
 	}
 };
