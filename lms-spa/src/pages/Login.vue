@@ -28,6 +28,7 @@
 
 <script>
 import { required, minLength } from "vuelidate/lib/validators";
+import AuthService from "../services/api/auth";
 
 export default {
 	data() {
@@ -50,51 +51,20 @@ export default {
 	},
 	methods: {
 		login() {
-			/*
 			AuthService.login({
 				Username: this.username,
 				Password: this.password
-			})
-				.then(({ data }) => {
-					if (data.isSuccess) {
-						const id = data.payload.id;
-						const token = data.payload.token;
-						StudentService.getStudent(id).then(({ data }) => {
-							let user = {
-								id,
-								name: data.ime,
-								surname: data.prezime,
-								jmbag: data.jmbag,
-								token
-							};
-							this.setUserData(user);
-							NotificationService.success(
-								"Login successful",
-								"You were successfully logged in!"
-							);
-							this.$router.push("/home");
-						});
-					} else {
-						throw new Error();
-					}
-				})
-				.catch(() => {
-					NotificationService.error("Error", "Unable to log in!");
-				})
-				.finally(() => {
-					this.loading = false;
-        });
-        */
+			}).then(({ response }) => {
+				console.log(response);
+			});
 		},
 		submit() {
 			this.$v.$touch();
 			if (this.$v.$invalid) {
-        console.log(this.$v);
-        console.log("Invalid!");
+				console.log("Invalid!");
 			} else {
-				// this.loading = true;
-				// this.login();
-      }
+				this.login();
+			}
 		}
 	}
 };
