@@ -5,11 +5,10 @@
 				<q-img style="width: 150px; height: 150px;" src="../assets/tvz-logo.svg"></q-img>
 			</q-card-section>
 			<q-card-section>
-				<ValidationProvider rules="required|min:4" v-slot="{ invalid, dirty, errors }">
+				<ValidationProvider name="username" rules="required|min:4" v-slot="{ invalid, dirty, errors }">
 					<q-input
 						:error="invalid && dirty"
-						:error-messages="errors"
-						name="username"
+						:error-message="errors[0]"
 						square
 						dense
 						filled
@@ -18,11 +17,10 @@
 						required
 					/>
 				</ValidationProvider>
-				<ValidationProvider rules="required|min:4" v-slot="{ invalid, dirty, errors }">
+				<ValidationProvider name="password" rules="required|min:4" v-slot="{ invalid, dirty, errors }">
 					<q-input
 						:error="invalid && dirty"
-						:error-messages="errors"
-						name="password"
+						:error-messages="errors[0]"
 						square
 						dense
 						filled
@@ -48,8 +46,9 @@ import { mapActions } from "vuex";
 import { required, min } from "vee-validate/dist/rules";
 import { ValidationProvider, extend } from "vee-validate";
 
+extend("min", min);
 extend("required", {
-	...required,
+  ...required,
 	message: "This field is required"
 });
 
@@ -96,9 +95,10 @@ export default {
 					this.loading = false;
 				});
 		},
-		submit() {
+		submit(shit) {
+      console.log(shit);
 			// this.login();
-		}
+    }
 	}
 };
 </script>
