@@ -1,5 +1,5 @@
 <template>
-	<q-drawer :width="225" v-model="drawerOpen" show-if-above bordered content-class="drawer-bg">
+	<q-drawer :width="250" v-model="drawerOpen" show-if-above bordered content-class="drawer-bg">
 		<q-list dense>
 			<q-item class="q-my-md">
 				<q-item-section avatar>
@@ -8,9 +8,9 @@
 					</q-avatar>
 				</q-item-section>
 				<q-item-section>
-					<q-item-label lines="1">Matija Novosel</q-item-label>
+					<q-item-label lines="1">{{ `${user.name} ${user.surname}` }}</q-item-label>
 					<q-item-label caption lines="2">
-						<span class="text-weight-bold">JMBAG:</span> 0246073749
+						<span class="text-weight-bold">JMBAG:</span> {{ user.jmbag }}
 					</q-item-label>
 				</q-item-section>
 			</q-item>
@@ -38,12 +38,14 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
 	name: "Drawer",
-  props: ["drawerTrigger"],
+	props: ["drawerTrigger"],
 	data() {
 		return {
-      drawerOpen: false,
+			drawerOpen: false,
 			links: [
 				{
 					icon: "mdi-bullhorn",
@@ -92,11 +94,14 @@ export default {
 				}
 			]
 		};
-  },
-  watch: {
-    drawerTrigger() {
-      this.drawerOpen = !this.drawerOpen;
-    }
-  }
+	},
+	watch: {
+		drawerTrigger() {
+			this.drawerOpen = !this.drawerOpen;
+		}
+	},
+	computed: {
+		...mapGetters(["user"])
+	}
 };
 </script>

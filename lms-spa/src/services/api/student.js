@@ -1,12 +1,14 @@
+import axios from 'axios';
+
 export default {
   async getStudent(id) {
-    return await this.$axios.get(`Student/${id}`);
+    return await axios.get(`Student/${id}`);
   },
-  async getPretplata(studentId) {
-    return await this.$axios.get(`Student/pretplata/${studentId}`);
+  async getPretplata(id) {
+    return await axios.get(`Student/pretplata/${id}`);
   },
   async subscribe(password, studentId, kolegijId) {
-    return await this.$axios.put('Student', {
+    return await axios.put('Student', {
       password,
       studentId,
       kolegijId

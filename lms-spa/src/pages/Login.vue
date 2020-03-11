@@ -5,9 +5,24 @@
 				<q-img style="width: 150px; height: 150px;" src="../assets/tvz-logo.svg"></q-img>
 			</q-card-section>
 			<q-card-section>
-				<q-form>
-					<q-input square dense filled label="Username" v-model="username" required />
+				<ValidationProvider rules="required|min:4" v-slot="{ invalid, dirty, errors }">
 					<q-input
+						:error="invalid && dirty"
+						:error-messages="errors"
+						name="username"
+						square
+						dense
+						filled
+						label="Username"
+						v-model="username"
+						required
+					/>
+				</ValidationProvider>
+				<ValidationProvider rules="required|min:4" v-slot="{ invalid, dirty, errors }">
+					<q-input
+						:error="invalid && dirty"
+						:error-messages="errors"
+						name="password"
 						square
 						dense
 						filled
@@ -17,7 +32,7 @@
 						required
 						class="q-pt-sm"
 					/>
-				</q-form>
+				</ValidationProvider>
 			</q-card-section>
 			<q-card-actions class="justify-center">
 				<q-btn @click="submit" class="ma-2" :loading="loading" color="primary">Sign in</q-btn>
@@ -27,44 +42,62 @@
 </template>
 
 <script>
-import { required, minLength } from "vuelidate/lib/validators";
 import AuthService from "../services/api/auth";
+import StudentService from "../services/api/student";
+import { mapActions } from "vuex";
+import { required, min } from "vee-validate/dist/rules";
+import { ValidationProvider, extend } from "vee-validate";
+
+extend("required", {
+	...required,
+	message: "This field is required"
+});
 
 export default {
 	data() {
 		return {
 			username: null,
 			password: null,
-			valid: false,
+			valid: true,
 			loading: false
 		};
 	},
-	validations: {
-		username: {
-			required,
-			minLength: minLength(4)
-		},
-		password: {
-			required,
-			minLength: minLength(4)
-		}
+	components: {
+		ValidationProvider
 	},
 	methods: {
+		...mapActions(["setUserData"]),
 		login() {
+			this.loading = true;
 			AuthService.login({
 				Username: this.username,
 				Password: this.password
-			}).then(({ response }) => {
-				console.log(response);
-			});
+			})
+				.then(({ data }) => {
+					if (data.isSuccess) {
+						const id = data.payload.id;
+						const token = data.payload.token;
+						StudentService.getStudent(id).then(({ data }) => {
+							let user = {
+								id,
+								name: data.ime,
+								surname: data.prezime,
+								jmbag: data.jmbag,
+								token
+							};
+							this.setUserData(user);
+							this.$router.push("/");
+						});
+					} else {
+						throw new Error();
+					}
+				})
+				.finally(() => {
+					this.loading = false;
+				});
 		},
 		submit() {
-			this.$v.$touch();
-			if (this.$v.$invalid) {
-				console.log("Invalid!");
-			} else {
-				this.login();
-			}
+			// this.login();
 		}
 	}
 };
