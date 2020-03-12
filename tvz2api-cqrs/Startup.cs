@@ -113,6 +113,8 @@ namespace tvz2api_cqrs
       services.AddScoped<IQueryHandlerAsync<StudentDetailsQuery, StudentQueryModel>, StudentQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<StudentPretplataQuery, List<int>>, StudentQueryHandler>();
       services.AddScoped<ICommandHandlerAsync<StudentUpdatePretplataCommand>, StudentCommandHandler>();
+
+      services.AddScoped<IQueryHandlerAsync<EmployeeQuery, List<EmployeeQueryModel>>, EmployeeQueryHandler>();
     }
   }
 }

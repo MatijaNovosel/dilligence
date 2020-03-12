@@ -105,7 +105,7 @@ export default {
 </script>
 
 <style scoped>
-  .q-drawer {
-    background: none;
-  }
+.q-drawer {
+	background: none;
+}
 </style>
