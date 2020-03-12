@@ -10,7 +10,8 @@
 				<q-item-section>
 					<q-item-label lines="1">{{ `${user.name} ${user.surname}` }}</q-item-label>
 					<q-item-label caption lines="2">
-						<span class="text-weight-bold">JMBAG:</span> {{ user.jmbag }}
+						<span class="text-weight-bold">JMBAG:</span>
+						{{ user.jmbag }}
 					</q-item-label>
 				</q-item-section>
 			</q-item>
@@ -25,12 +26,9 @@
 				:key="link.text"
 			>
 				<q-list :key="i" dense v-for="(sublink, i) in link.sublinks">
-					<q-item
-						@click="$router.push(sublink.route)"
-						class="text-caption"
-						clickable
-						v-ripple
-					>{{ sublink.text }}</q-item>
+					<q-item @click="$router.push(sublink.route)" class="text-caption" clickable v-ripple>
+						<span class="q-mt-xs q-pl-md">{{ sublink.text }}</span>
+					</q-item>
 				</q-list>
 			</q-expansion-item>
 		</q-list>
@@ -105,3 +103,9 @@ export default {
 	}
 };
 </script>
+
+<style scoped>
+  .q-drawer {
+    background: none;
+  }
+</style>
