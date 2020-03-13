@@ -8,6 +8,7 @@
 				<ValidationObserver ref="observer">
 					<ValidationProvider
 						immediate
+						mode="lazy"
 						name="username"
 						rules="required|min:4"
 						v-slot="{ invalid, dirty, errors }"
@@ -25,6 +26,7 @@
 					</ValidationProvider>
 					<ValidationProvider
 						immediate
+						mode="lazy"
 						name="password"
 						rules="required|min:4"
 						v-slot="{ invalid, dirty, errors }"
