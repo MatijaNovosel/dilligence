@@ -26,7 +26,7 @@
 				:key="link.text"
 			>
 				<q-list :key="i" dense v-for="(sublink, i) in link.sublinks">
-					<q-item @click="$router.push(sublink.route)" class="text-caption" clickable v-ripple>
+					<q-item @click="redirect(sublink.route)" class="text-caption" clickable v-ripple>
 						<span class="q-mt-xs q-pl-md">{{ sublink.text }}</span>
 					</q-item>
 				</q-list>
@@ -92,6 +92,14 @@ export default {
 				}
 			]
 		};
+	},
+	methods: {
+		redirect(route) {
+			if (this.$router.currentRoute.name === route.name) {
+				return;
+			}
+			this.$router.push(route);
+		}
 	},
 	watch: {
 		drawerTrigger() {
