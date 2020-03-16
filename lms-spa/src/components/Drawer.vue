@@ -3,7 +3,7 @@
 		<q-list dense>
 			<q-item class="q-my-md">
 				<q-item-section avatar>
-					<q-avatar size="40px">
+					<q-avatar size="40px" @click="$emit('avatarClicked')">
 						<img src="../assets/default-user.jpg" />
 					</q-avatar>
 				</q-item-section>
