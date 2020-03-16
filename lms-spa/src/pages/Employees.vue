@@ -1,6 +1,6 @@
 <template>
 	<q-page class="q-pa-md">
-    <!-- @update:pagination="optionsUpdated" - Stavi dok se popravi paginacija na SERVERU -->
+		<!-- @update:pagination="optionsUpdated" - Stavi dok se popravi paginacija na SERVERU -->
 		<q-table
 			:pagination.sync="pagination"
 			:loading="loading"
@@ -29,13 +29,37 @@
 							</div>
 							<div class="col-3">
 								<div class="q-pa-sm border-box">
-									Odjel:
+									<q-btn
+										:ripple="false"
+										dense
+										size="md"
+										flat
+										round
+										class="top-right"
+										icon="mdi-close-circle"
+										color="grey"
+										v-if="searchData.odjel.length != 0"
+										@click="searchData.odjel = []"
+									/>
+									<span>Odjel:</span>
 									<q-option-group dense :options="odjelOptions" type="checkbox" v-model="searchData.odjel" />
 								</div>
 							</div>
 							<div class="col-3">
 								<div class="q-pa-sm border-box">
-									Vrsta zaposljenja:
+									<q-btn
+										:ripple="false"
+										dense
+										size="md"
+										flat
+										round
+										class="top-right"
+										icon="mdi-close-circle"
+										color="grey"
+										v-if="searchData.employmentType.length != 0"
+										@click="searchData.employmentType = []"
+									/>
+									<span>Vrsta zaposljenja:</span>
 									<q-option-group
 										dense
 										:options="employmentTypeOptions"
@@ -84,7 +108,7 @@ export default {
 		}
 	},
 	created() {
-    this.getData();
+		this.getData();
 		for (let val in ODJEL) {
 			this.odjelOptions.push({ label: val, value: ODJEL[val] });
 		}
@@ -160,6 +184,11 @@ export default {
 
 <style lang="sass" scoped>
 .border-box
+  position: relative
   border: 1px solid rgba(0, 0, 0, 0.12)
   border-radius: 10px
+.top-right
+  position: absolute
+  right: 8px
+  top: 8px
 </style>

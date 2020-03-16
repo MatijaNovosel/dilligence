@@ -42,15 +42,7 @@
 				</q-card-section>
 				<q-card-actions class="q-pt-none">
 					<q-space />
-					<q-btn
-						:ripple="false"
-						dense
-						:loading="itemUploading"
-						:disabled="itemUploading"
-						size="sm"
-						color="primary"
-						@click="upload"
-					>Upload</q-btn>
+					<q-btn :ripple="false" dense size="sm" color="primary">Upload</q-btn>
 				</q-card-actions>
 			</q-card>
 		</q-dialog>

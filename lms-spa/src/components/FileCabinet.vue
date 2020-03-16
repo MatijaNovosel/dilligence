@@ -185,7 +185,7 @@ export default {
 };
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
 .right-abs
   position: absolute
   right: 8px
