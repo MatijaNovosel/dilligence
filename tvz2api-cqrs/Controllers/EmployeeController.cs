@@ -27,9 +27,15 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get(
+      [FromQuery(Name = "odjelIds[]")] List<OdjelEnum> odjelIds = null,
+      [FromQuery(Name = "zaposljenjeIds[]")] List<ZaposljenjeEnum> zaposljenjeIds = null,
+      string name = null,
+      string surname = null
+    )
     {
-      var result = await _queryBus.ExecuteAsync(new EmployeeQuery());
+      var specification = new EmployeeSpecification(name, surname, odjelIds, zaposljenjeIds);
+      var result = await _queryBus.ExecuteAsync(new EmployeeQuery(specification));
       return Ok(result);
     }
   }

@@ -23,6 +23,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     public async Task<List<EmployeeQueryModel>> HandleAsync(EmployeeQuery query)
     {
       var employees = await _context.Zaposlenik
+        .Where(query.Specification.Predicate)
         .Select(t => new EmployeeQueryModel
         {
           Id = t.Id,

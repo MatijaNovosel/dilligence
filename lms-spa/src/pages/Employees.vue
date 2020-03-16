@@ -1,9 +1,9 @@
 <template>
 	<q-page class="q-pa-md">
+    <!-- @update:pagination="optionsUpdated" - Stavi dok se popravi paginacija na SERVERU -->
 		<q-table
 			:pagination.sync="pagination"
 			:loading="loading"
-			@update:pagination="optionsUpdated"
 			separator="vertical"
 			dense
 			title="Employees"
@@ -16,10 +16,10 @@
 					<div class="col-12">
 						<span class="text-weight-light text-h5">Employees</span>
 					</div>
-          <div class="col-12 q-py-sm">
-            <q-separator />
-          </div>
-					<div class="col-12">
+					<div class="col-12 q-py-sm">
+						<q-separator />
+					</div>
+					<div class="col-12 q-pb-md">
 						<div class="row q-gutter-sm justify-center">
 							<div class="col-5">
 								<q-input v-model="searchData.name" dense label="Ime" clearable />
@@ -28,25 +28,34 @@
 								<q-input v-model="searchData.surname" dense label="Prezime" clearable />
 							</div>
 							<div class="col-3">
-								<div class="bg-grey-2 q-pa-sm rounded-borders">
+								<div class="q-pa-sm border-box">
 									Odjel:
-									<q-option-group dense :options="odjelOptions" type="checkbox" v-model="odjel" />
+									<q-option-group dense :options="odjelOptions" type="checkbox" v-model="searchData.odjel" />
 								</div>
 							</div>
 							<div class="col-3">
-								<div class="bg-grey-2 q-pa-sm rounded-borders">
+								<div class="q-pa-sm border-box">
 									Vrsta zaposljenja:
 									<q-option-group
 										dense
 										:options="employmentTypeOptions"
 										type="checkbox"
-										v-model="employmentType"
+										v-model="searchData.employmentType"
 									/>
 								</div>
 							</div>
 						</div>
 					</div>
+					<div class="col-12 text-right q-py-sm">
+						<q-btn color="primary" @click="getData">Search</q-btn>
+					</div>
 				</div>
+			</template>
+			<template v-slot:body-cell-odjelId="props">
+				<q-td :props="props">{{ props.value | odjelFilter }}</q-td>
+			</template>
+			<template v-slot:body-cell-vrstaZaposljenja="props">
+				<q-td :props="props">{{ props.value | zaposljenjeFilter }}</q-td>
 			</template>
 		</q-table>
 	</q-page>
@@ -54,6 +63,8 @@
 
 <script>
 import EmployeeService from "../services/api/employee";
+import ODJEL from "../constants/odjel";
+import EMPLOYMENT from "../constants/employment";
 
 export default {
 	name: "Employees",
@@ -63,7 +74,7 @@ export default {
 		},
 		getData() {
 			this.loading = true;
-			EmployeeService.getEmployees()
+			EmployeeService.getEmployees(...Object.values(this.searchData))
 				.then(({ data }) => {
 					this.employees = data;
 				})
@@ -72,26 +83,26 @@ export default {
 				});
 		}
 	},
+	created() {
+    this.getData();
+		for (let val in ODJEL) {
+			this.odjelOptions.push({ label: val, value: ODJEL[val] });
+		}
+		for (let val in EMPLOYMENT) {
+			this.employmentTypeOptions.push({ label: val, value: EMPLOYMENT[val] });
+		}
+	},
 	data() {
 		return {
-			employmentType: [],
-			odjel: [],
-			odjelOptions: [
-				{ label: "INRO", value: 1 },
-				{ label: "ELO", value: 2 },
-				{ label: "GRA", value: 3 },
-				{ label: "STRO", value: 4 }
-			],
-			employmentTypeOptions: [
-				{ label: "Vanski suradnik", value: 1 },
-				{ label: "Zaposlenik", value: 2 }
-			],
+			odjelOptions: [],
+			employmentTypeOptions: [],
 			searchData: {
 				name: null,
 				surname: null,
-				odjel: []
+				odjel: [],
+				employmentType: []
 			},
-			rowsPerPageOptions: [5, 10, 15],
+			rowsPerPageOptions: [10, 15, 20],
 			loading: false,
 			columns: [
 				{
@@ -140,9 +151,15 @@ export default {
 			employees: [],
 			pagination: {
 				page: 1,
-				rowsPerPage: 15
+				rowsPerPage: 20
 			}
 		};
 	}
 };
 </script>
+
+<style lang="sass">
+.border-box
+  border: 1px solid rgba(0, 0, 0, 0.12)
+  border-radius: 10px
+</style>
