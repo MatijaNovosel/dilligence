@@ -24,7 +24,7 @@
 					/>
 				</q-toolbar>
 				<q-card-section class="text-center q-pb-none">
-					<q-img src="../assets/default-user.jpg" class="border-box"></q-img>
+					<q-img src="../assets/default-user.jpg" class="border-box-image"></q-img>
 				</q-card-section>
 				<q-card-section>
 					<q-file
@@ -94,7 +94,7 @@ export default {
   overflow: hidden !important
 .q-item__section--avatar
   cursor: pointer
-.border-box
+.border-box-image
   width: 30%
   height: 30%
   border: 1px solid rgba(0, 0, 0, 0.12)

@@ -158,7 +158,7 @@ export default {
 };
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
 .border-box
   border: 1px solid rgba(0, 0, 0, 0.12)
   border-radius: 10px
