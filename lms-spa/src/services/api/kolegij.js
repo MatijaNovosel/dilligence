@@ -1,6 +1,8 @@
+import axios from 'axios';
+
 export default {
   async get(parameters) {
-    return await this.$axios.get('Kolegij', {
+    return await axios.get('Kolegij', {
       params: {
         smjerIDs: parameters.smjerIds,
         name: parameters.name,
@@ -11,9 +13,9 @@ export default {
     });
   },
   async getKolegij(id) {
-    return await this.$axios.get(`Kolegij/${id}`);
+    return await axios.get(`Kolegij/${id}`);
   },
   async getKolegijSidebar(id) {
-    return await this.$axios.get(`Kolegij/sidebar/${id}`);
+    return await axios.get(`Kolegij/sidebar/${id}`);
   }
 }

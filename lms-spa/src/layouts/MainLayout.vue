@@ -8,7 +8,7 @@
 			<router-view />
 		</q-page-container>
 		<q-dialog v-model="editPictureDialog" persistent>
-			<q-card class="upload-dialog">
+			<q-card class="picture-dialog">
 				<q-toolbar class="bg-primary text-white dialog-toolbar">
 					<span>Change profile picture</span>
 					<q-space />
@@ -76,6 +76,9 @@ export default {
 </script>
 
 <style lang="sass">
+.picture-dialog
+  width: 80vh
+  max-width: 80vw
 .navbar-img
   width: 40px
   height: 40px

@@ -1,14 +1,14 @@
 <template>
 	<div>
 		<q-card class="q-mx-auto q-my-lg cabinet-card" flat bordered>
-			<div class="text-center justify-center q-py-sm">
-				<span class="text-h6">{{ content.naslov }}</span>
+			<div class="text-center justify-center q-py-sm bg-primary">
+				<span class="caption text-white">{{ content.naslov }}</span>
 				<div class="right-abs">
 					<q-btn
 						:ripple="false"
 						dense
-						size="md"
-						color="green"
+						size="sm"
+						color="white"
 						flat
 						round
 						icon="mdi-plus-box-multiple"
@@ -19,9 +19,11 @@
 					<q-btn
 						:ripple="false"
 						dense
-						size="md"
+						size="sm"
+						color="white"
 						flat
 						round
+						class="q-ml-sm"
 						:icon="downloadMultiple ? 'mdi-lock-open-variant' : 'mdi-lock'"
 						@click="changeDownloadToMultiple"
 					>
@@ -70,9 +72,23 @@
 						></q-checkbox>
 					</q-item-section>
 				</q-item>
-        <q-item class="justify-center" v-show="downloadMultiple">
-          <q-btn size="sm" dense color="primary" @click="downloadMultipleFiles">Download</q-btn>
-        </q-item>
+				<q-item class="justify-center" v-show="downloadMultiple">
+					<q-space />
+					<q-btn size="sm" dense color="primary" @click="downloadMultipleFiles">Download</q-btn>
+					<q-space />
+					<q-btn
+						:ripple="false"
+						dense
+						size="sm"
+						flat
+						round
+						class="select-all"
+						v-if="downloadMultiple"
+						icon="mdi-check-box-multiple-outline"
+					>
+						<q-tooltip>Select all</q-tooltip>
+					</q-btn>
+				</q-item>
 			</q-list>
 		</q-card>
 		<q-dialog v-model="addFileDialog" persistent no-esc-dismiss>
@@ -205,4 +221,8 @@ export default {
   max-width: 80vw
 .q-item__section--main ~ .q-item__section--side
   padding-left: 0px
+.select-all
+  position: absolute
+  right: 15px
+  top: 12px
 </style>
