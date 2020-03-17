@@ -19,6 +19,7 @@ using tvz2api_cqrs.Implementation.Commands;
 using tvz2api_cqrs.Models;
 using tvz2api_cqrs.Models.DTO;
 using tvz2api_cqrs.QueryModels;
+using tvz2api_cqrs.Hubs;
 using System.IO;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Http;
@@ -42,8 +43,21 @@ namespace tvz2api_cqrs
     public void ConfigureServices(IServiceCollection services)
     {
       ConfigureAdditionalServices(services);
+      services.AddSignalR();
       services.AddDbContext<tvz2Context>();
       services.AddControllers();
+      services.AddCors(options =>
+      {
+        options.AddDefaultPolicy(
+        builder =>
+        {
+          builder
+            .WithOrigins("http://localhost:8080")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+        });
+      });
       services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
       {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -58,14 +72,6 @@ namespace tvz2api_cqrs
       {
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "tvz2cqrs", Version = "v1" });
       });
-      services.AddCors(options =>
-      {
-        options.AddDefaultPolicy(
-        builder =>
-        {
-          builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-        });
-      });
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -75,7 +81,14 @@ namespace tvz2api_cqrs
         app.UseDeveloperExceptionPage();
       }
       app.UseCors();
+      app.Use((context, next) =>
+      {
+        context.Response.Headers["Access-Control-Allow-Origin"] = "null";
+        context.Response.Headers["Access-Control-Allow-Credentials"] = "true";
+        return next.Invoke();
+      });
       app.UseHttpsRedirection();
+      app.UseWebSockets();
       app.UseSwagger();
       app.UseSwaggerUI(c =>
       {
@@ -86,6 +99,7 @@ namespace tvz2api_cqrs
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapControllers();
+        endpoints.MapHub<VijestiHub>("/vijesti-hub");
       });
     }
 
@@ -115,6 +129,8 @@ namespace tvz2api_cqrs
       services.AddScoped<ICommandHandlerAsync<StudentUpdatePretplataCommand>, StudentCommandHandler>();
 
       services.AddScoped<IQueryHandlerAsync<EmployeeQuery, List<EmployeeQueryModel>>, EmployeeQueryHandler>();
+
+      services.AddScoped<IQueryHandlerAsync<VijestQuery, List<VijestQueryModel>>, VijestQueryHandler>();
     }
   }
 }
