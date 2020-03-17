@@ -42,12 +42,12 @@ export default {
 		FileCabinet
 	},
 	created() {
-		const connection = new HubConnectionBuilder()
+		this.connection = new HubConnectionBuilder()
 			.withUrl("http://localhost:5000/vijesti-hub")
 			.configureLogging(LogLevel.Information)
 			.build();
-		connection.start();
-		connection.on("EVENT", response => {
+		this.connection.start();
+		this.connection.on("EVENT", response => {
 			this.vijesti = [ ...this.vijesti, response.payload ];
 		});
 		KolegijService.getKolegijSidebar(147).then(({ data }) => {
@@ -67,11 +67,15 @@ export default {
 	},
 	data() {
 		return {
+      connection: null,
       notification: null,
 			vijesti: null,
 			sidebarContents: null
 		};
-	}
+  },
+  beforeDestroy() {
+    this.connection.stop();
+  }
 };
 </script>
 
