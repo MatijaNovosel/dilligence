@@ -1,37 +1,30 @@
 <template>
-	<q-drawer :width="250" v-model="drawerOpen" show-if-above bordered content-class="drawer-bg">
-		<q-list dense>
-			<q-item class="q-my-md">
-				<q-item-section avatar>
-					<q-avatar size="40px" @click="$emit('avatarClicked')">
-						<img src="../assets/default-user.jpg" />
-					</q-avatar>
-				</q-item-section>
-				<q-item-section>
-					<q-item-label lines="1">{{ `${user.name} ${user.surname}` }}</q-item-label>
-					<q-item-label caption lines="2">
-						<span class="text-weight-bold">JMBAG:</span>
-						{{ user.jmbag }}
-					</q-item-label>
-				</q-item-section>
-			</q-item>
-			<q-separator />
-			<q-expansion-item
-				group="drawer"
-				dense
-				dense-toggle
-				class="text-weight-regular"
-				v-for="link in links"
-				:label="link.text"
-				:key="link.text"
-			>
-				<q-list :key="i" dense v-for="(sublink, i) in link.sublinks">
-					<q-item @click="redirect(sublink.route)" class="text-caption" clickable v-ripple>
-						<span class="q-mt-xs q-pl-md">{{ sublink.text }}</span>
-					</q-item>
-				</q-list>
-			</q-expansion-item>
+	<q-drawer
+		:mini="miniState"
+		mini-to-overlay
+		@mouseover="miniState = false"
+		@mouseout="miniState = true"
+		side="right"
+		:width="250"
+		show-if-above
+		bordered
+	>
+    <q-separator />
+		<q-list separator class="rounded-borders" style="max-width: 350px">
+			<template v-for="(user, index) in 10">
+				<q-item clickable v-ripple :key="user + index">
+					<q-item-section avatar>
+						<q-avatar>
+							<img src="../assets/default-user.jpg" />
+						</q-avatar>
+					</q-item-section>
+					<q-item-section>
+						<q-item-label lines="1">Ivica Todoric</q-item-label>
+					</q-item-section>
+				</q-item>
+			</template>
 		</q-list>
+    <q-separator />
 	</q-drawer>
 </template>
 
@@ -39,10 +32,11 @@
 import { mapGetters } from "vuex";
 
 export default {
-	name: "Drawer",
+	name: "ChatDrawer",
 	props: ["drawerTrigger"],
 	data() {
 		return {
+			miniState: true,
 			drawerOpen: false,
 			links: [
 				{
@@ -111,3 +105,9 @@ export default {
 	}
 };
 </script>
+
+<style scoped>
+.q-drawer {
+	background: none;
+}
+</style>

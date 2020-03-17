@@ -1,9 +1,11 @@
 <template>
-	<q-layout view="hHh lpR fff">
+	<q-layout view="hHh LpR fFf">
 		<div v-if="$router.currentRoute.path != '/login'">
 			<Navbar @drawerState="drawer = !drawer" />
 			<Drawer @avatarClicked="editPictureDialog = true" :drawerTrigger="drawer" />
+			<ChatDrawer @avatarClicked="editPictureDialog = true" :drawerTrigger="drawer" />
 		</div>
+    <Footer />
 		<q-page-container :class="{' drawer-bg': $router.currentRoute.path == '/login' }">
 			<router-view />
 		</q-page-container>
@@ -52,12 +54,16 @@
 <script>
 import Navbar from "../components/Navbar";
 import Drawer from "../components/Drawer";
+import ChatDrawer from "../components/ChatDrawer";
+import Footer from "../components/Footer";
 
 export default {
 	name: "MainLayout",
 	components: {
 		Navbar,
-		Drawer
+		Drawer,
+    ChatDrawer,
+    Footer
 	},
 	data() {
 		return {
