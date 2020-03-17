@@ -131,6 +131,7 @@ namespace tvz2api_cqrs
       services.AddScoped<IQueryHandlerAsync<EmployeeQuery, List<EmployeeQueryModel>>, EmployeeQueryHandler>();
 
       services.AddScoped<IQueryHandlerAsync<VijestQuery, List<VijestQueryModel>>, VijestQueryHandler>();
+      services.AddScoped<ICommandHandlerAsync<CreateVijestCommand, VijestQueryModel>, VijestCommandHandler>();
     }
   }
 }

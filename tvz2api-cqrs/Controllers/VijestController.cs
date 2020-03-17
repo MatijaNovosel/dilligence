@@ -2,6 +2,7 @@ using tvz2api_cqrs.Models;
 using tvz2api_cqrs.Infrastructure.Commands;
 using tvz2api_cqrs.Enumerations;
 using tvz2api_cqrs.Implementation.Queries;
+using tvz2api_cqrs.Implementation.Commands;
 using tvz2api_cqrs.QueryModels;
 using tvz2api_cqrs.Infrastructure.Messaging;
 using tvz2api_cqrs.Implementation.Specifications;
@@ -35,8 +36,15 @@ namespace tvz2api_cqrs.Controllers
     public async Task<IActionResult> GetDetails(int id)
     {
       var result = await _queryBus.ExecuteAsync(new VijestQuery(id));
-      await this._hubContext.Clients.All.SendAsync("EVENT", "Hello world!");
       return Ok(result);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateNew(CreateVijestCommand command)
+    {
+      var vijest = await _commandBus.ExecuteAsync<VijestQueryModel>(command);
+      await this._hubContext.Clients.All.SendAsync("EVENT", vijest);
+      return Ok(vijest);
     }
   }
 }

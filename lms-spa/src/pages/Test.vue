@@ -1,9 +1,28 @@
 <template>
 	<q-page>
-		<q-btn @click="triggerEvent">CLICK HERE FOR EVENT</q-btn>
 		<template v-for="content in sidebarContents">
 			<FileCabinet :key="content.id" :content="content"></FileCabinet>
 		</template>
+		<div class="row text-center justify-center q-my-md">
+			<div class="col-3">
+				<q-input v-model="notification" label="Enter new notification"></q-input>
+			</div>
+			<div class="col-1 flex flex-center">
+				<q-btn size="md" dense color="primary" @click="sendNotification">Send</q-btn>
+			</div>
+		</div>
+		<div class="row text-center justify-center full-width">
+			<div class="col-3">
+				<q-list bordered separator dense>
+					<q-item clickable v-ripple v-for="vijest in vijesti" :key="vijest.id">
+						<q-item-section>
+							<q-item-label>{{ vijest.naslov }}</q-item-label>
+							<q-item-label caption>{{ vijest.opis }}</q-item-label>
+						</q-item-section>
+					</q-item>
+				</q-list>
+			</div>
+		</div>
 	</q-page>
 </template>
 
@@ -28,22 +47,37 @@ export default {
 			.configureLogging(LogLevel.Information)
 			.build();
 		connection.start();
-		connection.on("EVENT", () => {
-			console.log("Kur-cina");
+		connection.on("EVENT", response => {
+			this.vijesti = [ ...this.vijesti, response.payload ];
 		});
 		KolegijService.getKolegijSidebar(147).then(({ data }) => {
 			this.sidebarContents = data;
 		});
+		this.getData();
 	},
 	methods: {
-		triggerEvent() {
-			this.$axios.get("Vijest/147");
-		}
+		getData() {
+			this.$axios.get("Vijest/147").then(({ data }) => {
+				this.vijesti = data;
+			});
+    },
+    sendNotification() {
+      this.$axios.post("Vijest", { naslov: this.notification });
+    }
 	},
 	data() {
 		return {
+      notification: null,
+			vijesti: null,
 			sidebarContents: null
 		};
 	}
 };
 </script>
+
+<style scoped lang="sass">
+.my-card
+  width: 100%
+  max-width: 350px
+  margin: 5px
+</style>
