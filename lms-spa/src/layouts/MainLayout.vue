@@ -2,59 +2,18 @@
 	<q-layout view="hHh LpR fFf">
 		<div v-if="$router.currentRoute.path != '/login'">
 			<Navbar @drawerState="drawer = !drawer" />
-			<Drawer @avatarClicked="editPictureDialog = true" :drawerTrigger="drawer" />
-			<ChatDrawer @avatarClicked="editPictureDialog = true" :drawerTrigger="drawer" />
+			<Drawer :drawerTrigger="drawer" />
 		</div>
-    <Footer />
+		<Footer v-if="$router.currentRoute.path != '/login'" />
 		<q-page-container :class="{' drawer-bg': $router.currentRoute.path == '/login' }">
 			<router-view />
 		</q-page-container>
-		<q-dialog v-model="editPictureDialog" persistent>
-			<q-card class="picture-dialog">
-				<q-toolbar class="bg-primary text-white dialog-toolbar">
-					<span>Change profile picture</span>
-					<q-space />
-					<q-btn
-						:ripple="false"
-						dense
-						size="sm"
-						color="white"
-						flat
-						round
-						icon="mdi-close-circle"
-						@click="resetDialog"
-					/>
-				</q-toolbar>
-				<q-card-section class="text-center q-pb-none">
-					<q-img src="../assets/default-user.jpg" class="border-box-image"></q-img>
-				</q-card-section>
-				<q-card-section>
-					<q-file
-						accept=".jpg, .pdf, image/*"
-						dense
-						outlined
-						v-model="picture"
-						clearable
-						label="Upload picture"
-					>
-						<template v-slot:prepend>
-							<q-icon name="mdi-paperclip" />
-						</template>
-					</q-file>
-				</q-card-section>
-				<q-card-actions class="q-pt-none">
-					<q-space />
-					<q-btn :ripple="false" dense size="sm" color="primary">Upload</q-btn>
-				</q-card-actions>
-			</q-card>
-		</q-dialog>
 	</q-layout>
 </template>
 
 <script>
 import Navbar from "../components/Navbar";
 import Drawer from "../components/Drawer";
-import ChatDrawer from "../components/ChatDrawer";
 import Footer from "../components/Footer";
 
 export default {
@@ -62,21 +21,12 @@ export default {
 	components: {
 		Navbar,
 		Drawer,
-    ChatDrawer,
-    Footer
+		Footer
 	},
 	data() {
 		return {
-			editPictureDialog: false,
-			drawer: null,
-			picture: null
+			drawer: null
 		};
-	},
-	methods: {
-		resetDialog() {
-			this.editPictureDialog = false;
-			this.picture = null;
-		}
 	}
 };
 </script>
