@@ -40,9 +40,9 @@ namespace tvz2api_cqrs.Models
         public string Napomena { get; set; }
         public string Preduvjeti { get; set; }
         public string Isvuekvivalencije { get; set; }
+        public string Lozinka { get; set; }
         public int? IzradioId { get; set; }
         public int? SmjerId { get; set; }
-        public string Password { get; set; }
 
         public virtual Smjer Smjer { get; set; }
         public virtual ICollection<Exam> Exam { get; set; }

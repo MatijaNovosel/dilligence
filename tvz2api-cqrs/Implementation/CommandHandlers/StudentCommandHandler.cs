@@ -32,7 +32,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
     public async Task HandleAsync(StudentUpdatePretplataCommand command)
     {
-      if (_context.Kolegij.Where(x => x.Id == command.KolegijId).FirstOrDefault().Password != command.Password)
+      if (_context.Kolegij.Where(x => x.Id == command.KolegijId).FirstOrDefault().Lozinka != command.Password)
       {
         throw new Exception("Wrong password!");
       }
