@@ -4,7 +4,6 @@
 			<Navbar @drawerState="drawer = !drawer" />
 			<Drawer :drawerTrigger="drawer" />
 		</div>
-		<Footer v-if="$router.currentRoute.path != '/login'" />
 		<q-page-container :class="{' drawer-bg': $router.currentRoute.path == '/login' }">
 			<router-view />
 		</q-page-container>
@@ -14,14 +13,12 @@
 <script>
 import Navbar from "../components/Navbar";
 import Drawer from "../components/Drawer";
-import Footer from "../components/Footer";
 
 export default {
 	name: "MainLayout",
 	components: {
 		Navbar,
-		Drawer,
-		Footer
+		Drawer
 	},
 	data() {
 		return {
