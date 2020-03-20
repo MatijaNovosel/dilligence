@@ -8,4 +8,7 @@ export default async ({ Vue }) => {
   Vue.filter("odjelFilter", val => {
     return Object.keys(ODJEL).find(k => ODJEL[k] === val);
   });
+  Vue.filter("timeStampFilter", val => {
+    return (new Date(Date.parse(val))).toString().slice(4, 24);
+  });
 }

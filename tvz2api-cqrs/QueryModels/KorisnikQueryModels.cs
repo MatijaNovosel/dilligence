@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using tvz2api_cqrs.Models;
 
 namespace tvz2api_cqrs.QueryModels
 {
@@ -12,7 +13,7 @@ namespace tvz2api_cqrs.QueryModels
   public class KorisnikChatQueryModel
   {
     public int Id { get; set; }
-    public int FirstParticipantId { get; set; }
-    public int SecondParticipantId { get; set; }
+    public KorisnikQueryModel FirstParticipant { get; set; }
+    public KorisnikQueryModel SecondParticipant { get; set; }
   }
 }

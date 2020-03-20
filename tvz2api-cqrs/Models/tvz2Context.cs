@@ -284,6 +284,8 @@ namespace tvz2api_cqrs.Models
                     .IsRequired()
                     .IsUnicode(false);
 
+                entity.Property(e => e.SentAt).HasDefaultValueSql("(getdate())");
+
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.HasOne(d => d.Chat)

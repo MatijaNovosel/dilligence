@@ -11,13 +11,13 @@
 						<q-separator />
 						<q-card-section class="q-py-xs q-px-none">
 							<q-list separator dense>
-								<q-item clickable v-for="(chat, i) in chats" :key="i">
+								<q-item clickable v-for="(chat, i) in chats" :key="i" @click="getChatDetails(chat.id)">
 									<q-item-section avatar class="q-pl-md">
 										<q-avatar size="30px">
-											<img src="https://cdn.quasar.dev/img/avatar2.jpg" />
+											<img src="../assets/default-user.jpg" />
 										</q-avatar>
 									</q-item-section>
-									<q-item-section>{{ chat.id }}</q-item-section>
+									<q-item-section>{{ chat.firstParticipant.id == user.id ? chat.secondParticipant.username : chat.firstParticipant.username }}</q-item-section>
 								</q-item>
 							</q-list>
 						</q-card-section>
@@ -27,18 +27,18 @@
 			<div class="col-9">
 				<div class="row">
 					<div class="col-12">
-						<div class="border-box chat q-px-md q-py-md">
-							<template v-for="message in 10">
+						<div class="border-box chat q-px-md q-py-md" v-if="activeChatMessages">
+							<template v-for="message in activeChatMessages">
 								<q-chat-message
-									:key="message"
-									name="User"
+									:key="message.id"
+									:name="message.userId == user.id ? 'You' : message.username"
 									avatar="../assets/default-user.jpg"
-									:text="['Message']"
-									:style="message % 2 == 0 ? 'text-align: right;' : 'text-align: left;'"
+									:text="[message.content]"
+									:style="message.userId == user.id ? 'text-align: right;' : 'text-align: left;'"
 									size="5"
-									stamp="7 minutes ago"
-									:sent="message % 2 == 0"
-									:bg-color="message % 2 == 0 ? 'blue-5' : 'blue-2'"
+									:stamp="message.sentAt | timeStampFilter"
+									:sent="message.userId == user.id"
+									:bg-color="message.userId == user.id ? 'blue-5' : 'blue-2'"
 								/>
 							</template>
 						</div>
@@ -52,9 +52,15 @@
 									</template>
 								</q-input>
 							</div>
-              <div class="col-1 text-center q-mt-xs">
-                <q-btn class="q-pa-xs" size="sm" dense color="primary" @click="newChatDialog = true">New chat</q-btn>
-              </div>
+							<div class="col-1 text-center q-mt-xs">
+								<q-btn
+									class="q-pa-xs"
+									size="sm"
+									dense
+									color="primary"
+									@click="newChatDialog = true"
+								>New chat</q-btn>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -115,21 +121,20 @@
 </template>
 
 <script>
-import FileCabinet from "../components/FileCabinet";
 import KorisnikService from "../services/api/korisnik";
+import ChatService from "../services/api/chat";
 import {
 	HubConnectionBuilder,
 	LogLevel,
 	HttpTransportType
 } from "@aspnet/signalr";
 import apiConfig from "../api.config";
+import { mapGetters } from "vuex";
 
 export default {
 	name: "Chat",
-	components: {
-		FileCabinet
-	},
 	created() {
+		this.getChats(this.user.id);
 		/* this.connection = new HubConnectionBuilder()
 			.withUrl("http://localhost:5000/vijesti-hub")
 			.configureLogging(LogLevel.Information)
@@ -139,15 +144,35 @@ export default {
 			this.vijesti = [ ...this.vijesti, response.payload ];
 		}); */
 	},
+	computed: {
+		...mapGetters(["user"])
+	},
 	methods: {
 		resetNewChatDialog() {
 			this.newChatDialog = false;
-      this.newChatSearch = null;
-      this.foundUsers = null;
+			this.newChatSearch = null;
+			this.foundUsers = null;
 		},
 		searchUsers() {
 			KorisnikService.searchKorisnik(this.newChatSearch).then(({ data }) => {
 				this.foundUsers = data.results;
+			});
+		},
+		getChats(id) {
+			KorisnikService.getChats(id).then(({ data }) => {
+				this.chats = data;
+				if (this.chats.length != 0) {
+					this.getChatDetails(this.chats[0].id);
+				}
+			});
+		},
+		getChatDetails(id) {
+			if (this.activeChatId != null && this.activeChatId == id) {
+				return;
+			}
+			this.activeChatId = id;
+			ChatService.getChatDetails(id).then(({ data }) => {
+				this.activeChatMessages = data.messages;
 			});
 		}
 	},
@@ -158,8 +183,10 @@ export default {
 			newChatDialog: false,
 			open: true,
 			connection: null,
-      message: null,
-      chats: null
+			message: null,
+			chats: null,
+			activeChatId: null,
+			activeChatMessages: null
 		};
 	},
 	beforeDestroy() {

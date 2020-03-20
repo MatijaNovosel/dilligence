@@ -136,6 +136,8 @@ namespace tvz2api_cqrs
       services.AddScoped<IQueryHandlerAsync<KorisnikQuery, List<KorisnikQueryModel>>, KorisnikQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<KorisnikTotalQuery, int>, KorisnikQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<KorisnikChatQuery, List<KorisnikChatQueryModel>>, KorisnikQueryHandler>();
+
+      services.AddScoped<IQueryHandlerAsync<ChatDetailsQuery, ChatQueryModel>, ChatQueryHandler>();
     }
   }
 }

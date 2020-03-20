@@ -9,6 +9,7 @@ namespace tvz2api_cqrs.Models
         public string Content { get; set; }
         public int UserId { get; set; }
         public int ChatId { get; set; }
+        public DateTime? SentAt { get; set; }
 
         public virtual Chat Chat { get; set; }
         public virtual Korisnik User { get; set; }

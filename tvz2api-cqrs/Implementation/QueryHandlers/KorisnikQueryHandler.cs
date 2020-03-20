@@ -57,8 +57,16 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         .Select(t => new KorisnikChatQueryModel
         {
           Id = t.Id,
-          FirstParticipantId = t.FirstParticipantId,
-          SecondParticipantId = t.SecondParticipantId
+          FirstParticipant = new KorisnikQueryModel() 
+          { 
+            Id = t.FirstParticipant.Id,
+            Username = t.FirstParticipant.Username
+          },
+          SecondParticipant = new KorisnikQueryModel() 
+          { 
+            Id = t.SecondParticipant.Id,
+            Username = t.SecondParticipant.Username
+          }
         })
         .ToListAsync();
       return chats;

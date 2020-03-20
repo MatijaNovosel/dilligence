@@ -7,5 +7,8 @@ export default {
         name
       }
     });
+  },
+  async getChats(id) {
+    return await axios.get("Korisnik/chat/" + id);
   }
 }
