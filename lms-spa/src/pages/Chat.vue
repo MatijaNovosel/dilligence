@@ -11,7 +11,7 @@
 						<q-separator />
 						<q-card-section class="q-py-xs q-px-none">
 							<q-list separator dense>
-								<q-item clickable v-for="(chat, i) in chats" :key="i" @click="getChatDetails(chat.id)">
+								<q-item clickable v-for="(chat, i) in chats" :key="i" @click="getChatDetails(chat)">
 									<q-item-section avatar class="q-pl-md">
 										<q-avatar size="30px">
 											<img src="../assets/default-user.jpg" />
@@ -27,11 +27,11 @@
 			<div class="col-9">
 				<div class="row">
 					<div class="col-12">
-						<div class="border-box chat q-px-md q-py-md" v-if="activeChatMessages">
+						<div ref="chat" class="border-box chat q-px-md q-py-md" v-if="activeChat">
 							<template v-for="message in activeChatMessages">
 								<q-chat-message
 									:key="message.id"
-									:name="message.userId == user.id ? 'You' : message.username"
+									:name="message.userId == user.id ? 'You' : (activeChat.firstParticipant.id == user.id ? activeChat.secondParticipant.username : activeChat.firstParticipant.username)"
 									avatar="../assets/default-user.jpg"
 									:text="[message.content]"
 									:style="message.userId == user.id ? 'text-align: right;' : 'text-align: left;'"
@@ -48,7 +48,7 @@
 							<div class="col-11">
 								<q-input label="Enter a message..." dense v-model="message" outlined bg-color="white">
 									<template v-slot:append>
-										<q-btn :ripple="false" dense size="sm" color="primary" @click="searchUsers">Send</q-btn>
+										<q-btn :ripple="false" dense size="sm" color="primary" @click="sendMessage">Send</q-btn>
 									</template>
 								</q-input>
 							</div>
@@ -135,14 +135,17 @@ export default {
 	name: "Chat",
 	created() {
 		this.getChats(this.user.id);
-		/* this.connection = new HubConnectionBuilder()
-			.withUrl("http://localhost:5000/vijesti-hub")
+		this.connection = new HubConnectionBuilder()
+			.withUrl("http://localhost:5000/chat-hub")
 			.configureLogging(LogLevel.Information)
 			.build();
 		this.connection.start();
-		this.connection.on("EVENT", response => {
-			this.vijesti = [ ...this.vijesti, response.payload ];
-		}); */
+		this.connection.on("messageSent", message => {
+			this.activeChatMessages = [...this.activeChatMessages, message];
+			setTimeout(() => {
+				this.$refs.chat.scrollTop = this.$refs.chat.scrollHeight;
+			}, 100);
+		});
 	},
 	computed: {
 		...mapGetters(["user"])
@@ -162,17 +165,27 @@ export default {
 			KorisnikService.getChats(id).then(({ data }) => {
 				this.chats = data;
 				if (this.chats.length != 0) {
-					this.getChatDetails(this.chats[0].id);
+					this.getChatDetails(this.chats[0]);
 				}
+				setTimeout(() => {
+					this.$refs.chat.scrollTop = this.$refs.chat.scrollHeight;
+				}, 100);
 			});
 		},
-		getChatDetails(id) {
-			if (this.activeChatId != null && this.activeChatId == id) {
+		getChatDetails(chat) {
+			if (this.activeChat != null && this.activeChat.id == chat.id) {
 				return;
 			}
-			this.activeChatId = id;
-			ChatService.getChatDetails(id).then(({ data }) => {
+			this.activeChat = chat;
+			ChatService.getChatDetails(chat.id).then(({ data }) => {
 				this.activeChatMessages = data.messages;
+			});
+		},
+		sendMessage() {
+			ChatService.sendMessage({
+				content: this.message,
+				chatId: this.activeChat.id,
+				userId: this.user.id
 			});
 		}
 	},
@@ -185,12 +198,12 @@ export default {
 			connection: null,
 			message: null,
 			chats: null,
-			activeChatId: null,
+			activeChat: null,
 			activeChatMessages: null
 		};
 	},
 	beforeDestroy() {
-		// this.connection.stop();
+		this.connection.stop();
 	}
 };
 </script>

@@ -7,7 +7,6 @@ namespace tvz2api_cqrs.Models.DTO
     {
       public int Id { get; set; }
       public string Content { get; set; }
-      public string Username { get; set; }
       public int UserId { get; set; }
       public DateTime? SentAt { get; set; }
     }

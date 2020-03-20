@@ -33,7 +33,6 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           {
             Id = x.Id,
             Content = x.Content,
-            Username = x.User.Username,
             SentAt = x.SentAt,
             UserId = x.UserId
           }).ToList()

@@ -100,6 +100,7 @@ namespace tvz2api_cqrs
       {
         endpoints.MapControllers();
         endpoints.MapHub<VijestiHub>("/vijesti-hub");
+        endpoints.MapHub<ChatHub>("/chat-hub");
       });
     }
 
@@ -138,6 +139,8 @@ namespace tvz2api_cqrs
       services.AddScoped<IQueryHandlerAsync<KorisnikChatQuery, List<KorisnikChatQueryModel>>, KorisnikQueryHandler>();
 
       services.AddScoped<IQueryHandlerAsync<ChatDetailsQuery, ChatQueryModel>, ChatQueryHandler>();
+
+      services.AddScoped<ICommandHandlerAsync<SendMessageCommand, MessageDTO>, ChatCommandHandler>();
     }
   }
 }
