@@ -27,7 +27,14 @@
 			<div class="col-9">
 				<div class="row">
 					<div class="col-12">
-						<div ref="chat" class="border-box chat q-px-md q-py-md" v-if="activeChat">
+						<q-scroll-area
+							v-if="activeChat"
+							ref="chat"
+							:thumb-style="thumbStyle"
+							:bar-style="barStyle"
+							class="border-box q-px-lg q-py-md chat"
+							style="height: 600px;"
+						>
 							<template v-for="message in activeChatMessages">
 								<q-chat-message
 									:key="message.id"
@@ -41,7 +48,7 @@
 									:bg-color="message.userId == user.id ? 'blue-5' : 'blue-2'"
 								/>
 							</template>
-						</div>
+						</q-scroll-area>
 					</div>
 					<div class="col-12 q-py-md">
 						<div class="row">
@@ -142,15 +149,16 @@ export default {
 		this.connection.start();
 		this.connection.on("messageSent", message => {
 			this.activeChatMessages = [...this.activeChatMessages, message];
-			setTimeout(() => {
-				this.$refs.chat.scrollTop = this.$refs.chat.scrollHeight;
-			}, 100);
+			this.scrollChatToBottom();
 		});
 	},
 	computed: {
 		...mapGetters(["user"])
 	},
 	methods: {
+		scrollChatToBottom() {
+      this.$refs.chat.setScrollPosition(this.$refs.chat.scrollSize, 300);
+		},
 		resetNewChatDialog() {
 			this.newChatDialog = false;
 			this.newChatSearch = null;
@@ -167,9 +175,6 @@ export default {
 				if (this.chats.length != 0) {
 					this.getChatDetails(this.chats[0]);
 				}
-				setTimeout(() => {
-					this.$refs.chat.scrollTop = this.$refs.chat.scrollHeight;
-				}, 100);
 			});
 		},
 		getChatDetails(chat) {
@@ -199,12 +204,35 @@ export default {
 			message: null,
 			chats: null,
 			activeChat: null,
-			activeChatMessages: null
+			activeChatMessages: null,
+			thumbStyle: {
+				right: "4px",
+				borderRadius: "5px",
+				backgroundColor: "#027be3",
+				width: "5px",
+				opacity: 0.75
+			},
+			barStyle: {
+				right: "2px",
+				borderRadius: "9px",
+				backgroundColor: "#027be3",
+				width: "9px",
+				opacity: 0.2
+			}
 		};
 	},
 	beforeDestroy() {
 		this.connection.stop();
-	}
+  },
+  watch: {
+    activeChatMessages: {
+      immediate: false,
+      deep: true,
+      handler() {
+        this.scrollChatToBottom();
+      }
+    }
+  }
 };
 </script>
 
@@ -224,9 +252,4 @@ export default {
   border-top-left-radius: 6px
   border-top-right-radius: 6px
   user-select: none
-.chat
-  background-color: #f9f9f9
-  overflow: auto
-  max-height: 600px !important
-  position: relative !important
 </style>
