@@ -11,7 +11,8 @@ using tvz2api_cqrs.Models.DTO;
 namespace tvz2api_cqrs.Implementation.QueryHandlers
 {
   public class ChatQueryHandler :
-    IQueryHandlerAsync<ChatDetailsQuery, ChatQueryModel>
+    IQueryHandlerAsync<ChatDetailsQuery, ChatQueryModel>,
+    IQueryHandlerAsync<ChatAvailableUsersQuery, List<KorisnikQueryModel>>
   {
     private readonly tvz2Context _context;
 
@@ -29,7 +30,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Id = t.Id,
           Messages = t.Message
           .Where(x => x.ChatId == query.Id)
-          .Select(x => new MessageDTO() 
+          .Select(x => new MessageDTO()
           {
             Id = x.Id,
             Content = x.Content,
@@ -39,6 +40,24 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         })
         .FirstOrDefaultAsync();
       return chat;
+    }
+
+    public async Task<List<KorisnikQueryModel>> HandleAsync(ChatAvailableUsersQuery query)
+    {
+      var users = await _context.Korisnik
+        .Where(t => 
+          t.Id != query.Id &&
+          !t.ChatFirstParticipant.Any(x => x.FirstParticipantId == query.Id || x.SecondParticipantId == query.Id) &&
+          !t.ChatSecondParticipant.Any(x => x.FirstParticipantId == query.Id || x.SecondParticipantId == query.Id)
+        )
+        .Select(t => new KorisnikQueryModel
+        {
+          Id = t.Id,
+          Created = t.Created,
+          Username = t.Username
+        })
+        .ToListAsync();
+      return users;
     }
   }
 }

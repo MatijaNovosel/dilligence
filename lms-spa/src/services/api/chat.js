@@ -6,5 +6,8 @@ export default {
   },
   async sendMessage(payload) {
     return await axios.post("Chat", payload);
-  }
+  },
+  async getAvailableUsers(id) {
+    return await axios.get("Chat/available/" + id);
+  },
 }

@@ -137,8 +137,10 @@ namespace tvz2api_cqrs
       services.AddScoped<IQueryHandlerAsync<KorisnikChatQuery, List<KorisnikChatQueryModel>>, KorisnikQueryHandler>();
 
       services.AddScoped<IQueryHandlerAsync<ChatDetailsQuery, ChatQueryModel>, ChatQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<ChatAvailableUsersQuery, List<KorisnikQueryModel>>, ChatQueryHandler>();
 
       services.AddScoped<ICommandHandlerAsync<SendMessageCommand, MessageDTO>, ChatCommandHandler>();
+      services.AddScoped<ICommandHandlerAsync<CreateNewChatCommand, NewChatDTO>, ChatCommandHandler>();
     }
   }
 }

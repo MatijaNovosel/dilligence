@@ -21,7 +21,9 @@ using tvz2api_cqrs.QueryModels;
 
 namespace tvz2api_cqrs.Implementation.CommandHandlers
 {
-  public class ChatCommandHandler : ICommandHandlerAsync<SendMessageCommand, MessageDTO>
+  public class ChatCommandHandler : 
+    ICommandHandlerAsync<SendMessageCommand, MessageDTO>,
+    ICommandHandlerAsync<CreateNewChatCommand, NewChatDTO>
   {
     private readonly tvz2Context _context;
 
@@ -32,7 +34,17 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
     public async Task<ICommandResult<NewChatDTO>> HandleAsync(CreateNewChatCommand command)
     {
-      return CommandResult<NewChatDTO>.Success(new NewChatDTO());
+      Chat chat = new Chat()
+      {
+        FirstParticipantId = command.FirstParticipantId,
+        SecondParticipantId = command.SecondParticipantId
+      };
+      await _context.Chat.AddAsync(chat);
+      await _context.SaveChangesAsync();
+      return CommandResult<NewChatDTO>.Success(new NewChatDTO()
+      {
+        Id = chat.Id
+      });
     }
 
     public async Task<ICommandResult<MessageDTO>> HandleAsync(SendMessageCommand command)
@@ -48,9 +60,9 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       return CommandResult<MessageDTO>.Success(new MessageDTO()
       {
         Id = message.Id,
-          Content = message.Content,
-          SentAt = message.SentAt,
-          UserId = message.UserId
+        Content = message.Content,
+        SentAt = message.SentAt,
+        UserId = message.UserId
       });
     }
   }
