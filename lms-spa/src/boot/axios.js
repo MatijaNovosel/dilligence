@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import apiConfig from '../api.config';
+// import store from '../store/index';
 
 Vue.prototype.$axios = axios
 
@@ -9,9 +10,7 @@ axios.interceptors.request.use((config) => {
   config.url = apiConfig.baseRoute + config.url;
 
   /*
-  if (store.getters.user.token != null) {
-    config.headers.common['Authorization'] = `Bearer ${store.getters.user.token}`;
-  }
+  config.headers.common['Authorization'] = `Bearer ${store.state.user.token}`;
   */
 
   /*

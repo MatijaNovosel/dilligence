@@ -1,33 +1,34 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using tvz2api_cqrs.Hubs;
+using tvz2api_cqrs.Implementation.CommandHandlers;
+using tvz2api_cqrs.Implementation.Commands;
+using tvz2api_cqrs.Implementation.Queries;
+using tvz2api_cqrs.Implementation.QueryHandlers;
 using tvz2api_cqrs.Infrastructure.CommandHandlers;
 using tvz2api_cqrs.Infrastructure.Commands;
 using tvz2api_cqrs.Infrastructure.Messaging;
 using tvz2api_cqrs.Infrastructure.QueryHandlers;
-using tvz2api_cqrs.Implementation.Queries;
-using tvz2api_cqrs.Implementation.QueryHandlers;
-using tvz2api_cqrs.Implementation.CommandHandlers;
-using tvz2api_cqrs.Implementation.Commands;
 using tvz2api_cqrs.Models;
 using tvz2api_cqrs.Models.DTO;
 using tvz2api_cqrs.QueryModels;
-using tvz2api_cqrs.Hubs;
-using System.IO;
-using System.Net.Http.Headers;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using tvz2api_cqrs.Middleware;
 
 namespace tvz2api_cqrs
 {
@@ -46,17 +47,19 @@ namespace tvz2api_cqrs
       services.AddSignalR();
       services.AddDbContext<tvz2Context>();
       services.AddControllers();
+      services.AddAuthorization();
       services.AddCors(options =>
       {
         options.AddDefaultPolicy(
-        builder =>
-        {
-          builder
-            .WithOrigins("http://localhost:8080")
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
-        });
+          builder =>
+          {
+            builder
+              .WithOrigins(new string[] { "http://localhost:8080", "null" })
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials()
+              .SetIsOriginAllowedToAllowWildcardSubdomains();
+          });
       });
       services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
       {
@@ -81,12 +84,7 @@ namespace tvz2api_cqrs
         app.UseDeveloperExceptionPage();
       }
       app.UseCors();
-      app.Use((context, next) =>
-      {
-        context.Response.Headers["Access-Control-Allow-Origin"] = "null";
-        context.Response.Headers["Access-Control-Allow-Credentials"] = "true";
-        return next.Invoke();
-      });
+      app.UseOptions();
       app.UseHttpsRedirection();
       app.UseWebSockets();
       app.UseSwagger();

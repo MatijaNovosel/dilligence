@@ -1,13 +1,13 @@
-using tvz2api_cqrs.Models;
-using tvz2api_cqrs.Enumerations;
-using tvz2api_cqrs.Infrastructure.Specifications;
-using LinqKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using LinqKit;
+using tvz2api_cqrs.Enumerations;
+using tvz2api_cqrs.Infrastructure.Specifications;
+using tvz2api_cqrs.Models;
 
 namespace tvz2api_cqrs.Implementation.Specifications
 {
@@ -27,7 +27,7 @@ namespace tvz2api_cqrs.Implementation.Specifications
     public int MinEcts { get; }
     public int MaxEcts { get; }
     public string Isvu { get; }
-    
+
     public Expression<Func<Kolegij, bool>> Predicate
     {
       get

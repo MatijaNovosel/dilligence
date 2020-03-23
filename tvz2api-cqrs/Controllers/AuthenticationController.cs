@@ -12,11 +12,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using tvz2api_cqrs.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace tvz2api_cqrs.Controllers
 {
   [Route("api/auth")]
   [ApiController]
+  [AllowAnonymous]
   public class AuthenticationController : ControllerBase
   {
     private readonly ICommandBus _commandBus;
