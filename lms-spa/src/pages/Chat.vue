@@ -29,37 +29,11 @@
       <div class="col-9">
         <div class="row">
           <div class="col-12" style="position: relative;">
-            <q-btn
-              @click="scrollChatToBottom"
-              v-if="$refs.chat && $refs.chat.scrollSize > $refs.chat.containerHeight && $refs.chat.scrollPercentage < 0.8"
-              size="sm"
-              round
-              color="primary"
-              icon="mdi-menu-down"
-              class="bottom-left"
-            />
-            <q-scroll-area
+            <ChatPanel
               v-if="activeChat"
-              ref="chat"
-              :thumb-style="thumbStyle"
-              :bar-style="barStyle"
-              class="border-box q-px-lg q-py-md chat"
-              style="height: 600px;"
-            >
-              <template v-for="message in activeChatMessages">
-                <q-chat-message
-                  :key="message.id"
-                  :name="message.userId == user.id ? 'You' : (activeChat.firstParticipant.id == user.id ? activeChat.secondParticipant.username : activeChat.firstParticipant.username)"
-                  avatar="../assets/default-user.jpg"
-                  :text="[message.content]"
-                  :style="message.userId == user.id ? 'text-align: right;' : 'text-align: left;'"
-                  size="5"
-                  :stamp="message.sentAt | timeStampFilter"
-                  :sent="message.userId == user.id"
-                  :bg-color="message.userId == user.id ? 'blue-5' : 'blue-2'"
-                />
-              </template>
-            </q-scroll-area>
+              :scrollToBottom="scrollTrigger"
+              :messages="activeChatMessages"
+            />
           </div>
           <div class="col-12 q-py-md">
             <div class="row">
@@ -154,6 +128,7 @@
 <script>
 import KorisnikService from "../services/api/korisnik";
 import ChatService from "../services/api/chat";
+import ChatPanel from "../components/ChatPanel";
 import {
   HubConnectionBuilder,
   LogLevel,
@@ -164,6 +139,9 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "Chat",
+  components: {
+    ChatPanel
+  },
   created() {
     this.getChats(this.user.id);
     this.connection = new HubConnectionBuilder()
@@ -173,16 +151,13 @@ export default {
     this.connection.start();
     this.connection.on("messageSent", message => {
       this.activeChatMessages = [...this.activeChatMessages, message];
-      this.scrollChatToBottom();
+      this.scrollTrigger = !this.scrollTrigger;
     });
   },
   computed: {
     ...mapGetters(["user"])
   },
   methods: {
-    scrollChatToBottom() {
-      this.$refs.chat.setScrollPosition(this.$refs.chat.scrollSize, 300);
-    },
     resetNewChatDialog() {
       this.newChatDialog = false;
       this.newChatSearch = this.foundUsers = null;
@@ -227,6 +202,7 @@ export default {
   },
   data() {
     return {
+      scrollTrigger: null,
       foundUsers: null,
       newChatSearch: null,
       newChatDialog: false,
@@ -235,21 +211,7 @@ export default {
       message: null,
       chats: null,
       activeChat: null,
-      activeChatMessages: null,
-      thumbStyle: {
-        right: "4px",
-        borderRadius: "5px",
-        backgroundColor: "#027be3",
-        width: "5px",
-        opacity: 0.75
-      },
-      barStyle: {
-        right: "2px",
-        borderRadius: "9px",
-        backgroundColor: "#027be3",
-        width: "9px",
-        opacity: 0.2
-      }
+      activeChatMessages: null
     };
   },
   beforeDestroy() {
@@ -263,20 +225,10 @@ export default {
   width: 100%
   max-width: 350px
   margin: 5px
-.border-box
-  position: relative
-  border: 1px solid rgba(0, 0, 0, 0.12)
-  border-radius: 10px
-  width: 100%
 .chat-tab
   background-color: white
   border: 1px solid rgba(0, 0, 0, 0.12)
   border-top-left-radius: 6px
   border-top-right-radius: 6px
   user-select: none
-.bottom-left
-  position: absolute
-  bottom: 20px
-  left: 20px
-  z-index: 200
 </style>
