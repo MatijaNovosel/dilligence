@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   async searchKorisnik(name) {
@@ -11,4 +11,4 @@ export default {
   async getChats(id) {
     return await axios.get("Korisnik/chat/" + id);
   }
-}
+};

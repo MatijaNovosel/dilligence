@@ -17,7 +17,9 @@
                       <img src="../assets/default-user.jpg" />
                     </q-avatar>
                   </q-item-section>
-                  <q-item-section>{{ chat.firstParticipant.id == user.id ? chat.secondParticipant.username : chat.firstParticipant.username }}</q-item-section>
+                  <q-item-section
+                    class="ellipsis"
+                  >{{ chat.firstParticipant.id == user.id ? chat.secondParticipant.username : chat.firstParticipant.username }}</q-item-section>
                 </q-item>
               </q-list>
             </q-card-section>
@@ -26,7 +28,16 @@
       </div>
       <div class="col-9">
         <div class="row">
-          <div class="col-12">
+          <div class="col-12" style="position: relative;">
+            <q-btn
+              @click="scrollChatToBottom"
+              v-if="$refs.chat && $refs.chat.scrollSize > $refs.chat.containerHeight && $refs.chat.scrollPercentage < 0.8"
+              size="sm"
+              round
+              color="primary"
+              icon="mdi-menu-down"
+              class="bottom-left"
+            />
             <q-scroll-area
               v-if="activeChat"
               ref="chat"
@@ -174,8 +185,7 @@ export default {
     },
     resetNewChatDialog() {
       this.newChatDialog = false;
-      this.newChatSearch = null;
-      this.foundUsers = null;
+      this.newChatSearch = this.foundUsers = null;
     },
     searchUsers() {
       ChatService.getAvailableUsers(this.user.id).then(({ data }) => {
@@ -204,6 +214,14 @@ export default {
         content: this.message,
         chatId: this.activeChat.id,
         userId: this.user.id
+      }).then(() => (this.message = null));
+    },
+    startNewChat(id) {
+      ChatService.createNewChat({
+        firstParticipantId: this.user.id,
+        secondParticipantId: id
+      }).then(({ data }) => {
+        this.getChats(this.user.id);
       });
     }
   },
@@ -236,33 +254,29 @@ export default {
   },
   beforeDestroy() {
     this.connection.stop();
-  },
-  watch: {
-    activeChatMessages: {
-      immediate: false,
-      deep: true,
-      handler() {
-        this.scrollChatToBottom();
-      }
-    }
   }
 };
 </script>
 
 <style scoped lang="sass">
 .my-card
-	width: 100%
-	max-width: 350px
-	margin: 5px
+  width: 100%
+  max-width: 350px
+  margin: 5px
 .border-box
-	position: relative
-	border: 1px solid rgba(0, 0, 0, 0.12)
-	border-radius: 10px
-	width: 100%
+  position: relative
+  border: 1px solid rgba(0, 0, 0, 0.12)
+  border-radius: 10px
+  width: 100%
 .chat-tab
-	background-color: white
-	border: 1px solid rgba(0, 0, 0, 0.12)
-	border-top-left-radius: 6px
-	border-top-right-radius: 6px
-	user-select: none
+  background-color: white
+  border: 1px solid rgba(0, 0, 0, 0.12)
+  border-top-left-radius: 6px
+  border-top-right-radius: 6px
+  user-select: none
+.bottom-left
+  position: absolute
+  bottom: 20px
+  left: 20px
+  z-index: 200
 </style>

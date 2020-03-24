@@ -10,4 +10,7 @@ export default {
   async getAvailableUsers(id) {
     return await axios.get("Chat/available/" + id);
   },
+  async createNewChat(payload) {
+    return await axios.post("Chat/new", payload);
+  }
 }
