@@ -1,8 +1,8 @@
 <template>
   <div>
     <q-btn
-      @click="scrollChatToBottom"
-      v-show="$refs.chat && $refs.chat.scrollSize > $refs.chat.containerHeight && $refs.chat.scrollPercentage < 0.8"
+      @click="scrollToBottom"
+      v-show="$refs.chat != undefined && $refs.chat.scrollSize > $refs.chat.containerHeight && $refs.chat.scrollPercentage < 0.8"
       size="sm"
       round
       color="primary"
@@ -10,7 +10,6 @@
       class="bottom-left"
     />
     <q-scroll-area
-      v-if="messages"
       ref="chat"
       :thumb-style="thumbStyle"
       :bar-style="barStyle"
@@ -36,6 +35,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import Vue from 'vue';
 
 export default {
   name: "ChatPanel",
@@ -58,20 +58,34 @@ export default {
       }
     };
   },
-  updated() {
-    this.scrollChatToBottom();
-  },
-	computed: {
+  computed: {
     ...mapGetters(["user"])
   },
   methods: {
-    scrollChatToBottom() {
-      this.$refs.chat.setScrollPosition(this.$refs.chat.scrollSize, 300);
-    }
+    scrollToBottom() {
+      Vue.nextTick(() => {
+        /*
+        
+          Component is rendered independently of the chat messages, so relying on the reference is a bad idea, however the scroll size of the component stays consistently the same
+        
+        */
+        this.$refs.chat.setScrollPosition(this.messages.length * 60, 350);
+      });
+    },
+    scrollToTop() {
+      this.$refs.chat.setScrollPosition(0, 350);
+    },
   },
   watch: {
+    messages: {
+      immediate: false,
+      deep: true,
+      handler() {
+        this.scrollToBottom();
+      }
+    },
     scrollTrigger() {
-      this.scrollChatToBottom();
+      this.scrollToBottom();
     }
   }
 };
@@ -79,13 +93,13 @@ export default {
 
 <style scoped lang="sass">
 .border-box
-	position: relative
-	border: 1px solid rgba(0, 0, 0, 0.12)
-	border-radius: 10px
-	width: 100%
+  position: relative
+  border: 1px solid rgba(0, 0, 0, 0.12)
+  border-radius: 10px
+  width: 100%
 .bottom-left
-	position: absolute
-	bottom: 20px
-	left: 20px
-	z-index: 200
+  position: absolute
+  bottom: 20px
+  left: 20px
+  z-index: 200
 </style>

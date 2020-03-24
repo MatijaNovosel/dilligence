@@ -30,8 +30,7 @@
         <div class="row">
           <div class="col-12" style="position: relative;">
             <ChatPanel
-              v-if="activeChat"
-              :scrollToBottom="scrollTrigger"
+              :scrollTrigger="scrollTrigger"
               :messages="activeChatMessages"
             />
           </div>
