@@ -29,10 +29,7 @@
       <div class="col-9">
         <div class="row">
           <div class="col-12" style="position: relative;">
-            <ChatPanel
-              :scrollTrigger="scrollTrigger"
-              :messages="activeChatMessages"
-            />
+            <ChatPanel :messages="activeChatMessages" />
           </div>
           <div class="col-12 q-py-md">
             <div class="row">
@@ -150,7 +147,6 @@ export default {
     this.connection.start();
     this.connection.on("messageSent", message => {
       this.activeChatMessages = [...this.activeChatMessages, message];
-      this.scrollTrigger = !this.scrollTrigger;
     });
   },
   computed: {
@@ -201,7 +197,6 @@ export default {
   },
   data() {
     return {
-      scrollTrigger: null,
       foundUsers: null,
       newChatSearch: null,
       newChatDialog: false,

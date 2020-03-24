@@ -83,9 +83,6 @@ export default {
       handler() {
         this.scrollToBottom();
       }
-    },
-    scrollTrigger() {
-      this.scrollToBottom();
     }
   }
 };
