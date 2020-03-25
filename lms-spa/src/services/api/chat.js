@@ -12,5 +12,8 @@ export default {
   },
   async createNewChat(payload) {
     return await axios.post("Chat/new", payload);
+  },
+  async deleteMessage(id) {
+    return await axios.delete("Chat/" + id);
   }
 }

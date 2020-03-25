@@ -29,7 +29,11 @@
       <div class="col-9">
         <div class="row">
           <div class="col-12" style="position: relative;">
-            <ChatPanel :messages="activeChatMessages" />
+            <ChatPanel
+              :scrollTrigger="scrollTrigger"
+              @deleteMessage="deleteMessage"
+              :messages="activeChatMessages"
+            />
           </div>
           <div class="col-12 q-py-md">
             <div class="row">
@@ -147,6 +151,10 @@ export default {
     this.connection.start();
     this.connection.on("messageSent", message => {
       this.activeChatMessages = [...this.activeChatMessages, message];
+      this.scrollTrigger = !this.scrollTrigger;
+    });
+    this.connection.on("messageDeleted", id => {
+      this.activeChatMessages = this.activeChatMessages.filter(x => x.id != id);
     });
   },
   computed: {
@@ -177,6 +185,7 @@ export default {
       this.activeChat = chat;
       ChatService.getChatDetails(chat.id).then(({ data }) => {
         this.activeChatMessages = data.messages;
+        this.scrollTrigger = !this.scrollTrigger;
       });
     },
     sendMessage() {
@@ -192,11 +201,16 @@ export default {
         secondParticipantId: id
       }).then(({ data }) => {
         this.getChats(this.user.id);
+        this.searchUsers();
       });
+    },
+    deleteMessage(id) {
+      ChatService.deleteMessage(id);
     }
   },
   data() {
     return {
+      scrollTrigger: false,
       foundUsers: null,
       newChatSearch: null,
       newChatDialog: false,

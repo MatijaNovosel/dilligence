@@ -9,7 +9,7 @@ namespace tvz2api_cqrs.Implementation.Commands
 {
   public class SendMessageCommand : ICommand<MessageDTO>
   {
-    public SendMessageCommand() { }
+    public SendMessageCommand() {}
     public SendMessageCommand(int userId, int chatId, string content)
     {
       UserId = userId;
@@ -23,8 +23,18 @@ namespace tvz2api_cqrs.Implementation.Commands
 
   public class CreateNewChatCommand : ICommand<NewChatDTO>
   {
-    public CreateNewChatCommand() { }
+    public CreateNewChatCommand() {}
     public int FirstParticipantId { get; set; }
     public int SecondParticipantId { get; set; }
+  }
+
+  public class DeleteMessageCommand : ICommand
+  {
+    public DeleteMessageCommand() {}
+    public DeleteMessageCommand(int id) 
+    {
+      Id = id;
+    }
+    public int Id { get; set; }
   }
 }

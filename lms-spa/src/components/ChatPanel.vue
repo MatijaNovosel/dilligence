@@ -21,13 +21,23 @@
           :key="message.id"
           :name="message.userId == user.id ? 'You' : (activeChat.firstParticipant.id == user.id ? activeChat.secondParticipant.username : activeChat.firstParticipant.username)"
           avatar="../assets/default-user.jpg"
-          :text="[message.content]"
           :style="message.userId == user.id ? 'text-align: right;' : 'text-align: left;'"
           size="5"
           :stamp="message.sentAt | timeStampFilter"
           :sent="message.userId == user.id"
           :bg-color="message.userId == user.id ? 'blue-5' : 'blue-2'"
-        />
+        >
+          <span>{{ message.content }}</span>
+          <q-btn
+            v-if="message.userId == user.id"
+            size="xs"
+            flat
+            round
+            text-color="grey-7"
+            icon="mdi-delete"
+            @click="$emit('deleteMessage', message.id)"
+          />
+        </q-chat-message>
       </template>
     </q-scroll-area>
   </div>
@@ -35,7 +45,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import Vue from 'vue';
+import Vue from "vue";
 
 export default {
   name: "ChatPanel",
@@ -66,23 +76,20 @@ export default {
       Vue.nextTick(() => {
         /*
         
-          Component is rendered independently of the chat messages, so relying on the reference is a bad idea, however the scroll size of the component stays consistently the same
+          Component is rendered independently of the chat messages, so relying on the reference is a bad idea, 
+          however the scroll size of the component stays consistently the same
         
         */
-        this.$refs.chat.setScrollPosition(this.messages.length * 60, 350);
+        this.$refs.chat.setScrollPosition(this.messages.length * 68, 350);
       });
     },
     scrollToTop() {
       this.$refs.chat.setScrollPosition(0, 350);
-    },
+    }
   },
   watch: {
-    messages: {
-      immediate: false,
-      deep: true,
-      handler() {
-        this.scrollToBottom();
-      }
+    scrollTrigger() {
+      this.scrollToBottom();
     }
   }
 };
@@ -99,4 +106,7 @@ export default {
   bottom: 20px
   left: 20px
   z-index: 200
+.aside
+  position: absolute
+  right: 5px
 </style>

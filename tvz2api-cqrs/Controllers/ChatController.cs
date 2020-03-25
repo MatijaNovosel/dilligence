@@ -61,5 +61,13 @@ namespace tvz2api_cqrs.Controllers
       var newChat = await _commandBus.ExecuteAsync<NewChatDTO>(command);
       return Ok(newChat);
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteMessage(int id)
+    {
+      await _commandBus.ExecuteAsync(new DeleteMessageCommand(id));
+      await this._hubContext.Clients.All.SendAsync("messageDeleted", id);
+      return Ok();
+    }
   }
 }

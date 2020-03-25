@@ -23,7 +23,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 {
   public class ChatCommandHandler:
     ICommandHandlerAsync<SendMessageCommand, MessageDTO>,
-    ICommandHandlerAsync<CreateNewChatCommand, NewChatDTO>
+    ICommandHandlerAsync<CreateNewChatCommand, NewChatDTO>,
+    ICommandHandlerAsync<DeleteMessageCommand>
     {
       private readonly tvz2Context _context;
 
@@ -64,6 +65,13 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
             SentAt = message.SentAt,
             UserId = message.UserId
         });
+      }
+
+      public async Task HandleAsync(DeleteMessageCommand command)
+      {
+        var msg = await _context.Message.Where(x => x.Id == command.Id).FirstOrDefaultAsync();
+        _context.Message.Remove(msg);
+        await _context.SaveChangesAsync();
       }
     }
 }
