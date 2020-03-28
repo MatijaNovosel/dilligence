@@ -42,8 +42,15 @@ namespace tvz2api_cqrs.Controllers
       return Ok(result);
     }
 
-    [HttpPut("")]
-    public async Task<IActionResult> Update(StudentUpdatePretplataCommand command)
+    [HttpPut]
+    public async Task<IActionResult> Subscribe(StudentSubscribeCommand command)
+    {
+      await _commandBus.ExecuteAsync(command);
+      return NoContent();
+    }
+
+    [HttpPut("unsubscribe")]
+    public async Task<IActionResult> Unsubscribe(StudentUnsubscribeCommand command)
     {
       await _commandBus.ExecuteAsync(command);
       return NoContent();

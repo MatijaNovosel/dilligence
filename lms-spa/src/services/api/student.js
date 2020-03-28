@@ -13,5 +13,11 @@ export default {
       studentId,
       kolegijId
     });
+  },
+  async unsubscribe(studentId, kolegijId) {
+    return await axios.put('Student/unsubscribe', {
+      studentId,
+      kolegijId
+    });
   }
 }

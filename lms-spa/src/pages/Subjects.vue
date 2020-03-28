@@ -91,7 +91,9 @@
                         <q-item-label>{{ col.label }}</q-item-label>
                       </q-item-section>
                       <q-item-section side>
-                        <q-item-label caption>{{ col.name != 'smjerId' ? col.value : col.value | smjerFilter }}</q-item-label>
+                        <q-item-label
+                          caption
+                        >{{ col.name != 'smjerId' ? col.value : col.value | smjerFilter }}</q-item-label>
                       </q-item-section>
                     </q-item>
                   </q-list>
@@ -99,12 +101,20 @@
                 <q-separator />
                 <q-card-actions>
                   <q-space />
-                  <q-btn v-if="subscriptions.includes(props.row.id)" flat size="sm" class="bg-red-4 text-white">
-                    Unsubscribe
-                  </q-btn>
-                  <q-btn v-else flat size="sm" class="bg-primary text-white">
-                    Subscribe
-                  </q-btn>
+                  <q-btn
+                    v-if="subscriptions.includes(props.row.id)"
+                    flat
+                    size="sm"
+                    class="bg-red-4 text-white"
+                    @click="unsubscribe(props.row.id)"
+                  >Unsubscribe</q-btn>
+                  <q-btn
+                    v-else
+                    flat
+                    size="sm"
+                    class="bg-primary text-white"
+                    @click="subscribe(props.row.id)"
+                  >Subscribe</q-btn>
                   <q-space />
                 </q-card-actions>
               </q-card>
@@ -125,6 +135,25 @@ import { mapGetters } from "vuex";
 export default {
   name: "Subjects",
   methods: {
+    subscribe(subjectId) {
+      StudentService.subscribe(this.password, this.user.id, subjectId)
+        .catch(error => {
+          this.$q.notify({
+            type: "negative",
+            message: "Incorrect password!"
+          });
+        })
+        .then(() => {
+          this.getSubscriptions();
+          this.getData();
+        });
+    },
+    unsubscribe(subjectId) {
+      StudentService.unsubscribe(this.user.id, subjectId).then(() => {
+        this.getSubscriptions();
+        this.getData();
+      });
+    },
     optionsUpdated(options) {
       this.getData();
     },
@@ -156,6 +185,7 @@ export default {
   },
   data() {
     return {
+      password: null,
       smjerOptions: [],
       subscriptions: null,
       searchData: {
