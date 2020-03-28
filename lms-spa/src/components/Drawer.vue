@@ -27,8 +27,8 @@
           :key="link.text"
         >
           <q-list :key="i" dense v-for="(sublink, i) in link.sublinks">
-            <q-item @click="redirect(sublink.route)" class="text-caption" clickable v-ripple>
-              <span class="q-mt-xs q-pl-md">{{ sublink.text }}</span>
+            <q-item @click="redirect(sublink.route)" class="text-body2" clickable v-ripple>
+              <span class="q-pl-md">{{ sublink.text }}</span>
             </q-item>
           </q-list>
         </q-expansion-item>
@@ -158,3 +158,10 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.q-list--dense > .q-item,
+.q-item--dense {
+  min-height: 19px;
+}
+</style>

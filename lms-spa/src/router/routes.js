@@ -12,7 +12,10 @@ const routes = [
           requiresAuth: true
         }
       },
-      { path: 'login', component: () => import('pages/Login.vue') },
+      {
+        path: 'login',
+        component: () => import('pages/Login.vue')
+      },
       {
         path: 'employees',
         name: 'employees',
@@ -33,6 +36,14 @@ const routes = [
         path: 'chat',
         name: 'chat',
         component: () => import('pages/Chat.vue'),
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'subjects',
+        name: 'subjects',
+        component: () => import('pages/Subjects.vue'),
         meta: {
           requiresAuth: true
         }

@@ -4,7 +4,7 @@ export default {
   async getStudent(id) {
     return await axios.get(`Student/${id}`);
   },
-  async getPretplata(id) {
+  async getSubscriptions(id) {
     return await axios.get(`Student/pretplata/${id}`);
   },
   async subscribe(password, studentId, kolegijId) {

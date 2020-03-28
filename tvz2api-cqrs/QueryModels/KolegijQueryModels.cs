@@ -9,7 +9,7 @@ namespace tvz2api_cqrs.QueryModels
     public string Naziv { get; set; }
     public string Isvu { get; set; }
     public int? Ects { get; set; }
-    public string Smjer { get; set; }
+    public int? SmjerId { get; set; }
   }
 
   public class KolegijDetailsQueryModel

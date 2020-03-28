@@ -80,7 +80,7 @@ export default {
           however the scroll size of the component stays consistently the same
         
         */
-        this.$refs.chat.setScrollPosition(this.messages.length * 68, 350);
+        this.$refs.chat.setScrollPosition(this.messages.length * 68, 0);
       });
     },
     scrollToTop() {
