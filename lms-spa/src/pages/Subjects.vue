@@ -113,7 +113,7 @@
                     flat
                     size="sm"
                     class="bg-primary text-white"
-                    @click="subscribe(props.row.id)"
+                    @click="openSubscribeDialog(props.row.id)"
                   >Subscribe</q-btn>
                   <q-space />
                 </q-card-actions>
@@ -123,6 +123,31 @@
         </q-table>
       </div>
     </div>
+    <q-dialog v-model="subscribeDialog" persistent no-esc-dismiss>
+      <q-card style="width: 50vw;">
+        <q-toolbar class="bg-primary text-white dialog-toolbar">
+          <q-space />
+          <q-btn
+            :ripple="false"
+            dense
+            size="sm"
+            color="white"
+            flat
+            round
+            icon="mdi-close-circle"
+            @click="resetSubscribeDialog"
+          />
+        </q-toolbar>
+        <q-card-section>
+          <q-input dense outlined v-model="password" clearable label="Enter password...">
+            <template v-slot:append>
+              <q-btn :ripple="false" dense size="sm" color="primary" @click="subscribe">Confirm</q-btn>
+            </template>
+          </q-input>
+        </q-card-section>
+        <q-card-section class="q-pt-none"></q-card-section>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -135,8 +160,12 @@ import { mapGetters } from "vuex";
 export default {
   name: "Subjects",
   methods: {
-    subscribe(subjectId) {
-      StudentService.subscribe(this.password, this.user.id, subjectId)
+    subscribe() {
+      StudentService.subscribe(
+        this.password,
+        this.user.id,
+        this.activeSubjectId
+      )
         .catch(error => {
           this.$q.notify({
             type: "negative",
@@ -146,6 +175,7 @@ export default {
         .then(() => {
           this.getSubscriptions();
           this.getData();
+          this.resetSubscribeDialog();
         });
     },
     unsubscribe(subjectId) {
@@ -153,6 +183,14 @@ export default {
         this.getSubscriptions();
         this.getData();
       });
+    },
+    openSubscribeDialog(subjectId) {
+      this.subscribeDialog = true;
+      this.activeSubjectId = subjectId;
+    },
+    resetSubscribeDialog() {
+      this.subscribeDialog = false;
+      this.password = this.activeSubjectId = null;
     },
     optionsUpdated(options) {
       this.getData();
@@ -185,6 +223,8 @@ export default {
   },
   data() {
     return {
+      activeSubjectId: null,
+      subscribeDialog: null,
       password: null,
       smjerOptions: [],
       subscriptions: null,
