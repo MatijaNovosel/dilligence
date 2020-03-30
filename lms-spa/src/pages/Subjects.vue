@@ -56,37 +56,35 @@
       </div>
       <div class="col-12 q-mt-sm">
         <q-table
-          v-if="subscriptions != null"
           :pagination.sync="pagination"
           :rows-per-page-options="rowsPerPageOptions"
+          :visible-columns="['smjerId']"
           grid
+          :loading="loading"
           :data="subjects"
           :columns="columns"
           row-key="naziv"
           hide-header
         >
           <template v-slot:item="props">
-            <div class="q-pa-xs col-xs-12 col-sm-6 col-md-4 col-lg-2 grid-style-transition">
+            <div class="q-pa-xs col-xs-12 col-sm-6 col-md-4 col-lg-3 grid-style-transition">
               <q-card flat bordered>
                 <q-card-section
-                  :class="(subscriptions.includes(props.row.id) ? 'bg-green-2' : 'bg-grey-2') + ' q-py-md'"
+                  :class="(props.row.subscribed ? 'bg-green-2' : 'bg-grey-2') + ' q-py-md'"
                 >
                   <span class="ellipsis">{{ props.row.naziv }}</span>
                   <q-icon
                     dense
                     size="20px"
                     class="aside"
-                    :name="subscriptions.includes(props.row.id) ? 'mdi-lock-open-variant' : 'mdi-lock-question'"
-                    :color="subscriptions.includes(props.row.id) ? 'green-5' : 'red-4'"
+                    :name="props.row.subscribed ? 'mdi-lock-open-variant' : 'mdi-lock-question'"
+                    :color="props.row.subscribed ? 'green-5' : 'red-4'"
                   />
                 </q-card-section>
                 <q-separator />
                 <q-card-section class="q-py-none">
                   <q-list dense>
-                    <q-item
-                      v-for="col in props.cols.filter(col => !['naziv', 'id'].includes(col.name))"
-                      :key="col.name"
-                    >
+                    <q-item v-for="col in props.cols" :key="col.name">
                       <q-item-section>
                         <q-item-label>{{ col.label }}</q-item-label>
                       </q-item-section>
@@ -102,7 +100,7 @@
                 <q-card-actions>
                   <q-space />
                   <q-btn
-                    v-if="subscriptions.includes(props.row.id)"
+                    v-if="props.row.subscribed"
                     flat
                     size="sm"
                     class="bg-red-4 text-white"
@@ -139,7 +137,7 @@
           />
         </q-toolbar>
         <q-card-section>
-          <q-input dense outlined v-model="password" clearable label="Enter password...">
+          <q-input type="password" dense outlined v-model="password" label="Enter password...">
             <template v-slot:append>
               <q-btn :ripple="false" dense size="sm" color="primary" @click="subscribe">Confirm</q-btn>
             </template>
@@ -166,21 +164,19 @@ export default {
         this.user.id,
         this.activeSubjectId
       )
+        .then(() => {
+          this.getData();
+          this.resetSubscribeDialog();
+        })
         .catch(error => {
           this.$q.notify({
             type: "negative",
             message: "Incorrect password!"
           });
-        })
-        .then(() => {
-          this.getSubscriptions();
-          this.getData();
-          this.resetSubscribeDialog();
         });
     },
     unsubscribe(subjectId) {
       StudentService.unsubscribe(this.user.id, subjectId).then(() => {
-        this.getSubscriptions();
         this.getData();
       });
     },
@@ -195,16 +191,18 @@ export default {
     optionsUpdated(options) {
       this.getData();
     },
-    getSubscriptions() {
-      StudentService.getSubscriptions(this.user.id).then(({ data }) => {
-        this.subscriptions = data;
-      });
-    },
     getData() {
       this.loading = true;
       SubjectService.get(this.searchData.smjer, this.searchData.name)
         .then(({ data }) => {
-          this.subjects = data.results;
+          let subjects = data.results;
+          StudentService.getSubscriptions(this.user.id).then(({ data }) => {
+            let subscriptions = data;
+            subjects.forEach(
+              x => (x.subscribed = subscriptions.includes(x.id))
+            );
+            this.subjects = subjects;
+          });
         })
         .finally(() => {
           this.loading = false;
@@ -216,7 +214,6 @@ export default {
   },
   created() {
     this.getData();
-    this.getSubscriptions();
     for (let val in SMJER) {
       this.smjerOptions.push({ label: val, value: SMJER[val] });
     }
@@ -227,7 +224,6 @@ export default {
       subscribeDialog: null,
       password: null,
       smjerOptions: [],
-      subscriptions: null,
       searchData: {
         name: null,
         smjer: [],
@@ -254,6 +250,12 @@ export default {
           align: "center",
           label: "Smjer",
           field: "smjerId"
+        },
+        {
+          name: "subscribed",
+          align: "center",
+          label: "Subscribed",
+          field: "subscribed"
         }
       ],
       subjects: [],
@@ -279,4 +281,6 @@ export default {
   position: absolute
   right: 15px
   bottom: 15px
+.dialog-toolbar
+  min-height: 30px
 </style>

@@ -239,4 +239,6 @@ export default {
   border-top-left-radius: 6px
   border-top-right-radius: 6px
   user-select: none
+.dialog-toolbar
+  min-height: 30px
 </style>
