@@ -27,18 +27,11 @@ namespace tvz2api_cqrs.Controllers
       _queryBus = queryBus;
     }
 
-    [HttpGet("")]
-    public async Task<IActionResult> Get(
-      [FromQuery(Name = "smjerIDs[]")] List<SmjerEnum> smjerIDs = null,
-      string name = null,
-      int minECTS = 1,
-      int maxECTS = 6,
-      string isvu = null,
-      int skip = 0,
-      int? take = null)
+    [HttpGet]
+    public async Task<IActionResult> Get(int? userId = null, [FromQuery(Name = "smjerIDs[]")] List<SmjerEnum> smjerIDs = null, string name = null, bool subscribed = false, bool nonSubscribed = false)
     {
       // var queryOptions = QueryOptionsExtensions.GetFromRequest(Request);
-      var specification = new KolegijSpecification(smjerIDs, name, minECTS, maxECTS, isvu);
+      var specification = new KolegijSpecification(userId, smjerIDs, name, subscribed, nonSubscribed);
       var result = await _queryBus.ExecuteAsync(new KolegijQuery(specification));
       var count = await _queryBus.ExecuteAsync(new KolegijTotalQuery(specification));
       return Ok(new PageableCollection<KolegijQueryModel>() { Results = result, Total = count });

@@ -8,11 +8,11 @@
         <q-separator />
       </div>
       <div class="col-12 q-pb-md">
-        <div class="row q-gutter-sm justify-start">
-          <div class="col-4">
+        <div class="row justify-start">
+          <div class="col-8">
             <q-input outlined v-model="searchData.name" dense label="Name" clearable />
           </div>
-          <div class="col-4">
+          <div class="col-4 q-pl-sm">
             <q-select
               outlined
               dense
@@ -35,15 +35,15 @@
               </template>
             </q-select>
           </div>
-          <div class="col-12">
+          <div class="col-12 q-pt-sm">
             <q-checkbox
-              size="sm"
+              size="xs"
               v-model="searchData.showSubscribed"
               val="xs"
               label="Show subscribed"
             />
             <q-checkbox
-              size="sm"
+              size="xs"
               v-model="searchData.showNonSubscribed"
               val="xs"
               label="Show non subscribed subjects"
@@ -52,7 +52,7 @@
         </div>
       </div>
       <div class="col-12 text-right q-py-sm">
-        <q-btn color="primary" @click="getData">Search</q-btn>
+        <q-btn dense class="q-px-sm" color="primary" @click="getData">Search</q-btn>
       </div>
       <div class="col-12 q-mt-sm">
         <q-table
@@ -72,7 +72,7 @@
                 <q-card-section
                   :class="(props.row.subscribed ? 'bg-green-2' : 'bg-grey-2') + ' q-py-md'"
                 >
-                  <span class="ellipsis">{{ props.row.naziv }}</span>
+                  <span class="ellipsis-text">{{ props.row.naziv }}</span>
                   <q-icon
                     dense
                     size="20px"
@@ -193,7 +193,13 @@ export default {
     },
     getData() {
       this.loading = true;
-      SubjectService.get(this.searchData.smjer, this.searchData.name)
+      SubjectService.get(
+        this.user.id,
+        this.searchData.smjer,
+        this.searchData.name,
+        this.searchData.showSubscribed,
+        this.searchData.showNonSubscribed
+      )
         .then(({ data }) => {
           let subjects = data.results;
           StudentService.getSubscriptions(this.user.id).then(({ data }) => {
@@ -228,7 +234,7 @@ export default {
         name: null,
         smjer: [],
         showSubscribed: true,
-        showNonSubscribed: true
+        showNonSubscribed: false
       },
       rowsPerPageOptions: [10, 15, 20],
       loading: false,
@@ -283,4 +289,8 @@ export default {
   bottom: 15px
 .dialog-toolbar
   min-height: 30px
+.ellipsis-text
+  white-space: nowrap
+  overflow: hidden
+  display: block
 </style>

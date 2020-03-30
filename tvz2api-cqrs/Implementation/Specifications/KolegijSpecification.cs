@@ -13,20 +13,20 @@ namespace tvz2api_cqrs.Implementation.Specifications
 {
   public class KolegijSpecification : ISpecification<Kolegij>
   {
-    public KolegijSpecification(List<SmjerEnum> smjerIds = null, string name = null, int minEcts = 1, int maxEcts = 6, string isvu = null)
+    public KolegijSpecification(int? userId = null, List<SmjerEnum> smjerIds = null, string name = null, bool subscribed = false, bool nonSubscribed = false)
     {
       SmjerIds = smjerIds;
       Name = name;
-      MinEcts = minEcts;
-      MaxEcts = maxEcts;
-      Isvu = isvu;
+      Subscribed = subscribed;
+      NonSubscribed = nonSubscribed;
+      UserId = userId;
     }
 
     public List<SmjerEnum> SmjerIds { get; }
     public string Name { get; }
-    public int MinEcts { get; }
-    public int MaxEcts { get; }
-    public string Isvu { get; }
+    public bool Subscribed { get; }
+    public bool NonSubscribed { get; }
+    public int? UserId { get; }
 
     public Expression<Func<Kolegij, bool>> Predicate
     {
@@ -50,12 +50,19 @@ namespace tvz2api_cqrs.Implementation.Specifications
           predicate = predicate.And(t => t.Naziv.ToLower().Contains(Name.ToLower()));
         }
 
-        if (!string.IsNullOrWhiteSpace(Isvu))
+        // Ako je odabran ili Subscribed ili NonSubscribed, logicki XOR
+        if (Subscribed != NonSubscribed)
         {
-          predicate = predicate.And(t => t.Isvu == Isvu);
-        }
+          if (Subscribed)
+          {
+            predicate = predicate.And(t => t.Pretplata.Any(x => x.KolegijId == t.Id && x.StudentId == UserId));
+          }
 
-        predicate = predicate.And(t => t.Ects >= MinEcts && t.Ects <= MaxEcts);
+          if (NonSubscribed)
+          {
+            predicate = predicate.And(t => !t.Pretplata.Any(x => x.KolegijId == t.Id && x.StudentId == UserId));
+          }
+        }
 
         return predicate.Expand();
       }

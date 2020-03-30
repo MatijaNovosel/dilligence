@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-drawer :width="250" v-model="drawerOpen" show-if-above bordered content-class="drawer-bg">
+    <q-drawer :width="250" v-model="drawerOpen" show-if-above content-class="drawer-bg">
       <q-list dense>
         <q-item class="q-my-md">
           <q-item-section avatar>

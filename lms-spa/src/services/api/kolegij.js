@@ -1,14 +1,14 @@
 import axios from 'axios';
 
 export default {
-  async get(smjerIds, name, minEcts, maxEcts, isvu) {
+  async get(userId, smjerIds, name, subscribed, nonSubscribed) {
     return await axios.get('Kolegij', {
       params: {
+        userId,
         smjerIds,
         name,
-        minEcts,
-        maxEcts,
-        isvu
+        subscribed,
+        nonSubscribed
       }
     });
   },
