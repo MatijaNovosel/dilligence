@@ -30,6 +30,7 @@ using tvz2api_cqrs.Middleware;
 using tvz2api_cqrs.Models;
 using tvz2api_cqrs.Models.DTO;
 using tvz2api_cqrs.QueryModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace tvz2api_cqrs
 {

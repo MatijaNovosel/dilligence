@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
+using tvz2api_cqrs.Enumerations;
 
 namespace tvz2api_cqrs.Controllers
 {
@@ -32,6 +34,12 @@ namespace tvz2api_cqrs.Controllers
     [HttpGet]
     public async Task<IActionResult> Get(int? userId = null, [FromQuery(Name = "smjerIDs[]")] List<SmjerEnum> smjerIDs = null, string name = null, bool subscribed = false, bool nonSubscribed = false)
     {
+      int[] privileges = JsonConvert.DeserializeObject<int[]>(User.FindFirst("Privileges").Value);
+
+      if(!privileges.Any(x => x == (int)PrivilegeEnum.CanViewSubjects)) {
+        return Unauthorized();
+      }
+
       // var queryOptions = QueryOptionsExtensions.GetFromRequest(Request);
       var specification = new KolegijSpecification(userId, smjerIDs, name, subscribed, nonSubscribed);
       var result = await _queryBus.ExecuteAsync(new KolegijQuery(specification));

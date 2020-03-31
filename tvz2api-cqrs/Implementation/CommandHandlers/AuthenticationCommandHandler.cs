@@ -23,6 +23,8 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using tvz2api_cqrs.Models.DTO;
+using Newtonsoft.Json;
+using tvz2api_cqrs.Enumerations;
 
 namespace tvz2api_cqrs.Implementation.CommandHandlers
 {
@@ -90,7 +92,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       // Token contains two claims, one is the ID and the other is the username
       var claims = new[] {
         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-        new Claim(ClaimTypes.Name, user.Username)
+        new Claim(ClaimTypes.Name, user.Username),
+        new Claim("Privileges", JsonConvert.SerializeObject(new int[] { (int)PrivilegeEnum.CanViewSubjects }))
       };
 
       // In order to make sure the claims are valid, created a key and hash it
