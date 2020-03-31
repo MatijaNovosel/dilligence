@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -47,7 +48,12 @@ namespace tvz2api_cqrs
       services.AddSignalR();
       services.AddDbContext<tvz2Context>();
       services.AddControllers();
-      services.AddAuthorization();
+      services.AddAuthorization(options =>
+      {
+        var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme);
+        defaultAuthorizationPolicyBuilder = defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
+        options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
+      });
       services.AddCors(options =>
       {
         options.AddDefaultPolicy(
@@ -74,6 +80,31 @@ namespace tvz2api_cqrs
       services.AddSwaggerGen(c =>
       {
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "tvz2cqrs", Version = "v1" });
+        c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+          Description = "Enter Bearer [space] and then your token in the text input below.",
+          Name = "Authorization",
+          In = ParameterLocation.Header,
+          Type = SecuritySchemeType.ApiKey,
+          Scheme = "Bearer"
+        });
+        c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+        {
+          {
+            new OpenApiSecurityScheme
+            {
+              Reference = new OpenApiReference
+              {
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
+              },
+              Scheme = "oauth2",
+              Name = "Bearer",
+              In = ParameterLocation.Header
+            },
+            new List<string>()
+          }
+        });
       });
     }
 
@@ -94,6 +125,7 @@ namespace tvz2api_cqrs
       });
       app.UseRouting();
       app.UseAuthorization();
+      app.UseAuthentication();
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapControllers();

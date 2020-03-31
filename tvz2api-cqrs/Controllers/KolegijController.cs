@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace tvz2api_cqrs.Controllers
 {
@@ -27,6 +28,7 @@ namespace tvz2api_cqrs.Controllers
       _queryBus = queryBus;
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> Get(int? userId = null, [FromQuery(Name = "smjerIDs[]")] List<SmjerEnum> smjerIDs = null, string name = null, bool subscribed = false, bool nonSubscribed = false)
     {
