@@ -13,7 +13,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
-using tvz2api_cqrs.Enumerations;
 
 namespace tvz2api_cqrs.Controllers
 {
