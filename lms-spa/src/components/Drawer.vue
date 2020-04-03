@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-drawer :width="250" v-model="drawerOpen" show-if-above content-class="drawer-bg">
+    <q-drawer :width="250" v-model="drawerOpen" show-if-above :content-class="$q.dark.isActive ? 'drawer-bg-dark' : 'drawer-bg'">
       <q-list dense>
         <q-item class="q-my-md">
           <q-item-section avatar>
@@ -159,9 +159,17 @@ export default {
 };
 </script>
 
-<style scoped>
-.q-list--dense > .q-item,
-.q-item--dense {
-  min-height: 19px;
-}
+<style lang="sass">
+.q-list--dense > .q-item, .q-item--dense
+  min-height: 19px
+.drawer-bg
+  background-image: url("../assets/nav-bg.svg")
+  background-position: center center
+  background-size: cover
+  overflow: hidden
+.drawer-bg-dark
+  background-image: url("../assets/nav-bg-dark.png")
+  background-position: center center
+  background-size: cover
+  overflow: hidden
 </style>

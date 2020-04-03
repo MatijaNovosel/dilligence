@@ -69,9 +69,7 @@
           <template v-slot:item="props">
             <div class="q-pa-xs col-xs-12 col-sm-6 col-md-4 col-lg-3 grid-style-transition">
               <q-card flat bordered>
-                <q-card-section
-                  :class="(props.row.subscribed ? 'bg-green-2' : 'bg-grey-2') + ' q-py-md'"
-                >
+                <q-card-section class="q-py-md">
                   <span class="ellipsis-text">{{ props.row.naziv }}</span>
                   <q-icon
                     dense
@@ -84,7 +82,7 @@
                 <q-separator />
                 <q-card-section class="q-py-none">
                   <q-list dense>
-                    <q-item v-for="col in props.cols" :key="col.name">
+                    <q-item class="q-my-sm" v-for="col in props.cols" :key="col.name">
                       <q-item-section>
                         <q-item-label>{{ col.label }}</q-item-label>
                       </q-item-section>
