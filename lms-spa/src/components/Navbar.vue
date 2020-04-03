@@ -1,6 +1,6 @@
 <template>
 	<q-header elevated>
-		<q-toolbar class="bg-white">
+		<q-toolbar :class="$q.dark.isActive ? 'bg-dark' : 'bg-white'">
 			<q-btn
 				flat
 				dense
