@@ -83,17 +83,18 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
     public async Task<ICommandResult<LoginUserDTO>> HandleAsync(AuthenticationLoginCommand command)
     {
-      var user = await _context.Korisnik.FirstOrDefaultAsync(x => x.Username == command.Username);
+      var user = await _context.Korisnik.Include(p => p.UserPrivileges).FirstOrDefaultAsync(x => x.Username == command.Username);
       if (user == null || !verifyPasswordHash(command.Password, user.PasswordHash, user.PasswordSalt))
       {
         throw new Exception("User credentials are wrong or the hashing integrity is faulty!");
       }
 
-      // Token contains two claims, one is the ID and the other is the username
+      var privileges = user.UserPrivileges.Select(x => x.PrivilegeId).ToArray();
+
       var claims = new[] {
         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
         new Claim(ClaimTypes.Name, user.Username),
-        new Claim("Privileges", JsonConvert.SerializeObject(new int[] { (int)PrivilegeEnum.CanViewSubjects }))
+        new Claim("Privileges", JsonConvert.SerializeObject(privileges))
       };
 
       // In order to make sure the claims are valid, created a key and hash it
