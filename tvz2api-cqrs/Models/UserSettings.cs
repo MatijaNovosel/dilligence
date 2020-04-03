@@ -3,15 +3,12 @@ using System.Collections.Generic;
 
 namespace tvz2api_cqrs.Models
 {
-    public partial class Message
+    public partial class UserSettings
     {
         public int Id { get; set; }
-        public string Content { get; set; }
-        public DateTime? SentAt { get; set; }
         public int UserId { get; set; }
-        public int ChatId { get; set; }
+        public bool DarkMode { get; set; }
 
-        public virtual Chat Chat { get; set; }
         public virtual Korisnik User { get; set; }
     }
 }
