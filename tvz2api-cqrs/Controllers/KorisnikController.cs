@@ -37,6 +37,13 @@ namespace tvz2api_cqrs.Controllers
       return Ok(new PageableCollection<KorisnikQueryModel>() { Results = result, Total = count });
     }
 
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetSettings(int id)
+    {
+      var result = await _queryBus.ExecuteAsync(new KorisnikSettingsQuery() { Id = id });
+      return Ok(result);
+    }
+
     [HttpGet("chat/{id}")]
     public async Task<IActionResult> GetChats(int id)
     {

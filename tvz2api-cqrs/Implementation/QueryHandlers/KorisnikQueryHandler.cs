@@ -13,6 +13,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
   public class KorisnikQueryHandler :
     IQueryHandlerAsync<KorisnikQuery, List<KorisnikQueryModel>>,
     IQueryHandlerAsync<KorisnikChatQuery, List<KorisnikChatQueryModel>>,
+    IQueryHandlerAsync<KorisnikSettingsQuery, KorisnikSettingsQueryModel>,
     IQueryHandlerAsync<KorisnikTotalQuery, int>
   {
     private readonly tvz2Context _context;
@@ -70,6 +71,12 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         })
         .ToListAsync();
       return chats;
+    }
+
+    public async Task<KorisnikSettingsQueryModel> HandleAsync(KorisnikSettingsQuery query)
+    {
+      var settings = await _context.UserSettings.FirstOrDefaultAsync(x => x.UserId == query.Id);
+      return new KorisnikSettingsQueryModel() { DarkMode = settings.DarkMode };
     }
   }
 }

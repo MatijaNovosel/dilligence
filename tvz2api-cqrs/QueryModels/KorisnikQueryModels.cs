@@ -16,4 +16,8 @@ namespace tvz2api_cqrs.QueryModels
     public KorisnikQueryModel FirstParticipant { get; set; }
     public KorisnikQueryModel SecondParticipant { get; set; }
   }
+  public class KorisnikSettingsQueryModel
+  {
+    public bool DarkMode { get; set; }
+  }
 }

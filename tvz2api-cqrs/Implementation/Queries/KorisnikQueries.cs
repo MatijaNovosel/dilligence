@@ -34,4 +34,10 @@ namespace tvz2api_cqrs.Implementation.Queries
     public KorisnikChatQuery() { }
     public int Id { get; set; }
   }
+
+  public class KorisnikSettingsQuery : IQuery<KorisnikSettingsQueryModel>
+  {
+    public KorisnikSettingsQuery() { }
+    public int Id { get; set; }
+  }
 }
