@@ -83,7 +83,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
     public async Task<ICommandResult<LoginUserDTO>> HandleAsync(AuthenticationLoginCommand command)
     {
-      var user = await _context.Korisnik.Include(p => p.UserPrivileges).FirstOrDefaultAsync(x => x.Username == command.Username);
+      var user = await _context.Korisnik.Include(p => p.UserPrivileges).Include(p => p.UserSettings).FirstOrDefaultAsync(x => x.Username == command.Username);
       if (user == null || !verifyPasswordHash(command.Password, user.PasswordHash, user.PasswordSalt))
       {
         throw new Exception("User credentials are wrong or the hashing integrity is faulty!");
@@ -112,7 +112,9 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       var tokenHandler = new JwtSecurityTokenHandler();
       var token = tokenHandler.CreateToken(tokenDescriptor);
 
-      return CommandResult<LoginUserDTO>.Success(new LoginUserDTO(tokenHandler.WriteToken(token), user.Username, user.Id));
+      var settings = new KorisnikSettingsQueryModel() { DarkMode = user.UserSettings.FirstOrDefault().DarkMode };
+
+      return CommandResult<LoginUserDTO>.Success(new LoginUserDTO(tokenHandler.WriteToken(token), user.Username, user.Id, settings));
     }
   }
 }

@@ -1,11 +1,19 @@
 <template>
-	<div id="q-app">
-		<router-view />
-	</div>
+  <div id="q-app">
+    <router-view />
+  </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
-	name: "App"
+  name: "App",
+  computed: {
+    ...mapGetters(["user"])
+  },
+  updated() {
+    this.$q.dark.set(this.user.settings.darkMode);
+  }
 };
 </script>

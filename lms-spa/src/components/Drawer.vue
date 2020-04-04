@@ -1,6 +1,11 @@
 <template>
   <div>
-    <q-drawer :width="250" v-model="drawerOpen" show-if-above :content-class="$q.dark.isActive ? 'drawer-bg-dark' : 'drawer-bg'">
+    <q-drawer
+      :width="250"
+      v-model="drawerOpen"
+      show-if-above
+      :content-class="$q.dark.isActive ? 'drawer-bg-dark' : 'drawer-bg'"
+    >
       <q-list dense>
         <q-item class="q-my-md">
           <q-item-section avatar>
@@ -128,7 +133,7 @@ export default {
           route: { name: "exams" },
           sublinks: [
             {
-              text: "Availabel exams",
+              text: "Available exams",
               route: { name: "exams" }
             }
           ]

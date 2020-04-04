@@ -14,12 +14,23 @@
       <span :class="($q.dark.isActive ? 'text-white' : 'text-black') + ' text-h6 q-ml-sm'">LMS</span>
       <span class="text-grey q-ml-xs">by Matija</span>
       <q-space />
-      <div :class="($q.dark.isActive ? 'text-white' : 'text-black') + ' q-pr-md'">Quasar v{{ $q.version }}</div>
+      <div
+        :class="($q.dark.isActive ? 'text-white' : 'text-black') + ' q-pr-md'"
+      >Quasar v{{ $q.version }}</div>
       <q-btn
         flat
         dense
         round
-				:color="$q.dark.isActive ? 'primary' : 'red-7'"
+        color="grey-8"
+        icon="mdi-cog"
+        aria-label="Menu"
+        @click="$router.push('/settings')"
+      />
+      <q-btn
+        flat
+        dense
+        round
+        :color="$q.dark.isActive ? 'primary' : 'red-7'"
         icon="power_settings_new"
         aria-label="Menu"
         @click="logout"
@@ -41,6 +52,7 @@ export default {
         type: "positive",
         message: "Successfully logged out!"
       });
+      this.$q.dark.set(false);
       this.$router.push("/login");
     }
   }

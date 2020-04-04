@@ -12,7 +12,10 @@ const Store = new Vuex.Store({
       token: null,
       name: null,
       surname: null,
-      JMBAG: null
+      JMBAG: null,
+      settings: {
+        dark: null
+      }
     }
   },
   mutations: {
@@ -25,7 +28,10 @@ const Store = new Vuex.Store({
         token: null,
         name: null,
         surname: null,
-        JMBAG: null
+        JMBAG: null,
+        settings: {
+          dark: null
+        }
       };
     }
   },

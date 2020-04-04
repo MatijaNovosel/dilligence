@@ -38,13 +38,7 @@
           <div class="col-12 q-py-md">
             <div class="row">
               <div class="col-11">
-                <q-input
-                  label="Enter a message..."
-                  dense
-                  v-model="message"
-                  outlined
-                  bg-color="white"
-                >
+                <q-input label="Enter a message..." dense v-model="message" outlined>
                   <template v-slot:append>
                     <q-btn :ripple="false" dense size="sm" color="primary" @click="sendMessage">Send</q-btn>
                   </template>
@@ -234,7 +228,6 @@ export default {
   max-width: 350px
   margin: 5px
 .chat-tab
-  background-color: white
   border: 1px solid rgba(0, 0, 0, 0.12)
   border-top-left-radius: 6px
   border-top-right-radius: 6px
