@@ -34,26 +34,5 @@ namespace tvz2api_cqrs.Controllers
       var result = await _queryBus.ExecuteAsync(new StudentDetailsQuery(id));
       return Ok(result);
     }
-
-    [HttpGet("pretplata/{id}")]
-    public async Task<IActionResult> GetPretplata(int id)
-    {
-      var result = await _queryBus.ExecuteAsync(new StudentPretplataQuery(id));
-      return Ok(result);
-    }
-
-    [HttpPut]
-    public async Task<IActionResult> Subscribe(StudentSubscribeCommand command)
-    {
-      await _commandBus.ExecuteAsync(command);
-      return NoContent();
-    }
-
-    [HttpPut("unsubscribe")]
-    public async Task<IActionResult> Unsubscribe(StudentUnsubscribeCommand command)
-    {
-      await _commandBus.ExecuteAsync(command);
-      return NoContent();
-    }
   }
 }

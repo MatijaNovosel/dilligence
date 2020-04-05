@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using tvz2api_cqrs.Implementation.Commands;
 
 namespace tvz2api_cqrs.Controllers
 {
@@ -49,6 +50,34 @@ namespace tvz2api_cqrs.Controllers
     {
       var result = await _queryBus.ExecuteAsync(new KorisnikChatQuery() { Id = id });
       return Ok(result);
+    }
+
+    [HttpGet("pretplata/{id}")]
+    public async Task<IActionResult> GetPretplata(int id)
+    {
+      var result = await _queryBus.ExecuteAsync(new KorisnikPretplataQuery(id));
+      return Ok(result);
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> Subscribe(KorisnikSubscribeCommand command)
+    {
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
+    }
+
+    [HttpPut("unsubscribe")]
+    public async Task<IActionResult> Unsubscribe(KorisnikUnsubscribeCommand command)
+    {
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
+    }
+
+    [HttpPut("settings")]
+    public async Task<IActionResult> UpdateSettings(KorisnikUpdateSettingsCommand command)
+    {
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
     }
   }
 }

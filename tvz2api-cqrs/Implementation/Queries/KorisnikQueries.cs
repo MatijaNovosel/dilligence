@@ -40,4 +40,13 @@ namespace tvz2api_cqrs.Implementation.Queries
     public KorisnikSettingsQuery() { }
     public int Id { get; set; }
   }
+
+  public class KorisnikPretplataQuery : IQuery<List<int>>
+  {
+    public KorisnikPretplataQuery(int id)
+    {
+      Id = id;
+    }
+    public int Id { get; set; }
+  }
 }

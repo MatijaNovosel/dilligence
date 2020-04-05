@@ -11,8 +11,7 @@ using tvz2api_cqrs.Models.DTO;
 namespace tvz2api_cqrs.Implementation.QueryHandlers
 {
   public class StudentQueryHandler :
-    IQueryHandlerAsync<StudentDetailsQuery, StudentQueryModel>,
-    IQueryHandlerAsync<StudentPretplataQuery, List<int>>
+    IQueryHandlerAsync<StudentDetailsQuery, StudentQueryModel>
   {
     private readonly tvz2Context _context;
 
@@ -35,15 +34,6 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         })
         .FirstOrDefaultAsync();
       return student;
-    }
-
-    public async Task<List<int>> HandleAsync(StudentPretplataQuery query)
-    {
-      var preplate = await _context.Pretplata
-        .Where(t => t.StudentId == query.Id)
-        .Select(t => (int)t.KolegijId)
-        .ToListAsync();
-      return preplate;
     }
   }
 }

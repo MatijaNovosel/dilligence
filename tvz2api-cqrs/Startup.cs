@@ -157,9 +157,10 @@ namespace tvz2api_cqrs
       services.AddScoped<ICommandHandlerAsync<AuthenticationLoginCommand, LoginUserDTO>, AuthenticationCommandHandler>();
 
       services.AddScoped<IQueryHandlerAsync<StudentDetailsQuery, StudentQueryModel>, StudentQueryHandler>();
-      services.AddScoped<IQueryHandlerAsync<StudentPretplataQuery, List<int>>, StudentQueryHandler>();
-      services.AddScoped<ICommandHandlerAsync<StudentSubscribeCommand>, StudentCommandHandler>();
-      services.AddScoped<ICommandHandlerAsync<StudentUnsubscribeCommand>, StudentCommandHandler>();
+
+      services.AddScoped<ICommandHandlerAsync<KorisnikSubscribeCommand>, KorisnikCommandHandler>();
+      services.AddScoped<ICommandHandlerAsync<KorisnikUnsubscribeCommand>, KorisnikCommandHandler>();
+      services.AddScoped<ICommandHandlerAsync<KorisnikUpdateSettingsCommand>, KorisnikCommandHandler>();
 
       services.AddScoped<IQueryHandlerAsync<EmployeeQuery, List<EmployeeQueryModel>>, EmployeeQueryHandler>();
 
@@ -170,6 +171,7 @@ namespace tvz2api_cqrs
       services.AddScoped<IQueryHandlerAsync<KorisnikTotalQuery, int>, KorisnikQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<KorisnikChatQuery, List<KorisnikChatQueryModel>>, KorisnikQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<KorisnikSettingsQuery, KorisnikSettingsQueryModel>, KorisnikQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<KorisnikPretplataQuery, List<int>>, KorisnikQueryHandler>();
 
       services.AddScoped<IQueryHandlerAsync<ChatDetailsQuery, ChatQueryModel>, ChatQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<ChatAvailableUsersQuery, List<KorisnikQueryModel>>, ChatQueryHandler>();

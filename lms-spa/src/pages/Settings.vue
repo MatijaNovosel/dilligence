@@ -16,6 +16,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import KorisnikService from "../services/api/korisnik";
 
 export default {
   name: "Settings",
@@ -34,8 +35,14 @@ export default {
         let user = Object.assign({}, this.user);
         user.settings = Object.assign({}, val);
         this.setUserData(user);
+        KorisnikService.updateSettings(this.user.id, user.settings).then(() => {
+          this.$q.notify({
+            type: "positive",
+            message: "Settings successfully updated!"
+          });
+        });
       },
-      { immediate: true, deep: true }
+      { immediate: false, deep: true }
     );
   },
   computed: {

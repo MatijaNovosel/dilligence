@@ -14,7 +14,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     IQueryHandlerAsync<KorisnikQuery, List<KorisnikQueryModel>>,
     IQueryHandlerAsync<KorisnikChatQuery, List<KorisnikChatQueryModel>>,
     IQueryHandlerAsync<KorisnikSettingsQuery, KorisnikSettingsQueryModel>,
-    IQueryHandlerAsync<KorisnikTotalQuery, int>
+    IQueryHandlerAsync<KorisnikTotalQuery, int>,
+    IQueryHandlerAsync<KorisnikPretplataQuery, List<int>>
   {
     private readonly tvz2Context _context;
 
@@ -58,13 +59,13 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         .Select(t => new KorisnikChatQueryModel
         {
           Id = t.Id,
-          FirstParticipant = new KorisnikQueryModel() 
-          { 
+          FirstParticipant = new KorisnikQueryModel()
+          {
             Id = t.FirstParticipant.Id,
             Username = t.FirstParticipant.Username
           },
-          SecondParticipant = new KorisnikQueryModel() 
-          { 
+          SecondParticipant = new KorisnikQueryModel()
+          {
             Id = t.SecondParticipant.Id,
             Username = t.SecondParticipant.Username
           }
@@ -77,6 +78,15 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     {
       var settings = await _context.UserSettings.FirstOrDefaultAsync(x => x.UserId == query.Id);
       return new KorisnikSettingsQueryModel() { DarkMode = settings.DarkMode };
+    }
+
+    public async Task<List<int>> HandleAsync(KorisnikPretplataQuery query)
+    {
+      var preplate = await _context.Pretplata
+        .Where(t => t.StudentId == query.Id)
+        .Select(t => (int)t.KolegijId)
+        .ToListAsync();
+      return preplate;
     }
   }
 }
