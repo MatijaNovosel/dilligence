@@ -14,6 +14,17 @@ export default {
   },
   updated() {
     this.$q.dark.set(this.user.settings.darkMode);
+  },
+  watch: {
+    user: {
+      deep: true,
+      immediate: false,
+      handler(oldVal, newVal) {
+        if (oldVal.settings.darkMode != newVal.settings.darkMode) {
+          this.$q.dark.set(this.user.settings.darkMode);
+        }
+      }
+    }
   }
 };
 </script>
