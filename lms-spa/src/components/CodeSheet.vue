@@ -3,28 +3,34 @@
     <div class="code-container">
       <div
         class="code text-grey q-pa-md row"
-        :color="background"
+        :class="background"
         @mouseenter="showCopy = true"
         @mouseleave="showCopy = false"
       >
-        <q-btn v-if="showCopy" text icon class="gore-desno text-white" @click="copyCode">
-          <q-icon name="mdi-content-copy" />
-        </q-btn>
-        <div class="col-1">
-          <div class="flex" v-for="(row, index) of rows" :key="index">
-            <span class="text-orange q-mr-md code-row">{{ getRowText(index + 1) }}</span>
+        <q-btn
+          v-if="showCopy"
+          flat
+          dense
+          round
+          class="gore-desno"
+          icon="mdi-content-copy"
+          @click="copyCode"
+        />
+        <div class="col-1 text-right">
+          <div v-for="n in rows.length" :key="n">
+            <span class="text-amber-9 q-pr-md code-row">{{ getRowText(n) }}</span>
           </div>
         </div>
         <div class="col-11">
           <div
-            class="flex"
+            class="flex text-grey-5"
             v-for="(row, index) of rows"
             :key="index"
             :class="getClass(index)"
             @mouseenter="rowEntered(index)"
             @mouseleave="rowLeft(index)"
           >
-            <span>{{ row }}</span>
+            <span class="q-pl-sm">{{ row }}</span>
           </div>
         </div>
       </div>
@@ -40,8 +46,10 @@ export default {
   data() {
     return {
       color: "grey",
-      darkenDefault: "darken-3",
-      darkenSelected: "darken-2",
+      darkenDefault: "10",
+      darkenSelected: "8",
+      defaultClass: "bg-grey-10",
+      selectedClass: "bg-grey-9",
       showCopy: false,
       hovered: -1,
       selected: []
@@ -58,9 +66,8 @@ export default {
       const isDefault =
         index !== this.hovered && this.selected.indexOf(index) === -1;
       return {
-        [this.color]: true,
-        [this.darkenDefault]: isDefault,
-        [this.darkenSelected]: !isDefault
+        [this.defaultClass]: isDefault,
+        [this.selectedClass]: !isDefault
       };
     },
     rowEntered(index) {
@@ -82,7 +89,7 @@ export default {
       return this.code.split("\n");
     },
     background() {
-      return this.color + " " + this.darkenDefault;
+      return `bg-${this.color}-${this.darkenDefault}`;
     }
   }
 };

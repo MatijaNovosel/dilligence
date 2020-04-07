@@ -7,17 +7,36 @@
           <q-card-section>Started on 10:45, 10th of March 2019</q-card-section>
           <q-separator />
           <q-card-section>
-            <div class="row q-px-sm q-pt-sm">
-              <q-input dense filled type="text" v-model="timeLeft" label="Time left" readonly />
+            <div class="row">
+              <q-input class="full-width" dense filled type="text" v-model="timeLeft" label="Time left" readonly />
             </div>
           </q-card-section>
           <q-separator />
           <q-card-actions class="q-px-md">
             <div class="row">
               <div class="col-12">
-                <p>Progress:</p>
+                <span class="q-pb-sm">Progress:</span>
               </div>
               <div class="col-12">
+                <q-option-group
+                  v-model="selectedQuestion"
+                  :options="options"
+                  color="primary"
+                  inline
+                  dense
+                />
+                <template v-for="(item, i) in questionInfo">
+                  <q-chip
+                    color="primary"
+                    square
+                    text-color="white"
+                    :key="i"
+                    :class="{ 
+                      odgovoreno: answeredQuestions.includes(i - 1),
+                      notOdgovoreno: !answeredQuestions.includes(i - 1) 
+                    }"
+                  >{{ i + 1 }}</q-chip>
+                </template>
                 <!--
                 <v-chip-group column v-model="selectedQuestion" mandatory>
                   <v-chip
@@ -34,8 +53,8 @@
             </div>
           </q-card-actions>
           <q-separator />
-          <q-card-actions class="q-px-md">
-            <div class="row q-my-md">
+          <q-card-actions class="justify-center">
+            <div class="row q-my-sm">
               <q-btn class="primary" @click="finishExamDialog = true">Finish exam</q-btn>
             </div>
           </q-card-actions>
@@ -44,8 +63,6 @@
       <div :class="'q-pa-md col-' + questionCols">
         <q-card>
           <q-card-section class="text-center">
-            Question {{ `${selectedQuestion + 1} - ${questionInfo[selectedQuestion].title}` }}
-            <q-space />
             <q-btn
               flat
               dense
@@ -61,12 +78,7 @@
               text
               @click="hideInfoCard"
             />
-            <q-tooltip v-model="show" bottom>
-              <template v-slot:activator="{ on }">
-                <q-btn flat dense round icon="mdi-autorenew" text v-on="on" @click="_resetAnswer" />
-              </template>
-              <span>Reset question</span>
-            </q-tooltip>
+            <q-btn flat dense round icon="mdi-autorenew" text v-on="on" @click="_resetAnswer" />
             <q-btn
               flat
               dense
@@ -77,8 +89,9 @@
             />
           </q-card-section>
           <q-separator />
-          <q-card-section>
-            <div class="row q-pl-md">{{ questionInfo[selectedQuestion].question }}</div>
+          <q-card-section class="text-center">
+            <span class="text-h6">Question {{ `${selectedQuestion + 1} - ${questionInfo[selectedQuestion].title}` }}</span>
+            <div class="row q-pb-md q-pl-md">{{ questionInfo[selectedQuestion].question }}</div>
             <div class="justify-center row">
               <div class="col-11">
                 <code-sheet :code="questionInfo[selectedQuestion].content" />
