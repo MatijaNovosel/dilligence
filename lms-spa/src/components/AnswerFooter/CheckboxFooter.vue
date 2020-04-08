@@ -1,18 +1,5 @@
 <template>
-  <div>
-    <div class="row">
-      <div class="col-12" v-for="(answer, index) in answers" :key="answer.id">
-        <q-checkbox
-          v-model="selectedAnswer"
-          :label="answer.content"
-          :value="index"
-          dense
-          multiple
-          color="primary"
-        ></q-checkbox>
-      </div>
-    </div>
-  </div>
+  <q-option-group dense v-model="selectedAnswer" :options="answers" type="checkbox" @input="change" />
 </template>
 
 <script>
@@ -23,13 +10,12 @@ export default {
       selectedAnswer: []
     };
   },
+  methods: {
+    change() {
+      this.$emit("answerChanged", this.selectedAnswer);
+    }
+  },
   watch: {
-    selectedAnswer: {
-      immediate: false,
-      handler() {
-        this.$emit("answerChanged", this.selectedAnswer);
-      }
-    },
     reset: {
       immediate: false,
       handler() {

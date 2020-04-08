@@ -8,7 +8,15 @@
           <q-separator />
           <q-card-section>
             <div class="row">
-              <q-input class="full-width" dense filled type="text" v-model="timeLeft" label="Time left" readonly />
+              <q-input
+                class="full-width"
+                dense
+                filled
+                type="text"
+                v-model="timeLeft"
+                label="Time left"
+                readonly
+              />
             </div>
           </q-card-section>
           <q-separator />
@@ -18,13 +26,6 @@
                 <span class="q-pb-sm">Progress:</span>
               </div>
               <div class="col-12">
-                <q-option-group
-                  v-model="selectedQuestion"
-                  :options="options"
-                  color="primary"
-                  inline
-                  dense
-                />
                 <template v-for="(item, i) in questionInfo">
                   <q-chip
                     color="primary"
@@ -37,25 +38,13 @@
                     }"
                   >{{ i + 1 }}</q-chip>
                 </template>
-                <!--
-                <v-chip-group column v-model="selectedQuestion" mandatory>
-                  <v-chip
-                    v-for="(item, index) in questionInfo"
-                    :key="index"
-                    :class="{ 
-                            odgovoreno: answeredQuestions.includes(index - 1),
-                            notOdgovoreno: !answeredQuestions.includes(index - 1) 
-                          }"
-                  >{{ index + 1 }}</v-chip>
-                </v-chip-group>
-                -->
               </div>
             </div>
           </q-card-actions>
           <q-separator />
           <q-card-actions class="justify-center">
             <div class="row q-my-sm">
-              <q-btn class="primary" @click="finishExamDialog = true">Finish exam</q-btn>
+              <q-btn color="primary" @click="finishExamDialog = true">Finish exam</q-btn>
             </div>
           </q-card-actions>
         </q-card>
@@ -68,7 +57,8 @@
               dense
               round
               icon="mdi-chevron-left"
-              @click="selectedQuestion = selectedQuestion - 1 < 0 ? selectedQuestion : --selectedQuestion"
+              :disabled="selectedQuestion - 1 < 0"
+              @click="--selectedQuestion"
             />
             <q-btn
               flat
@@ -78,19 +68,22 @@
               text
               @click="hideInfoCard"
             />
-            <q-btn flat dense round icon="mdi-autorenew" text v-on="on" @click="_resetAnswer" />
+            <q-btn flat dense round icon="mdi-autorenew" text @click="_resetAnswer" />
             <q-btn
               flat
               dense
               round
               icon="mdi-chevron-right"
               text
-              @click="selectedQuestion = selectedQuestion + 1 >= questionInfo.length ? selectedQuestion : ++selectedQuestion"
+              :disabled="selectedQuestion + 1 >= questionInfo.length"
+              @click="++selectedQuestion"
             />
           </q-card-section>
           <q-separator />
           <q-card-section class="text-center">
-            <span class="text-h6">Question {{ `${selectedQuestion + 1} - ${questionInfo[selectedQuestion].title}` }}</span>
+            <span
+              class="text-h6"
+            >Question {{ `${selectedQuestion + 1} - ${questionInfo[selectedQuestion].title}` }}</span>
             <div class="row q-pb-md q-pl-md">{{ questionInfo[selectedQuestion].question }}</div>
             <div class="justify-center row">
               <div class="col-11">
@@ -99,24 +92,22 @@
             </div>
           </q-card-section>
           <q-separator />
-          <!--
           <q-card-actions class="q-px-md">
             <radio-footer
+              v-if="questionInfo[selectedQuestion].type == questionTypes.RADIO"
               @answerChanged="answerChanged"
               :selectedAnswers="selectedAnswers"
               :reset="resetAnswer"
-              v-if="questionInfo[selectedQuestion].type == questionTypes.RADIO"
               :answers="questionInfo[selectedQuestion].answers"
             />
             <checkbox-footer
+              v-else
               @answerChanged="answerChanged"
               :selectedAnswers="selectedAnswers"
               :reset="resetAnswer"
-              v-else-if="questionInfo[selectedQuestion].type == questionTypes.CHECKBOX"
               :answers="questionInfo[selectedQuestion].answers"
             />
           </q-card-actions>
-          -->
         </q-card>
       </div>
     </div>
@@ -139,14 +130,14 @@
 
 <script>
 import CodeSheet from "../components/CodeSheet";
-// import RadioFooter from "../components/AnswerFooter/RadioFooter";
-// import CheckboxFooter from "../components/AnswerFooter/CheckboxFooter";
+import RadioFooter from "../components/AnswerFooter/RadioFooter";
+import CheckboxFooter from "../components/AnswerFooter/CheckboxFooter";
 
 export default {
   components: {
-    CodeSheet
-    // RadioFooter,
-    // CheckboxFooter
+    CodeSheet,
+    RadioFooter,
+    CheckboxFooter
   },
   data() {
     return {
@@ -169,19 +160,23 @@ export default {
           type: 1,
           answers: [
             {
-              content: "I don't know",
+              value: 1,
+              label: "I don't know",
               answered: false
             },
             {
-              content: "Compilation error",
+              value: 2,
+              label: "Compilation error",
               answered: false
             },
             {
-              content: "Array(1, 2, 3, 4, 5)",
+              value: 3,
+              label: "Array(1, 2, 3, 4, 5)",
               answered: false
             },
             {
-              content: "Array(5, 4, 3, 2, 1)",
+              value: 4,
+              label: "Array(5, 4, 3, 2, 1)",
               answered: false
             }
           ]
@@ -194,19 +189,23 @@ export default {
           type: 1,
           answers: [
             {
-              content: "Array(double) P[50];",
+              value: 1,
+              label: "Array(double) P[50];",
               answered: false
             },
             {
-              content: "Array<double> P[50];",
+              value: 2,
+              label: "Array<double> P[50];",
               answered: false
             },
             {
-              content: "Array P[50];",
+              value: 3,
+              label: "Array P[50];",
               answered: false
             },
             {
-              content: "Array<double> P[50];",
+              value: 4,
+              label: "Array<double> P[50];",
               answered: false
             }
           ]
@@ -218,24 +217,29 @@ export default {
           type: 2,
           answers: [
             {
-              content:
+              value: 1,
+              label:
                 "It outputs nothing because it is not possible to use char values instead of integer ones",
               answered: false
             },
             {
-              content: "65 65",
+              value: 2,
+              label: "65 65",
               answered: false
             },
             {
-              content: "A A",
+              value: 3,
+              label: "A A",
               answered: false
             },
             {
-              content: "A 65",
+              value: 4,
+              label: "A 65",
               answered: false
             },
             {
-              content: "65 A",
+              value: 5,
+              label: "65 A",
               answered: false
             }
           ]
@@ -253,6 +257,12 @@ export default {
         this.questionInfo[this.selectedQuestion].type ==
         this.questionTypes.CHECKBOX
       ) {
+        if (val.length == 0 || val == null) {
+          this.answeredQuestions = this.answeredQuestions.filter(
+            x => x != this.selectedQuestion - 1
+          );
+          return;
+        }
         this.questionInfo[this.selectedQuestion].answers.forEach((x, i) => {
           x.answered = val.includes(i) ? true : false;
         });
@@ -288,7 +298,7 @@ export default {
       }
       this.timeLeft = `${minutes}:${seconds}`;
     }, 1000);
-    this.questionTypes = { CHECKBOX: 1 };
+    this.questionTypes = { RADIO: 1, CHECKBOX: 2 };
   },
   watch: {
     selectedQuestion: {

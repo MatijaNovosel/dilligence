@@ -120,10 +120,6 @@ export default {
             {
               text: "Available subjects",
               route: { name: "subjects" }
-            },
-            {
-              text: "Subscribed subjects",
-              route: { name: "my-subjects" }
             }
           ]
         },

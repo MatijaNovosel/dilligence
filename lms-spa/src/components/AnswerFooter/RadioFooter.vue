@@ -1,15 +1,5 @@
 <template>
-  <div>
-    <v-radio-group column v-model="selectedAnswer" @change="changeRadio">
-      <v-radio
-        v-for="answer in answers"
-        :key="answer.id"
-        :label="answer.content"
-        color="primary"
-        :value="answer.id"
-      ></v-radio>
-    </v-radio-group>
-  </div>
+  <q-option-group dense v-model="selectedAnswer" :options="answers" @input="change" />
 </template>
 
 <script>
@@ -21,7 +11,7 @@ export default {
     };
   },
   methods: {
-    changeRadio() {
+    change() {
       this.$emit("answerChanged", this.selectedAnswer);
     }
   },
