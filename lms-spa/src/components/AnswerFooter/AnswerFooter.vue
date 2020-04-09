@@ -1,13 +1,19 @@
 <template>
-  <q-option-group dense v-model="selectedAnswer" :options="answers" type="checkbox" @input="change" />
+  <q-option-group
+    dense
+    v-model="selectedAnswer"
+    :options="answers"
+    :type="type == 2 ? 'checkbox' : 'radio'"
+    @input="change"
+  />
 </template>
 
 <script>
 export default {
-  props: ["answers", "reset", "selectedAnswers"],
+  props: ["answers", "reset", "selectedAnswers", "type"],
   data() {
     return {
-      selectedAnswer: []
+      selectedAnswer: null
     };
   },
   methods: {
@@ -19,12 +25,16 @@ export default {
     reset: {
       immediate: false,
       handler() {
-        this.selectedAnswer = [];
+        if (this.type == 1) {
+          this.selectedAnswer = null;
+        } else {
+          this.selectedAnswer = [];
+        }
       }
     },
     selectedAnswers: {
-      immediate: true,
       deep: true,
+      immediate: true,
       handler(val) {
         this.selectedAnswer = val;
       }
