@@ -76,27 +76,29 @@
             />
           </q-card-section>
           <q-separator />
-          <q-card-section class="text-center">
-            <span
-              class="text-h6"
-            >Question {{ `${selectedQuestion + 1} - ${questionInfo[selectedQuestion].title}` }}</span>
-            <div class="row q-pb-md q-pl-md">{{ questionInfo[selectedQuestion].question }}</div>
-            <div class="justify-center row">
-              <div class="col-11">
-                <code-sheet :code="questionInfo[selectedQuestion].content" />
-              </div>
+          <template v-for="(question, i) in questionInfo">
+            <div :key="i" v-if="selectedQuestion === i">
+              <q-card-section class="text-center">
+                <span class="text-h6">Question {{ `${i + 1} - ${question.title}` }}</span>
+                <div class="row q-pb-md q-pl-md">{{ question.question }}</div>
+                <div class="justify-center row">
+                  <div class="col-11">
+                    <code-sheet :code="question.content" />
+                  </div>
+                </div>
+              </q-card-section>
+              <q-separator />
+              <q-card-actions class="q-px-md">
+                <answer-footer
+                  :type="question.type"
+                  :selectedAnswers="question.userAnswers"
+                  :reset="resetAnswer"
+                  :answers="question.answers"
+                  @answerChanged="answerChanged"
+                />
+              </q-card-actions>
             </div>
-          </q-card-section>
-          <q-separator />
-          <q-card-actions class="q-px-md">
-            <answer-footer
-              :type="questionInfo[selectedQuestion].type"
-              :selectedAnswers="selectedAnswers"
-              :reset="resetAnswer"
-              :answers="questionInfo[selectedQuestion].answers"
-              @answerChanged="answerChanged"
-            />
-          </q-card-actions>
+          </template>
         </q-card>
       </div>
     </div>
@@ -128,19 +130,18 @@ export default {
   },
   data() {
     return {
-      show: false,
       finishExamDialog: false,
       centerQuestion: true,
       questionCols: 9,
       timeLeft: null,
       selectedQuestion: 0,
-      selectedAnswers: null,
       selectedAnswer: null,
       questionTypes: null,
       resetAnswer: null,
       answeredQuestions: [],
       questionInfo: [
         {
+          id: 1,
           title: "Javascript",
           question: "What is the output of this block of code?",
           content: `var numbers = [ 1, 2, 3, 4, 5 ];\nnumbers.sort((a, b) => { \n  if(a > b) return 1; \n  else return -1;\n});\nconsole.log(numbers);`,
@@ -166,6 +167,7 @@ export default {
           ]
         },
         {
+          id: 2,
           title: "C++",
           question:
             "How would One initialize an instance of this generic class?",
@@ -192,6 +194,7 @@ export default {
           ]
         },
         {
+          id: 3,
           title: "C++ 2",
           question: "What is the output of this block of code?",
           content: `template\nclass A\n{\nprotected:\n\tT x;\npublic:\n\tA(T x) { this->x = x; }\n\tvoid print()\n\t{\n\t\tcout << x << " ";\n\t}\n};\n\nint main()\n{\n\tA a('A');\n\tA b('A');\n\ta.print(); b.print();\n}`,
@@ -289,14 +292,6 @@ export default {
       this.timeLeft = `${minutes}:${seconds}`;
     }, 100);
     this.questionTypes = { RADIO: 1, CHECKBOX: 2 };
-  },
-  watch: {
-    selectedQuestion: {
-      immediate: true,
-      handler(val) {
-        this.selectedAnswers = this.questionInfo[val].userAnswers;
-      }
-    }
   }
 };
 </script>
