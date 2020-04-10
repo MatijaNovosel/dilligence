@@ -3,23 +3,20 @@ using System.Collections.Generic;
 
 namespace tvz2api_cqrs.Models
 {
-    public partial class Question
+    public partial class ExamAttempt
     {
-        public Question()
+        public ExamAttempt()
         {
-            Answer = new HashSet<Answer>();
             UserAnswer = new HashSet<UserAnswer>();
         }
 
         public int Id { get; set; }
-        public string Title { get; set; }
-        public string Content { get; set; }
+        public int? TimeLeft { get; set; }
+        public int? UserId { get; set; }
         public int? ExamId { get; set; }
-        public int? TypeId { get; set; }
 
         public virtual Exam Exam { get; set; }
-        public virtual QuestionType Type { get; set; }
-        public virtual ICollection<Answer> Answer { get; set; }
+        public virtual Korisnik User { get; set; }
         public virtual ICollection<UserAnswer> UserAnswer { get; set; }
     }
 }

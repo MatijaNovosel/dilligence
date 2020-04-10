@@ -229,18 +229,16 @@ export default {
   },
   methods: {
     chipColor(i) {
-      if (this.$q.dark.isActive) {
-        if (i === this.selectedQuestion) {
-          if (this.answeredQuestions.includes(this.selectedQuestion - 1)) {
-            return "grey-2";
-          }
-          return "grey-4";
+      if (i === this.selectedQuestion) {
+        if (this.answeredQuestions.includes(this.selectedQuestion - 1)) {
+          return this.$q.dark.isActive ? "grey-2" : "blue-2";
         }
-        if (this.answeredQuestions.includes(i - 1)) {
-          return "grey-6";
-        }
-        return "grey-8";
+        return this.$q.dark.isActive ? "grey-4" : "blue-4";
       }
+      if (this.answeredQuestions.includes(i - 1)) {
+        return this.$q.dark.isActive ? "grey-6" : "blue-6";
+      }
+      return this.$q.dark.isActive ? "grey-8" : "blue-8";
     },
     hideInfoCard() {
       this.centerQuestion = !this.centerQuestion;
