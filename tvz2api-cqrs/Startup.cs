@@ -179,6 +179,8 @@ namespace tvz2api_cqrs
       services.AddScoped<ICommandHandlerAsync<SendMessageCommand, MessageDTO>, ChatCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<CreateNewChatCommand, NewChatDTO>, ChatCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<DeleteMessageCommand>, ChatCommandHandler>();
+
+      services.AddScoped<IQueryHandlerAsync<ExamDetailsQuery, ExamDetailsQueryModel>, ExamQueryHandler>();
     }
   }
 }
