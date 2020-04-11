@@ -11,6 +11,7 @@ namespace tvz2api_cqrs.Models
         }
 
         public int Id { get; set; }
+        public bool? Terminated { get; set; }
         public int? TimeLeft { get; set; }
         public int? UserId { get; set; }
         public int? ExamId { get; set; }
