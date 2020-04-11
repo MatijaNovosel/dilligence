@@ -124,6 +124,7 @@ import CodeSheet from "../components/CodeSheet";
 import AnswerFooter from "../components/AnswerFooter/AnswerFooter";
 
 export default {
+  name: "ExamDetails",
   components: {
     CodeSheet,
     AnswerFooter

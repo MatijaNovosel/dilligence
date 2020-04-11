@@ -9,7 +9,12 @@
       <q-separator />
       <q-card-actions>
         <q-space />
-        <q-btn flat size="sm" class="bg-red-4 text-white" @click="unsubscribe(props.row.id)">START</q-btn>
+        <q-btn
+          @click="$router.push({ name: 'exam-details', params: { id: '123' } })"
+          flat
+          size="sm"
+          class="bg-red-4 text-white"
+        >START</q-btn>
         <q-space />
       </q-card-actions>
     </q-card>
@@ -27,17 +32,4 @@ export default {
 </script>
 
 <style scoped lang="sass">
-.border-box
-  position: relative
-  border: 1px solid rgba(0, 0, 0, 0.12)
-  border-radius: 10px
-  width: 100%
-.bottom-left
-  position: absolute
-  bottom: 20px
-  left: 20px
-  z-index: 200
-.aside
-  position: absolute
-  right: 5px
 </style>
