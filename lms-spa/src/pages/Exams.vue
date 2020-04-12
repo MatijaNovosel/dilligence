@@ -1,25 +1,50 @@
 <template>
   <q-page class="q-pa-md">
     <div class="row">
-      <template v-for="n in 10">
-        <div :key="n" class="q-pa-xs col-xs-12 col-sm-6 col-md-4 col-lg-3">
-          <ExamCard />
+      <div class="col-12">
+        <span class="text-weight-light text-h5">Available exams</span>
+      </div>
+      <div class="col-12 q-py-sm">
+        <q-separator />
+      </div>
+      <div class="col-12">
+        <div class="row">
+          <template v-for="(attempt, i) in attempts">
+            <div :key="i" class="q-pa-xs col-xs-12 col-sm-6 col-md-4 col-lg-3">
+              <ExamCard :examData="attempt" />
+            </div>
+          </template>
         </div>
-      </template>
+      </div>
     </div>
-    <router-view></router-view>
   </q-page>
 </template>
 
 <script>
 import ExamCard from "../components/ExamCard";
+import ExamService from "../services/api/exam";
+import { mapGetters } from "vuex";
 
 export default {
   name: "Exams",
   components: { ExamCard },
-  methods: {},
+  methods: {
+    getAttempts() {
+      ExamService.getAttempts(this.user.id).then(({ data }) => {
+        this.attempts = data;
+      });
+    }
+  },
+  computed: {
+    ...mapGetters(["user"])
+  },
+  created() {
+    this.getAttempts();
+  },
   data() {
-    return {};
+    return {
+      attempts: null
+    };
   }
 };
 </script>

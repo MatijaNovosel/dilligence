@@ -18,6 +18,7 @@ using System.Net;
 
 namespace tvz2api_cqrs.Controllers
 {
+  [Authorize]
   [Route("api/[controller]")]
   [ApiController]
   public class ExamController : ControllerBase
@@ -31,9 +32,15 @@ namespace tvz2api_cqrs.Controllers
       _queryBus = queryBus;
     }
 
-    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> Get(int userId)
+    {
+      var result = await _queryBus.ExecuteAsync(new ExamInProgressQuery(userId));
+      return Ok(result);
+    }
+
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
+    public async Task<IActionResult> GetDetails(int id)
     {
       var result = await _queryBus.ExecuteAsync(new ExamDetailsQuery(id));
       return Ok(result);

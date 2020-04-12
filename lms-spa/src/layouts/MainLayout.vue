@@ -30,16 +30,16 @@ export default {
 
 <style lang="sass">
 .picture-dialog
-	width: 80vh
-	max-width: 80vw
+  width: 80vh
+  max-width: 80vw
 .navbar-img
-	width: 40px
-	height: 40px
+  width: 40px
+  height: 40px
 .q-item__section--avatar
-	cursor: pointer
+  cursor: pointer
 .border-box-image
-	width: 30%
-	height: 30%
-	border: 1px solid rgba(0, 0, 0, 0.12)
-	border-radius: 10px
+  width: 30%
+  height: 30%
+  border: 1px solid rgba(0, 0, 0, 0.12)
+  border-radius: 10px
 </style>

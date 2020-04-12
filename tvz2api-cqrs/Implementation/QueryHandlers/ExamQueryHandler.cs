@@ -11,7 +11,8 @@ using tvz2api_cqrs.QueryModels;
 namespace tvz2api_cqrs.Implementation.QueryHandlers
 {
   public class ExamQueryHandler :
-    IQueryHandlerAsync<ExamDetailsQuery, ExamDetailsQueryModel>
+    IQueryHandlerAsync<ExamDetailsQuery, ExamDetailsQueryModel>,
+    IQueryHandlerAsync<ExamInProgressQuery, List<ExamAttemptQueryModel>>
   {
     private readonly tvz2Context _context;
 
@@ -38,14 +39,32 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
               TypeId = x.TypeId,
               Answers = x.Answer.Select(y => new AnswerDTO()
               {
-                Content = y.Content,
-                Id = y.Id,
-                Correct = y.Correct
+                Label = y.Content,
+                Value = y.Id
               }).ToList()
             }).ToList()
         })
         .FirstOrDefaultAsync();
       return exam;
+    }
+
+    public async Task<List<ExamAttemptQueryModel>> HandleAsync(ExamInProgressQuery query)
+    {
+      var exams = await _context.ExamAttempt
+        .Where(t => t.UserId == query.UserId)
+        .Select(t => new ExamAttemptQueryModel
+        {
+          Id = t.Id,
+          TimeLeft = t.TimeLeft,
+          Terminated = t.Terminated,
+          Exam = new ExamDTO()
+          {
+            Id = t.Exam.Id,
+            Naziv = t.Exam.Naziv,
+            Subject = t.Exam.Subject.Naziv
+          }
+        }).ToListAsync();
+      return exams;
     }
   }
 }
