@@ -29,12 +29,12 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         {
           Id = t.Id,
           Terminated = t.Terminated,
-          TimeLeft = t.TimeLeft,
+          StartedAt = t.StartedAt,
           Exam = new ExamDetailsDTO()
           {
             Id = t.Exam.Id,
             Naziv = t.Exam.Naziv,
-            SubjectId = t.Exam.SubjectId,
+            TimeNeeded = t.Exam.TimeNeeded,
             Questions = t.Exam.Question
             .Select(x => new QuestionDTO
             {
@@ -42,6 +42,10 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
               Content = x.Content,
               Title = x.Title,
               TypeId = x.TypeId,
+              UserAnswers = x.UserAnswer
+                .Where(y => y.QuestionId == x.Id && y.AttemptId == query.Id)
+                .Select(y => (int)y.AnswerId)
+                .ToList(),
               Answers = x.Answer.Select(y => new AnswerDTO()
               {
                 Label = y.Content,
@@ -61,12 +65,14 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         .Select(t => new ExamAttemptQueryModel
         {
           Id = t.Id,
-          TimeLeft = t.TimeLeft,
+          StartedAt = t.StartedAt,
+          Started = t.Started,
           Terminated = t.Terminated,
           Exam = new ExamDTO()
           {
             Id = t.Exam.Id,
             Naziv = t.Exam.Naziv,
+            TimeNeeded = t.Exam.TimeNeeded,
             Subject = t.Exam.Subject.Naziv
           }
         }).ToListAsync();

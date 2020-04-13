@@ -2,7 +2,7 @@
   <q-card flat bordered>
     <q-badge class="gore-desno">
       <q-icon size="xs" name="mdi-clock-fast" />
-      <span class="q-pl-xs">{{ examData.timeLeft | countdownFilter }}</span>
+      <span class="q-pl-xs">{{ timeLeft }}</span>
     </q-badge>
     <q-card-section class="q-py-sm">
       <div class="text-overline">{{ examData.exam.subject }}</div>
@@ -28,6 +28,14 @@ export default {
   props: ["examData"],
   data() {
     return {};
+  },
+  computed: {
+    timeLeft() {
+      if (this.examData != null)
+        return this.$options.filters.countdownFilter(
+          this.examData.exam.timeNeeded
+        );
+    }
   },
   methods: {}
 };

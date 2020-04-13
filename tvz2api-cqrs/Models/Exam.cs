@@ -13,6 +13,7 @@ namespace tvz2api_cqrs.Models
 
         public int Id { get; set; }
         public string Naziv { get; set; }
+        public int TimeNeeded { get; set; }
         public int? SubjectId { get; set; }
 
         public virtual Kolegij Subject { get; set; }

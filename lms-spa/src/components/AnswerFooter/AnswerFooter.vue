@@ -4,7 +4,7 @@
     dense
     v-model="selectedAnswer"
     :options="answers"
-    :type="type == 2 ? 'checkbox' : 'radio'"
+    :type="type == 1 ? 'radio' : 'checkbox'"
     @input="change"
   />
 </template>

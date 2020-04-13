@@ -34,15 +34,10 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     public async Task HandleAsync(UpdateAttemptCommand command)
     {
       var attempt = await _context.ExamAttempt.FirstOrDefaultAsync(x => x.Id == command.Id);
-      attempt.TimeLeft = command.TimeLeft;
       attempt.Terminated = command.Terminated;
 
       command.Exam.Questions.ForEach(x =>
       {
-        if (x.UserAnswers.Count == 0)
-        {
-          return;
-        }
         if (x.TypeId == (int)QuestionTypeEnum.RADIO)
         {
           var specificUserAnswer = _context.UserAnswer.Where(y => y.QuestionId == x.Id && y.AttemptId == command.Id).FirstOrDefault();
@@ -50,22 +45,19 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
           {
             _context.UserAnswer.Add(new UserAnswer()
             {
-              AnswerId = x.UserAnswers[0],
+              AnswerId = x.UserAnswers.Count != 0 ? (int?)x.UserAnswers[0] : null,
               AttemptId = command.Id,
               QuestionId = x.Id
             });
             return;
           }
-          specificUserAnswer.AnswerId = x.UserAnswers[0];
+          specificUserAnswer.AnswerId = x.UserAnswers.Count != 0 ? (int?)x.UserAnswers[0] : null;
         }
         else
         {
           var specificUserAnswers = _context.UserAnswer.Where(y => y.QuestionId == x.Id && y.AttemptId == command.Id).ToList();
-          if (specificUserAnswers.Count != 0)
-          {
-            _context.RemoveRange(specificUserAnswers);
-            _context.SaveChanges();
-          }
+          _context.RemoveRange(specificUserAnswers);
+          _context.SaveChanges();
           foreach (var userAnswer in x.UserAnswers)
           {
             _context.UserAnswer.Add(new UserAnswer()

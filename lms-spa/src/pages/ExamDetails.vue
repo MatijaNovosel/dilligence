@@ -138,6 +138,7 @@ export default {
       questionCols: 9,
       selectedQuestion: 0,
       selectedAnswer: null,
+      time: null,
       questionTypes: null,
       resetAnswer: null,
       answeredQuestions: [],
@@ -149,7 +150,7 @@ export default {
     ...mapGetters(["user"]),
     timeLeft() {
       if (this.attempt != null)
-        return this.$options.filters.countdownFilter(this.attempt.timeLeft);
+        return this.$options.filters.countdownFilter(this.time);
     }
   },
   methods: {
@@ -157,7 +158,10 @@ export default {
       let updatedAttempt = JSON.parse(JSON.stringify(this.attempt));
       updatedAttempt.exam.questions.forEach(x => {
         if (x.typeId === this.questionTypes.RADIO) {
-          x.userAnswers = x.userAnswers === null ? [] : [x.userAnswers];
+          x.userAnswers =
+            x.userAnswers === null || x.userAnswers === 0
+              ? []
+              : [x.userAnswers];
         }
       });
       ExamService.updateAttemptCommand(updatedAttempt);
@@ -195,11 +199,6 @@ export default {
       this.updateAttempt();
     },
     _resetAnswer() {
-      /*
-
-        SPREMI U BACKEND OVDJE
-
-      */
       let exam = this.attempt.exam;
       if (
         exam.questions[this.selectedQuestion].typeId ==
@@ -213,17 +212,37 @@ export default {
       this.answeredQuestions = this.answeredQuestions.filter(
         x => x != this.selectedQuestion - 1
       );
+      this.updateAttempt();
     },
     getAttemptData(attemptId) {
       ExamService.getAttemptDetails(attemptId).then(({ data }) => {
-        data.exam.questions.forEach(
-          x =>
-            (x.userAnswers =
-              x.typeId == this.questionTypes.CHECKBOX ? [] : null)
-        );
+        data.exam.questions.forEach(x => {
+          if (x.typeId == this.questionTypes.RADIO) {
+            x.userAnswers = x.userAnswers.length == 0 ? null : x.userAnswers[0];
+          }
+        });
+
         this.attempt = data;
+
+        this.attempt.exam.questions.forEach((x, i) => {
+          if (
+            x.userAnswers != [] &&
+            x.userAnswers != null &&
+            x.userAnswers != 0
+          ) {
+            this.answeredQuestions.push(i - 1);
+          }
+        });
+
+        let startDate = new Date(this.attempt.startedAt);
+        let currentDate = new Date();
+        let secondBetweenTwoDate = Math.abs(
+          (currentDate.getTime() - startDate.getTime()) / 1000
+        );
+        this.time = this.attempt.exam.timeNeeded - secondBetweenTwoDate;
+
         this.timerIntervalId = setInterval(() => {
-          this.attempt.timeLeft--;
+          this.time--;
         }, 1000);
       });
     }
@@ -235,17 +254,11 @@ export default {
     this.questionTypes = { RADIO: 1, CHECKBOX: 2 };
     const attemptId = this.$route.params.id;
     this.getAttemptData(attemptId);
-    // STVORI UNLOAD METODU OVDJE
   }
 };
 </script>
 
 <style scoped lang="sass">
-.gore-desno
-  position: absolute
-  top: 10px
-  right: 5px
-  margin: 5px
 .border-box
   position: relative
   border: 1px solid rgba(0, 0, 0, 0.12)

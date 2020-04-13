@@ -1,5 +1,6 @@
 using tvz2api_cqrs.Models.DTO;
 using System.Collections.Generic;
+using System;
 
 namespace tvz2api_cqrs.QueryModels
 {
@@ -7,7 +8,8 @@ namespace tvz2api_cqrs.QueryModels
   {
     public int Id { get; set; }
     public bool? Terminated { get; set; }
-    public int? TimeLeft { get; set; }
+    public bool? Started { get; set; }
+    public DateTime? StartedAt { get; set; }
     public ExamDetailsDTO Exam { get; set; }
   }
 
@@ -15,7 +17,8 @@ namespace tvz2api_cqrs.QueryModels
   {
     public int Id { get; set; }
     public bool? Terminated { get; set; }
-    public int? TimeLeft { get; set; }
+    public DateTime? StartedAt { get; set; }
+    public bool? Started { get; set; }
     public ExamDTO Exam { get; set; }
   }
 }
