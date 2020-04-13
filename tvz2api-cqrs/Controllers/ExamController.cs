@@ -5,6 +5,7 @@ using tvz2api_cqrs.Implementation.Queries;
 using tvz2api_cqrs.QueryModels;
 using tvz2api_cqrs.Infrastructure.Messaging;
 using tvz2api_cqrs.Implementation.Specifications;
+using tvz2api_cqrs.Implementation.Commands;
 using Microsoft.AspNetCore.Mvc;
 using tvz2api_cqrs.Common;
 using System;
@@ -32,18 +33,25 @@ namespace tvz2api_cqrs.Controllers
       _queryBus = queryBus;
     }
 
-    [HttpGet]
+    [HttpGet("{userId}")]
     public async Task<IActionResult> Get(int userId)
     {
       var result = await _queryBus.ExecuteAsync(new ExamInProgressQuery(userId));
       return Ok(result);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("details/{id}")]
     public async Task<IActionResult> GetDetails(int id)
     {
-      var result = await _queryBus.ExecuteAsync(new ExamDetailsQuery(id));
+      var result = await _queryBus.ExecuteAsync(new ExamInProgressDetailsQuery(id));
       return Ok(result);
+    }
+
+    [HttpPut("attempt")]
+    public async Task<IActionResult> Register(UpdateAttemptCommand command)
+    {
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
     }
   }
 }

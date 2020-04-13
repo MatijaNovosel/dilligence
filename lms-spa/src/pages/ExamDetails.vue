@@ -1,11 +1,9 @@
 <template>
   <div>
-    <div class="row justify-center" v-if="examData">
+    <div class="row justify-center" v-if="attempt">
       <div class="col-3 q-pa-md" v-show="centerQuestion">
         <q-card>
-          <q-card-section class="text-center">{{ examData.naziv }}</q-card-section>
-          <q-separator />
-          <q-card-section>Started on 10:45, 10th of March 2019</q-card-section>
+          <q-card-section class="text-center">{{ attempt.exam.naziv }}</q-card-section>
           <q-separator />
           <q-card-section>
             <div class="row">
@@ -24,7 +22,7 @@
           <q-card-actions class="q-px-md">
             <div class="row">
               <div class="col-12">
-                <template v-for="(item, i) in examData.questions">
+                <template v-for="(item, i) in attempt.exam.questions">
                   <q-chip
                     :color="chipColor(i)"
                     clickable
@@ -71,12 +69,12 @@
               round
               icon="mdi-chevron-right"
               text
-              :disabled="selectedQuestion + 1 >= examData.questions.length"
+              :disabled="selectedQuestion + 1 >= attempt.exam.questions.length"
               @click="++selectedQuestion"
             />
           </q-card-section>
           <q-separator />
-          <template v-for="(question, i) in examData.questions">
+          <template v-for="(question, i) in attempt.exam.questions">
             <div :key="i" v-if="selectedQuestion === i">
               <q-card-section>
                 <div class="row">
@@ -92,7 +90,7 @@
               <q-separator />
               <q-card-actions class="q-px-md">
                 <answer-footer
-                  :type="question.type"
+                  :type="question.typeId"
                   :selectedAnswers="question.userAnswers"
                   :reset="resetAnswer"
                   :answers="question.answers"
@@ -135,11 +133,9 @@ export default {
   },
   data() {
     return {
-      examData: null,
       finishExamDialog: false,
       centerQuestion: true,
       questionCols: 9,
-      timeLeft: null,
       selectedQuestion: 0,
       selectedAnswer: null,
       questionTypes: null,
@@ -150,9 +146,22 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["user"])
+    ...mapGetters(["user"]),
+    timeLeft() {
+      if (this.attempt != null)
+        return this.$options.filters.countdownFilter(this.attempt.timeLeft);
+    }
   },
   methods: {
+    updateAttempt() {
+      let updatedAttempt = JSON.parse(JSON.stringify(this.attempt));
+      updatedAttempt.exam.questions.forEach(x => {
+        if (x.typeId === this.questionTypes.RADIO) {
+          x.userAnswers = x.userAnswers === null ? [] : [x.userAnswers];
+        }
+      });
+      ExamService.updateAttemptCommand(updatedAttempt);
+    },
     chipColor(i) {
       if (i === this.selectedQuestion) {
         if (this.answeredQuestions.includes(this.selectedQuestion - 1)) {
@@ -170,9 +179,8 @@ export default {
       this.questionCols = this.centerQuestion ? 9 : 12;
     },
     answerChanged(val) {
-      // Val od RADIO dolazi kao jedna vrijednost, dok od CHECKBOX kao polje
       if (
-        this.examData.questions[this.selectedQuestion].type ==
+        this.attempt.exam.questions[this.selectedQuestion].typeId ==
         this.questionTypes.CHECKBOX
       ) {
         if (val.length == 0 || val == null) {
@@ -182,48 +190,52 @@ export default {
           return;
         }
       }
-      this.examData.questions[this.selectedQuestion].userAnswers = val;
+      this.attempt.exam.questions[this.selectedQuestion].userAnswers = val;
       this.answeredQuestions.push(this.selectedQuestion - 1);
+      this.updateAttempt();
     },
     _resetAnswer() {
+      /*
+
+        SPREMI U BACKEND OVDJE
+
+      */
+      let exam = this.attempt.exam;
       if (
-        this.examData.questions[this.selectedQuestion].type ==
+        exam.questions[this.selectedQuestion].typeId ==
         this.questionTypes.CHECKBOX
       ) {
-        this.examData.questions[this.selectedQuestion].userAnswers = [];
+        exam.questions[this.selectedQuestion].userAnswers = [];
       } else {
-        this.examData.questions[this.selectedQuestion].userAnswers = null;
+        exam.questions[this.selectedQuestion].userAnswers = null;
       }
       this.resetAnswer = !this.resetAnswer;
       this.answeredQuestions = this.answeredQuestions.filter(
         x => x != this.selectedQuestion - 1
       );
     },
-    getExamData() {
-      ExamService.getExamDetails(1).then(({ data }) => {
-        data.questions.forEach(x => (x.userAnswers = null));
-        this.examData = data;
-        ExamService.getAttempts(this.user.id).then(({ data }) => {
-          this.attempt = data[0];
-          this.timerIntervalId = setInterval(() => {
-            this.attempt.timeLeft--;
-            const format = val => `0${Math.floor(val)}`.slice(-2);
-            const hours = this.attempt.timeLeft / 3600;
-            const minutes = (this.attempt.timeLeft % 3600) / 60;
-            this.timeLeft = [hours, minutes, this.attempt.timeLeft % 60]
-              .map(format)
-              .join(":");
-          }, 1000);
-        });
+    getAttemptData(attemptId) {
+      ExamService.getAttemptDetails(attemptId).then(({ data }) => {
+        data.exam.questions.forEach(
+          x =>
+            (x.userAnswers =
+              x.typeId == this.questionTypes.CHECKBOX ? [] : null)
+        );
+        this.attempt = data;
+        this.timerIntervalId = setInterval(() => {
+          this.attempt.timeLeft--;
+        }, 1000);
       });
     }
   },
-  created() {
-    this.getExamData();
-    this.questionTypes = { RADIO: 1, CHECKBOX: 2 };
-  },
   beforeDestroy() {
     clearInterval(this.timerIntervalId);
+  },
+  created() {
+    this.questionTypes = { RADIO: 1, CHECKBOX: 2 };
+    const attemptId = this.$route.params.id;
+    this.getAttemptData(attemptId);
+    // STVORI UNLOAD METODU OVDJE
   }
 };
 </script>

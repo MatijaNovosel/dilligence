@@ -15,4 +15,12 @@ export default async ({ Vue }) => {
   Vue.filter("timeStampFilter", val => {
     return (new Date(Date.parse(val))).toString().slice(4, 24);
   });
+  Vue.filter("countdownFilter", val => {
+    const format = x => `0${Math.floor(x)}`.slice(-2);
+    const hours = val / 3600;
+    const minutes = (val % 3600) / 60;
+    return [hours, minutes, val % 60]
+      .map(format)
+      .join(":");
+  });
 }

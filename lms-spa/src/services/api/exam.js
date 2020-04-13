@@ -1,10 +1,13 @@
 import axios from 'axios';
 
 export default {
-  async getExamDetails(id) {
-    return await axios.get('Exam/' + id);
-  },
   async getAttempts(userId) {
-    return await axios.get('Exam', { params: { userId } });
+    return await axios.get('Exam/' + userId);
+  },
+  async getAttemptDetails(id) {
+    return await axios.get('Exam/details/' + id);
+  },
+  async updateAttemptCommand(payload) {
+    return await axios.put('Exam/attempt', payload);
   }
 }

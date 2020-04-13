@@ -9,9 +9,9 @@ using tvz2api_cqrs.Models.DTO;
 
 namespace tvz2api_cqrs.Implementation.Queries
 {
-  public class ExamDetailsQuery : IQuery<ExamDetailsQueryModel>
+  public class ExamInProgressDetailsQuery : IQuery<ExamAttemptDetailsQueryModel>
   {
-    public ExamDetailsQuery(int id)
+    public ExamInProgressDetailsQuery(int id)
     {
       Id = id;
     }

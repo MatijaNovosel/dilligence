@@ -2,7 +2,7 @@
   <q-card flat bordered>
     <q-badge class="gore-desno">
       <q-icon size="xs" name="mdi-clock-fast" />
-      <span class="q-pl-xs">{{ timeLeft }}</span>
+      <span class="q-pl-xs">{{ examData.timeLeft | countdownFilter }}</span>
     </q-badge>
     <q-card-section class="q-py-sm">
       <div class="text-overline">{{ examData.exam.subject }}</div>
@@ -26,16 +26,6 @@
 export default {
   name: "ExamCard",
   props: ["examData"],
-  computed: {
-    timeLeft() {
-      const format = val => `0${Math.floor(val)}`.slice(-2);
-      const hours = this.examData.timeLeft / 3600;
-      const minutes = (this.examData.timeLeft % 3600) / 60;
-      return [hours, minutes, this.examData.timeLeft % 60]
-        .map(format)
-        .join(":");
-    }
-  },
   data() {
     return {};
   },

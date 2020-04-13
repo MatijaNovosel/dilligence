@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace tvz2api_cqrs.QueryModels
 {
-  public class ExamDetailsQueryModel
+  public class ExamAttemptDetailsQueryModel
   {
     public int Id { get; set; }
-    public string Naziv { get; set; }
-    public int? SubjectId { get; set; }
-    public List<QuestionDTO> Questions { get; set; }
+    public bool? Terminated { get; set; }
+    public int? TimeLeft { get; set; }
+    public ExamDetailsDTO Exam { get; set; }
   }
 
   public class ExamAttemptQueryModel
@@ -16,6 +16,6 @@ namespace tvz2api_cqrs.QueryModels
     public int Id { get; set; }
     public bool? Terminated { get; set; }
     public int? TimeLeft { get; set; }
-    public ExamDTO Exam{ get; set; }
+    public ExamDTO Exam { get; set; }
   }
 }
