@@ -48,4 +48,4 @@ VALUES
 INSERT INTO ExamAttempt
 	([Terminated], [Started], [StartedAt], [UserID], [ExamID])
 VALUES
-	(0, 1, CURRENT_TIMESTAMP, 1, 1);
+	(0, 0, NULL, 1, 1);

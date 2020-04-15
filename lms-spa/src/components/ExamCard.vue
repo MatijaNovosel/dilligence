@@ -16,7 +16,7 @@
         flat
         size="sm"
         class="bg-red-4 text-white"
-      >START</q-btn>
+      >{{ buttonText }}</q-btn>
       <q-space />
     </q-card-actions>
   </q-card>
@@ -31,10 +31,22 @@ export default {
   },
   computed: {
     timeLeft() {
-      if (this.examData != null)
+      if (this.examData != null) {
         return this.$options.filters.countdownFilter(
           this.examData.exam.timeNeeded
         );
+      }
+    },
+    buttonText() {
+      if (this.examData != null) {
+        if (this.examData.started && this.examData.terminated) {
+          return "VIEW";
+        } else if (this.examData.started && !this.examData.terminated) {
+          return "CONTINUE";
+        } else {
+          return "START";
+        }
+      }
     }
   },
   methods: {}

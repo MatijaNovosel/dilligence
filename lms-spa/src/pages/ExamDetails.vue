@@ -149,8 +149,9 @@ export default {
   computed: {
     ...mapGetters(["user"]),
     timeLeft() {
-      if (this.attempt != null)
+      if (this.attempt != null) {
         return this.$options.filters.countdownFilter(this.time);
+      }
     }
   },
   methods: {

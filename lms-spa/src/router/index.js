@@ -13,5 +13,11 @@ export default function ({ store }) {
     mode: process.env.VUE_ROUTER_MODE,
     base: process.env.VUE_ROUTER_BASE
   });
-  return Router
+
+  const originalPush = VueRouter.prototype.push;
+  VueRouter.prototype.push = function push(location) {
+    return originalPush.call(this, location).catch(err => err);
+  }
+
+  return Router;
 }
