@@ -8,12 +8,18 @@ using tvz2api_cqrs.Models.DTO;
 
 namespace tvz2api_cqrs.Implementation.Commands
 {
-  public class UpdateAttemptCommand : ICommand
+  public class ExamUpdateAttemptCommand : ICommand
   {
-    public UpdateAttemptCommand() { }
+    public ExamUpdateAttemptCommand() { }
     public int Id { get; set; }
     public bool Terminated { get; set; }
     public int TimeLeft { get; set; }
     public UpdateExamDetailsDTO Exam { get; set; }
+  }
+
+  public class ExamStartAttemptCommand : ICommand
+  {
+    public ExamStartAttemptCommand() { }
+    public int AttemptId { get; set; }
   }
 }

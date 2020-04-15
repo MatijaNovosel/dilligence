@@ -83,7 +83,6 @@
                   </div>
                   <div class="col-12 border-box q-mt-md">
                     <p class="q-pa-md" v-html="question.content"></p>
-                    <!-- <code-sheet :code="question.content" /> -->
                   </div>
                 </div>
               </q-card-section>
@@ -143,13 +142,17 @@ export default {
       resetAnswer: null,
       answeredQuestions: [],
       attempt: null,
-      timerIntervalId: null
+      timerIntervalId: null,
+      expired: false
     };
   },
   computed: {
     ...mapGetters(["user"]),
     timeLeft() {
       if (this.attempt != null) {
+        if (this.expired) {
+          return "EXPIRED";
+        }
         return this.$options.filters.countdownFilter(this.time);
       }
     }
@@ -240,7 +243,11 @@ export default {
         let secondBetweenTwoDate = Math.abs(
           (currentDate.getTime() - startDate.getTime()) / 1000
         );
+
         this.time = this.attempt.exam.timeNeeded - secondBetweenTwoDate;
+        if (this.time < 0) {
+          this.expired = true;
+        }
 
         this.timerIntervalId = setInterval(() => {
           this.time--;

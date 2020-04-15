@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-pa-md">
-    <div class="row full-width">
+    <div class="row full-width" v-if="checkPrivileges()">
       <div class="col-12">
         <span class="text-weight-light text-h5">Available subjects</span>
       </div>
@@ -149,15 +149,16 @@
 
 <script>
 import SubjectService from "../services/api/kolegij";
-import StudentService from "../services/api/student";
+import KorisnikService from "../services/api/korisnik";
 import SMJER from "../constants/smjer";
-import { mapGetters } from "vuex";
+import UserMixin from "../mixins/userMixin";
 
 export default {
   name: "Subjects",
+  mixins: [ UserMixin ],
   methods: {
     subscribe() {
-      StudentService.subscribe(
+      KorisnikService.subscribe(
         this.password,
         this.user.id,
         this.activeSubjectId
@@ -174,7 +175,7 @@ export default {
         });
     },
     unsubscribe(subjectId) {
-      StudentService.unsubscribe(this.user.id, subjectId).then(() => {
+      KorisnikService.unsubscribe(this.user.id, subjectId).then(() => {
         this.getData();
       });
     },
@@ -200,7 +201,7 @@ export default {
       )
         .then(({ data }) => {
           let subjects = data.results;
-          StudentService.getSubscriptions(this.user.id).then(({ data }) => {
+          KorisnikService.getSubscriptions(this.user.id).then(({ data }) => {
             let subscriptions = data;
             subjects.forEach(
               x => (x.subscribed = subscriptions.includes(x.id))
@@ -212,9 +213,6 @@ export default {
           this.loading = false;
         });
     }
-  },
-  computed: {
-    ...mapGetters(["user"])
   },
   created() {
     this.getData();

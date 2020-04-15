@@ -13,6 +13,7 @@ const Store = new Vuex.Store({
       name: null,
       surname: null,
       JMBAG: null,
+      privileges: null,
       settings: {
         darkMode: null
       }
@@ -29,6 +30,7 @@ const Store = new Vuex.Store({
         name: null,
         surname: null,
         JMBAG: null,
+        privileges: null,
         settings: {
           darkMode: null
         }

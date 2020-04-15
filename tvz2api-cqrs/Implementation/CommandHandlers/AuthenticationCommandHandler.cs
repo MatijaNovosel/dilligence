@@ -114,7 +114,14 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
       var settings = new KorisnikSettingsQueryModel() { DarkMode = user.UserSettings.FirstOrDefault().DarkMode };
 
-      return CommandResult<LoginUserDTO>.Success(new LoginUserDTO(tokenHandler.WriteToken(token), user.Username, user.Id, settings));
+      return CommandResult<LoginUserDTO>.Success(new LoginUserDTO()
+      {
+        Id = user.Id,
+        Username = user.Username,
+        Settings = settings,
+        Privileges = privileges.ToList(),
+        Token = tokenHandler.WriteToken(token)
+      });
     }
   }
 }

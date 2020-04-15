@@ -22,7 +22,8 @@ using tvz2api_cqrs.QueryModels;
 namespace tvz2api_cqrs.Implementation.CommandHandlers
 {
   public class ExamCommandHandler :
-    ICommandHandlerAsync<UpdateAttemptCommand>
+    ICommandHandlerAsync<ExamUpdateAttemptCommand>,
+    ICommandHandlerAsync<ExamStartAttemptCommand>
   {
     private readonly tvz2Context _context;
 
@@ -31,7 +32,17 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       _context = context;
     }
 
-    public async Task HandleAsync(UpdateAttemptCommand command)
+    public async Task HandleAsync(ExamStartAttemptCommand command)
+    {
+      var attempt = await _context.ExamAttempt.FirstOrDefaultAsync(x => x.Id == command.AttemptId);
+
+      attempt.Started = true;
+      attempt.StartedAt = DateTime.Now;
+
+      await _context.SaveChangesAsync();
+    }
+
+    public async Task HandleAsync(ExamUpdateAttemptCommand command)
     {
       var attempt = await _context.ExamAttempt.FirstOrDefaultAsync(x => x.Id == command.Id);
       attempt.Terminated = command.Terminated;

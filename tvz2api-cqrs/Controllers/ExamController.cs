@@ -48,7 +48,14 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPut("attempt")]
-    public async Task<IActionResult> Register(UpdateAttemptCommand command)
+    public async Task<IActionResult> Register(ExamUpdateAttemptCommand command)
+    {
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
+    }
+
+    [HttpPost("start")]
+    public async Task<IActionResult> StartAttempt(ExamStartAttemptCommand command)
     {
       await _commandBus.ExecuteAsync(command);
       return Ok();

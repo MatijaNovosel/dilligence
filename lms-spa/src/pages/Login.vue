@@ -98,10 +98,11 @@ export default {
               type: "positive",
               message: "Successfully logged in!"
             });
-            const [id, token, settings] = [
+            const [id, token, settings, privileges] = [
               data.payload.id,
               data.payload.token,
-              data.payload.settings
+              data.payload.settings,
+              data.payload.privileges
             ];
             StudentService.getStudent(id).then(({ data }) => {
               let user = {
@@ -110,7 +111,8 @@ export default {
                 surname: data.prezime,
                 jmbag: data.jmbag,
                 token,
-                settings
+                settings,
+                privileges
               };
               this.setUserData(user);
               this.$router.push("/");
@@ -147,6 +149,6 @@ export default {
 
 <style scoped lang="sass">
 .login-card
-	width: 25%;
-	background: none;
+  width: 25%;
+  background: none;
 </style>
