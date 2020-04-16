@@ -71,6 +71,14 @@ const routes = [
         meta: {
           requiresAuth: true
         }
+      },
+      {
+        path: 'exam-edit',
+        name: 'exam-edit',
+        component: () => import('pages/ExamEdit.vue'),
+        meta: {
+          requiresAuth: true
+        }
       }
     ]
   }

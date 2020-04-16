@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-pa-md">
-    <div class="row full-width" v-if="checkPrivileges()">
+    <div class="row full-width" v-if="checkPrivileges(Privileges.CanViewSubjects)">
       <div class="col-12">
         <span class="text-weight-light text-h5">Available subjects</span>
       </div>

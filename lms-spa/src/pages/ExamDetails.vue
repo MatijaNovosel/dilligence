@@ -119,7 +119,6 @@
 </template>
 
 <script>
-import CodeSheet from "../components/CodeSheet";
 import AnswerFooter from "../components/AnswerFooter/AnswerFooter";
 import ExamService from "../services/api/exam";
 import { mapGetters } from "vuex";
@@ -127,7 +126,6 @@ import { mapGetters } from "vuex";
 export default {
   name: "ExamDetails",
   components: {
-    CodeSheet,
     AnswerFooter
   },
   data() {
