@@ -9,24 +9,31 @@
                 <span class="text-weight-light text-h5">Exam info</span>
               </div>
               <div class="col-6 q-pr-sm">
-                <q-input outlined dense label="Exam name" />
+                <q-input v-model="exam.naziv" outlined dense label="Exam name" />
               </div>
               <div class="col-6">
-                <q-input outlined dense label="Time needed" />
+                <q-input
+                  outlined
+                  dense
+                  label="Time needed"
+                  v-model="exam.timeNeeded"
+                  mask="##:##"
+                  hint="Format must be 'hours:minutes'"
+                />
               </div>
               <div class="col-12 q-pt-sm">
-                <q-input dense outlined v-model="dueDate" label="Due date" readonly>
+                <q-input dense outlined v-model="exam.dueDate" label="Due date" readonly>
                   <template v-slot:prepend>
                     <q-icon name="mdi-calendar-month" class="cursor-pointer">
                       <q-popup-proxy transition-show="scale" transition-hide="scale">
-                        <q-date v-model="dueDate" mask="YYYY-MM-DD HH:mm" />
+                        <q-date v-model="exam.dueDate" mask="YYYY-MM-DD HH:mm" />
                       </q-popup-proxy>
                     </q-icon>
                   </template>
                   <template v-slot:append>
                     <q-icon name="mdi-alarm" class="cursor-pointer">
                       <q-popup-proxy transition-show="scale" transition-hide="scale">
-                        <q-time v-model="dueDate" mask="YYYY-MM-DD HH:mm" format24h />
+                        <q-time v-model="exam.dueDate" mask="YYYY-MM-DD HH:mm" format24h />
                       </q-popup-proxy>
                     </q-icon>
                   </template>
@@ -46,34 +53,46 @@
                   class="bg-green-6 text-white"
                   square
                   style="cursor: pointer; user-select: none;"
+                  @click="addNewQuestion"
                 >
                   <q-icon name="mdi-plus" />
                 </q-chip>
-                <template v-for="n in 10">
+                <template v-for="n in exam.questions.length">
                   <q-chip
                     clickable
                     square
                     :key="n"
                     style="cursor: pointer; user-select: none;"
+                    @click="selectedQuestion = n - 1"
                   >{{ n }}</q-chip>
                 </template>
               </div>
             </div>
           </q-card-actions>
           <q-separator />
-          <template v-for="n in 10">
-            <div :key="n" v-if="selectedQuestion === n">
+          <template v-for="(question, i) in exam.questions">
+            <div :key="i" v-if="selectedQuestion === i">
               <q-card-section>
                 <div class="row items-center text-center">
-                  <div class="col-11 text-center q-pr-sm">
-                    <q-input outlined dense label="Question name"></q-input>
+                  <div class="col-6 text-center q-pr-sm">
+                    <q-input v-model="question.title" outlined dense label="Question name"></q-input>
+                  </div>
+                  <div class="col-5 text-center q-pr-sm">
+                    <q-select
+                      dense
+                      outlined
+                      v-model="question.typeId"
+                      label="Answer type"
+                      :options="questionTypeOptions"
+                      behavior="menu"
+                    />
                   </div>
                   <div class="col-1">
-                    <q-btn size="sm" class="bg-red-5 text-white">Remove question</q-btn>
+                    <q-btn size="sm" class="bg-red-5 text-white" @click="removeQuestion(i)">Remove</q-btn>
                   </div>
                   <div class="col-12 q-my-md">
                     <q-editor
-                      v-model="editorContent"
+                      v-model="question.content"
                       min-height="5rem"
                       :toolbar="toolbarOptions"
                       :fonts="fonts"
@@ -83,7 +102,7 @@
                     <div class="text-h6 gore-desno">
                       <q-badge color="primary">Preview</q-badge>
                     </div>
-                    <p class="q-pa-md" v-html="editorContent"></p>
+                    <p class="q-pa-md" v-html="question.content"></p>
                   </div>
                 </div>
               </q-card-section>
@@ -110,10 +129,9 @@ export default {
   name: "ExamDetails",
   data() {
     return {
-      dueDate: "2019-02-01 12:44",
       editorContent: "",
-      selectedQuestion: 1,
-      examData: null,
+      selectedQuestion: 0,
+      exam: null,
       toolbarOptions: [
         [
           {
@@ -184,9 +202,45 @@ export default {
       }
     };
   },
-  methods: {},
+  methods: {
+    removeQuestion(i) {
+      this.exam.questions.splice(i, 1);
+    },
+    addNewQuestion() {
+      this.exam.questions.push({
+        id: null,
+        title: null,
+        content: "",
+        typeId: this.questionTypeOptions[0],
+        answers: []
+      });
+    }
+  },
   created() {
+    this.exam = {
+      naziv: "Programming exam",
+      timeNeeded: "01:00",
+      dueDate: "2019-02-01 12:44",
+      questions: [
+        {
+          id: 1,
+          title: "Question 1",
+          content: "<b> he hee </b>",
+          typeId: { label: "Radio", value: 1 },
+          answers: [
+            {
+              value: 1,
+              label: "<b> He HEE </b>"
+            }
+          ]
+        }
+      ]
+    };
     this.questionTypes = { RADIO: 1, CHECKBOX: 2 };
+    this.questionTypeOptions = [
+      { label: "Radio", value: 1 },
+      { label: "Checkbox", value: 2 }
+    ];
   }
 };
 </script>
