@@ -42,10 +42,10 @@
             </div>
           </q-card-section>
           <q-separator />
-          <q-card-actions class="q-px-md">
+          <q-card-section class="q-px-md">
             <div class="row">
-              <div class="col-12 q-pb-md">
-                <span class="text-weight-light text-h5">Exam contents</span>
+              <div class="col-12 q-pb-sm">
+                <span class="text-weight-light text-h5">Questions</span>
               </div>
               <div class="col-12">
                 <q-chip
@@ -68,7 +68,7 @@
                 </template>
               </div>
             </div>
-          </q-card-actions>
+          </q-card-section>
           <q-separator />
           <template v-for="(question, i) in exam.questions">
             <div :key="i" v-if="selectedQuestion === i">
@@ -88,7 +88,11 @@
                     />
                   </div>
                   <div class="col-1">
-                    <q-btn size="sm" class="bg-red-5 text-white" @click="removeQuestion(i)">Remove</q-btn>
+                    <q-btn
+                      size="sm"
+                      class="bg-red-5 text-white"
+                      @click="exam.questions.splice(i, 1)"
+                    >Remove</q-btn>
                   </div>
                   <div class="col-12 q-my-md">
                     <q-editor
@@ -107,9 +111,44 @@
                 </div>
               </q-card-section>
               <q-separator />
-              <q-card-actions class="q-px-md">
-                <!-- Ubaci sucelje za odgovore ovdje -->
-              </q-card-actions>
+              <q-card-section>
+                <div class="row">
+                  <div class="col-12 q-pb-sm">
+                    <span class="text-weight-light text-h5">Answers</span>
+                    <q-btn
+                      dense
+                      size="sm"
+                      class="bg-green-6 text-white q-ml-md q-mb-xs"
+                      @click="addNewAnswer(question)"
+                    >
+                      <q-icon name="mdi-plus" />
+                    </q-btn>
+                  </div>
+                  <div class="col-12">
+                    <template v-for="(answer, i) in question.answers">
+                      <q-input v-model="answer.content" outlined dense :key="i" class="q-py-xs">
+                        <template v-slot:append>
+                          <q-btn
+                            @click="question.answers.splice(i, 1)"
+                            dense
+                            size="sm"
+                            class="bg-red-6 text-white"
+                          >Remove</q-btn>
+                          <q-checkbox
+                            :disable="!answer.correct && question.typeId.value == 1 && question.answers.reduce((sum, x) => sum += x.correct ? 1 : 0, 0) >= 1"
+                            size="xs"
+                            color="green-5"
+                            v-model="answer.correct"
+                          />
+                        </template>
+                      </q-input>
+                    </template>
+                  </div>
+                  <div class="col-12 q-pl-sm">
+                    <span class="hint-text">* Tick the checkbox next to the answer if it is correct!</span>
+                  </div>
+                </div>
+              </q-card-section>
             </div>
           </template>
         </q-card>
@@ -127,9 +166,9 @@ import UserMixin from "../mixins/userMixin";
 
 export default {
   name: "ExamDetails",
+  mixins: [UserMixin],
   data() {
     return {
-      editorContent: "",
       selectedQuestion: 0,
       exam: null,
       toolbarOptions: [
@@ -203,8 +242,12 @@ export default {
     };
   },
   methods: {
-    removeQuestion(i) {
-      this.exam.questions.splice(i, 1);
+    addNewAnswer(question) {
+      question.answers.push({
+        id: 1,
+        content: "New answer",
+        correct: false
+      });
     },
     addNewQuestion() {
       this.exam.questions.push({
@@ -212,7 +255,12 @@ export default {
         title: null,
         content: "",
         typeId: this.questionTypeOptions[0],
-        answers: []
+        answers: [
+          {
+            value: 1,
+            label: "I don't know"
+          }
+        ]
       });
     }
   },
@@ -229,8 +277,19 @@ export default {
           typeId: { label: "Radio", value: 1 },
           answers: [
             {
-              value: 1,
-              label: "<b> He HEE </b>"
+              id: 1,
+              content: "Answer 1",
+              correct: true
+            },
+            {
+              id: 2,
+              content: "Answer 2",
+              correct: false
+            },
+            {
+              id: 3,
+              content: "Answer 3",
+              correct: false
             }
           ]
         }
@@ -254,4 +313,7 @@ export default {
   position: absolute
   top: 5px
   right: 10px
+.hint-text
+  font-size: 11px
+  color: rgb(141, 141, 141)
 </style>
