@@ -113,6 +113,7 @@ export default {
       dueDate: "2019-02-01 12:44",
       editorContent: "",
       selectedQuestion: 1,
+      examData: null,
       toolbarOptions: [
         [
           {

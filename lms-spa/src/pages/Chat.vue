@@ -5,24 +5,34 @@
         <q-expansion-item v-model="open" label="Recent chats" class="chat-tab">
           <q-card>
             <q-separator />
-            <q-card-section class="q-pb-sm q-pt-none">
-              <q-input dense label="Search users..."></q-input>
-            </q-card-section>
-            <q-separator />
-            <q-card-section class="q-py-xs q-px-none">
-              <q-list separator dense>
-                <q-item clickable v-for="(chat, i) in chats" :key="i" @click="getChatDetails(chat)">
-                  <q-item-section avatar class="q-pl-md">
-                    <q-avatar size="30px">
-                      <img src="../assets/default-user.jpg" />
-                    </q-avatar>
-                  </q-item-section>
-                  <q-item-section
-                    class="ellipsis"
-                  >{{ chat.firstParticipant.id == user.id ? chat.secondParticipant.username : chat.firstParticipant.username }}</q-item-section>
-                </q-item>
-              </q-list>
-            </q-card-section>
+            <div v-if="chats && chats.length != 0">
+              <q-card-section class="q-pb-sm q-pt-none">
+                <q-input dense label="Search users..."></q-input>
+              </q-card-section>
+              <q-separator />
+              <q-card-section class="q-py-xs q-px-none">
+                <q-list separator dense>
+                  <q-item
+                    clickable
+                    v-for="(chat, i) in chats"
+                    :key="i"
+                    @click="getChatDetails(chat)"
+                  >
+                    <q-item-section avatar class="q-pl-md">
+                      <q-avatar size="30px">
+                        <img src="../assets/default-user.jpg" />
+                      </q-avatar>
+                    </q-item-section>
+                    <q-item-section
+                      class="ellipsis"
+                    >{{ chat.firstParticipant.id == user.id ? chat.secondParticipant.username : chat.firstParticipant.username }}</q-item-section>
+                  </q-item>
+                </q-list>
+              </q-card-section>
+            </div>
+            <div v-else>
+              <q-card-section class="text-center">No recent chats found!</q-card-section>
+            </div>
           </q-card>
         </q-expansion-item>
       </div>
@@ -36,15 +46,28 @@
             />
           </div>
           <div class="col-12 q-py-md">
-            <div class="row">
+            <div class="row items-center">
               <div class="col-11">
-                <q-input label="Enter a message..." dense v-model="message" outlined>
+                <q-input
+                  :readonly="!activeChat"
+                  label="Enter a message..."
+                  dense
+                  v-model="message"
+                  outlined
+                >
                   <template v-slot:append>
-                    <q-btn :ripple="false" dense size="sm" color="primary" @click="sendMessage">Send</q-btn>
+                    <q-btn
+                      :disabled="!activeChat"
+                      :ripple="false"
+                      dense
+                      size="sm"
+                      color="primary"
+                      @click="sendMessage"
+                    >Send</q-btn>
                   </template>
                 </q-input>
               </div>
-              <div class="col-1 text-center q-mt-xs">
+              <div class="col-1 text-center">
                 <q-btn
                   class="q-pa-xs"
                   size="sm"
@@ -142,7 +165,6 @@ export default {
       .withUrl("http://localhost:5000/chat-hub")
       .configureLogging(LogLevel.Information)
       .build();
-    this.connection.start();
     this.connection.on("messageSent", message => {
       this.activeChatMessages = [...this.activeChatMessages, message];
       this.scrollTrigger = !this.scrollTrigger;
@@ -150,6 +172,7 @@ export default {
     this.connection.on("messageDeleted", id => {
       this.activeChatMessages = this.activeChatMessages.filter(x => x.id != id);
     });
+    this.connection.start();
   },
   computed: {
     ...mapGetters(["user"])
