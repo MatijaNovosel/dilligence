@@ -112,7 +112,12 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       var tokenHandler = new JwtSecurityTokenHandler();
       var token = tokenHandler.CreateToken(tokenDescriptor);
 
-      var settings = new KorisnikSettingsQueryModel() { DarkMode = user.UserSettings.FirstOrDefault().DarkMode };
+      var userSettings = user.UserSettings.FirstOrDefault();
+      var settings = new KorisnikSettingsQueryModel() 
+      { 
+        DarkMode = userSettings.DarkMode,
+        Locale = userSettings.Locale,
+      };
 
       return CommandResult<LoginUserDTO>.Success(new LoginUserDTO()
       {

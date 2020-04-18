@@ -14,6 +14,7 @@ export default {
   },
   updated() {
     this.$q.dark.set(this.user.settings.darkMode);
+    this.$i18n.locale = this.user.settings.locale;
   },
   watch: {
     user: {

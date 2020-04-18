@@ -15,7 +15,8 @@ const Store = new Vuex.Store({
       JMBAG: null,
       privileges: null,
       settings: {
-        darkMode: null
+        darkMode: null,
+        locale: null
       }
     }
   },
@@ -32,7 +33,8 @@ const Store = new Vuex.Store({
         JMBAG: null,
         privileges: null,
         settings: {
-          darkMode: null
+          darkMode: null,
+          locale: null
         }
       };
     }

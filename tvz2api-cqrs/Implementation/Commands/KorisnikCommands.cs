@@ -37,5 +37,6 @@ namespace tvz2api_cqrs.Implementation.Commands
     public KorisnikUpdateSettingsCommand() { }
     public int UserId { get; set; }
     public bool DarkMode { get; set; }
+    public string Locale { get; set; }
   }
 }

@@ -30,7 +30,8 @@ export default {
   async updateSettings(userId, settings) {
     return await axios.put('Korisnik/settings', {
       userId,
-      darkMode: settings.darkMode
+      darkMode: settings.darkMode,
+      locale: settings.locale
     });
   }
 };

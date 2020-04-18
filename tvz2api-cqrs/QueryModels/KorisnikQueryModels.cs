@@ -19,5 +19,6 @@ namespace tvz2api_cqrs.QueryModels
   public class KorisnikSettingsQueryModel
   {
     public bool DarkMode { get; set; }
+    public string Locale { get; set; }
   }
 }
