@@ -14,7 +14,7 @@ namespace tvz2api_cqrs.Implementation.Commands
     public int Id { get; set; }
     public bool Terminated { get; set; }
     public int TimeLeft { get; set; }
-    public UpdateExamDetailsDTO Exam { get; set; }
+    public UpdateAttemptDTO Exam { get; set; }
   }
 
   public class ExamStartAttemptCommand : ICommand
@@ -29,6 +29,8 @@ namespace tvz2api_cqrs.Implementation.Commands
     public string Naziv { get; set; }
     public int TimeNeeded { get; set; }
     public DateTime DueDate { get; set; }
+    public int CreatedById { get; set; }
+    public int SubjectId { get; set; }
     public List<CreateQuestionDTO> Questions { get; set; }
   }
 }

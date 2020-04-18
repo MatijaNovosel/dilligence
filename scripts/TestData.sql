@@ -1,7 +1,7 @@
 INSERT INTO Exam
-	(Naziv, SubjectID, TimeNeeded)
+	(Naziv, SubjectID, TimeNeeded, DueDate)
 VALUES
-	('General programming exam', 147, 3600);
+	('General programming exam', 147, 3600, CURRENT_TIMESTAMP);
 
 INSERT INTO Question
 	(Title, Content, ExamID, TypeID)

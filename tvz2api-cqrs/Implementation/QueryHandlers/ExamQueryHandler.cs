@@ -34,6 +34,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           {
             Id = t.Exam.Id,
             Naziv = t.Exam.Naziv,
+            CreatedBy = t.Exam.CreatedBy.Username,
+            DueDate = t.Exam.DueDate,
             TimeNeeded = t.Exam.TimeNeeded,
             Questions = t.Exam.Question
             .Select(x => new QuestionDTO

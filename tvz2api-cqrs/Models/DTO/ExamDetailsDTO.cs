@@ -8,10 +8,12 @@ namespace tvz2api_cqrs.Models.DTO
     public int Id { get; set; }
     public string Naziv { get; set; }
     public int TimeNeeded { get; set; }
+    public string CreatedBy { get; set; }
+    public DateTime? DueDate { get; set; }
     public List<QuestionDTO> Questions { get; set; }
   }
 
-  public class UpdateExamDetailsDTO
+  public class UpdateAttemptDTO
   {
     public int Id { get; set; }
     public List<QuestionDTO> Questions { get; set; }

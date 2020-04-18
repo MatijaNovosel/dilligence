@@ -246,7 +246,17 @@ export default {
     questionTypeChanged(question) {
       question.answers.forEach(x => (x.correct = false));
     },
-    createExam() {},
+    createExam() {
+      let newExam = JSON.parse(JSON.stringify(this.exam));
+      newExam.questions.forEach(x => (x.typeId = x.typeId.value));
+      newExam.timeNeeded = this.$options.filters.hoursMinutesToSecondsFilter(
+        newExam.timeNeeded
+      );
+      newExam.dueDate = new Date(newExam.dueDate);
+      newExam.createdById = this.user.id;
+      newExam.subjectId = 147;
+      ExamService.createExam(newExam);
+    },
     addNewAnswer(question) {
       question.answers.push({
         id: 1,
@@ -256,45 +266,28 @@ export default {
     },
     addNewQuestion() {
       this.exam.questions.push({
-        id: null,
         title: null,
         content: "",
         typeId: this.questionTypeOptions[0],
-        answers: [
-          {
-            value: 1,
-            label: "I don't know"
-          }
-        ]
+        answers: []
       });
     }
   },
   created() {
     this.exam = {
-      naziv: "Programming exam",
+      naziv: "Exam name",
       timeNeeded: "01:00",
       dueDate: "2019-02-01 12:44",
       questions: [
         {
           id: 1,
           title: "Question 1",
-          content: "<b> he hee </b>",
+          content: "<b> Question contents </b>",
           typeId: { label: "Radio", value: 1 },
           answers: [
             {
-              id: 1,
               content: "Answer 1",
               correct: true
-            },
-            {
-              id: 2,
-              content: "Answer 2",
-              correct: false
-            },
-            {
-              id: 3,
-              content: "Answer 3",
-              correct: false
             }
           ]
         }
@@ -302,8 +295,8 @@ export default {
     };
     this.questionTypes = { RADIO: 1, CHECKBOX: 2 };
     this.questionTypeOptions = [
-      { label: "Radio", value: 1 },
-      { label: "Checkbox", value: 2 }
+      { label: "Radio", value: this.questionTypes.RADIO },
+      { label: "Checkbox", value: this.questionTypes.CHECKBOX }
     ];
   }
 };

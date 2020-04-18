@@ -9,6 +9,7 @@ namespace tvz2api_cqrs.Models
         {
             ChatFirstParticipant = new HashSet<Chat>();
             ChatSecondParticipant = new HashSet<Chat>();
+            Exam = new HashSet<Exam>();
             ExamAttempt = new HashSet<ExamAttempt>();
             Message = new HashSet<Message>();
             UserPrivileges = new HashSet<UserPrivileges>();
@@ -23,6 +24,7 @@ namespace tvz2api_cqrs.Models
 
         public virtual ICollection<Chat> ChatFirstParticipant { get; set; }
         public virtual ICollection<Chat> ChatSecondParticipant { get; set; }
+        public virtual ICollection<Exam> Exam { get; set; }
         public virtual ICollection<ExamAttempt> ExamAttempt { get; set; }
         public virtual ICollection<Message> Message { get; set; }
         public virtual ICollection<UserPrivileges> UserPrivileges { get; set; }

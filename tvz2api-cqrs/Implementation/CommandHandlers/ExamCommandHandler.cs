@@ -23,7 +23,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 {
   public class ExamCommandHandler :
     ICommandHandlerAsync<ExamUpdateAttemptCommand>,
-    ICommandHandlerAsync<ExamStartAttemptCommand>
+    ICommandHandlerAsync<ExamStartAttemptCommand>,
+    ICommandHandlerAsync<ExamCreateCommand>
   {
     private readonly tvz2Context _context;
 
@@ -48,8 +49,9 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       {
         Naziv = command.Naziv,
         TimeNeeded = command.TimeNeeded,
-        // Fix this later!!
-        SubjectId = 147
+        SubjectId = command.SubjectId,
+        CreatedById = command.CreatedById,
+        DueDate = command.DueDate
       };
       await _context.Exam.AddAsync(exam);
       await _context.SaveChangesAsync();
@@ -69,7 +71,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         {
           _context.Answer.Add(new Answer()
           {
-            Content = y.Label,
+            Content = y.Content,
             Correct = y.Correct,
             QuestionId = question.Id
           });

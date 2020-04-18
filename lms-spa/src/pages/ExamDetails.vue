@@ -121,10 +121,11 @@
 <script>
 import AnswerFooter from "../components/AnswerFooter/AnswerFooter";
 import ExamService from "../services/api/exam";
-import { mapGetters } from "vuex";
+import UserMixin from "../mixins/userMixin";
 
 export default {
   name: "ExamDetails",
+  mixins: [UserMixin],
   components: {
     AnswerFooter
   },
@@ -145,7 +146,6 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["user"]),
     timeLeft() {
       if (this.attempt != null) {
         if (this.expired) {

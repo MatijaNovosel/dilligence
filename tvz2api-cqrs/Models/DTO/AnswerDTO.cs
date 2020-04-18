@@ -11,8 +11,7 @@ namespace tvz2api_cqrs.Models.DTO
 
   public class CreateAnswerDTO
   {
-    public int Value { get; set; }
-    public string Label { get; set; }
+    public string Content { get; set; }
     public bool Correct { get; set; } 
   }
 }

@@ -13,9 +13,12 @@ namespace tvz2api_cqrs.Models
 
         public int Id { get; set; }
         public string Naziv { get; set; }
+        public DateTime? DueDate { get; set; }
         public int TimeNeeded { get; set; }
         public int? SubjectId { get; set; }
+        public int? CreatedById { get; set; }
 
+        public virtual Korisnik CreatedBy { get; set; }
         public virtual Kolegij Subject { get; set; }
         public virtual ICollection<ExamAttempt> ExamAttempt { get; set; }
         public virtual ICollection<Question> Question { get; set; }
