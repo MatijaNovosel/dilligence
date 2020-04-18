@@ -10,6 +10,7 @@ namespace tvz2api_cqrs.Models.DTO
     public int TimeNeeded { get; set; }
     public List<QuestionDTO> Questions { get; set; }
   }
+
   public class UpdateExamDetailsDTO
   {
     public int Id { get; set; }

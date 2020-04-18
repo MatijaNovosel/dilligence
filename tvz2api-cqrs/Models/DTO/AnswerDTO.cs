@@ -8,4 +8,11 @@ namespace tvz2api_cqrs.Models.DTO
     public int Value { get; set; }
     public string Label { get; set; }
   }
+
+  public class CreateAnswerDTO
+  {
+    public int Value { get; set; }
+    public string Label { get; set; }
+    public bool Correct { get; set; } 
+  }
 }

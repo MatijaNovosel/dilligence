@@ -42,6 +42,42 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       await _context.SaveChangesAsync();
     }
 
+    public async Task HandleAsync(ExamCreateCommand command)
+    {
+      var exam = new Exam()
+      {
+        Naziv = command.Naziv,
+        TimeNeeded = command.TimeNeeded,
+        // Fix this later!!
+        SubjectId = 147
+      };
+      await _context.Exam.AddAsync(exam);
+      await _context.SaveChangesAsync();
+
+      command.Questions.ForEach(x =>
+      {
+        var question = new Question()
+        {
+          Content = x.Content,
+          Title = x.Title,
+          TypeId = x.TypeId,
+          ExamId = exam.Id
+        };
+        _context.Question.Add(question);
+        _context.SaveChanges();
+        x.Answers.ForEach(y =>
+        {
+          _context.Answer.Add(new Answer()
+          {
+            Content = y.Label,
+            Correct = y.Correct,
+            QuestionId = question.Id
+          });
+        });
+        _context.SaveChanges();
+      });
+    }
+
     public async Task HandleAsync(ExamUpdateAttemptCommand command)
     {
       var attempt = await _context.ExamAttempt.FirstOrDefaultAsync(x => x.Id == command.Id);

@@ -3,7 +3,7 @@
     <div class="row justify-center">
       <div class="col-12 q-pa-md">
         <q-card>
-          <q-card-section>
+          <q-card-section class="bg-grey-1">
             <div class="row">
               <div class="col-12 q-pb-md">
                 <span class="text-weight-light text-h5">Exam info</span>
@@ -72,13 +72,14 @@
           <q-separator />
           <template v-for="(question, i) in exam.questions">
             <div :key="i" v-if="selectedQuestion === i">
-              <q-card-section>
+              <q-card-section class="bg-grey-1">
                 <div class="row items-center text-center">
                   <div class="col-6 text-center q-pr-sm">
                     <q-input v-model="question.title" outlined dense label="Question name"></q-input>
                   </div>
                   <div class="col-5 text-center q-pr-sm">
                     <q-select
+                      @input="questionTypeChanged(question)"
                       dense
                       outlined
                       v-model="question.typeId"
@@ -154,7 +155,7 @@
         </q-card>
       </div>
       <div class="col-12 text-right q-pr-md">
-        <q-btn size="sm" class="bg-green-5 text-white">Save changes</q-btn>
+        <q-btn @click="createExam" size="sm" class="bg-green-5 text-white">Save</q-btn>
       </div>
     </div>
   </div>
@@ -242,6 +243,10 @@ export default {
     };
   },
   methods: {
+    questionTypeChanged(question) {
+      question.answers.forEach(x => (x.correct = false));
+    },
+    createExam() {},
     addNewAnswer(question) {
       question.answers.push({
         id: 1,

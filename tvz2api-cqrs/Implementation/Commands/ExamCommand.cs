@@ -22,4 +22,13 @@ namespace tvz2api_cqrs.Implementation.Commands
     public ExamStartAttemptCommand() { }
     public int AttemptId { get; set; }
   }
+
+  public class ExamCreateCommand : ICommand
+  {
+    public ExamCreateCommand() { }
+    public string Naziv { get; set; }
+    public int TimeNeeded { get; set; }
+    public DateTime DueDate { get; set; }
+    public List<CreateQuestionDTO> Questions { get; set; }
+  }
 }
