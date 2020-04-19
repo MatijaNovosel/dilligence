@@ -4,7 +4,7 @@
       :width="250"
       v-model="drawerOpen"
       show-if-above
-      :content-class="$q.dark.isActive ? 'drawer-bg-dark' : 'drawer-bg'"
+      :content-class="($q.dark.isActive ? 'drawer-bg-dark' : 'drawer-bg') + ' drawer-base'"
     >
       <q-list dense>
         <q-item class="q-my-md">
@@ -33,7 +33,7 @@
         >
           <q-list :key="i" dense v-for="(sublink, i) in link.sublinks">
             <q-item @click="redirect(sublink.route)" class="text-body2" clickable v-ripple>
-              <span class="q-pl-md">{{ sublink.text }}</span>
+              <span class="q-pl-md">{{ $t('drawerLinks.' + sublink.text) }}</span>
             </q-item>
           </q-list>
         </q-expansion-item>
@@ -95,41 +95,41 @@ export default {
       links: [
         {
           icon: "mdi-bullhorn",
-          text: "General",
+          text: "general",
           route: { name: "/" },
           sublinks: [
             {
-              text: "Home",
+              text: "home",
               route: { name: "home" }
             },
             {
-              text: "Employees",
+              text: "employees",
               route: { name: "employees" }
             },
             {
-              text: "Chats",
+              text: "chats",
               route: { name: "chat" }
             }
           ]
         },
         {
           icon: "mdi-file-document",
-          text: "Subjects",
+          text: "subjects",
           route: { name: "subjects" },
           sublinks: [
             {
-              text: "Available subjects",
+              text: "availableSubjects",
               route: { name: "subjects" }
             }
           ]
         },
         {
           icon: "mdi-test-tube",
-          text: "Exams",
+          text: "exams",
           route: { name: "exams" },
           sublinks: [
             {
-              text: "Available exams",
+              text: "availableExams",
               route: { name: "exams" }
             }
           ]
@@ -163,14 +163,12 @@ export default {
 <style lang="sass">
 .q-list--dense > .q-item, .q-item--dense
   min-height: 19px
+.drawer-base
+  background-position: center center
+  background-size: cover
+  overflow: hidden
 .drawer-bg
   background-image: url("../assets/nav-bg.svg")
-  background-position: center center
-  background-size: cover
-  overflow: hidden
 .drawer-bg-dark
   background-image: url("../assets/nav-bg-dark.png")
-  background-position: center center
-  background-size: cover
-  overflow: hidden
 </style>

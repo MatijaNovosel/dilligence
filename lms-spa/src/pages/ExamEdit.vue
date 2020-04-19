@@ -6,23 +6,23 @@
           <q-card-section class="bg-grey-1">
             <div class="row">
               <div class="col-12 q-pb-md">
-                <span class="text-weight-light text-h5">Exam info</span>
+                <span class="text-weight-light text-h5">{{ $t("exam.info") }}</span>
               </div>
               <div class="col-6 q-pr-sm">
-                <q-input v-model="exam.naziv" outlined dense label="Exam name" />
+                <q-input v-model="exam.naziv" outlined dense :label="$t('exam.name')" />
               </div>
               <div class="col-6">
                 <q-input
                   outlined
                   dense
-                  label="Time needed"
+                  :label="$t('timeNeeded')"
                   v-model="exam.timeNeeded"
                   mask="##:##"
-                  hint="Format must be 'hours:minutes'"
+                  :hint="$t('error.timeNeededFormat')"
                 />
               </div>
               <div class="col-12 q-pt-sm">
-                <q-input dense outlined v-model="exam.dueDate" label="Due date" readonly>
+                <q-input dense outlined v-model="exam.dueDate" :label="$('dueDate')" readonly>
                   <template v-slot:prepend>
                     <q-icon name="mdi-calendar-month" class="cursor-pointer">
                       <q-popup-proxy transition-show="scale" transition-hide="scale">
@@ -45,7 +45,7 @@
           <q-card-section class="q-px-md">
             <div class="row">
               <div class="col-12 q-pb-sm">
-                <span class="text-weight-light text-h5">Questions</span>
+                <span class="text-weight-light text-h5">{{ $t('questions') }}</span>
               </div>
               <div class="col-12">
                 <q-chip
@@ -75,7 +75,7 @@
               <q-card-section class="bg-grey-1">
                 <div class="row items-center text-center">
                   <div class="col-6 text-center q-pr-sm">
-                    <q-input v-model="question.title" outlined dense label="Question name"></q-input>
+                    <q-input v-model="question.title" outlined dense :label="$t('questionName')" />
                   </div>
                   <div class="col-5 text-center q-pr-sm">
                     <q-select
@@ -83,7 +83,7 @@
                       dense
                       outlined
                       v-model="question.typeId"
-                      label="Answer type"
+                      :label="$t('questionType')"
                       :options="questionTypeOptions"
                       behavior="menu"
                     />
@@ -93,7 +93,7 @@
                       size="sm"
                       class="bg-red-5 text-white"
                       @click="exam.questions.splice(i, 1)"
-                    >Remove</q-btn>
+                    >{{ $t('remove') }}</q-btn>
                   </div>
                   <div class="col-12 q-my-md">
                     <q-editor
@@ -105,7 +105,7 @@
                   </div>
                   <div class="col-12 border-box">
                     <div class="text-h6 gore-desno">
-                      <q-badge color="primary">Preview</q-badge>
+                      <q-badge color="primary">{{ $t('preview') }}</q-badge>
                     </div>
                     <p class="q-pa-md" v-html="question.content"></p>
                   </div>
@@ -115,7 +115,7 @@
               <q-card-section>
                 <div class="row">
                   <div class="col-12 q-pb-sm">
-                    <span class="text-weight-light text-h5">Answers</span>
+                    <span class="text-weight-light text-h5">{{ $t('answers') }}</span>
                     <q-btn
                       dense
                       size="sm"
@@ -134,7 +134,7 @@
                             dense
                             size="sm"
                             class="bg-red-6 text-white"
-                          >Remove</q-btn>
+                          >{{ $t('remove') }}</q-btn>
                           <q-checkbox
                             :disable="!answer.correct && question.typeId.value == 1 && question.answers.reduce((sum, x) => sum += x.correct ? 1 : 0, 0) >= 1"
                             size="xs"
@@ -146,7 +146,7 @@
                     </template>
                   </div>
                   <div class="col-12 q-pl-sm">
-                    <span class="hint-text">* Tick the checkbox next to the answer if it is correct!</span>
+                    <span class="hint-text">* {{ $t('tickIfCorrect') }}</span>
                   </div>
                 </div>
               </q-card-section>
@@ -155,7 +155,7 @@
         </q-card>
       </div>
       <div class="col-12 text-right q-pr-md">
-        <q-btn @click="createExam" size="sm" class="bg-green-5 text-white">Save</q-btn>
+        <q-btn @click="createExam" size="sm" class="bg-green-5 text-white">{{ $t('save') }}</q-btn>
       </div>
     </div>
   </div>
@@ -260,7 +260,7 @@ export default {
     addNewAnswer(question) {
       question.answers.push({
         id: 1,
-        content: "New answer",
+        content: this.$t("newAnswer"),
         correct: false
       });
     },
@@ -274,6 +274,17 @@ export default {
     }
   },
   created() {
+    this.questionTypes = { RADIO: 1, CHECKBOX: 2 };
+    this.questionTypeOptions = [
+      {
+        label: this.$t("questionTypes.radio"),
+        value: this.questionTypes.RADIO
+      },
+      {
+        label: this.$t("questionTypes.checkbox"),
+        value: this.questionTypes.CHECKBOX
+      }
+    ];
     this.exam = {
       naziv: "Exam name",
       timeNeeded: "01:00",
@@ -283,7 +294,7 @@ export default {
           id: 1,
           title: "Question 1",
           content: "<b> Question contents </b>",
-          typeId: { label: "Radio", value: 1 },
+          typeId: questionTypeOptions[0],
           answers: [
             {
               content: "Answer 1",
@@ -293,11 +304,6 @@ export default {
         }
       ]
     };
-    this.questionTypes = { RADIO: 1, CHECKBOX: 2 };
-    this.questionTypeOptions = [
-      { label: "Radio", value: this.questionTypes.RADIO },
-      { label: "Checkbox", value: this.questionTypes.CHECKBOX }
-    ];
   }
 };
 </script>
