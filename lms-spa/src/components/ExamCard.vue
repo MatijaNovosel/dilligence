@@ -40,11 +40,11 @@ export default {
     buttonText() {
       if (this.examData != null) {
         if (this.examData.started && this.examData.terminated) {
-          return "VIEW";
+          return this.$t("view");
         } else if (this.examData.started && !this.examData.terminated) {
-          return "CONTINUE";
+          return this.$t("continue");
         } else {
-          return "START";
+          return this.$t("start");
         }
       }
     }

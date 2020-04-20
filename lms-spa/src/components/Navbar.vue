@@ -12,7 +12,7 @@
       />
       <q-img class="navbar-img q-ml-md" src="../assets/tvz-logo.svg"></q-img>
       <span :class="($q.dark.isActive ? 'text-white' : 'text-black') + ' text-h6 q-ml-sm'">LMS</span>
-      <span class="text-grey q-ml-xs">by Matija</span>
+      <span class="text-grey q-ml-xs">{{ $t('author') }}</span>
       <q-space />
       <div
         :class="($q.dark.isActive ? 'text-white' : 'text-black') + ' q-pr-md'"

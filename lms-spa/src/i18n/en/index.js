@@ -10,7 +10,10 @@ export default {
     availableExams: "Available exams"
   },
   error: {
-    timeNeededFormat: "Format must be 'hours:minutes'"
+    timeNeededFormat: "Format must be 'hours:minutes'",
+    required: "This field is required!",
+    invalid: "Invalid data provided!",
+    incorrectPassword: "Incorrect password!"
   },
   exam: {
     info: "Exam info",
@@ -45,5 +48,32 @@ export default {
   tickIfCorrect: "Tick the checkbox next to the answer if it is correct!",
   save: "Save",
   newAnswer: "New answer",
-  availableExams: "Available exams"
+  availableExams: "Available exams",
+  username: "Username",
+  password: "Password",
+  signIn: "Sign in",
+  successfullyLoggedIn: "Successfully logged in!",
+  unsubscribe: "Unsubscribe",
+  subscribe: "Subscribe",
+  confirm: "Confirm",
+  enterPassword: "Enter password",
+  showSubscribed: "Show subscribed",
+  showNonSubscribed: "Show non subscribed",
+  search: "Search",
+  name: "Name",
+  subscribed: "Subscribed",
+  specialization: "Specialization",
+  availableCourses: "Available courses",
+  send: "Send",
+  enterNewNotification: "Enter new notification",
+  author: "Made by Matija Novosel",
+  uploadFiles: "Upload files",
+  downloadMultiple: "Download multiple",
+  download: "Download",
+  selectAll: "Select all",
+  upload: "Upload",
+  uploadMultipleFiles: "Uplaod multiple files",
+  view: "View",
+  continue: "Continue",
+  start: "Start"
 }

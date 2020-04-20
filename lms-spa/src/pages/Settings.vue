@@ -2,7 +2,7 @@
   <q-page class="q-pa-md">
     <div class="row full-width">
       <div class="col-12">
-        <span class="text-weight-light text-h5"> {{ $t('settings') }} </span>
+        <span class="text-weight-light text-h5">{{ $t('settings') }}</span>
       </div>
       <div class="col-12 q-py-sm">
         <q-separator />

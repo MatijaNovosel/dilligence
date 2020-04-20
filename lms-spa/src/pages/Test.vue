@@ -5,10 +5,10 @@
     </template>
     <div class="row text-center justify-center q-my-md">
       <div class="col-3">
-        <q-input v-model="notification" label="Enter new notification"></q-input>
+        <q-input v-model="notification" :label="$t('enterNewNotification')"></q-input>
       </div>
       <div class="col-1 flex flex-center">
-        <q-btn size="md" dense color="primary" @click="sendNotification">Send</q-btn>
+        <q-btn size="md" dense color="primary" @click="sendNotification">{{ $t('send') }}</q-btn>
       </div>
     </div>
     <div class="row text-center justify-center full-width">
@@ -46,13 +46,13 @@ export default {
       .withUrl("http://localhost:5000/vijesti-hub")
       .configureLogging(LogLevel.Information)
       .build();
-    this.connection.start();
     this.connection.on("EVENT", response => {
       this.vijesti = [...this.vijesti, response.payload];
     });
     KolegijService.getKolegijSidebar(147).then(({ data }) => {
       this.sidebarContents = data;
     });
+    this.connection.start();
     this.getData();
   },
   methods: {
@@ -81,7 +81,7 @@ export default {
 
 <style scoped lang="sass">
 .my-card
-	width: 100%
-	max-width: 350px
-	margin: 5px
+  width: 100%
+  max-width: 350px
+  margin: 5px
 </style>

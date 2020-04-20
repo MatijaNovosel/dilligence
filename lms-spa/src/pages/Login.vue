@@ -19,7 +19,7 @@
               square
               dense
               filled
-              label="Username"
+              :label="$t('username')"
               v-model="username"
               required
             />
@@ -37,7 +37,7 @@
               square
               dense
               filled
-              label="Password"
+              :label="$t('password')"
               v-model="password"
               type="password"
               required
@@ -47,7 +47,7 @@
         </ValidationObserver>
       </q-card-section>
       <q-card-actions class="justify-center">
-        <q-btn @click="submit" :loading="loading" color="primary">Sign in</q-btn>
+        <q-btn @click="submit" :loading="loading" color="primary">{{ $t('signIn') }}</q-btn>
       </q-card-actions>
     </q-card>
   </q-page>
@@ -68,7 +68,7 @@ import {
 extend("min", min);
 extend("required", {
   ...required,
-  message: "This field is required"
+  message: this.$t("error.required")
 });
 
 export default {
@@ -96,14 +96,9 @@ export default {
           if (data.isSuccess) {
             this.$q.notify({
               type: "positive",
-              message: "Successfully logged in!"
+              message: this.$t("successfullyLoggedIn")
             });
-            const [id, token, settings, privileges] = [
-              data.payload.id,
-              data.payload.token,
-              data.payload.settings,
-              data.payload.privileges
-            ];
+            const { id, token, settings, privileges } = { ...data.payload };
             StudentService.getStudent(id).then(({ data }) => {
               let user = {
                 id,
@@ -138,7 +133,7 @@ export default {
         } else {
           this.$q.notify({
             type: "negative",
-            message: "Invalid data provided!"
+            message: this.$t("error.invalid")
           });
         }
       });

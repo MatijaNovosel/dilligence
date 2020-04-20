@@ -2,7 +2,7 @@
   <q-page class="q-pa-md">
     <div class="row full-width" v-if="checkPrivileges(Privileges.CanViewSubjects)">
       <div class="col-12">
-        <span class="text-weight-light text-h5">Available subjects</span>
+        <span class="text-weight-light text-h5">{{ $t('availableCourses') }}</span>
       </div>
       <div class="col-12 q-py-sm">
         <q-separator />
@@ -10,7 +10,7 @@
       <div class="col-12 q-pb-md">
         <div class="row justify-start">
           <div class="col-8">
-            <q-input outlined v-model="searchData.name" dense label="Name" clearable />
+            <q-input outlined v-model="searchData.name" dense :label="$t('name')" clearable />
           </div>
           <div class="col-4 q-pl-sm">
             <q-select
@@ -40,19 +40,19 @@
               size="xs"
               v-model="searchData.showSubscribed"
               val="xs"
-              label="Show subscribed"
+              :label="$t('showSubscribed')"
             />
             <q-checkbox
               size="xs"
               v-model="searchData.showNonSubscribed"
               val="xs"
-              label="Show non subscribed subjects"
+              :label="$t('showNonSubscribed')"
             />
           </div>
         </div>
       </div>
       <div class="col-12 text-right q-py-sm">
-        <q-btn dense class="q-px-sm" color="primary" @click="getData">Search</q-btn>
+        <q-btn dense class="q-px-sm" color="primary" @click="getData">{{ $t('search') }}</q-btn>
       </div>
       <div class="col-12 q-mt-sm">
         <q-table
@@ -103,14 +103,14 @@
                     size="sm"
                     class="bg-red-4 text-white"
                     @click="unsubscribe(props.row.id)"
-                  >Unsubscribe</q-btn>
+                  >{{ $t('unsubscribe') }}</q-btn>
                   <q-btn
                     v-else
                     flat
                     size="sm"
                     class="bg-primary text-white"
                     @click="openSubscribeDialog(props.row.id)"
-                  >Subscribe</q-btn>
+                  >{{ $t('subscribe') }}</q-btn>
                   <q-space />
                 </q-card-actions>
               </q-card>
@@ -135,13 +135,18 @@
           />
         </q-toolbar>
         <q-card-section>
-          <q-input type="password" dense outlined v-model="password" label="Enter password...">
+          <q-input type="password" dense outlined v-model="password" :label="$t('enterPassword')">
             <template v-slot:append>
-              <q-btn :ripple="false" dense size="sm" color="primary" @click="subscribe">Confirm</q-btn>
+              <q-btn
+                :ripple="false"
+                dense
+                size="sm"
+                color="primary"
+                @click="subscribe"
+              >{{ $t('confirm') }}</q-btn>
             </template>
           </q-input>
         </q-card-section>
-        <q-card-section class="q-pt-none"></q-card-section>
       </q-card>
     </q-dialog>
   </q-page>
@@ -155,7 +160,7 @@ import UserMixin from "../mixins/userMixin";
 
 export default {
   name: "Subjects",
-  mixins: [ UserMixin ],
+  mixins: [UserMixin],
   methods: {
     subscribe() {
       KorisnikService.subscribe(
@@ -170,7 +175,7 @@ export default {
         .catch(error => {
           this.$q.notify({
             type: "negative",
-            message: "Incorrect password!"
+            message: this.$t("error.incorrectPassword")
           });
         });
     },
@@ -243,20 +248,20 @@ export default {
         },
         {
           name: "naziv",
-          label: "Name",
+          label: this.$t("name"),
           align: "center",
           field: "naziv"
         },
         {
           name: "smjerId",
           align: "center",
-          label: "Smjer",
+          label: this.$t("specialization"),
           field: "smjerId"
         },
         {
           name: "subscribed",
           align: "center",
-          label: "Subscribed",
+          label: this.$t("subscribed"),
           field: "subscribed"
         }
       ],

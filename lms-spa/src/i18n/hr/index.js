@@ -10,7 +10,10 @@ export default {
     availableExams: "Dostupni zadatci"
   },
   error: {
-    timeNeededFormat: "Format mora biti 'sati:minute'"
+    timeNeededFormat: "Format mora biti 'sati:minute'",
+    required: "Ovo polje je potrebno unijeti!",
+    invalid: "Uneseni su neispravni podatci!",
+    incorrectPassword: "Neispravna zaporka!"
   },
   exam: {
     info: "Informacije o zadatku",
@@ -45,5 +48,32 @@ export default {
   tickIfCorrect: "Stavite kvačicu ako je pitanje točno!",
   save: "Pohrani",
   newAnswer: "Novi odgovor",
-  availableExams: "Dostupni zadatci"
+  availableExams: "Dostupni zadatci",
+  username: "Korisničko ime",
+  password: "Zaporka",
+  signIn: "Prijavi se",
+  successfullyLoggedIn: "Uspješno ste prijavljeni!",
+  unsubscribe: "Odjavi",
+  subscribe: "Pretplati",
+  confirm: "Potvrdi",
+  enterPassword: "Unesite lozinku",
+  showSubscribed: "Prikaži pretplaćeno",
+  showNonSubscribed: "Prikaži nepretplaćeno",
+  search: "Pretraži",
+  name: "Naziv",
+  subscribed: "Pretplaćen",
+  specialization: "Smjer",
+  availableCourses: "Dostupni kolegiji",
+  send: "Pošalji",
+  enterNewNotification: "Unesi novu obavijest",
+  author: "Izradio Matija Novosel",
+  uploadFiles: "Prenesite datoteke",
+  downloadMultiple: "Višestruko preuzimanje",
+  download: "Preuzimanje",
+  selectAll: "Odaberi sve",
+  upload: "Prenesi",
+  uploadMultipleFiles: "Prenesite više datoteka",
+  view: "Pregledaj",
+  continue: "Nastavi",
+  start: "Započni"
 }
