@@ -10,6 +10,6 @@ namespace tvz2api_cqrs.Models
         public int PrivilegeId { get; set; }
 
         public virtual Privileges Privilege { get; set; }
-        public virtual Korisnik User { get; set; }
+        public virtual User User { get; set; }
     }
 }

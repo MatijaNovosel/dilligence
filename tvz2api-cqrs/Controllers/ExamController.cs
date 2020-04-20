@@ -16,13 +16,14 @@ using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using System.Net.Mail;
 using System.Net;
+using tvz2api_cqrs.Custom;
 
 namespace tvz2api_cqrs.Controllers
 {
   [Authorize]
   [Route("api/[controller]")]
   [ApiController]
-  public class ExamController : ControllerBase
+  public class ExamController : CustomController
   {
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;

@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-pa-md">
-    <div class="row full-width" v-if="checkPrivileges(Privileges.CanViewSubjects)">
+    <div class="row full-width">
       <div class="col-12">
         <span class="text-weight-light text-h5">{{ $t('availableCourses') }}</span>
       </div>
@@ -18,7 +18,7 @@
               dense
               v-model="searchData.smjer"
               :options="smjerOptions"
-              label="Smjer"
+              :label="$t('specialization')"
               multiple
               emit-value
               map-options

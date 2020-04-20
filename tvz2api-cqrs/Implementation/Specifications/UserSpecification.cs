@@ -11,20 +11,21 @@ using System.Threading.Tasks;
 
 namespace tvz2api_cqrs.Implementation.Specifications
 {
-  public class KorisnikSpecification : ISpecification<Korisnik>
+
+  public class UserSpecification : ISpecification<User>
   {
-    public KorisnikSpecification(string name = null)
+    public UserSpecification(string name = null)
     {
       Name = name;
     }
 
     public string Name { get; }
-    
-    public Expression<Func<Korisnik, bool>> Predicate
+
+    public Expression<Func<User, bool>> Predicate
     {
       get
       {
-        Expression<Func<Korisnik, bool>> predicate = t => true;
+        Expression<Func<User, bool>> predicate = t => true;
 
         if (!string.IsNullOrWhiteSpace(Name))
         {
@@ -35,4 +36,5 @@ namespace tvz2api_cqrs.Implementation.Specifications
       }
     }
   }
+
 }

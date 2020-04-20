@@ -14,12 +14,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using tvz2api_cqrs.Hubs;
+using tvz2api_cqrs.Custom;
 
 namespace tvz2api_cqrs.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  public class VijestController : ControllerBase
+  public class VijestController : CustomController
   {
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
@@ -35,14 +36,14 @@ namespace tvz2api_cqrs.Controllers
     [HttpGet("{id}")]
     public async Task<IActionResult> GetDetails(int id)
     {
-      var result = await _queryBus.ExecuteAsync(new VijestQuery(id));
+      var result = await _queryBus.ExecuteAsync(new NotificationQuery(id));
       return Ok(result);
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateNew(CreateVijestCommand command)
     {
-      var vijest = await _commandBus.ExecuteAsync<VijestQueryModel>(command);
+      var vijest = await _commandBus.ExecuteAsync<NotificationQueryModel>(command);
       await this._hubContext.Clients.All.SendAsync("EVENT", vijest);
       return Ok(vijest);
     }

@@ -21,7 +21,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace tvz2api_cqrs.Implementation.CommandHandlers
 {
   public class VijestCommandHandler :
-    ICommandHandlerAsync<CreateVijestCommand, VijestQueryModel>
+    ICommandHandlerAsync<CreateVijestCommand, NotificationQueryModel>
   {
     private readonly tvz2Context _context;
 
@@ -30,23 +30,23 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       _context = context;
     }
 
-    public async Task<ICommandResult<VijestQueryModel>> HandleAsync(CreateVijestCommand command)
+    public async Task<ICommandResult<NotificationQueryModel>> HandleAsync(CreateVijestCommand command)
     {
-      Vijest vijest = new Vijest()
+      Notification vijest = new Notification()
       {
-        KolegijId = 147,
-        ObjavioId = 1,
+        CourseId = 147,
+        SubmittedById = 1,
         Naslov = command.Naslov,
         Opis = "Hardkodirani opis",
         Datum = DateTime.Now
       };
-      await _context.Vijest.AddAsync(vijest);
+      await _context.Notification.AddAsync(vijest);
       await _context.SaveChangesAsync();
-      return CommandResult<VijestQueryModel>.Success(new VijestQueryModel()
+      return CommandResult<NotificationQueryModel>.Success(new NotificationQueryModel()
       {
         Id = vijest.Id,
-        KolegijId = vijest.KolegijId,
-        ObjavioId = vijest.ObjavioId,
+        CourseId = vijest.CourseId,
+        SubmittedById = vijest.SubmittedById,
         Naslov = vijest.Naslov,
         Opis = vijest.Opis,
         Datum = vijest.Datum

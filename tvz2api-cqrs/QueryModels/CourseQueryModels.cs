@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace tvz2api_cqrs.QueryModels
 {
-  public class KolegijQueryModel
+  public class CourseQueryModel
   {
     public int Id { get; set; }
     public string Naziv { get; set; }
@@ -12,7 +12,7 @@ namespace tvz2api_cqrs.QueryModels
     public int? SmjerId { get; set; }
   }
 
-  public class KolegijDetailsQueryModel
+  public class CourseDetailsQueryModel
   {
     public int Id { get; set; }
     public string Naziv { get; set; }

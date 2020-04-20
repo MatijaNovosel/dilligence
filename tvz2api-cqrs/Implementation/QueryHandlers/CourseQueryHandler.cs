@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+/* using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -10,22 +10,22 @@ using tvz2api_cqrs.QueryModels;
 
 namespace tvz2api_cqrs.Implementation.QueryHandlers
 {
-  public class KolegijQueryHandler:
-    IQueryHandlerAsync<KolegijQuery, List<KolegijQueryModel>>,
-    IQueryHandlerAsync<KolegijTotalQuery, int>,
+  public class CourseQueryHandler:
+    IQueryHandlerAsync<CourseQuery, List<KolegijQueryModel>>,
+    IQueryHandlerAsync<CourseTotalQuery, int>,
     IQueryHandlerAsync<StudentKolegijTotalQuery, int>,
     IQueryHandlerAsync<StudentKolegijQuery, List<StudentQueryModel>>,
-    IQueryHandlerAsync<KolegijDetailsQuery, KolegijDetailsQueryModel>,
-    IQueryHandlerAsync<KolegijSidebarQuery, List<SidebarContentDTO>>
+    IQueryHandlerAsync<CourseDetailsQuery, KolegijDetailsQueryModel>,
+    IQueryHandlerAsync<CourseSidebarQuery, List<SidebarContentDTO>>
     {
       private readonly tvz2Context _context;
 
-      public KolegijQueryHandler(tvz2Context context)
+      public CourseQueryHandler(tvz2Context context)
       {
         _context = context;
       }
 
-      public async Task<KolegijDetailsQueryModel> HandleAsync(KolegijDetailsQuery query)
+      public async Task<KolegijDetailsQueryModel> HandleAsync(CourseDetailsQuery query)
       {
         var kolegij = await _context.Kolegij
           .Where(t => t.Id == query.Id)
@@ -68,7 +68,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         return kolegij;
       }
 
-      public async Task<List<SidebarContentDTO>> HandleAsync(KolegijSidebarQuery query)
+      public async Task<List<SidebarContentDTO>> HandleAsync(CourseSidebarQuery query)
       {
         var sidebarContent = await _context.SidebarContent
           .Where(x => x.KolegijId == query.Id)
@@ -107,7 +107,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         return studenti;
       }
 
-      public async Task<List<KolegijQueryModel>> HandleAsync(KolegijQuery query)
+      public async Task<List<KolegijQueryModel>> HandleAsync(CourseQuery query)
       {
         var kolegiji = await _context.Kolegij
           .Where(query.Specification.Predicate)
@@ -122,7 +122,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         return kolegiji;
       }
 
-      public async Task<int> HandleAsync(KolegijTotalQuery query)
+      public async Task<int> HandleAsync(CourseTotalQuery query)
       {
         var count = await _context.Kolegij
           .Where(query.Specification.Predicate)
@@ -152,4 +152,4 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         return count;
       }
     }
-}
+} */

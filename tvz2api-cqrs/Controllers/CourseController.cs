@@ -1,4 +1,4 @@
-using tvz2api_cqrs.Models;
+/* using tvz2api_cqrs.Models;
 using tvz2api_cqrs.Infrastructure.Commands;
 using tvz2api_cqrs.Enumerations;
 using tvz2api_cqrs.Implementation.Queries;
@@ -15,17 +15,18 @@ using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using System.Net.Mail;
 using System.Net;
+using tvz2api_cqrs.Custom;
 
 namespace tvz2api_cqrs.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  public class KolegijController : ControllerBase
+  public class CourseController : CustomController
   {
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
 
-    public KolegijController(ICommandBus commandBus, IQueryBus queryBus)
+    public CourseController(ICommandBus commandBus, IQueryBus queryBus)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;
@@ -44,8 +45,8 @@ namespace tvz2api_cqrs.Controllers
 
       // var queryOptions = QueryOptionsExtensions.GetFromRequest(Request);
       var specification = new KolegijSpecification(userId, smjerIDs, name, subscribed, nonSubscribed);
-      var result = await _queryBus.ExecuteAsync(new KolegijQuery(specification));
-      var count = await _queryBus.ExecuteAsync(new KolegijTotalQuery(specification));
+      var result = await _queryBus.ExecuteAsync(new CourseQuery(specification));
+      var count = await _queryBus.ExecuteAsync(new CourseTotalQuery(specification));
       return Ok(new PageableCollection<KolegijQueryModel>() { Results = result, Total = count });
     }
 
@@ -60,14 +61,14 @@ namespace tvz2api_cqrs.Controllers
     [HttpGet("{id}")]
     public async Task<IActionResult> GetDetails(int id)
     {
-      var result = await _queryBus.ExecuteAsync(new KolegijDetailsQuery(id));
+      var result = await _queryBus.ExecuteAsync(new CourseDetailsQuery(id));
       return Ok(result);
     }
 
     [HttpGet("sidebar/{id}")]
     public async Task<IActionResult> GetSidebarContents(int id)
     {
-      var result = await _queryBus.ExecuteAsync(new KolegijSidebarQuery(id));
+      var result = await _queryBus.ExecuteAsync(new CourseSidebarQuery(id));
       return Ok(result);
     }
 
@@ -77,7 +78,6 @@ namespace tvz2api_cqrs.Controllers
       SmtpClient client = new SmtpClient("mysmtpserver");
       client.UseDefaultCredentials = false;
       client.Credentials = new NetworkCredential("username", "password");
-
       MailMessage mailMessage = new MailMessage();
       mailMessage.From = new MailAddress("mnovosel2@tvz.hr");
       mailMessage.To.Add("mnovosel2@tvz.hr");
@@ -87,4 +87,4 @@ namespace tvz2api_cqrs.Controllers
       return Ok();
     }
   }
-}
+} */

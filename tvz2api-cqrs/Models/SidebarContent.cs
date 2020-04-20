@@ -12,9 +12,9 @@ namespace tvz2api_cqrs.Models
 
         public int Id { get; set; }
         public string Naslov { get; set; }
-        public int? KolegijId { get; set; }
+        public int? CourseId { get; set; }
 
-        public virtual Kolegij Kolegij { get; set; }
+        public virtual Course Course { get; set; }
         public virtual ICollection<SidebarContentFile> SidebarContentFile { get; set; }
     }
 }

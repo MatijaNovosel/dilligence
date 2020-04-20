@@ -6,10 +6,10 @@ using tvz2api_cqrs.Infrastructure.Commands;
 
 namespace tvz2api_cqrs.Implementation.Commands
 {
-  public class KorisnikSubscribeCommand : ICommand
+  public class UserSubscribeCommand : ICommand
   {
-    public KorisnikSubscribeCommand() { }
-    public KorisnikSubscribeCommand(int userId, string password, int kolegijId)
+    public UserSubscribeCommand() { }
+    public UserSubscribeCommand(int userId, string password, int kolegijId)
     {
       UserId = userId;
       Password = password;
@@ -20,10 +20,10 @@ namespace tvz2api_cqrs.Implementation.Commands
     public int KolegijId { get; set; }
   }
 
-  public class KorisnikUnsubscribeCommand : ICommand
+  public class UserUnsubscribeCommand : ICommand
   {
-    public KorisnikUnsubscribeCommand() { }
-    public KorisnikUnsubscribeCommand(int userId, int kolegijId)
+    public UserUnsubscribeCommand() { }
+    public UserUnsubscribeCommand(int userId, int kolegijId)
     {
       UserId = userId;
       KolegijId = kolegijId;
@@ -32,9 +32,9 @@ namespace tvz2api_cqrs.Implementation.Commands
     public int KolegijId { get; set; }
   }
 
-  public class KorisnikUpdateSettingsCommand : ICommand
+  public class UserUpdateSettingsCommand : ICommand
   {
-    public KorisnikUpdateSettingsCommand() { }
+    public UserUpdateSettingsCommand() { }
     public int UserId { get; set; }
     public bool DarkMode { get; set; }
     public string Locale { get; set; }

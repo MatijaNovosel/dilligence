@@ -12,12 +12,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using tvz2api_cqrs.Custom;
 
 namespace tvz2api_cqrs.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  public class StudentController : ControllerBase
+  public class StudentController : CustomController
   {
     private readonly IQueryBus _queryBus;
     private readonly ICommandBus _commandBus;

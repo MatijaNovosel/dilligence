@@ -8,6 +8,7 @@ namespace tvz2api_cqrs.Models
         public File()
         {
             SidebarContentFile = new HashSet<SidebarContentFile>();
+            User = new HashSet<User>();
         }
 
         public int Id { get; set; }
@@ -16,5 +17,6 @@ namespace tvz2api_cqrs.Models
         public byte[] Data { get; set; }
 
         public virtual ICollection<SidebarContentFile> SidebarContentFile { get; set; }
+        public virtual ICollection<User> User { get; set; }
     }
 }

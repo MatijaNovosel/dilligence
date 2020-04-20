@@ -20,40 +20,40 @@ using tvz2api_cqrs.QueryModels;
 
 namespace tvz2api_cqrs.Implementation.CommandHandlers
 {
-  public class KorisnikCommandHandler :
-    ICommandHandlerAsync<KorisnikSubscribeCommand>,
-    ICommandHandlerAsync<KorisnikUnsubscribeCommand>,
-    ICommandHandlerAsync<KorisnikUpdateSettingsCommand>
+  public class UserCommandHandler :
+    ICommandHandlerAsync<UserSubscribeCommand>,
+    ICommandHandlerAsync<UserUnsubscribeCommand>,
+    ICommandHandlerAsync<UserUpdateSettingsCommand>
   {
     private readonly tvz2Context _context;
 
-    public KorisnikCommandHandler(tvz2Context context)
+    public UserCommandHandler(tvz2Context context)
     {
       _context = context;
     }
 
-    public async Task HandleAsync(KorisnikSubscribeCommand command)
+    public async Task HandleAsync(UserSubscribeCommand command)
     {
-      if (_context.Kolegij.Where(x => x.Id == command.KolegijId).FirstOrDefault().Lozinka != command.Password)
+      if (_context.Course.Where(x => x.Id == command.KolegijId).FirstOrDefault().Lozinka != command.Password)
       {
         throw new Exception("Wrong password!");
       }
-      await _context.Pretplata.AddAsync(new Pretplata()
+      await _context.Subscription.AddAsync(new Subscription()
       {
-        KolegijId = command.KolegijId,
-        StudentId = command.UserId
+        CourseId = command.KolegijId,
+        UserId = command.UserId
       });
       await _context.SaveChangesAsync();
     }
 
-    public async Task HandleAsync(KorisnikUnsubscribeCommand command)
+    public async Task HandleAsync(UserUnsubscribeCommand command)
     {
-      var pretplata = await _context.Pretplata.Where(x => x.KolegijId == command.KolegijId && x.StudentId == command.UserId).FirstOrDefaultAsync();
-      _context.Pretplata.Remove(pretplata);
+      var pretplata = await _context.Subscription.Where(x => x.CourseId == command.KolegijId && x.UserId == command.UserId).FirstOrDefaultAsync();
+      _context.Subscription.Remove(pretplata);
       await _context.SaveChangesAsync();
     }
 
-    public async Task HandleAsync(KorisnikUpdateSettingsCommand command)
+    public async Task HandleAsync(UserUpdateSettingsCommand command)
     {
       var settings = await _context.UserSettings.FirstOrDefaultAsync(x => x.UserId == command.UserId);
       settings.DarkMode = command.DarkMode;

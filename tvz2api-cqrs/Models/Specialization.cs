@@ -3,12 +3,11 @@ using System.Collections.Generic;
 
 namespace tvz2api_cqrs.Models
 {
-    public partial class Smjer
+    public partial class Specialization
     {
-        public Smjer()
+        public Specialization()
         {
-            Kolegij = new HashSet<Kolegij>();
-            Student = new HashSet<Student>();
+            Course = new HashSet<Course>();
         }
 
         public int Id { get; set; }
@@ -16,7 +15,6 @@ namespace tvz2api_cqrs.Models
         public string SkraceniNaziv { get; set; }
         public bool? Vanredno { get; set; }
 
-        public virtual ICollection<Kolegij> Kolegij { get; set; }
-        public virtual ICollection<Student> Student { get; set; }
+        public virtual ICollection<Course> Course { get; set; }
     }
 }

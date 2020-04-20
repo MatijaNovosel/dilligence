@@ -49,7 +49,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       {
         Naziv = command.Naziv,
         TimeNeeded = command.TimeNeeded,
-        SubjectId = command.SubjectId,
+        CourseId = command.CourseId,
         CreatedById = command.CreatedById,
         DueDate = command.DueDate
       };

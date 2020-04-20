@@ -30,7 +30,7 @@ namespace tvz2api_cqrs.Implementation.Commands
     public int TimeNeeded { get; set; }
     public DateTime DueDate { get; set; }
     public int CreatedById { get; set; }
-    public int SubjectId { get; set; }
+    public int CourseId { get; set; }
     public List<CreateQuestionDTO> Questions { get; set; }
   }
 }

@@ -18,7 +18,7 @@ namespace tvz2api_cqrs.Models
         public int? ExamId { get; set; }
 
         public virtual Exam Exam { get; set; }
-        public virtual Korisnik User { get; set; }
+        public virtual User User { get; set; }
         public virtual ICollection<UserAnswer> UserAnswer { get; set; }
     }
 }

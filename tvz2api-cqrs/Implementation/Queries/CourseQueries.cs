@@ -9,48 +9,48 @@ using tvz2api_cqrs.Models.DTO;
 
 namespace tvz2api_cqrs.Implementation.Queries
 {
-  public class KolegijQuery : IQuery<List<KolegijQueryModel>>
+  public class CourseQuery : IQuery<List<CourseQueryModel>>
   {
-    public KolegijQuery() { }
-    public KolegijQuery(KolegijSpecification specification)
+    public CourseQuery() { }
+    public CourseQuery(CourseSpecification specification)
     {
       Specification = specification;
     }
-    public KolegijQuery(QueryOptions queryOptions, KolegijSpecification specification)
+    public CourseQuery(QueryOptions queryOptions, CourseSpecification specification)
     {
       QueryOptions = queryOptions;
       Specification = specification;
     }
     public QueryOptions QueryOptions { get; set; }
-    public KolegijSpecification Specification { get; set; }
+    public CourseSpecification Specification { get; set; }
   }
 
-  public class KolegijDetailsQuery : IQuery<KolegijDetailsQueryModel>
+  public class CourseDetailsQuery : IQuery<CourseDetailsQueryModel>
   {
-    public KolegijDetailsQuery(int id)
+    public CourseDetailsQuery(int id)
     {
       Id = id;
     }
     public int Id { get; set; }
   }
 
-  public class KolegijSidebarQuery : IQuery<List<SidebarContentDTO>>
+  public class CourseSidebarQuery : IQuery<List<SidebarContentDTO>>
   {
-    public KolegijSidebarQuery(int id)
+    public CourseSidebarQuery(int id)
     {
       Id = id;
     }
     public int Id { get; set; }
   }
 
-  public class KolegijTotalQuery : IQuery<int>
+  public class CourseTotalQuery : IQuery<int>
   {
-    public KolegijTotalQuery(KolegijSpecification specification)
+    public CourseTotalQuery(CourseSpecification specification)
     {
       Specification = specification;
     }
-    public KolegijTotalQuery() { }
-    public KolegijSpecification Specification { get; set; }
+    public CourseTotalQuery() { }
+    public CourseSpecification Specification { get; set; }
   }
 
   public class StudentKolegijQuery : IQuery<List<StudentQueryModel>>

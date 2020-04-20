@@ -11,38 +11,36 @@ using tvz2api_cqrs.Models;
 
 namespace tvz2api_cqrs.Implementation.Specifications
 {
-  public class KolegijSpecification : ISpecification<Kolegij>
+  public class CourseSpecification : ISpecification<Course>
   {
-    public KolegijSpecification(int? userId = null, List<SmjerEnum> smjerIds = null, string name = null, bool subscribed = false, bool nonSubscribed = false)
+    public CourseSpecification(int? userId = null, List<SmjerEnum> smjerIds = null, string name = null, bool subscribed = false, bool nonSubscribed = false)
     {
-      SmjerIds = smjerIds;
+      SpecializationIds = smjerIds;
       Name = name;
       Subscribed = subscribed;
       NonSubscribed = nonSubscribed;
       UserId = userId;
     }
 
-    public List<SmjerEnum> SmjerIds { get; }
+    public List<SmjerEnum> SpecializationIds { get; }
     public string Name { get; }
     public bool Subscribed { get; }
     public bool NonSubscribed { get; }
     public int? UserId { get; }
 
-    public Expression<Func<Kolegij, bool>> Predicate
+
+    public Expression<Func<Course, bool>> Predicate
     {
       get
       {
-        Expression<Func<Kolegij, bool>> predicate = t => true;
+        Expression<Func<Course, bool>> predicate = t => true;
 
-        if (SmjerIds != null && SmjerIds.Count() > 0)
+        if (SpecializationIds != null && SpecializationIds.Count() > 0)
         {
-          /*
 
-            Inace linija ide: predicate = predicate.And(t => SmjerIds.Any(x => (int)x == t.SmjerId));
-            EF ne moze prevesti taj query u SQL zbog problema na EFCore 3.1.0 (https://github.com/dotnet/efcore/issues/17342).
-
-          */
-          predicate = predicate.And(t => SmjerIds.Select(x => (int)x).Contains((int)t.SmjerId));
+          // Inace linija ide: predicate = predicate.And(t => SmjerIds.Any(x => (int)x == t.SmjerId));
+          // EF ne moze prevesti taj query u SQL zbog problema na EFCore 3.1.0 (https://github.com/dotnet/efcore/issues/17342).
+          predicate = predicate.And(t => SpecializationIds.Select(x => (int)x).Contains((int)t.SpecializationId));
         }
 
         if (!string.IsNullOrWhiteSpace(Name))
@@ -55,12 +53,12 @@ namespace tvz2api_cqrs.Implementation.Specifications
         {
           if (Subscribed)
           {
-            predicate = predicate.And(t => t.Pretplata.Any(x => x.KolegijId == t.Id && x.StudentId == UserId));
+            predicate = predicate.And(t => t.Subscription.Any(x => x.CourseId == t.Id && x.UserId == UserId));
           }
 
           if (NonSubscribed)
           {
-            predicate = predicate.And(t => !t.Pretplata.Any(x => x.KolegijId == t.Id && x.StudentId == UserId));
+            predicate = predicate.And(t => !t.Subscription.Any(x => x.CourseId == t.Id && x.UserId == UserId));
           }
         }
 

@@ -12,6 +12,6 @@ namespace tvz2api_cqrs.Models
         public int ChatId { get; set; }
 
         public virtual Chat Chat { get; set; }
-        public virtual Korisnik User { get; set; }
+        public virtual User User { get; set; }
     }
 }

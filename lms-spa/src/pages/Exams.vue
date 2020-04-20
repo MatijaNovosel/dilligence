@@ -24,19 +24,18 @@
 import ExamCard from "../components/ExamCard";
 import ExamService from "../services/api/exam";
 import { mapGetters } from "vuex";
+import UserMixin from "../mixins/userMixin";
 
 export default {
   name: "Exams",
   components: { ExamCard },
+  mixins: [UserMixin],
   methods: {
     getAttempts() {
       ExamService.getAttempts(this.user.id).then(({ data }) => {
         this.attempts = data;
       });
     }
-  },
-  computed: {
-    ...mapGetters(["user"])
   },
   created() {
     this.getAttempts();

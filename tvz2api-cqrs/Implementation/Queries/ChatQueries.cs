@@ -18,7 +18,7 @@ namespace tvz2api_cqrs.Implementation.Queries
     public int Id { get; set; }
   }
 
-  public class ChatAvailableUsersQuery : IQuery<List<KorisnikQueryModel>>
+  public class ChatAvailableUsersQuery : IQuery<List<UserQueryModel>>
   {
     public ChatAvailableUsersQuery(int id)
     {

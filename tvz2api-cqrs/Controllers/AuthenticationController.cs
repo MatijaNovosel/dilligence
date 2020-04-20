@@ -13,13 +13,14 @@ using tvz2api_cqrs.Infrastructure.Messaging;
 using tvz2api_cqrs.Models;
 using tvz2api_cqrs.Models.DTO;
 using tvz2api_cqrs.QueryModels;
+using tvz2api_cqrs.Custom;
 
 namespace tvz2api_cqrs.Controllers
 {
   [Route("api/auth")]
   [ApiController]
   [AllowAnonymous]
-  public class AuthenticationController : ControllerBase
+  public class AuthenticationController : CustomController
   {
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;

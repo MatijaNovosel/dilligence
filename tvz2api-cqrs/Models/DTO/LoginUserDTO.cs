@@ -7,7 +7,7 @@ namespace tvz2api_cqrs.Models.DTO
 {
   public class LoginUserDTO
   {
-    public LoginUserDTO(string token, string username, int id, KorisnikSettingsQueryModel settings)
+    public LoginUserDTO(string token, string username, int id, UserSettingsQueryModel settings)
     {
       Token = token;
       Username = username;
@@ -19,7 +19,7 @@ namespace tvz2api_cqrs.Models.DTO
     public string Token { get; set; }
     public string Username { get; set; }
     public List<int> Privileges { get; set; }
-    public KorisnikSettingsQueryModel Settings { get; set; }
+    public UserSettingsQueryModel Settings { get; set; }
     public int Id { get; set; }
   }
 }

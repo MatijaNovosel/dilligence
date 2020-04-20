@@ -65,25 +65,25 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
     public async Task HandleAsync(AuthenticationRegisterCommand command)
     {
-      if (await _context.Korisnik.AnyAsync(x => x.Username == command.Username))
+      if (await _context.User.AnyAsync(x => x.Username == command.Username))
       {
         throw new Exception("Username already exists!");
       }
 
-      var newUser = new Korisnik() { Username = command.Username };
+      var newUser = new User() { Username = command.Username };
 
       byte[] passwordHash, passwordSalt;
       CreatePasswordHash(command.Password, out passwordHash, out passwordSalt);
       newUser.PasswordHash = passwordHash;
       newUser.PasswordSalt = passwordSalt;
 
-      await _context.Korisnik.AddAsync(newUser);
+      await _context.User.AddAsync(newUser);
       await _context.SaveChangesAsync();
     }
 
     public async Task<ICommandResult<LoginUserDTO>> HandleAsync(AuthenticationLoginCommand command)
     {
-      var user = await _context.Korisnik.Include(p => p.UserPrivileges).Include(p => p.UserSettings).FirstOrDefaultAsync(x => x.Username == command.Username);
+      var user = await _context.User.Include(p => p.UserPrivileges).Include(p => p.UserSettings).FirstOrDefaultAsync(x => x.Username == command.Username);
       if (user == null || !verifyPasswordHash(command.Password, user.PasswordHash, user.PasswordSalt))
       {
         throw new Exception("User credentials are wrong or the hashing integrity is faulty!");
@@ -113,8 +113,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       var token = tokenHandler.CreateToken(tokenDescriptor);
 
       var userSettings = user.UserSettings.FirstOrDefault();
-      var settings = new KorisnikSettingsQueryModel() 
-      { 
+      var settings = new UserSettingsQueryModel()
+      {
         DarkMode = userSettings.DarkMode,
         Locale = userSettings.Locale,
       };

@@ -14,8 +14,8 @@ namespace tvz2api_cqrs.Models
         public int FirstParticipantId { get; set; }
         public int SecondParticipantId { get; set; }
 
-        public virtual Korisnik FirstParticipant { get; set; }
-        public virtual Korisnik SecondParticipant { get; set; }
+        public virtual User FirstParticipant { get; set; }
+        public virtual User SecondParticipant { get; set; }
         public virtual ICollection<Message> Message { get; set; }
     }
 }

@@ -11,12 +11,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using tvz2api_cqrs.Custom;
 
 namespace tvz2api_cqrs.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  public class FileController : ControllerBase
+  public class FileController : CustomController
   {
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;

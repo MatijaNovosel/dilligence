@@ -41,9 +41,9 @@ const routes = [
         }
       },
       {
-        path: 'subjects',
-        name: 'subjects',
-        component: () => import('pages/Subjects.vue'),
+        path: 'courses',
+        name: 'courses',
+        component: () => import('pages/Courses.vue'),
         meta: {
           requiresAuth: true
         }

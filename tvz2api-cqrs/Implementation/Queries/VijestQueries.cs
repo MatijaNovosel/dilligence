@@ -7,9 +7,9 @@ using tvz2api_cqrs.Models.DTO;
 
 namespace tvz2api_cqrs.Implementation.Queries
 {
-  public class VijestQuery : IQuery<List<VijestQueryModel>>
+  public class NotificationQuery : IQuery<List<NotificationQueryModel>>
   {
-    public VijestQuery(int id)
+    public NotificationQuery(int id)
     {
       Id = id;
     }

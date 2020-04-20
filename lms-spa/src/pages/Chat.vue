@@ -2,12 +2,12 @@
   <q-page>
     <div class="q-pa-md row justify-center">
       <div class="col-2 q-mr-lg">
-        <q-expansion-item v-model="open" label="Recent chats" class="chat-tab">
+        <q-expansion-item v-model="open" :label="$t('recentChats')" class="chat-tab">
           <q-card>
             <q-separator />
             <div v-if="chats && chats.length != 0">
               <q-card-section class="q-pb-sm q-pt-none">
-                <q-input dense label="Search users..."></q-input>
+                <q-input dense :label="$t('searchUsers')"></q-input>
               </q-card-section>
               <q-separator />
               <q-card-section class="q-py-xs q-px-none">
@@ -31,7 +31,7 @@
               </q-card-section>
             </div>
             <div v-else>
-              <q-card-section class="text-center">No recent chats found!</q-card-section>
+              <q-card-section class="text-center">{{ $t('noRecentChats') }}</q-card-section>
             </div>
           </q-card>
         </q-expansion-item>
@@ -50,7 +50,7 @@
               <div class="col-11">
                 <q-input
                   :readonly="!activeChat"
-                  label="Enter a message..."
+                  :label="$t('enterMessage')"
                   dense
                   v-model="message"
                   outlined
@@ -63,7 +63,7 @@
                       size="sm"
                       color="primary"
                       @click="sendMessage"
-                    >Send</q-btn>
+                    >{{ $t('send') }}</q-btn>
                   </template>
                 </q-input>
               </div>
@@ -74,7 +74,7 @@
                   dense
                   color="primary"
                   @click="newChatDialog = true"
-                >New chat</q-btn>
+                >{{ $t('newChat') }}</q-btn>
               </div>
             </div>
           </div>
@@ -103,13 +103,13 @@
             outlined
             v-model="newChatSearch"
             clearable
-            label="Search users..."
+            :label="$t('searchUsers')"
           >
             <template v-slot:prepend>
               <q-icon name="mdi-magnify" />
             </template>
             <template v-slot:append>
-              <q-btn :ripple="false" dense size="sm" color="primary" @click="searchUsers">Search</q-btn>
+              <q-btn :ripple="false" dense size="sm" color="primary" @click="searchUsers">{{ $t('search') }}</q-btn>
             </template>
           </q-input>
         </q-card-section>

@@ -7,7 +7,7 @@ using tvz2api_cqrs.QueryModels;
 
 namespace tvz2api_cqrs.Implementation.Commands
 {
-  public class CreateVijestCommand : ICommand<VijestQueryModel>
+  public class CreateVijestCommand : ICommand<NotificationQueryModel>
   {
     public CreateVijestCommand() { }
     public string Naslov { get; set; }

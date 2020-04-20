@@ -21,57 +21,57 @@ using tvz2api_cqrs.QueryModels;
 
 namespace tvz2api_cqrs.Implementation.CommandHandlers
 {
-  public class ChatCommandHandler:
+  public class ChatCommandHandler :
     ICommandHandlerAsync<SendMessageCommand, MessageDTO>,
     ICommandHandlerAsync<CreateNewChatCommand, NewChatDTO>,
     ICommandHandlerAsync<DeleteMessageCommand>
+  {
+    private readonly tvz2Context _context;
+
+    public ChatCommandHandler(tvz2Context context)
     {
-      private readonly tvz2Context _context;
-
-      public ChatCommandHandler(tvz2Context context)
-      {
-        _context = context;
-      }
-
-      public async Task<ICommandResult<NewChatDTO>> HandleAsync(CreateNewChatCommand command)
-      {
-        Chat chat = new Chat()
-        {
-          FirstParticipantId = command.FirstParticipantId,
-          SecondParticipantId = command.SecondParticipantId
-        };
-        await _context.Chat.AddAsync(chat);
-        await _context.SaveChangesAsync();
-        return CommandResult<NewChatDTO>.Success(new NewChatDTO()
-        {
-          Id = chat.Id
-        });
-      }
-
-      public async Task<ICommandResult<MessageDTO>> HandleAsync(SendMessageCommand command)
-      {
-        Message message = new Message()
-        {
-          ChatId = command.ChatId,
-          UserId = command.UserId,
-          Content = command.Content
-        };
-        await _context.Message.AddAsync(message);
-        await _context.SaveChangesAsync();
-        return CommandResult<MessageDTO>.Success(new MessageDTO()
-        {
-          Id = message.Id,
-            Content = message.Content,
-            SentAt = message.SentAt,
-            UserId = message.UserId
-        });
-      }
-
-      public async Task HandleAsync(DeleteMessageCommand command)
-      {
-        var msg = await _context.Message.Where(x => x.Id == command.Id).FirstOrDefaultAsync();
-        _context.Message.Remove(msg);
-        await _context.SaveChangesAsync();
-      }
+      _context = context;
     }
+
+    public async Task<ICommandResult<NewChatDTO>> HandleAsync(CreateNewChatCommand command)
+    {
+      Chat chat = new Chat()
+      {
+        FirstParticipantId = command.FirstParticipantId,
+        SecondParticipantId = command.SecondParticipantId
+      };
+      await _context.Chat.AddAsync(chat);
+      await _context.SaveChangesAsync();
+      return CommandResult<NewChatDTO>.Success(new NewChatDTO()
+      {
+        Id = chat.Id
+      });
+    }
+
+    public async Task<ICommandResult<MessageDTO>> HandleAsync(SendMessageCommand command)
+    {
+      Message message = new Message()
+      {
+        ChatId = command.ChatId,
+        UserId = command.UserId,
+        Content = command.Content
+      };
+      await _context.Message.AddAsync(message);
+      await _context.SaveChangesAsync();
+      return CommandResult<MessageDTO>.Success(new MessageDTO()
+      {
+        Id = message.Id,
+        Content = message.Content,
+        SentAt = message.SentAt,
+        UserId = message.UserId
+      });
+    }
+
+    public async Task HandleAsync(DeleteMessageCommand command)
+    {
+      var msg = await _context.Message.Where(x => x.Id == command.Id).FirstOrDefaultAsync();
+      _context.Message.Remove(msg);
+      await _context.SaveChangesAsync();
+    }
+  }
 }

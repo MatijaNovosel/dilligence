@@ -28,7 +28,7 @@
           dense-toggle
           class="text-weight-regular"
           v-for="link in links"
-          :label="link.text"
+          :label="$t('drawerLinks.' + link.text)"
           :key="link.text"
         >
           <q-list :key="i" dense v-for="(sublink, i) in link.sublinks">
@@ -114,12 +114,12 @@ export default {
         },
         {
           icon: "mdi-file-document",
-          text: "subjects",
-          route: { name: "subjects" },
+          text: "courses",
+          route: { name: "courses" },
           sublinks: [
             {
               text: "availableSubjects",
-              route: { name: "subjects" }
+              route: { name: "courses" }
             }
           ]
         },

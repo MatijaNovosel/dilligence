@@ -7,7 +7,8 @@ export default {
     subjects: "Kolegiji",
     availableSubjects: "Dostupni kolegiji",
     exams: "Zadatci",
-    availableExams: "Dostupni zadatci"
+    availableExams: "Dostupni zadatci",
+    courses: "Kolegiji"
   },
   error: {
     timeNeededFormat: "Format mora biti 'sati:minute'",
@@ -75,5 +76,10 @@ export default {
   uploadMultipleFiles: "Prenesite više datoteka",
   view: "Pregledaj",
   continue: "Nastavi",
-  start: "Započni"
+  start: "Započni",
+  noRecentChats: "Nije pronađen ni jedan razgovor!",
+  searchUsers: "Pretražite korisnike",
+  recentChats: "Prijašnji razgovori",
+  enterMessage: "Unesite poruku",
+  newChat: "Novi razgovor"
 }

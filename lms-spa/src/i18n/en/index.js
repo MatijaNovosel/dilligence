@@ -7,7 +7,8 @@ export default {
     subjects: "Courses",
     availableSubjects: "Available courses",
     exams: "Exams",
-    availableExams: "Available exams"
+    availableExams: "Available exams",
+    courses: "Courses"
   },
   error: {
     timeNeededFormat: "Format must be 'hours:minutes'",
@@ -75,5 +76,10 @@ export default {
   uploadMultipleFiles: "Uplaod multiple files",
   view: "View",
   continue: "Continue",
-  start: "Start"
+  start: "Start",
+  noRecentChats: "No recent chats found!",
+  searchUsers: "Search users",
+  recentChats: "Recent chats",
+  enterMessage: "Enter a message",
+  newChat: "New chat"
 }
