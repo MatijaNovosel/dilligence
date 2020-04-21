@@ -55,7 +55,6 @@
 
 <script>
 import AuthService from "../services/api/auth";
-import StudentService from "../services/api/student";
 import { mapActions } from "vuex";
 import { required, min } from "vee-validate/dist/rules";
 import {
@@ -68,7 +67,7 @@ import {
 extend("min", min);
 extend("required", {
   ...required,
-  message: this.$t("error.required")
+  message: "This field is required!"
 });
 
 export default {
@@ -98,10 +97,7 @@ export default {
               type: "positive",
               message: this.$t("successfullyLoggedIn")
             });
-            const { id, token, settings, privileges, name, surname } = {
-              ...data.payload
-            };
-            let user = { id, name, surname, token, settings, privileges };
+            let user = { ...data.payload };
             this.setUserData(user);
             this.$router.push("/");
           } else {

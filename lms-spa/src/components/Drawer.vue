@@ -16,8 +16,8 @@
           <q-item-section>
             <q-item-label lines="1">{{ `${user.name} ${user.surname}` }}</q-item-label>
             <q-item-label caption lines="2">
-              <span class="text-weight-bold">JMBAG:</span>
-              {{ user.jmbag }}
+              <span class="text-weight-bold">{{ $t("username") }}:</span>
+              {{ user.username }}
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -42,7 +42,7 @@
     <q-dialog v-model="editPictureDialog" persistent>
       <q-card class="picture-dialog">
         <q-toolbar class="bg-primary text-white dialog-toolbar">
-          <span>Change profile picture</span>
+          <span>{{ $t('changeProfilePicture') }}</span>
           <q-space />
           <q-btn
             :ripple="false"
@@ -65,7 +65,7 @@
             outlined
             v-model="picture"
             clearable
-            label="Upload picture"
+            :label="$t('uploadPicture')"
           >
             <template v-slot:prepend>
               <q-icon name="mdi-paperclip" />
@@ -74,7 +74,7 @@
         </q-card-section>
         <q-card-actions class="q-pt-none">
           <q-space />
-          <q-btn :ripple="false" dense size="sm" color="primary">Upload</q-btn>
+          <q-btn :ripple="false" dense size="sm" color="primary">{{ $t('upload') }}</q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>

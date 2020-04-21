@@ -7,19 +7,13 @@ namespace tvz2api_cqrs.Models.DTO
 {
   public class LoginUserDTO
   {
-    public LoginUserDTO(string token, string username, int id, UserSettingsQueryModel settings)
-    {
-      Token = token;
-      Username = username;
-      Id = id;
-      Settings = settings;
-    }
     public LoginUserDTO() { }
-
+    public int Id { get; set; }
     public string Token { get; set; }
     public string Username { get; set; }
+    public string Name { get; set; }
+    public string Surname { get; set; }
     public List<int> Privileges { get; set; }
     public UserSettingsQueryModel Settings { get; set; }
-    public int Id { get; set; }
   }
 }

@@ -153,8 +153,8 @@
 </template>
 
 <script>
-import SubjectService from "../services/api/kolegij";
-import KorisnikService from "../services/api/korisnik";
+import CourseService from "../services/api/course";
+import UserService from "../services/api/user";
 import SMJER from "../constants/smjer";
 import UserMixin from "../mixins/userMixin";
 
@@ -163,7 +163,7 @@ export default {
   mixins: [UserMixin],
   methods: {
     subscribe() {
-      KorisnikService.subscribe(
+      UserService.subscribe(
         this.password,
         this.user.id,
         this.activeSubjectId
@@ -180,7 +180,7 @@ export default {
         });
     },
     unsubscribe(subjectId) {
-      KorisnikService.unsubscribe(this.user.id, subjectId).then(() => {
+      UserService.unsubscribe(this.user.id, subjectId).then(() => {
         this.getData();
       });
     },
@@ -197,7 +197,7 @@ export default {
     },
     getData() {
       this.loading = true;
-      SubjectService.get(
+      CourseService.get(
         this.user.id,
         this.searchData.smjer,
         this.searchData.name,
@@ -206,7 +206,7 @@ export default {
       )
         .then(({ data }) => {
           let subjects = data.results;
-          KorisnikService.getSubscriptions(this.user.id).then(({ data }) => {
+          UserService.getSubscriptions(this.user.id).then(({ data }) => {
             let subscriptions = data;
             subjects.forEach(
               x => (x.subscribed = subscriptions.includes(x.id))

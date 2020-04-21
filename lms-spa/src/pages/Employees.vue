@@ -86,7 +86,6 @@
 </template>
 
 <script>
-import EmployeeService from "../services/api/employee";
 import ODJEL from "../constants/odjel";
 import EMPLOYMENT from "../constants/employment";
 
@@ -98,13 +97,6 @@ export default {
 		},
 		getData() {
 			this.loading = true;
-			EmployeeService.getEmployees(...Object.values(this.searchData))
-				.then(({ data }) => {
-					this.employees = data;
-				})
-				.finally(() => {
-					this.loading = false;
-				});
 		}
 	},
 	created() {

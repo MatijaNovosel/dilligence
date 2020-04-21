@@ -122,6 +122,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       return CommandResult<LoginUserDTO>.Success(new LoginUserDTO()
       {
         Id = user.Id,
+        Name = user.Name,
+        Surname = user.Surname,
         Username = user.Username,
         Settings = settings,
         Privileges = privileges.ToList(),

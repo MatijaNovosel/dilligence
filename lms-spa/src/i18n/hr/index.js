@@ -81,5 +81,7 @@ export default {
   searchUsers: "Pretražite korisnike",
   recentChats: "Prijašnji razgovori",
   enterMessage: "Unesite poruku",
-  newChat: "Novi razgovor"
+  newChat: "Novi razgovor",
+  changeProfilePicture: "Promijenite profilnu sliku",
+  uploadPicture: "Prenesite sliku"
 }

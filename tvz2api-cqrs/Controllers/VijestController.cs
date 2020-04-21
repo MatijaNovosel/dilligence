@@ -24,9 +24,9 @@ namespace tvz2api_cqrs.Controllers
   {
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
-    private readonly IHubContext<VijestiHub> _hubContext;
+    private readonly IHubContext<NotificationHub> _hubContext;
 
-    public VijestController(ICommandBus commandBus, IQueryBus queryBus, IHubContext<VijestiHub> vijestiHub)
+    public VijestController(ICommandBus commandBus, IQueryBus queryBus, IHubContext<NotificationHub> vijestiHub)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;

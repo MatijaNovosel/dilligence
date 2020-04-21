@@ -47,7 +47,7 @@ namespace tvz2api_cqrs
     {
       ConfigureAdditionalServices(services);
       services.AddSignalR();
-      // services.AddDbContext<tvz2Context>();
+      services.AddDbContext<tvz2Context>();
       services.AddControllers();
       services.AddAuthorization(options =>
       {
@@ -130,7 +130,7 @@ namespace tvz2api_cqrs
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapControllers();
-        endpoints.MapHub<VijestiHub>("/vijesti-hub");
+        endpoints.MapHub<NotificationHub>("/vijesti-hub");
         endpoints.MapHub<ChatHub>("/chat-hub");
       });
     }

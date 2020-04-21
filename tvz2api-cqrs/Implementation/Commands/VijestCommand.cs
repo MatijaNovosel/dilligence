@@ -10,10 +10,10 @@ namespace tvz2api_cqrs.Implementation.Commands
   public class NotificationCreateCommand : ICommand<NotificationQueryModel>
   {
     public NotificationCreateCommand() { }
-    public string Naslov { get; set; }
-    public string Opis { get; set; }
-    public int? ObjavioId { get; set; }
-    public int? KolegijId { get; set; }
-    public DateTime? Datum { get; set; }
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public int? SubmittedById { get; set; }
+    public int? CourseId { get; set; }
+    public DateTime? SubmittedAt { get; set; }
   }
 }

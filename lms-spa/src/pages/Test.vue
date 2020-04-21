@@ -49,7 +49,7 @@ export default {
     this.connection.on("EVENT", response => {
       this.vijesti = [...this.vijesti, response.payload];
     });
-    CourseService.getKolegijSidebar(147).then(({ data }) => {
+    CourseService.getCourseSidebar(147).then(({ data }) => {
       this.sidebarContents = data;
     });
     this.connection.start();

@@ -81,5 +81,7 @@ export default {
   searchUsers: "Search users",
   recentChats: "Recent chats",
   enterMessage: "Enter a message",
-  newChat: "New chat"
+  newChat: "New chat",
+  changeProfilePicture: "Change profile picture",
+  uploadPicture: "Upload picture"
 }

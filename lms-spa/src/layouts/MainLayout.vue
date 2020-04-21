@@ -4,7 +4,7 @@
       <Navbar @drawerState="drawer = !drawer" />
       <Drawer :drawerTrigger="drawer" />
     </div>
-    <q-page-container :class="{' drawer-bg': $router.currentRoute.path == '/login' }">
+    <q-page-container :class="{'svg-bg': $router.currentRoute.path == '/login' }">
       <router-view />
     </q-page-container>
   </q-layout>
@@ -42,4 +42,9 @@ export default {
   height: 30%
   border: 1px solid rgba(0, 0, 0, 0.12)
   border-radius: 10px
+.svg-bg
+  background-position: center center
+  background-image: url("../assets/nav-bg.svg")
+  background-size: cover
+  overflow: hidden
 </style>

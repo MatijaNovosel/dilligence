@@ -36,7 +36,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       {
         CourseId = 147,
         SubmittedById = 1,
-        Title = command.Naslov,
+        Title = command.Title,
         Description = "Hardkodirani opis",
         SubmittedAt = DateTime.Now
       };

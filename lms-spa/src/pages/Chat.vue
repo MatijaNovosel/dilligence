@@ -109,7 +109,13 @@
               <q-icon name="mdi-magnify" />
             </template>
             <template v-slot:append>
-              <q-btn :ripple="false" dense size="sm" color="primary" @click="searchUsers">{{ $t('search') }}</q-btn>
+              <q-btn
+                :ripple="false"
+                dense
+                size="sm"
+                color="primary"
+                @click="searchUsers"
+              >{{ $t('search') }}</q-btn>
             </template>
           </q-input>
         </q-card-section>
@@ -143,7 +149,7 @@
 </template>
 
 <script>
-import KorisnikService from "../services/api/korisnik";
+import UserService from "../services/api/user";
 import ChatService from "../services/api/chat";
 import ChatPanel from "../components/ChatPanel";
 import {
@@ -188,7 +194,7 @@ export default {
       });
     },
     getChats(id) {
-      KorisnikService.getChats(id).then(({ data }) => {
+      UserService.getChats(id).then(({ data }) => {
         this.chats = data;
         if (this.chats.length != 0) {
           this.getChatDetails(this.chats[0]);
