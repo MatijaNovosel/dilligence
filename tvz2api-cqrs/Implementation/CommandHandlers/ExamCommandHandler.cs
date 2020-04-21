@@ -47,7 +47,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     {
       var exam = new Exam()
       {
-        Naziv = command.Naziv,
+        Name = command.Name,
         TimeNeeded = command.TimeNeeded,
         CourseId = command.CourseId,
         CreatedById = command.CreatedById,

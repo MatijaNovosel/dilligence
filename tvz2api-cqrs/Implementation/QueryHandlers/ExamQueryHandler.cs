@@ -1,4 +1,4 @@
-/* using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -33,7 +33,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Exam = new ExamDetailsDTO()
           {
             Id = t.Exam.Id,
-            Naziv = t.Exam.Naziv,
+            Naziv = t.Exam.Name,
             CreatedBy = t.Exam.CreatedBy.Username,
             DueDate = t.Exam.DueDate,
             TimeNeeded = t.Exam.TimeNeeded,
@@ -73,12 +73,12 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Exam = new ExamDTO()
           {
             Id = t.Exam.Id,
-            Naziv = t.Exam.Naziv,
+            Naziv = t.Exam.Name,
             TimeNeeded = t.Exam.TimeNeeded,
-            Subject = t.Exam.Subject.Naziv
+            Subject = t.Exam.Course.Name
           }
         }).ToListAsync();
       return exams;
     }
   }
-} */
+}

@@ -28,7 +28,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import KorisnikService from "../services/api/korisnik";
+import UserService from "../services/api/user";
 
 export default {
   name: "Settings",
@@ -59,7 +59,7 @@ export default {
         user.settings = Object.assign({}, val);
         this.setUserData(user);
         this.$i18n.locale = user.settings.locale;
-        KorisnikService.updateSettings(this.user.id, user.settings).then(() => {
+        UserService.updateSettings(this.user.id, user.settings).then(() => {
           this.$q.notify({
             type: "positive",
             message: "Settings successfully updated!"

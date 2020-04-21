@@ -11,9 +11,8 @@ namespace tvz2api_cqrs.Models
         }
 
         public int Id { get; set; }
-        public string Naziv { get; set; }
-        public string SkraceniNaziv { get; set; }
-        public bool? Vanredno { get; set; }
+        public string Name { get; set; }
+        public string Shorthand { get; set; }
 
         public virtual ICollection<Course> Course { get; set; }
     }

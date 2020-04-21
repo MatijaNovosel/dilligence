@@ -48,7 +48,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
           newFiles.Add(new tvz2api_cqrs.Models.File
           {
-            Naziv = Path.GetFileName(fileName),
+            Name = Path.GetFileName(fileName),
             ContentType = file.ContentType,
             Data = fileBytes
           });
@@ -77,7 +77,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
           newFiles.Add(new tvz2api_cqrs.Models.File
           {
-            Naziv = Path.GetFileName(fileName),
+            Name = Path.GetFileName(fileName),
             ContentType = file.ContentType,
             Data = fileBytes
           });

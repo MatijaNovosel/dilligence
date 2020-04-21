@@ -1,4 +1,5 @@
-/* using tvz2api_cqrs.Models;
+using tvz2api_cqrs.Models;
+using tvz2api_cqrs.Models.DTO;
 using tvz2api_cqrs.Infrastructure.Commands;
 using tvz2api_cqrs.Enumerations;
 using tvz2api_cqrs.Implementation.Queries;
@@ -34,28 +35,21 @@ namespace tvz2api_cqrs.Controllers
 
     [Authorize]
     [HttpGet]
-    public async Task<IActionResult> Get(int? userId = null, [FromQuery(Name = "smjerIDs[]")] List<SmjerEnum> smjerIDs = null, string name = null, bool subscribed = false, bool nonSubscribed = false)
+    public async Task<IActionResult> Get(int? userId = null, [FromQuery(Name = "smjerIDs[]")] List<SpecializationEnum> courseIds = null, string name = null, bool subscribed = false, bool nonSubscribed = false)
     {
-      int[] privileges = JsonConvert.DeserializeObject<int[]>(User.FindFirst("Privileges").Value);
-
-      if (!privileges.Any(x => x == (int)PrivilegeEnum.CanViewSubjects))
-      {
-        return Unauthorized();
-      }
-
       // var queryOptions = QueryOptionsExtensions.GetFromRequest(Request);
-      var specification = new KolegijSpecification(userId, smjerIDs, name, subscribed, nonSubscribed);
+      var specification = new CourseSpecification(userId, courseIds, name, subscribed, nonSubscribed);
       var result = await _queryBus.ExecuteAsync(new CourseQuery(specification));
       var count = await _queryBus.ExecuteAsync(new CourseTotalQuery(specification));
-      return Ok(new PageableCollection<KolegijQueryModel>() { Results = result, Total = count });
+      return Ok(new PageableCollection<CourseQueryModel>() { Results = result, Total = count });
     }
 
-    [HttpGet("studenti/{id}")]
-    public async Task<IActionResult> GetStudenti(int id)
+    [HttpGet("users/{id}")]
+    public async Task<IActionResult> GetUsers(int id)
     {
-      var result = await _queryBus.ExecuteAsync(new StudentKolegijQuery(id));
-      var count = await _queryBus.ExecuteAsync(new StudentKolegijTotalQuery(id));
-      return Ok(new PageableCollection<StudentQueryModel>() { Results = result, Total = count });
+      var result = await _queryBus.ExecuteAsync(new UserCourseQuery(id));
+      var count = await _queryBus.ExecuteAsync(new UserCourseTotalQuery(id));
+      return Ok(new PageableCollection<UserDTO>() { Results = result, Total = count });
     }
 
     [HttpGet("{id}")]
@@ -87,4 +81,4 @@ namespace tvz2api_cqrs.Controllers
       return Ok();
     }
   }
-} */
+}

@@ -1,4 +1,4 @@
-/* using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +12,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
 {
   public class ChatQueryHandler :
     IQueryHandlerAsync<ChatDetailsQuery, ChatQueryModel>,
-    IQueryHandlerAsync<ChatAvailableUsersQuery, List<KorisnikQueryModel>>
+    IQueryHandlerAsync<ChatAvailableUsersQuery, List<UserQueryModel>>
   {
     private readonly tvz2Context _context;
 
@@ -42,15 +42,15 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
       return chat;
     }
 
-    public async Task<List<KorisnikQueryModel>> HandleAsync(ChatAvailableUsersQuery query)
+    public async Task<List<UserQueryModel>> HandleAsync(ChatAvailableUsersQuery query)
     {
-      var users = await _context.Korisnik
+      var users = await _context.User
         .Where(t =>
           t.Id != query.Id &&
           !t.ChatFirstParticipant.Any(x => x.FirstParticipantId == query.Id || x.SecondParticipantId == query.Id) &&
           !t.ChatSecondParticipant.Any(x => x.FirstParticipantId == query.Id || x.SecondParticipantId == query.Id)
         )
-        .Select(t => new KorisnikQueryModel
+        .Select(t => new UserQueryModel
         {
           Id = t.Id,
           Created = t.Created,
@@ -60,4 +60,4 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
       return users;
     }
   }
-} */
+}

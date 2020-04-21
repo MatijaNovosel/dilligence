@@ -98,20 +98,12 @@ export default {
               type: "positive",
               message: this.$t("successfullyLoggedIn")
             });
-            const { id, token, settings, privileges } = { ...data.payload };
-            StudentService.getStudent(id).then(({ data }) => {
-              let user = {
-                id,
-                name: data.ime,
-                surname: data.prezime,
-                jmbag: data.jmbag,
-                token,
-                settings,
-                privileges
-              };
-              this.setUserData(user);
-              this.$router.push("/");
-            });
+            const { id, token, settings, privileges, name, surname } = {
+              ...data.payload
+            };
+            let user = { id, name, surname, token, settings, privileges };
+            this.setUserData(user);
+            this.$router.push("/");
           } else {
             throw new Error();
           }

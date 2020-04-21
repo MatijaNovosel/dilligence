@@ -11,7 +11,7 @@ namespace tvz2api_cqrs.Models
         }
 
         public int Id { get; set; }
-        public string Naslov { get; set; }
+        public string Title { get; set; }
         public int? CourseId { get; set; }
 
         public virtual Course Course { get; set; }

@@ -1,4 +1,4 @@
-/* using tvz2api_cqrs.Models;
+using tvz2api_cqrs.Models;
 using tvz2api_cqrs.Implementation.Queries;
 using tvz2api_cqrs.QueryModels;
 using tvz2api_cqrs.Infrastructure.QueryHandlers;
@@ -10,25 +10,25 @@ using tvz2api_cqrs.Models.DTO;
 
 namespace tvz2api_cqrs.Implementation.QueryHandlers
 {
-  public class KorisnikQueryHandler :
-    IQueryHandlerAsync<KorisnikQuery, List<KorisnikQueryModel>>,
-    IQueryHandlerAsync<KorisnikChatQuery, List<KorisnikChatQueryModel>>,
-    IQueryHandlerAsync<KorisnikSettingsQuery, KorisnikSettingsQueryModel>,
-    IQueryHandlerAsync<KorisnikTotalQuery, int>,
-    IQueryHandlerAsync<KorisnikPretplataQuery, List<int>>
+  public class UserQueryHandler :
+    IQueryHandlerAsync<UserQuery, List<UserQueryModel>>,
+    IQueryHandlerAsync<UserChatQuery, List<UserChatQueryModel>>,
+    IQueryHandlerAsync<UserSettingsQuery, UserSettingsQueryModel>,
+    IQueryHandlerAsync<UserTotalQuery, int>,
+    IQueryHandlerAsync<UserSubscriptionQuery, List<int>>
   {
     private readonly tvz2Context _context;
 
-    public KorisnikQueryHandler(tvz2Context context)
+    public UserQueryHandler(tvz2Context context)
     {
       _context = context;
     }
 
-    public async Task<List<KorisnikQueryModel>> HandleAsync(KorisnikQuery query)
+    public async Task<List<UserQueryModel>> HandleAsync(UserQuery query)
     {
-      var korisnici = await _context.Korisnik
+      var korisnici = await _context.User
         .Where(query.Specification.Predicate)
-        .Select(t => new KorisnikQueryModel
+        .Select(t => new UserQueryModel
         {
           Id = t.Id,
           Username = t.Username,
@@ -38,11 +38,11 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
       return korisnici;
     }
 
-    public async Task<int> HandleAsync(KorisnikTotalQuery query)
+    public async Task<int> HandleAsync(UserTotalQuery query)
     {
-      var count = await _context.Korisnik
+      var count = await _context.User
         .Where(query.Specification.Predicate)
-        .Select(t => new KorisnikQueryModel
+        .Select(t => new UserQueryModel
         {
           Id = t.Id,
           Username = t.Username,
@@ -52,19 +52,19 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
       return count;
     }
 
-    public async Task<List<KorisnikChatQueryModel>> HandleAsync(KorisnikChatQuery query)
+    public async Task<List<UserChatQueryModel>> HandleAsync(UserChatQuery query)
     {
       var chats = await _context.Chat
         .Where(t => t.FirstParticipantId == query.Id || t.SecondParticipantId == query.Id)
-        .Select(t => new KorisnikChatQueryModel
+        .Select(t => new UserChatQueryModel
         {
           Id = t.Id,
-          FirstParticipant = new KorisnikQueryModel()
+          FirstParticipant = new UserQueryModel()
           {
             Id = t.FirstParticipant.Id,
             Username = t.FirstParticipant.Username
           },
-          SecondParticipant = new KorisnikQueryModel()
+          SecondParticipant = new UserQueryModel()
           {
             Id = t.SecondParticipant.Id,
             Username = t.SecondParticipant.Username
@@ -74,20 +74,23 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
       return chats;
     }
 
-    public async Task<KorisnikSettingsQueryModel> HandleAsync(KorisnikSettingsQuery query)
+    public async Task<UserSettingsQueryModel> HandleAsync(UserSettingsQuery query)
     {
       var settings = await _context.UserSettings.FirstOrDefaultAsync(x => x.UserId == query.Id);
-      return new KorisnikSettingsQueryModel() { DarkMode = settings.DarkMode };
+      return new UserSettingsQueryModel()
+      {
+        DarkMode = settings.DarkMode,
+        Locale = settings.Locale
+      };
     }
 
-    public async Task<List<int>> HandleAsync(KorisnikPretplataQuery query)
+    public async Task<List<int>> HandleAsync(UserSubscriptionQuery query)
     {
-      var preplate = await _context.Pretplata
-        .Where(t => t.StudentId == query.Id)
-        .Select(t => (int)t.KolegijId)
+      var subscriptions = await _context.Subscription
+        .Where(t => t.UserId == query.Id)
+        .Select(t => (int)t.CourseId)
         .ToListAsync();
-      return preplate;
+      return subscriptions;
     }
   }
 }
- */

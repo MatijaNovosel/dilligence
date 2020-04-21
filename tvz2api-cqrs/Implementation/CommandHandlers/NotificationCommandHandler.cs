@@ -36,9 +36,9 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       {
         CourseId = 147,
         SubmittedById = 1,
-        Naslov = command.Naslov,
-        Opis = "Hardkodirani opis",
-        Datum = DateTime.Now
+        Title = command.Naslov,
+        Description = "Hardkodirani opis",
+        SubmittedAt = DateTime.Now
       };
       await _context.Notification.AddAsync(vijest);
       await _context.SaveChangesAsync();
@@ -47,9 +47,9 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         Id = vijest.Id,
         CourseId = vijest.CourseId,
         SubmittedById = vijest.SubmittedById,
-        Naslov = vijest.Naslov,
-        Opis = vijest.Opis,
-        Datum = vijest.Datum
+        Naslov = vijest.Title,
+        Opis = vijest.Description,
+        Datum = vijest.SubmittedAt
       });
     }
   }

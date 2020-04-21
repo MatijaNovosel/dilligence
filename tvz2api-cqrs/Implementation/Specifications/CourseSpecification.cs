@@ -37,15 +37,18 @@ namespace tvz2api_cqrs.Implementation.Specifications
 
         if (SpecializationIds != null && SpecializationIds.Count() > 0)
         {
+          /*
+          
+            Inace linija ide: predicate = predicate.And(t => SmjerIds.Any(x => (int)x == t.SmjerId));
+            EF ne moze prevesti taj query u SQL zbog problema na EFCore 3.1.0 (https://github.com/dotnet/efcore/issues/17342).
 
-          // Inace linija ide: predicate = predicate.And(t => SmjerIds.Any(x => (int)x == t.SmjerId));
-          // EF ne moze prevesti taj query u SQL zbog problema na EFCore 3.1.0 (https://github.com/dotnet/efcore/issues/17342).
+          */
           predicate = predicate.And(t => SpecializationIds.Select(x => (int)x).Contains((int)t.SpecializationId));
         }
 
         if (!string.IsNullOrWhiteSpace(Name))
         {
-          predicate = predicate.And(t => t.Naziv.ToLower().Contains(Name.ToLower()));
+          predicate = predicate.And(t => t.Name.ToLower().Contains(Name.ToLower()));
         }
 
         // Ako je odabran ili Subscribed ili NonSubscribed, logicki XOR

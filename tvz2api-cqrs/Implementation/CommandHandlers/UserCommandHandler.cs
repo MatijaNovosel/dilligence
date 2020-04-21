@@ -34,13 +34,13 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
     public async Task HandleAsync(UserSubscribeCommand command)
     {
-      if (_context.Course.Where(x => x.Id == command.KolegijId).FirstOrDefault().Lozinka != command.Password)
+      if (_context.Course.Where(x => x.Id == command.CourseId).FirstOrDefault().Password != command.Password)
       {
         throw new Exception("Wrong password!");
       }
       await _context.Subscription.AddAsync(new Subscription()
       {
-        CourseId = command.KolegijId,
+        CourseId = command.CourseId,
         UserId = command.UserId
       });
       await _context.SaveChangesAsync();
@@ -48,8 +48,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
     public async Task HandleAsync(UserUnsubscribeCommand command)
     {
-      var pretplata = await _context.Subscription.Where(x => x.CourseId == command.KolegijId && x.UserId == command.UserId).FirstOrDefaultAsync();
-      _context.Subscription.Remove(pretplata);
+      var subscriptiom = await _context.Subscription.Where(x => x.CourseId == command.CourseId && x.UserId == command.UserId).FirstOrDefaultAsync();
+      _context.Subscription.Remove(subscriptiom);
       await _context.SaveChangesAsync();
     }
 

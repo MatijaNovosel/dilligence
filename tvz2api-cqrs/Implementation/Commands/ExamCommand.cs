@@ -13,7 +13,6 @@ namespace tvz2api_cqrs.Implementation.Commands
     public ExamUpdateAttemptCommand() { }
     public int Id { get; set; }
     public bool Terminated { get; set; }
-    public int TimeLeft { get; set; }
     public UpdateAttemptDTO Exam { get; set; }
   }
 
@@ -26,7 +25,7 @@ namespace tvz2api_cqrs.Implementation.Commands
   public class ExamCreateCommand : ICommand
   {
     public ExamCreateCommand() { }
-    public string Naziv { get; set; }
+    public string Name { get; set; }
     public int TimeNeeded { get; set; }
     public DateTime DueDate { get; set; }
     public int CreatedById { get; set; }

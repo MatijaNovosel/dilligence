@@ -6,9 +6,9 @@ namespace tvz2api_cqrs.Models
     public partial class Notification
     {
         public int Id { get; set; }
-        public string Naslov { get; set; }
-        public DateTime? Datum { get; set; }
-        public string Opis { get; set; }
+        public string Title { get; set; }
+        public DateTime? SubmittedAt { get; set; }
+        public string Description { get; set; }
         public int? CourseId { get; set; }
         public int? SubmittedById { get; set; }
 

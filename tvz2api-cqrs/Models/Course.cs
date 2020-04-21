@@ -14,10 +14,10 @@ namespace tvz2api_cqrs.Models
         }
 
         public int Id { get; set; }
-        public string Naziv { get; set; }
+        public string Name { get; set; }
         public string Isvu { get; set; }
         public int? Ects { get; set; }
-        public string Lozinka { get; set; }
+        public string Password { get; set; }
         public int? MadeById { get; set; }
         public int? SpecializationId { get; set; }
 

@@ -12,12 +12,11 @@ export default {
     ...mapGetters(["user"])
   },
   methods: {
-    /*
-
-      @Input -> variable amount of parameters, represents requested privileges e.g. f(1, 2, 3, 4)
-      @Output -> boolean, does the user have the requested privileges
-
-    */
+    /**
+     * Checks if the current user has the requested privileges.
+     * @param {...number} requestedPrivileges - Variable amount of numbers representing the requested privileges.
+     * @return {boolean} A boolean indicating if the user has said privileges or not.
+     */
     checkPrivileges(...requestedPrivileges) {
       return this.user.privileges.some(privilege => requestedPrivileges.includes(privilege));
     }

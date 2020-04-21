@@ -28,7 +28,7 @@
 
 <script>
 import FileCabinet from "../components/FileCabinet";
-import KolegijService from "../services/api/kolegij";
+import CourseService from "../services/api/course";
 import {
   HubConnectionBuilder,
   LogLevel,
@@ -49,7 +49,7 @@ export default {
     this.connection.on("EVENT", response => {
       this.vijesti = [...this.vijesti, response.payload];
     });
-    KolegijService.getKolegijSidebar(147).then(({ data }) => {
+    CourseService.getKolegijSidebar(147).then(({ data }) => {
       this.sidebarContents = data;
     });
     this.connection.start();
@@ -57,12 +57,12 @@ export default {
   },
   methods: {
     getData() {
-      this.$axios.get("Vijest/147").then(({ data }) => {
+      this.$axios.get("Notification/147").then(({ data }) => {
         this.vijesti = data;
       });
     },
     sendNotification() {
-      this.$axios.post("Vijest", { naslov: this.notification });
+      this.$axios.post("Notification", { naslov: this.notification });
     }
   },
   data() {

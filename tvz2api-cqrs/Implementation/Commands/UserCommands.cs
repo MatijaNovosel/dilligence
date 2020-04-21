@@ -9,27 +9,27 @@ namespace tvz2api_cqrs.Implementation.Commands
   public class UserSubscribeCommand : ICommand
   {
     public UserSubscribeCommand() { }
-    public UserSubscribeCommand(int userId, string password, int kolegijId)
+    public UserSubscribeCommand(int userId, string password, int courseId)
     {
       UserId = userId;
       Password = password;
-      KolegijId = kolegijId;
+      CourseId = courseId;
     }
     public int UserId { get; set; }
     public string Password { get; set; }
-    public int KolegijId { get; set; }
+    public int CourseId { get; set; }
   }
 
   public class UserUnsubscribeCommand : ICommand
   {
     public UserUnsubscribeCommand() { }
-    public UserUnsubscribeCommand(int userId, int kolegijId)
+    public UserUnsubscribeCommand(int userId, int courseId)
     {
       UserId = userId;
-      KolegijId = kolegijId;
+      CourseId = courseId;
     }
     public int UserId { get; set; }
-    public int KolegijId { get; set; }
+    public int CourseId { get; set; }
   }
 
   public class UserUpdateSettingsCommand : ICommand

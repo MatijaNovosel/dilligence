@@ -18,10 +18,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using tvz2api_cqrs.Hubs;
-// using tvz2api_cqrs.Implementation.CommandHandlers;
+using tvz2api_cqrs.Implementation.CommandHandlers;
 using tvz2api_cqrs.Implementation.Commands;
 using tvz2api_cqrs.Implementation.Queries;
-// using tvz2api_cqrs.Implementation.QueryHandlers;
+using tvz2api_cqrs.Implementation.QueryHandlers;
 using tvz2api_cqrs.Infrastructure.CommandHandlers;
 using tvz2api_cqrs.Infrastructure.Commands;
 using tvz2api_cqrs.Infrastructure.Messaging;
@@ -140,13 +140,12 @@ namespace tvz2api_cqrs
       services.AddScoped<ICommandBus, CommandBus>();
       services.AddScoped<IEventBus, EventBus>();
       services.AddScoped<IQueryBus, QueryBus>();
-      /*
 
-      services.AddScoped<IQueryHandlerAsync<CourseQuery, List<KolegijQueryModel>>, CourseQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<CourseQuery, List<CourseQueryModel>>, CourseQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<CourseTotalQuery, int>, CourseQueryHandler>();
-      services.AddScoped<IQueryHandlerAsync<StudentKolegijQuery, List<StudentQueryModel>>, CourseQueryHandler>();
-      services.AddScoped<IQueryHandlerAsync<StudentKolegijTotalQuery, int>, CourseQueryHandler>();
-      services.AddScoped<IQueryHandlerAsync<CourseDetailsQuery, KolegijDetailsQueryModel>, CourseQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<UserCourseQuery, List<UserDTO>>, CourseQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<UserCourseTotalQuery, int>, CourseQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<CourseDetailsQuery, CourseDetailsQueryModel>, CourseQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<CourseSidebarQuery, List<SidebarContentDTO>>, CourseQueryHandler>();
 
       services.AddScoped<ICommandHandlerAsync<FileUploadCommand, List<int>>, FileCommandHandler>();
@@ -157,23 +156,21 @@ namespace tvz2api_cqrs
       services.AddScoped<ICommandHandlerAsync<AuthenticationRegisterCommand>, AuthenticationCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<AuthenticationLoginCommand, LoginUserDTO>, AuthenticationCommandHandler>();
 
-      services.AddScoped<IQueryHandlerAsync<StudentDetailsQuery, StudentQueryModel>, StudentQueryHandler>();
-
       services.AddScoped<ICommandHandlerAsync<UserSubscribeCommand>, UserCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<UserUnsubscribeCommand>, UserCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<UserUpdateSettingsCommand>, UserCommandHandler>();
 
-      services.AddScoped<IQueryHandlerAsync<VijestQuery, List<VijestQueryModel>>, VijestQueryHandler>();
-      services.AddScoped<ICommandHandlerAsync<CreateVijestCommand, VijestQueryModel>, VijestCommandHandler>();
+      services.AddScoped<IQueryHandlerAsync<NotificationQuery, List<NotificationQueryModel>>, NotificationQueryHandler>();
+      services.AddScoped<ICommandHandlerAsync<NotificationCreateCommand, NotificationQueryModel>, NotificationCommandHandler>();
 
-      services.AddScoped<IQueryHandlerAsync<KorisnikQuery, List<KorisnikQueryModel>>, KorisnikQueryHandler>();
-      services.AddScoped<IQueryHandlerAsync<KorisnikTotalQuery, int>, KorisnikQueryHandler>();
-      services.AddScoped<IQueryHandlerAsync<KorisnikChatQuery, List<KorisnikChatQueryModel>>, KorisnikQueryHandler>();
-      services.AddScoped<IQueryHandlerAsync<KorisnikSettingsQuery, KorisnikSettingsQueryModel>, KorisnikQueryHandler>();
-      services.AddScoped<IQueryHandlerAsync<KorisnikPretplataQuery, List<int>>, KorisnikQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<UserQuery, List<UserQueryModel>>, UserQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<UserTotalQuery, int>, UserQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<UserChatQuery, List<UserChatQueryModel>>, UserQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<UserSettingsQuery, UserSettingsQueryModel>, UserQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<UserSubscriptionQuery, List<int>>, UserQueryHandler>();
 
       services.AddScoped<IQueryHandlerAsync<ChatDetailsQuery, ChatQueryModel>, ChatQueryHandler>();
-      services.AddScoped<IQueryHandlerAsync<ChatAvailableUsersQuery, List<KorisnikQueryModel>>, ChatQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<ChatAvailableUsersQuery, List<UserQueryModel>>, ChatQueryHandler>();
 
       services.AddScoped<ICommandHandlerAsync<SendMessageCommand, MessageDTO>, ChatCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<CreateNewChatCommand, NewChatDTO>, ChatCommandHandler>();
@@ -185,7 +182,6 @@ namespace tvz2api_cqrs
       services.AddScoped<ICommandHandlerAsync<ExamUpdateAttemptCommand>, ExamCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<ExamStartAttemptCommand>, ExamCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<ExamCreateCommand>, ExamCommandHandler>();
-      */
     }
   }
 }

@@ -1,4 +1,4 @@
-/* using tvz2api_cqrs.Models;
+using tvz2api_cqrs.Models;
 using tvz2api_cqrs.Implementation.Queries;
 using tvz2api_cqrs.QueryModels;
 using tvz2api_cqrs.Infrastructure.QueryHandlers;
@@ -27,7 +27,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         .Select(t => new FileQueryModel
         {
           Id = t.Id,
-          Naziv = t.Naziv,
+          Naziv = t.Name,
           ContentType = t.ContentType,
           Data = t.Data
         })
@@ -36,4 +36,3 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     }
   }
 }
- */

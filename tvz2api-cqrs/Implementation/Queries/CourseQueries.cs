@@ -53,7 +53,7 @@ namespace tvz2api_cqrs.Implementation.Queries
     public CourseSpecification Specification { get; set; }
   }
 
-  public class UserCourseQuery : IQuery<List<UserQueryModel>>
+  public class UserCourseQuery : IQuery<List<UserDTO>>
   {
     public UserCourseQuery(int id)
     {

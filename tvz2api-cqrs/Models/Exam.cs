@@ -12,7 +12,7 @@ namespace tvz2api_cqrs.Models
         }
 
         public int Id { get; set; }
-        public string Naziv { get; set; }
+        public string Name { get; set; }
         public DateTime? DueDate { get; set; }
         public int TimeNeeded { get; set; }
         public int? CourseId { get; set; }
