@@ -19,7 +19,7 @@ namespace tvz2api_cqrs.QueryModels
     public string Isvu { get; set; }
     public int? Ects { get; set; }
     public string Smjer { get; set; }
-    public List<StudentDTO> Studenti { get; set; }
+    public List<UserDTO> Users { get; set; }
     public List<SidebarContentDTO> SidebarContents { get; set; }
   }
 }

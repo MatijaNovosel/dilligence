@@ -1,4 +1,4 @@
-/* using tvz2api_cqrs.Models;
+using tvz2api_cqrs.Models;
 using tvz2api_cqrs.Implementation.Queries;
 using tvz2api_cqrs.QueryModels;
 using tvz2api_cqrs.Infrastructure.QueryHandlers;
@@ -10,27 +10,27 @@ using tvz2api_cqrs.Models.DTO;
 
 namespace tvz2api_cqrs.Implementation.QueryHandlers
 {
-  public class VijestQueryHandler :
-    IQueryHandlerAsync<VijestQuery, List<VijestQueryModel>>
+  public class NotificationQueryHandler :
+    IQueryHandlerAsync<NotificationQuery, List<NotificationQueryModel>>
   {
     private readonly tvz2Context _context;
 
-    public VijestQueryHandler(tvz2Context context)
+    public NotificationQueryHandler(tvz2Context context)
     {
       _context = context;
     }
 
-    public async Task<List<VijestQueryModel>> HandleAsync(VijestQuery query)
+    public async Task<List<NotificationQueryModel>> HandleAsync(NotificationQuery query)
     {
-      var vijesti = await _context.Vijest
-        .Where(t => t.KolegijId == query.Id)
-        .Select(t => new VijestQueryModel
+      var vijesti = await _context.Notification
+        .Where(t => t.CourseId == query.Id)
+        .Select(t => new NotificationQueryModel
         {
           Id = t.Id,
           Datum = t.Datum,
-          KolegijId = t.KolegijId,
+          CourseId = t.CourseId,
           Naslov = t.Naslov,
-          ObjavioId = t.ObjavioId,
+          SubmittedById = t.SubmittedById,
           Opis = t.Opis
         })
         .ToListAsync();
@@ -38,4 +38,3 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     }
   }
 }
- */

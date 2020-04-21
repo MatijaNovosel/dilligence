@@ -53,18 +53,18 @@ namespace tvz2api_cqrs.Implementation.Queries
     public CourseSpecification Specification { get; set; }
   }
 
-  public class StudentKolegijQuery : IQuery<List<StudentQueryModel>>
+  public class UserCourseQuery : IQuery<List<UserQueryModel>>
   {
-    public StudentKolegijQuery(int id)
+    public UserCourseQuery(int id)
     {
       Id = id;
     }
     public int Id { get; set; }
   }
 
-  public class StudentKolegijTotalQuery : IQuery<int>
+  public class UserCourseTotalQuery : IQuery<int>
   {
-    public StudentKolegijTotalQuery(int id)
+    public UserCourseTotalQuery(int id)
     {
       Id = id;
     }

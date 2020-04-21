@@ -13,7 +13,7 @@ namespace tvz2api_cqrs.Implementation.Specifications
 {
   public class CourseSpecification : ISpecification<Course>
   {
-    public CourseSpecification(int? userId = null, List<SmjerEnum> smjerIds = null, string name = null, bool subscribed = false, bool nonSubscribed = false)
+    public CourseSpecification(int? userId = null, List<SpecializationEnum> smjerIds = null, string name = null, bool subscribed = false, bool nonSubscribed = false)
     {
       SpecializationIds = smjerIds;
       Name = name;
@@ -22,7 +22,7 @@ namespace tvz2api_cqrs.Implementation.Specifications
       UserId = userId;
     }
 
-    public List<SmjerEnum> SpecializationIds { get; }
+    public List<SpecializationEnum> SpecializationIds { get; }
     public string Name { get; }
     public bool Subscribed { get; }
     public bool NonSubscribed { get; }

@@ -20,17 +20,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace tvz2api_cqrs.Implementation.CommandHandlers
 {
-  public class VijestCommandHandler :
-    ICommandHandlerAsync<CreateVijestCommand, NotificationQueryModel>
+  public class NotificationCommandHandler :
+    ICommandHandlerAsync<NotificationCreateCommand, NotificationQueryModel>
   {
     private readonly tvz2Context _context;
 
-    public VijestCommandHandler(tvz2Context context)
+    public NotificationCommandHandler(tvz2Context context)
     {
       _context = context;
     }
 
-    public async Task<ICommandResult<NotificationQueryModel>> HandleAsync(CreateVijestCommand command)
+    public async Task<ICommandResult<NotificationQueryModel>> HandleAsync(NotificationCreateCommand command)
     {
       Notification vijest = new Notification()
       {

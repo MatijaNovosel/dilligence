@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace tvz2api_cqrs.Enumerations
 {
-    public enum SmjerEnum
+    public enum SpecializationEnum
     {
         inf = 1,
         rac = 2,
