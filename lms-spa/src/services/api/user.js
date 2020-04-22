@@ -27,7 +27,7 @@ export default {
    * @return {AxiosPromise<any>} Axios promise to be resolved in the view.
    */
   async getSubscriptions(id) {
-    return await axios.get(`Korisnik/pretplata/${id}`);
+    return await axios.get(`User/subscription/${id}`);
   },
   /**
    * Subscribes a user to a course.

@@ -53,7 +53,7 @@ namespace tvz2api_cqrs.Controllers
       return Ok(result);
     }
 
-    [HttpGet("pretplata/{id}")]
+    [HttpGet("subscription/{id}")]
     public async Task<IActionResult> GetPretplata(int id)
     {
       var result = await _queryBus.ExecuteAsync(new UserSubscriptionQuery(id));

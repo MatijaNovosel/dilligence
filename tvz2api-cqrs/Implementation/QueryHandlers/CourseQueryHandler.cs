@@ -32,7 +32,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         .Select(t => new CourseDetailsQueryModel
         {
           Id = t.Id,
-          Naziv = t.Name,
+          Name = t.Name,
           Ects = t.Ects,
           Smjer = t.Specialization.Name,
           Users = t.Subscription
@@ -56,7 +56,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
                 .Select(y => new FileDTO
                 {
                   Id = y.File.Id,
-                  Naziv = y.File.Name,
+                  Name = y.File.Name,
                   ContentType = y.File.ContentType,
                   Data = y.File.Data
                 })
@@ -81,7 +81,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
             .Select(y => new FileDTO
             {
               Id = y.File.Id,
-              Naziv = y.File.Name,
+              Name = y.File.Name,
               ContentType = y.File.ContentType,
               Data = y.File.Data
             })
@@ -113,8 +113,9 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         .Select(t => new CourseQueryModel
         {
           Id = t.Id,
-          Naziv = t.Name,
+          Name = t.Name,
           Ects = t.Ects,
+          Subscribed = t.Subscription.Any(x => x.UserId == query.Specification.UserId),
           SmjerId = t.SpecializationId
         })
         .ToListAsync();
@@ -128,8 +129,9 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         .Select(t => new CourseQueryModel
         {
           Id = t.Id,
-          Naziv = t.Name,
+          Name = t.Name,
           Ects = t.Ects,
+          Subscribed = t.Subscription.Any(x => x.UserId == query.Specification.UserId),
           SmjerId = t.SpecializationId
         }).CountAsync();
       return count;

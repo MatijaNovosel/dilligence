@@ -3,7 +3,7 @@
     <div class="row justify-center" v-if="attempt">
       <div class="col-3 q-pa-md" v-show="centerQuestion">
         <q-card>
-          <q-card-section class="text-center">{{ attempt.exam.naziv }}</q-card-section>
+          <q-card-section class="text-center">{{ attempt.exam.name }}</q-card-section>
           <q-separator />
           <q-card-section>
             <div class="row">

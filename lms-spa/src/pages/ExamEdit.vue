@@ -9,7 +9,7 @@
                 <span class="text-weight-light text-h5">{{ $t("exam.info") }}</span>
               </div>
               <div class="col-6 q-pr-sm">
-                <q-input v-model="exam.naziv" outlined dense :label="$t('exam.name')" />
+                <q-input v-model="exam.name" outlined dense :label="$t('exam.name')" />
               </div>
               <div class="col-6">
                 <q-input
@@ -286,7 +286,7 @@ export default {
       }
     ];
     this.exam = {
-      naziv: "Exam name",
+      name: "Exam name",
       timeNeeded: "01:00",
       dueDate: "2019-02-01 12:44",
       questions: [

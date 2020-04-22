@@ -33,7 +33,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Exam = new ExamDetailsDTO()
           {
             Id = t.Exam.Id,
-            Naziv = t.Exam.Name,
+            Name = t.Exam.Name,
             CreatedBy = t.Exam.CreatedBy.Username,
             DueDate = t.Exam.DueDate,
             TimeNeeded = t.Exam.TimeNeeded,
@@ -73,7 +73,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Exam = new ExamDTO()
           {
             Id = t.Exam.Id,
-            Naziv = t.Exam.Name,
+            Name = t.Exam.Name,
             TimeNeeded = t.Exam.TimeNeeded,
             Subject = t.Exam.Course.Name
           }

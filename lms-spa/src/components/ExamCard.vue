@@ -6,7 +6,7 @@
     </q-badge>
     <q-card-section class="q-py-sm">
       <div class="text-overline">{{ examData.exam.subject }}</div>
-      <span class="ellipsis-text">{{ examData.exam.naziv }}</span>
+      <span class="ellipsis-text">{{ examData.exam.name }}</span>
     </q-card-section>
     <q-separator />
     <q-card-actions>

@@ -36,18 +36,18 @@
         <q-item
           :class="{ shaded: index % 2, nonShaded: !(index % 2) }"
           v-for="(file, index) in content.files"
-          :key="file.id + file.naziv"
+          :key="file.id + file.name"
         >
           <q-item-section avatar>
             <q-icon
               class="q-pl-md"
               color="primary"
-              :name="fileIcon(file.naziv.slice(file.naziv.lastIndexOf('.') + 1))"
+              :name="fileIcon(file.name.slice(file.name.lastIndexOf('.') + 1))"
             />
           </q-item-section>
           <q-separator vertical />
           <q-item-section class="q-pl-md">
-            <q-item-label>{{ file.naziv }}</q-item-label>
+            <q-item-label>{{ file.name }}</q-item-label>
             <q-item-label caption>{{ file.contentType }}</q-item-label>
           </q-item-section>
           <q-item-section side>
@@ -172,7 +172,7 @@ export default {
     },
     handleDownload(item) {
       item.downloading = true;
-      this.download(item.contentType, item.data, item.naziv);
+      this.download(item.contentType, item.data, item.name);
       setTimeout(() => (item.downloading = false), 500);
     },
     upload() {

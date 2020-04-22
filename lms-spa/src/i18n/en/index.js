@@ -83,5 +83,15 @@ export default {
   enterMessage: "Enter a message",
   newChat: "New chat",
   changeProfilePicture: "Change profile picture",
-  uploadPicture: "Upload picture"
+  uploadPicture: "Upload picture",
+  noData: "No data available",
+  loading: "Loading",
+  subscribeToCourse: "Subscribe to course",
+  viewCourseDetails: "View course details",
+  unsubscribeFromCourse: "Unsubscribe from course",
+  subscribeToCourse: "Subscribe to course",
+  home: "Home",
+  participants: "Participants",
+  exams: "Exams",
+  notifications: "Notifications"
 }

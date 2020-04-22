@@ -120,7 +120,8 @@
           </q-input>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          <q-list separator dense class="border-box">
+          <div class="text-center" v-if="foundUsers && foundUsers.length == 0">No users found!</div>
+          <q-list v-else separator dense class="border-box">
             <q-item v-for="(user, i) in foundUsers" :key="i">
               <q-item-section avatar class="q-pl-md">
                 <q-avatar size="30px">

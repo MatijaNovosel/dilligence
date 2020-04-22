@@ -1,62 +1,65 @@
 <template>
-  <q-page class="flex flex-center">
-    <div class="q-gutter-y-md">
-      <q-card>
-        <q-tabs
-          v-model="tab"
-          dense
-          class="text-grey"
-          active-color="primary"
-          indicator-color="primary"
-          align="justify"
-          narrow-indicator
-        >
-          <q-tab name="mails" label="Mails" />
-          <q-tab name="alarms" label="Alarms" />
-          <q-tab name="movies" label="Movies" />
-        </q-tabs>
-        <q-separator />
-        <q-tab-panels v-model="tab" animated>
-          <q-tab-panel name="mails">
-            <div class="text-h6">Mails</div>Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          </q-tab-panel>
-          <q-tab-panel name="alarms">
-            <div class="text-h6">Alarms</div>Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          </q-tab-panel>
-          <q-tab-panel name="movies">
-            <div class="text-h6">Movies</div>Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          </q-tab-panel>
-        </q-tab-panels>
-      </q-card>
-      <q-card>
-        <q-tab-panels v-model="tab" animated>
-          <q-tab-panel name="mails">
-            <div class="text-h6">Mails</div>Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          </q-tab-panel>
-          <q-tab-panel name="alarms">
-            <div class="text-h6">Alarms</div>Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          </q-tab-panel>
-          <q-tab-panel name="movies">
-            <div class="text-h6">Movies</div>Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          </q-tab-panel>
-        </q-tab-panels>
-        <q-separator />
-        <q-tabs v-model="tab" dense class="bg-grey-3" align="justify" narrow-indicator>
-          <q-tab name="mails" label="Mails" />
-          <q-tab name="alarms" label="Alarms" />
-          <q-tab name="movies" label="Movies" />
-        </q-tabs>
-      </q-card>
+  <q-page class="q-pa-md">
+    <div class="row" v-if="course">
+      <div class="col-12 q-pb-md text-center">
+        <span class="text-weight-light text-h5">{{ course.name }}</span>
+      </div>
+      <div class="col-12">
+        <q-card flat bordered>
+          <q-tabs
+            v-model="tab"
+            dense
+            class="text-grey"
+            active-color="primary"
+            indicator-color="primary"
+            align="justify"
+            narrow-indicator
+          >
+            <q-tab name="home" :label="$t('home')" />
+            <q-tab name="notifications" :label="$t('notifications')" />
+            <q-tab name="participants" :label="$t('participants')" />
+            <q-tab name="exams" :label="$t('exams')" />
+          </q-tabs>
+          <q-separator />
+          <q-tab-panels v-model="tab">
+            <q-tab-panel name="home">
+              {{ tab }}
+            </q-tab-panel>
+            <q-tab-panel name="notifications">
+              
+            </q-tab-panel>
+            <q-tab-panel name="participants">
+              {{ tab }}
+            </q-tab-panel>
+            <q-tab-panel name="exams">
+              {{ tab }}
+            </q-tab-panel>
+          </q-tab-panels>
+        </q-card>
+      </div>
     </div>
   </q-page>
 </template>
 
 <script>
+import CourseService from "../services/api/course";
+
 export default {
   name: "CourseDetails",
+  created() {
+    this.getData();
+  },
+  methods: {
+    getData() {
+      CourseService.getCourse(this.$route.params.id).then(({ data }) => {
+        this.course = data;
+      });
+    }
+  },
   data() {
     return {
-      tab: "mails"
+      course: null,
+      tab: "home"
     };
   }
 };

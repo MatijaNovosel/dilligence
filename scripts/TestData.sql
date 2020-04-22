@@ -1,5 +1,5 @@
 INSERT INTO Exam
-	(Naziv, SubjectID, TimeNeeded, DueDate)
+	([Name], SubjectID, TimeNeeded, DueDate)
 VALUES
 	('General programming exam', 147, 3600, CURRENT_TIMESTAMP);
 

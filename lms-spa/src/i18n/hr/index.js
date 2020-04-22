@@ -83,5 +83,15 @@ export default {
   enterMessage: "Unesite poruku",
   newChat: "Novi razgovor",
   changeProfilePicture: "Promijenite profilnu sliku",
-  uploadPicture: "Prenesite sliku"
+  uploadPicture: "Prenesite sliku",
+  noData: "Nema dostupnih podataka",
+  loading: "Učitavanje",
+  subscribeToCourse: "Pretplatite se na kolegij",
+  viewCourseDetails: "Stranica kolegija",
+  unsubscribeFromCourse: "Poništite pretplatu",
+  subscribeToCourse: "Pretplatite se na kolegij",
+  home: "Početna stranica",
+  participants: "Sudionici",
+  exams: "Zadatci",
+  notifications: "Obavijesti"
 }

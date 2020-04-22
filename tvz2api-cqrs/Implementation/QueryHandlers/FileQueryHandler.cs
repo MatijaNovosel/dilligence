@@ -27,7 +27,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         .Select(t => new FileQueryModel
         {
           Id = t.Id,
-          Naziv = t.Name,
+          Name = t.Name,
           ContentType = t.ContentType,
           Data = t.Data
         })
