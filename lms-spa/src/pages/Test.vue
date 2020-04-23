@@ -5,10 +5,10 @@
     </template>
     <div class="row text-center justify-center q-my-md">
       <div class="col-3">
-        <q-input v-model="notification" :label="$t('enterNewNotification')"></q-input>
+        <q-input v-model="notification" :label="$i18n.t('enterNewNotification')"></q-input>
       </div>
       <div class="col-1 flex flex-center">
-        <q-btn size="md" dense color="primary" @click="sendNotification">{{ $t('send') }}</q-btn>
+        <q-btn size="md" dense color="primary" @click="sendNotification">{{ $i18n.t('send') }}</q-btn>
       </div>
     </div>
     <div class="row text-center justify-center full-width">

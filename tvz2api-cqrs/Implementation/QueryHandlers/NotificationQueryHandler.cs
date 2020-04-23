@@ -27,11 +27,11 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         .Select(t => new NotificationQueryModel
         {
           Id = t.Id,
-          Datum = t.SubmittedAt,
-          CourseId = t.CourseId,
-          Naslov = t.Title,
-          SubmittedById = t.SubmittedById,
-          Opis = t.Description
+          SubmittedAt = t.SubmittedAt,
+          Title = t.Title,
+          Course = t.Course.Name,
+          SubmittedBy = $"{t.SubmittedBy.Name} {t.SubmittedBy.Surname}",
+          Description = t.Description
         })
         .ToListAsync();
       return vijesti;

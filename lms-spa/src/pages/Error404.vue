@@ -7,13 +7,13 @@
       >
     </p>
     <p class="text-faded">
-      {{ $t('contentNotFound') }}<strong>(404)</strong>
+      {{ $i18n.t('contentNotFound') }}<strong>(404)</strong>
     </p>
     <q-btn
       color="secondary"
       style="width:200px;"
       to="/"
-      :label="$t('goBack')"
+      :label="$i18n.t('goBack')"
     />
   </div>
 </template>

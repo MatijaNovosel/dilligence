@@ -27,7 +27,7 @@ namespace tvz2api_cqrs.Controllers
     private readonly IQueryBus _queryBus;
     private readonly IHubContext<ChatHub> _hubContext;
 
-    public ChatController(ICommandBus commandBus, IQueryBus queryBus, IHubContext<ChatHub> chatHub)
+    public ChatController(ICommandBus commandBus, IQueryBus queryBus, IHubContext<ChatHub> chatHub, tvz2Context context): base(context)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;

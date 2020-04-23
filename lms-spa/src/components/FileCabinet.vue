@@ -14,7 +14,7 @@
             icon="mdi-plus-box-multiple"
             @click="addFileDialog = !addFileDialog"
           >
-            <q-tooltip>{{ $t('uploadFiles') }}</q-tooltip>
+            <q-tooltip>{{ $i18n.t('uploadFiles') }}</q-tooltip>
           </q-btn>
           <q-btn
             :ripple="false"
@@ -27,7 +27,7 @@
             :icon="downloadMultiple ? 'mdi-lock-open-variant' : 'mdi-lock'"
             @click="changeDownloadToMultiple"
           >
-            <q-tooltip>{{ $t('downloadMultiple') }}</q-tooltip>
+            <q-tooltip>{{ $i18n.t('downloadMultiple') }}</q-tooltip>
           </q-btn>
         </div>
       </div>
@@ -74,7 +74,7 @@
         </q-item>
         <q-item class="justify-center" v-show="downloadMultiple">
           <q-space />
-          <q-btn size="sm" dense color="primary" @click="downloadMultipleFiles">{{ $t('download') }}</q-btn>
+          <q-btn size="sm" dense color="primary" @click="downloadMultipleFiles">{{ $i18n.t('download') }}</q-btn>
           <q-space />
           <q-btn
             :ripple="false"
@@ -86,7 +86,7 @@
             v-if="downloadMultiple"
             icon="mdi-check-box-multiple-outline"
           >
-            <q-tooltip>{{ $t('selectAll') }}</q-tooltip>
+            <q-tooltip>{{ $i18n.t('selectAll') }}</q-tooltip>
           </q-btn>
         </q-item>
       </q-list>
@@ -113,7 +113,7 @@
             outlined
             v-model="files"
             clearable
-            :label="$t('uploadMultipleFiles')"
+            :label="$i18n.t('uploadMultipleFiles')"
           >
             <template v-slot:prepend>
               <q-icon name="mdi-paperclip" />
@@ -130,7 +130,7 @@
             size="sm"
             color="primary"
             @click="upload"
-          >{{ $t('upload') }}</q-btn>
+          >{{ $i18n.t('upload') }}</q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>

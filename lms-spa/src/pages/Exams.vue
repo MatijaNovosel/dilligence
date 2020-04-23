@@ -2,7 +2,7 @@
   <q-page class="q-pa-md">
     <div class="row">
       <div class="col-12">
-        <span class="text-weight-light text-h5">{{ $t('availableExams') }}</span>
+        <span class="text-weight-light text-h5">{{ $i18n.t('availableExams') }}</span>
       </div>
       <div class="col-12 q-py-sm">
         <q-separator />

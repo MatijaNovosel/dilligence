@@ -1,6 +1,6 @@
 <template>
   <q-card flat bordered>
-    <q-badge class="gore-desno">
+    <q-badge class="absolute-top-right">
       <q-icon size="xs" name="mdi-clock-fast" />
       <span class="q-pl-xs">{{ timeLeft }}</span>
     </q-badge>
@@ -40,11 +40,11 @@ export default {
     buttonText() {
       if (this.examData != null) {
         if (this.examData.started && this.examData.terminated) {
-          return this.$t("view");
+          return this.$i18n.t("view");
         } else if (this.examData.started && !this.examData.terminated) {
-          return this.$t("continue");
+          return this.$i18n.t("continue");
         } else {
-          return this.$t("start");
+          return this.$i18n.t("start");
         }
       }
     }
@@ -52,10 +52,3 @@ export default {
   methods: {}
 };
 </script>
-
-<style scoped lang="sass">
-.gore-desno
-  position: absolute
-  top: 10px
-  right: 10px
-</style>

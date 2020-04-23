@@ -2,7 +2,7 @@
   <q-page class="q-pa-md">
     <div class="row">
       <div class="col-12">
-        <span class="text-weight-light text-h5">{{ $t('availableCourses') }}</span>
+        <span class="text-weight-light text-h5">{{ $i18n.t('availableCourses') }}</span>
       </div>
       <div class="col-12 q-py-sm">
         <q-separator />
@@ -10,7 +10,7 @@
       <div class="col-12 q-pb-md">
         <div class="row justify-start">
           <div class="col-8">
-            <q-input outlined v-model="searchData.name" dense :label="$t('name')" clearable />
+            <q-input outlined v-model="searchData.name" dense :label="$i18n.t('name')" clearable />
           </div>
           <div class="col-4 q-pl-sm">
             <q-select
@@ -18,7 +18,7 @@
               dense
               v-model="searchData.smjer"
               :options="smjerOptions"
-              :label="$t('specialization')"
+              :label="$i18n.t('specialization')"
               multiple
               emit-value
               map-options
@@ -40,13 +40,13 @@
               size="xs"
               v-model="searchData.showSubscribed"
               val="xs"
-              :label="$t('showSubscribed')"
+              :label="$i18n.t('showSubscribed')"
             />
             <q-checkbox
               size="xs"
               v-model="searchData.showNonSubscribed"
               val="xs"
-              :label="$t('showNonSubscribed')"
+              :label="$i18n.t('showNonSubscribed')"
             />
           </div>
         </div>
@@ -59,7 +59,7 @@
           class="q-px-sm"
           color="primary"
           @click="getData"
-        >{{ $t('search') }}</q-btn>
+        >{{ $i18n.t('search') }}</q-btn>
       </div>
       <div class="col-12 q-py-sm">
         <q-separator />
@@ -74,8 +74,8 @@
           :data="subjects"
           :columns="columns"
           row-key="name"
-          :no-data-label="$t('noData')"
-          :loading-label="$t('loading')"
+          :no-data-label="$i18n.t('noData')"
+          :loading-label="$i18n.t('loading')"
           hide-header
         >
           <template v-slot:item="props">
@@ -121,7 +121,7 @@
                         anchor="top middle"
                         self="bottom middle"
                         :offset="[10, 10]"
-                      >{{ $t('viewCourseDetails') }}</q-tooltip>
+                      >{{ $i18n.t('viewCourseDetails') }}</q-tooltip>
                     </q-btn>
                     <q-btn
                       size="sm"
@@ -134,7 +134,7 @@
                         anchor="top middle"
                         self="bottom middle"
                         :offset="[10, 10]"
-                      >{{ props.row.subscribed ? $t('unsubscribeFromCourse') : $t('subscribeToCourse') }}</q-tooltip>
+                      >{{ props.row.subscribed ? $i18n.t('unsubscribeFromCourse') : $i18n.t('subscribeToCourse') }}</q-tooltip>
                     </q-btn>
                   </q-btn-group>
                 </div>
@@ -157,7 +157,7 @@
     <q-dialog v-model="subscribeDialog" persistent no-esc-dismiss>
       <q-card style="width: 50vw;">
         <q-toolbar class="bg-primary text-white dialog-toolbar">
-          <span>{{ $t('subscribeToCourse') }}</span>
+          <span>{{ $i18n.t('subscribeToCourse') }}</span>
           <q-space />
           <q-btn
             :ripple="false"
@@ -171,7 +171,7 @@
           />
         </q-toolbar>
         <q-card-section>
-          <q-input type="password" dense outlined v-model="password" :label="$t('enterPassword')">
+          <q-input type="password" dense outlined v-model="password" :label="$i18n.t('enterPassword')">
             <template v-slot:append>
               <q-btn
                 :ripple="false"
@@ -179,7 +179,7 @@
                 size="sm"
                 color="primary"
                 @click="subscribe"
-              >{{ $t('confirm') }}</q-btn>
+              >{{ $i18n.t('confirm') }}</q-btn>
             </template>
           </q-input>
         </q-card-section>
@@ -207,7 +207,7 @@ export default {
         .catch(error => {
           this.$q.notify({
             type: "negative",
-            message: this.$t("error.incorrectPassword")
+            message: this.$i18n.t("error.incorrectPassword")
           });
         });
     },
@@ -273,20 +273,20 @@ export default {
         },
         {
           name: "name",
-          label: this.$t("name"),
+          label: this.$i18n.t("name"),
           align: "center",
           field: "name"
         },
         {
           name: "smjerId",
           align: "center",
-          label: this.$t("specialization"),
+          label: this.$i18n.t("specialization"),
           field: "smjerId"
         },
         {
           name: "subscribed",
           align: "center",
-          label: this.$t("subscribed"),
+          label: this.$i18n.t("subscribed"),
           field: "subscribed"
         }
       ],
@@ -301,14 +301,6 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.border-box
-  position: relative
-  border: 1px solid rgba(0, 0, 0, 0.12)
-  border-radius: 10px
-.top-right
-  position: absolute
-  right: 8px
-  top: 8px
 .aside
   position: absolute
   right: 15px

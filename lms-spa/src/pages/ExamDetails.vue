@@ -13,7 +13,7 @@
                 filled
                 type="text"
                 v-model="timeLeft"
-                :label="$t('timeLeft')"
+                :label="$i18n.t('timeLeft')"
                 readonly
               />
             </div>
@@ -38,7 +38,7 @@
           <q-separator />
           <q-card-actions class="justify-center">
             <div class="row q-my-sm">
-              <q-btn color="primary" @click="finishExamDialog = true">{{ $t('finishExam') }}</q-btn>
+              <q-btn color="primary" @click="finishExamDialog = true">{{ $i18n.t('finishExam') }}</q-btn>
             </div>
           </q-card-actions>
         </q-card>
@@ -79,7 +79,7 @@
               <q-card-section>
                 <div class="row">
                   <div class="col-12 text-center">
-                    <span class="text-h6">{{ `${$t('question')} ${i + 1} - ${question.title}` }}</span>
+                    <span class="text-h6">{{ `${$i18n.t('question')} ${i + 1} - ${question.title}` }}</span>
                   </div>
                   <div class="col-12 border-box q-mt-md">
                     <p class="q-pa-md" v-html="question.content"></p>
@@ -104,11 +104,11 @@
     <q-dialog v-model="finishExamDialog" persistent max-width="500">
       <q-card>
         <q-system-bar color="primary" />
-        <q-card-section class="text-center q-mt-md">{{ $t("areYouSure") }}</q-card-section>
+        <q-card-section class="text-center q-mt-md">{{ $i18n.t("areYouSure") }}</q-card-section>
         <q-card-actions class="q-pb-md">
           <q-space />
-          <q-btn color="green" class="text-white" @click="finishExamDialog = false">{{ $t("yes") }}</q-btn>
-          <q-btn color="red" class="text-white" @click="finishExamDialog = false">{{ $t("no") }}</q-btn>
+          <q-btn color="green" class="text-white" @click="finishExamDialog = false">{{ $i18n.t("yes") }}</q-btn>
+          <q-btn color="red" class="text-white" @click="finishExamDialog = false">{{ $i18n.t("no") }}</q-btn>
           <q-space />
         </q-card-actions>
       </q-card>
@@ -147,7 +147,7 @@ export default {
     timeLeft() {
       if (this.attempt != null) {
         if (this.expired) {
-          return this.$t("expired");
+          return this.$i18n.t("expired");
         }
         return this.$options.filters.countdownFilter(this.time);
       }
@@ -261,10 +261,3 @@ export default {
   }
 };
 </script>
-
-<style scoped lang="sass">
-.border-box
-  position: relative
-  border: 1px solid rgba(0, 0, 0, 0.12)
-  border-radius: 10px
-</style>

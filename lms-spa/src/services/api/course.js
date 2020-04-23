@@ -36,5 +36,13 @@ export default {
    */
   async getCourseSidebar(id) {
     return await axios.get(`Course/sidebar/${id}`);
+  },
+  /**
+   * Retrieves a list of notifications for a specific course.
+   * @param {number} courseId - Id of the requested course.
+   * @return {AxiosPromise<any>} Axios promise to be resolved in the view.
+   */
+  async getNotifications(courseId) {
+    return await axios.get(`Course/notifications/${courseId}`);
   }
 }

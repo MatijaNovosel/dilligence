@@ -27,7 +27,7 @@ namespace tvz2api_cqrs.Controllers
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
 
-    public CourseController(ICommandBus commandBus, IQueryBus queryBus)
+    public CourseController(ICommandBus commandBus, IQueryBus queryBus, tvz2Context context): base(context)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;
@@ -56,6 +56,13 @@ namespace tvz2api_cqrs.Controllers
     public async Task<IActionResult> GetDetails(int id)
     {
       var result = await _queryBus.ExecuteAsync(new CourseDetailsQuery(id));
+      return Ok(result);
+    }
+
+    [HttpGet("notifications/{id}")]
+    public async Task<IActionResult> GetNotifications(int id)
+    {
+      var result = await _queryBus.ExecuteAsync(new CourseNotificationsQuery(id));
       return Ok(result);
     }
 

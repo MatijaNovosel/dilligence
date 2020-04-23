@@ -16,7 +16,7 @@
           <q-item-section>
             <q-item-label lines="1">{{ `${user.name} ${user.surname}` }}</q-item-label>
             <q-item-label caption lines="2">
-              <span class="text-weight-bold">{{ $t("username") }}:</span>
+              <span class="text-weight-bold">{{ $i18n.t("username") }}:</span>
               {{ user.username }}
             </q-item-label>
           </q-item-section>
@@ -28,12 +28,12 @@
           dense-toggle
           class="text-weight-regular"
           v-for="link in links"
-          :label="$t('drawerLinks.' + link.text)"
+          :label="$i18n.t('drawerLinks.' + link.text)"
           :key="link.text"
         >
           <q-list :key="i" dense v-for="(sublink, i) in link.sublinks">
             <q-item @click="redirect(sublink.route)" class="text-body2" clickable v-ripple>
-              <span class="q-pl-md">{{ $t('drawerLinks.' + sublink.text) }}</span>
+              <span class="q-pl-md">{{ $i18n.t('drawerLinks.' + sublink.text) }}</span>
             </q-item>
           </q-list>
         </q-expansion-item>
@@ -42,7 +42,7 @@
     <q-dialog v-model="editPictureDialog" persistent>
       <q-card class="picture-dialog">
         <q-toolbar class="bg-primary text-white dialog-toolbar">
-          <span>{{ $t('changeProfilePicture') }}</span>
+          <span>{{ $i18n.t('changeProfilePicture') }}</span>
           <q-space />
           <q-btn
             :ripple="false"
@@ -65,7 +65,7 @@
             outlined
             v-model="picture"
             clearable
-            :label="$t('uploadPicture')"
+            :label="$i18n.t('uploadPicture')"
           >
             <template v-slot:prepend>
               <q-icon name="mdi-paperclip" />
@@ -74,7 +74,7 @@
         </q-card-section>
         <q-card-actions class="q-pt-none">
           <q-space />
-          <q-btn :ripple="false" dense size="sm" color="primary">{{ $t('upload') }}</q-btn>
+          <q-btn :ripple="false" dense size="sm" color="primary">{{ $i18n.t('upload') }}</q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>

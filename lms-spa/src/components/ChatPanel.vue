@@ -96,11 +96,6 @@ export default {
 </script>
 
 <style scoped lang="sass">
-.border-box
-  position: relative
-  border: 1px solid rgba(0, 0, 0, 0.12)
-  border-radius: 10px
-  width: 100%
 .bottom-left
   position: absolute
   bottom: 20px

@@ -7,6 +7,8 @@ using tvz2api_cqrs.Infrastructure.QueryHandlers;
 using tvz2api_cqrs.Models;
 using tvz2api_cqrs.Models.DTO;
 using tvz2api_cqrs.QueryModels;
+using System;
+using System.Security.Claims;
 
 namespace tvz2api_cqrs.Implementation.QueryHandlers
 {
@@ -150,6 +152,23 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         })
         .CountAsync();
       return count;
+    }
+
+    public async Task<List<NotificationQueryModel>> HandleAsync(CourseNotificationsQuery query)
+    {
+      var courses = await _context.Notification
+        .Where(x => x.CourseId == query.Id)
+        .Select(t => new NotificationQueryModel
+        {
+          Id = t.Id,
+          Description = t.Description,
+          Title = t.Title,
+          Course = t.Course.Name,
+          SubmittedAt = t.SubmittedAt,
+          SubmittedBy = $"{t.SubmittedBy.Name} {t.SubmittedBy.Surname}"
+        })
+        .ToListAsync();
+      return courses;
     }
   }
 }

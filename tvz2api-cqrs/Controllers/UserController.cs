@@ -23,7 +23,7 @@ namespace tvz2api_cqrs.Controllers
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
 
-    public UserController(ICommandBus commandBus, IQueryBus queryBus)
+    public UserController(ICommandBus commandBus, IQueryBus queryBus, tvz2Context context): base(context)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;

@@ -19,7 +19,7 @@
               square
               dense
               filled
-              :label="$t('username')"
+              :label="$i18n.t('username')"
               v-model="username"
               required
             />
@@ -37,7 +37,7 @@
               square
               dense
               filled
-              :label="$t('password')"
+              :label="$i18n.t('password')"
               v-model="password"
               type="password"
               required
@@ -47,7 +47,7 @@
         </ValidationObserver>
       </q-card-section>
       <q-card-actions class="justify-center">
-        <q-btn @click="submit" :loading="loading" color="primary">{{ $t('signIn') }}</q-btn>
+        <q-btn @click="submit" :loading="loading" color="primary">{{ $i18n.t('signIn') }}</q-btn>
       </q-card-actions>
     </q-card>
   </q-page>
@@ -95,7 +95,7 @@ export default {
           if (data.isSuccess) {
             this.$q.notify({
               type: "positive",
-              message: this.$t("successfullyLoggedIn")
+              message: this.$i18n.t("successfullyLoggedIn")
             });
             let user = { ...data.payload };
             this.setUserData(user);
@@ -121,7 +121,7 @@ export default {
         } else {
           this.$q.notify({
             type: "negative",
-            message: this.$t("error.invalid")
+            message: this.$i18n.t("error.invalid")
           });
         }
       });

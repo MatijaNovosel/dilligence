@@ -47,9 +47,9 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         Id = vijest.Id,
         CourseId = vijest.CourseId,
         SubmittedById = vijest.SubmittedById,
-        Naslov = vijest.Title,
-        Opis = vijest.Description,
-        Datum = vijest.SubmittedAt
+        Title = vijest.Title,
+        Description = vijest.Description,
+        SubmittedAt = vijest.SubmittedAt
       });
     }
   }
