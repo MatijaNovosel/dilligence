@@ -21,7 +21,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace tvz2api_cqrs.Implementation.CommandHandlers
 {
   public class NotificationCommandHandler :
-    ICommandHandlerAsync<NotificationCreateCommand, NotificationQueryModel>
+    ICommandHandlerAsync<NotificationCreateCommand>
   {
     private readonly lmsContext _context;
 
@@ -30,27 +30,29 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       _context = context;
     }
 
-    public async Task<ICommandResult<NotificationQueryModel>> HandleAsync(NotificationCreateCommand command)
+    public async Task HandleAsync(NotificationCreateCommand command)
     {
       Notification notification = new Notification()
       {
-        CourseId = 147,
-        SubmittedById = 1,
+        CourseId = command.CourseId,
+        SubmittedById = command.SubmittedById,
         Title = command.Title,
-        Description = "Hardkodirani opis",
+        Description = command.Description,
         SubmittedAt = DateTime.Now
       };
       await _context.Notification.AddAsync(notification);
       await _context.SaveChangesAsync();
-      return CommandResult<NotificationQueryModel>.Success(new NotificationQueryModel()
+
+      notification.Course.Subscription.Select(x => x.UserId).ToList().ForEach(x =>
       {
-        Id = notification.Id,
-        Course = notification.Course.Name,
-        SubmittedBy = $"{notification.SubmittedBy.Name} {notification.SubmittedBy.Surname}",
-        Title = notification.Title,
-        Description = notification.Description,
-        SubmittedAt = notification.SubmittedAt
+        _context.NotificationUserSeen.AddAsync(new NotificationUserSeen()
+        {
+          NotificationId = notification.Id,
+          UserId = x
+        });
       });
+
+      await _context.SaveChangesAsync();
     }
   }
 }

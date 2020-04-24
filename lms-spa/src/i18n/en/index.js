@@ -94,5 +94,6 @@ export default {
   participants: "Participants",
   exams: "Exams",
   notifications: "Notifications",
-  submittedBy: "Submitted by"
+  submittedBy: "Submitted by",
+  successfullyLoggedOut: "Successfully logged out"
 }

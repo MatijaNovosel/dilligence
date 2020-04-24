@@ -47,7 +47,7 @@ namespace tvz2api_cqrs.Controllers
       return Ok(result);
     }
 
-    [HttpGet("user/{userId}")]
+    [HttpGet("user-total/{userId}")]
     public async Task<IActionResult> GetUserNotificationsTotal(int userId)
     {
       var result = await _queryBus.ExecuteAsync(new NotificationUserTotalQuery(userId));

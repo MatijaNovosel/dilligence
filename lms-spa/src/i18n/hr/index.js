@@ -94,5 +94,6 @@ export default {
   participants: "Sudionici",
   exams: "Zadatci",
   notifications: "Obavijesti",
-  submittedBy: "Objavio"
+  submittedBy: "Objavio",
+  successfullyLoggedOut: "Uspješno ste odjavljeni"
 }

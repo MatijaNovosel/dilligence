@@ -165,7 +165,7 @@ namespace tvz2api_cqrs
       services.AddScoped<IQueryHandlerAsync<NotificationUserQuery, List<NotificationQueryModel>>, NotificationQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<NotificationUserTotalQuery, int>, NotificationQueryHandler>();
 
-      services.AddScoped<ICommandHandlerAsync<NotificationCreateCommand, NotificationQueryModel>, NotificationCommandHandler>();
+      services.AddScoped<ICommandHandlerAsync<NotificationCreateCommand>, NotificationCommandHandler>();
 
       services.AddScoped<IQueryHandlerAsync<UserQuery, List<UserQueryModel>>, UserQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<UserTotalQuery, int>, UserQueryHandler>();
