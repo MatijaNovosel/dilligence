@@ -57,9 +57,8 @@ namespace tvz2api_cqrs.Controllers
     [HttpPost]
     public async Task<IActionResult> CreateNew(NotificationCreateCommand command)
     {
-      var notification = await _commandBus.ExecuteAsync<NotificationQueryModel>(command);
-      await this._hubContext.Clients.All.SendAsync("EVENT", notification);
-      return Ok(notification);
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
     }
   }
 }

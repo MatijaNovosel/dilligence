@@ -43,9 +43,12 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       await _context.Notification.AddAsync(notification);
       await _context.SaveChangesAsync();
 
-      notification.Course.Subscription.Select(x => x.UserId).ToList().ForEach(x =>
+      var course = _context.Course.Include(t => t.Subscription).FirstOrDefault(t => t.Id == command.CourseId);
+      var subscriptionUserIds = course.Subscription.Select(t => t.UserId).ToList();
+
+      subscriptionUserIds.ForEach(x =>
       {
-        _context.NotificationUserSeen.AddAsync(new NotificationUserSeen()
+        _context.NotificationUserSeen.Add(new NotificationUserSeen()
         {
           NotificationId = notification.Id,
           UserId = x

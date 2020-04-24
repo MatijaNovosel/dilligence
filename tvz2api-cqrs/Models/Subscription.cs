@@ -6,6 +6,7 @@ namespace tvz2api_cqrs.Models
     public partial class Subscription
     {
         public int Id { get; set; }
+        public DateTime? JoinedAt { get; set; }
         public int? UserId { get; set; }
         public int? CourseId { get; set; }
 

@@ -59,16 +59,10 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     public async Task<int> HandleAsync(NotificationUserTotalQuery query)
     {
       var count = await _context.Notification
-        .Where(t => t.Course.Subscription.Any(x => x.UserId == query.UserId))
-        .Select(t => new NotificationQueryModel
-        {
-          Id = t.Id,
-          SubmittedAt = t.SubmittedAt,
-          Title = t.Title,
-          Course = t.Course.Name,
-          SubmittedBy = $"{t.SubmittedBy.Name} {t.SubmittedBy.Surname}",
-          Description = t.Description
-        })
+        .Where(t =>
+          t.Course.Subscription.Any(x => x.UserId == query.UserId) &&
+          t.NotificationUserSeen.Any(x => x.UserId == query.UserId && x.NotificationId == t.Id && x.Seen == false)
+        )
         .CountAsync();
       return count;
     }

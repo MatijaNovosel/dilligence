@@ -24,7 +24,7 @@
               map-options
             >
               <template v-slot:option="scope">
-                <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
+                <q-item dense v-bind="scope.itemProps" v-on="scope.itemEvents">
                   <q-item-section>
                     <q-item-label v-html="scope.opt.label"></q-item-label>
                   </q-item-section>

@@ -41,7 +41,7 @@
     </q-drawer>
     <q-dialog v-model="editPictureDialog" persistent>
       <q-card class="picture-dialog">
-        <q-toolbar class="bg-primary text-white dialog-toolbar">
+        <q-toolbar style="min-height: 30px;" class="bg-primary text-white dialog-toolbar">
           <span>{{ $i18n.t('changeProfilePicture') }}</span>
           <q-space />
           <q-btn
@@ -72,10 +72,6 @@
             </template>
           </q-file>
         </q-card-section>
-        <q-card-actions class="q-pt-none">
-          <q-space />
-          <q-btn :ripple="false" dense size="sm" color="primary">{{ $i18n.t('upload') }}</q-btn>
-        </q-card-actions>
       </q-card>
     </q-dialog>
   </div>

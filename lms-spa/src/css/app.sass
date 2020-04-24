@@ -1,5 +1,4 @@
-\:root
-  --absolute-offset: 10px
+$absolute-offset: 10px
   
 .border-box
   position: relative
@@ -10,19 +9,19 @@
   position: absolute
 .absolute-top
   @extend .absolute
-  top: var(--absolute-offset)
+  top: $absolute-offset
 .absolute-bottom
   @extend .absolute
-  bottom: var(--absolute-offset)
+  bottom: $absolute-offset
 .absolute-top-left
   @extend .absolute-top
-  left: var(--absolute-offset)
+  left: $absolute-offset
 .absolute-top-right
   @extend .absolute-top
-  right: var(--absolute-offset)
+  right: $absolute-offset
 .absolute-bottom-left
   @extend .absolute-bottom
-  left: var(--absolute-offset)
+  left: $absolute-offset
 .absolute-bottom-right
   @extend .absolute-bottom
-  right: var(--absolute-offset)
+  right: $absolute-offset

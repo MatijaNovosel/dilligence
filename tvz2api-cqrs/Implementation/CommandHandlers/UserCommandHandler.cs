@@ -41,7 +41,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       await _context.Subscription.AddAsync(new Subscription()
       {
         CourseId = command.CourseId,
-        UserId = command.UserId
+        UserId = command.UserId,
+        JoinedAt = DateTime.Now,
       });
       await _context.SaveChangesAsync();
     }

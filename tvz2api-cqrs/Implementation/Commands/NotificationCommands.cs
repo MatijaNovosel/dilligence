@@ -7,7 +7,7 @@ using tvz2api_cqrs.QueryModels;
 
 namespace tvz2api_cqrs.Implementation.Commands
 {
-  public class NotificationCreateCommand : ICommand<NotificationQueryModel>
+  public class NotificationCreateCommand : ICommand
   {
     public NotificationCreateCommand() { }
     public string Title { get; set; }

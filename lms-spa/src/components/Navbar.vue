@@ -18,8 +18,28 @@
         class
         :class="($q.dark.isActive ? 'text-white' : 'text-black') + ' q-pr-md'"
       >Quasar v{{ $q.version }}</div>
-      <q-btn flat dense round color="grey-8" icon="mdi-bell">
-        <q-badge color="red" floating>{{ notificationCount }}</q-badge>
+      <q-btn
+        flat
+        dense
+        round
+        color="grey-8"
+        :icon="(notificationCount && notificationCount > 0) ? 'mdi-bell-ring' : 'mdi-bell'"
+      >
+        <q-badge
+          v-if="notificationCount && notificationCount > 0"
+          color="red"
+          floating
+        >{{ notificationCount }}</q-badge>
+        <q-menu persistent auto-close>
+          <q-list separator dense style="min-width: 300px">
+            <q-item clickable>
+              <q-item-section>New tab</q-item-section>
+            </q-item>
+            <q-item clickable>
+              <q-item-section>New incognito tab</q-item-section>
+            </q-item>
+          </q-list>
+        </q-menu>
       </q-btn>
       <q-btn
         class="q-mx-sm"
