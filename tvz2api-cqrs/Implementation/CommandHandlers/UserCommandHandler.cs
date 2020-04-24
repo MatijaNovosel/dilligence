@@ -25,9 +25,9 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     ICommandHandlerAsync<UserUnsubscribeCommand>,
     ICommandHandlerAsync<UserUpdateSettingsCommand>
   {
-    private readonly tvz2Context _context;
+    private readonly lmsContext _context;
 
-    public UserCommandHandler(tvz2Context context)
+    public UserCommandHandler(lmsContext context)
     {
       _context = context;
     }

@@ -25,9 +25,9 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     ICommandHandlerAsync<FileDeleteCommand>,
     ICommandHandlerAsync<FileUploadSidebarCommand, List<int>>
   {
-    private readonly tvz2Context _context;
+    private readonly lmsContext _context;
 
-    public FileCommandHandler(tvz2Context context)
+    public FileCommandHandler(lmsContext context)
     {
       _context = context;
     }

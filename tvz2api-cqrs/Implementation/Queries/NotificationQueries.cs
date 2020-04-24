@@ -15,4 +15,22 @@ namespace tvz2api_cqrs.Implementation.Queries
     }
     public int Id { get; set; }
   }
+
+  public class NotificationUserQuery : IQuery<List<NotificationQueryModel>>
+  {
+    public NotificationUserQuery(int userId)
+    {
+      UserId = userId;
+    }
+    public int UserId { get; set; }
+  }
+
+  public class NotificationUserTotalQuery : IQuery<int>
+  {
+    public NotificationUserTotalQuery(int userId)
+    {
+      UserId = userId;
+    }
+    public int UserId { get; set; }
+  }
 }

@@ -25,7 +25,7 @@ namespace tvz2api_cqrs.Controllers
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
 
-    public AuthenticationController(ICommandBus commandBus, IQueryBus queryBus, tvz2Context context): base(context)
+    public AuthenticationController(ICommandBus commandBus, IQueryBus queryBus, lmsContext context): base(context)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;

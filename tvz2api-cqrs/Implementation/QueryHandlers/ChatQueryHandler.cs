@@ -14,9 +14,9 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     IQueryHandlerAsync<ChatDetailsQuery, ChatQueryModel>,
     IQueryHandlerAsync<ChatAvailableUsersQuery, List<UserQueryModel>>
   {
-    private readonly tvz2Context _context;
+    private readonly lmsContext _context;
 
-    public ChatQueryHandler(tvz2Context context)
+    public ChatQueryHandler(lmsContext context)
     {
       _context = context;
     }

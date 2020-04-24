@@ -26,9 +26,9 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     ICommandHandlerAsync<ExamStartAttemptCommand>,
     ICommandHandlerAsync<ExamCreateCommand>
   {
-    private readonly tvz2Context _context;
+    private readonly lmsContext _context;
 
-    public ExamCommandHandler(tvz2Context context)
+    public ExamCommandHandler(lmsContext context)
     {
       _context = context;
     }

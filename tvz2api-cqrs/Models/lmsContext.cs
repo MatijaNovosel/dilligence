@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace tvz2api_cqrs.Models
 {
-  public partial class tvz2Context : DbContext
+  public partial class lmsContext : DbContext
   {
-    public tvz2Context()
+    public lmsContext()
     {
     }
 
-    public tvz2Context(DbContextOptions<tvz2Context> options)
+    public lmsContext(DbContextOptions<lmsContext> options)
         : base(options)
     {
     }
@@ -197,9 +197,7 @@ namespace tvz2api_cqrs.Models
 
         entity.Property(e => e.CourseId).HasColumnName("CourseID");
 
-        entity.Property(e => e.Description)
-                  .HasMaxLength(255)
-                  .IsUnicode(false);
+        entity.Property(e => e.Description).IsUnicode(false);
 
         entity.Property(e => e.SubmittedAt).HasColumnType("date");
 

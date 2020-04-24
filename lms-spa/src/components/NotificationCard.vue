@@ -1,8 +1,14 @@
 <template>
   <q-card flat bordered>
+    <q-bar dense :class="`bg-${color}`">
+      <span>{{ value.title }}</span>
+    </q-bar>
     <q-card-section class="q-py-sm">
-      <div class="text-overline">{{ notificationData.name }}</div>
-      <span class="ellipsis-text">{{ notificationData.description }}</span>
+      <span v-html="value.description" />
+    </q-card-section>
+    <q-separator />
+    <q-card-section class="q-py-sm">
+      <span class="text-caption">{{ $i18n.t('submittedBy') }}: {{ value.submittedBy }}</span>
     </q-card-section>
   </q-card>
 </template>
@@ -10,7 +16,7 @@
 <script>
 export default {
   name: "NotificationCard",
-  props: ["notificationData"],
+  props: ["value", "color"],
   data() {
     return {};
   },

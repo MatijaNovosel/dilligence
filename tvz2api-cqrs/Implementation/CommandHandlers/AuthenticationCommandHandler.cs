@@ -32,10 +32,10 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     ICommandHandlerAsync<AuthenticationRegisterCommand>,
     ICommandHandlerAsync<AuthenticationLoginCommand, LoginUserDTO>
   {
-    private readonly tvz2Context _context;
+    private readonly lmsContext _context;
     private readonly IConfiguration _config;
 
-    public AuthenticationCommandHandler(tvz2Context context, IConfiguration config)
+    public AuthenticationCommandHandler(lmsContext context, IConfiguration config)
     {
       _context = context;
       _config = config;

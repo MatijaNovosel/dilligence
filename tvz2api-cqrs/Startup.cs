@@ -47,7 +47,7 @@ namespace tvz2api_cqrs
     {
       ConfigureAdditionalServices(services);
       services.AddSignalR();
-      services.AddDbContext<tvz2Context>();
+      services.AddDbContext<lmsContext>();
       services.AddControllers();
       services.AddAuthorization(options =>
       {
@@ -130,7 +130,7 @@ namespace tvz2api_cqrs
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapControllers();
-        endpoints.MapHub<NotificationHub>("/vijesti-hub");
+        endpoints.MapHub<NotificationHub>("/notification-hub");
         endpoints.MapHub<ChatHub>("/chat-hub");
       });
     }
@@ -147,6 +147,7 @@ namespace tvz2api_cqrs
       services.AddScoped<IQueryHandlerAsync<UserCourseTotalQuery, int>, CourseQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<CourseDetailsQuery, CourseDetailsQueryModel>, CourseQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<CourseSidebarQuery, List<SidebarContentDTO>>, CourseQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<CourseNotificationsQuery, List<NotificationQueryModel>>, CourseQueryHandler>();
 
       services.AddScoped<ICommandHandlerAsync<FileUploadCommand, List<int>>, FileCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<FileUploadSidebarCommand, List<int>>, FileCommandHandler>();
@@ -161,6 +162,9 @@ namespace tvz2api_cqrs
       services.AddScoped<ICommandHandlerAsync<UserUpdateSettingsCommand>, UserCommandHandler>();
 
       services.AddScoped<IQueryHandlerAsync<NotificationQuery, List<NotificationQueryModel>>, NotificationQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<NotificationUserQuery, List<NotificationQueryModel>>, NotificationQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<NotificationUserTotalQuery, int>, NotificationQueryHandler>();
+
       services.AddScoped<ICommandHandlerAsync<NotificationCreateCommand, NotificationQueryModel>, NotificationCommandHandler>();
 
       services.AddScoped<IQueryHandlerAsync<UserQuery, List<UserQueryModel>>, UserQueryHandler>();

@@ -9,9 +9,13 @@
       </div>
       <div class="col-12">
         <div class="row">
-          <template v-for="(attempt, i) in attempts">
-            <div :key="i" class="q-pa-xs col-xs-12 col-sm-6 col-md-4 col-lg-3">
-              <ExamCard :examData="attempt" />
+          <template v-if="attempts">
+            <div
+              v-for="(attempt, i) in attempts"
+              :key="i"
+              class="q-pa-xs col-xs-12 col-sm-6 col-md-4 col-lg-3"
+            >
+              <ExamCard :value="attempt" />
             </div>
           </template>
         </div>

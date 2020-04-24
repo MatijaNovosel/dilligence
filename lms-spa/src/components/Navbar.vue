@@ -15,24 +15,28 @@
       <span class="text-grey q-ml-xs">{{ $i18n.t('author') }}</span>
       <q-space />
       <div
+        class=""
         :class="($q.dark.isActive ? 'text-white' : 'text-black') + ' q-pr-md'"
       >Quasar v{{ $q.version }}</div>
+      <q-btn flat dense round color="grey-8" icon="mdi-bell">
+        <q-badge color="red" floating>4</q-badge>
+      </q-btn>
       <q-btn
+        class="q-mx-sm"
         flat
         dense
         round
         color="grey-8"
         icon="mdi-cog"
-        aria-label="Menu"
         @click="$router.push('/settings')"
       />
       <q-btn
         flat
         dense
         round
+        class="q-mr-md"
         :color="$q.dark.isActive ? 'primary' : 'red-7'"
         icon="power_settings_new"
-        aria-label="Menu"
         @click="logout"
       />
     </q-toolbar>

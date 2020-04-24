@@ -14,9 +14,9 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     IQueryHandlerAsync<ExamInProgressDetailsQuery, ExamAttemptDetailsQueryModel>,
     IQueryHandlerAsync<ExamInProgressQuery, List<ExamAttemptQueryModel>>
   {
-    private readonly tvz2Context _context;
+    private readonly lmsContext _context;
 
-    public ExamQueryHandler(tvz2Context context)
+    public ExamQueryHandler(lmsContext context)
     {
       _context = context;
     }

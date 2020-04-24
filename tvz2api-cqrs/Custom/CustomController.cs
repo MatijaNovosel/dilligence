@@ -10,8 +10,8 @@ namespace tvz2api_cqrs.Custom
 {
   public class CustomController : ControllerBase
   {
-    protected tvz2Context _context;
-    public CustomController(tvz2Context context)
+    protected lmsContext _context;
+    public CustomController(lmsContext context)
     {
       _context = context;
     }

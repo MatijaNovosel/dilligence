@@ -93,5 +93,6 @@ export default {
   home: "Home",
   participants: "Participants",
   exams: "Exams",
-  notifications: "Notifications"
+  notifications: "Notifications",
+  submittedBy: "Submitted by"
 }

@@ -11,18 +11,20 @@ using tvz2api_cqrs.Models.DTO;
 namespace tvz2api_cqrs.Implementation.QueryHandlers
 {
   public class NotificationQueryHandler :
-    IQueryHandlerAsync<NotificationQuery, List<NotificationQueryModel>>
+    IQueryHandlerAsync<NotificationQuery, List<NotificationQueryModel>>,
+    IQueryHandlerAsync<NotificationUserQuery, List<NotificationQueryModel>>,
+    IQueryHandlerAsync<NotificationUserTotalQuery, int>
   {
-    private readonly tvz2Context _context;
+    private readonly lmsContext _context;
 
-    public NotificationQueryHandler(tvz2Context context)
+    public NotificationQueryHandler(lmsContext context)
     {
       _context = context;
     }
 
     public async Task<List<NotificationQueryModel>> HandleAsync(NotificationQuery query)
     {
-      var vijesti = await _context.Notification
+      var notifications = await _context.Notification
         .Where(t => t.CourseId == query.Id)
         .Select(t => new NotificationQueryModel
         {
@@ -34,7 +36,41 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Description = t.Description
         })
         .ToListAsync();
-      return vijesti;
+      return notifications;
+    }
+
+    public async Task<List<NotificationQueryModel>> HandleAsync(NotificationUserQuery query)
+    {
+      var notifications = await _context.Notification
+        .Where(t => t.Course.Subscription.Any(x => x.UserId == query.UserId))
+        .Select(t => new NotificationQueryModel
+        {
+          Id = t.Id,
+          SubmittedAt = t.SubmittedAt,
+          Title = t.Title,
+          Course = t.Course.Name,
+          SubmittedBy = $"{t.SubmittedBy.Name} {t.SubmittedBy.Surname}",
+          Description = t.Description
+        })
+        .ToListAsync();
+      return notifications;
+    }
+
+    public async Task<int> HandleAsync(NotificationUserTotalQuery query)
+    {
+      var count = await _context.Notification
+        .Where(t => t.Course.Subscription.Any(x => x.UserId == query.UserId))
+        .Select(t => new NotificationQueryModel
+        {
+          Id = t.Id,
+          SubmittedAt = t.SubmittedAt,
+          Title = t.Title,
+          Course = t.Course.Name,
+          SubmittedBy = $"{t.SubmittedBy.Name} {t.SubmittedBy.Surname}",
+          Description = t.Description
+        })
+        .CountAsync();
+      return count;
     }
   }
 }

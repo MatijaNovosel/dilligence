@@ -23,16 +23,16 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
   public class NotificationCommandHandler :
     ICommandHandlerAsync<NotificationCreateCommand, NotificationQueryModel>
   {
-    private readonly tvz2Context _context;
+    private readonly lmsContext _context;
 
-    public NotificationCommandHandler(tvz2Context context)
+    public NotificationCommandHandler(lmsContext context)
     {
       _context = context;
     }
 
     public async Task<ICommandResult<NotificationQueryModel>> HandleAsync(NotificationCreateCommand command)
     {
-      Notification vijest = new Notification()
+      Notification notification = new Notification()
       {
         CourseId = 147,
         SubmittedById = 1,
@@ -40,16 +40,16 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         Description = "Hardkodirani opis",
         SubmittedAt = DateTime.Now
       };
-      await _context.Notification.AddAsync(vijest);
+      await _context.Notification.AddAsync(notification);
       await _context.SaveChangesAsync();
       return CommandResult<NotificationQueryModel>.Success(new NotificationQueryModel()
       {
-        Id = vijest.Id,
-        CourseId = vijest.CourseId,
-        SubmittedById = vijest.SubmittedById,
-        Title = vijest.Title,
-        Description = vijest.Description,
-        SubmittedAt = vijest.SubmittedAt
+        Id = notification.Id,
+        Course = notification.Course.Name,
+        SubmittedBy = $"{notification.SubmittedBy.Name} {notification.SubmittedBy.Surname}",
+        Title = notification.Title,
+        Description = notification.Description,
+        SubmittedAt = notification.SubmittedAt
       });
     }
   }

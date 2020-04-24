@@ -13,9 +13,9 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
   public class FileQueryHandler :
     IQueryHandlerAsync<FileQuery, List<FileQueryModel>>
   {
-    private readonly tvz2Context _context;
+    private readonly lmsContext _context;
 
-    public FileQueryHandler(tvz2Context context)
+    public FileQueryHandler(lmsContext context)
     {
       _context = context;
     }

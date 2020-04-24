@@ -26,9 +26,9 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     ICommandHandlerAsync<CreateNewChatCommand, NewChatDTO>,
     ICommandHandlerAsync<DeleteMessageCommand>
   {
-    private readonly tvz2Context _context;
+    private readonly lmsContext _context;
 
-    public ChatCommandHandler(tvz2Context context)
+    public ChatCommandHandler(lmsContext context)
     {
       _context = context;
     }

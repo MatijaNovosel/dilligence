@@ -17,12 +17,13 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     IQueryHandlerAsync<CourseTotalQuery, int>,
     IQueryHandlerAsync<UserCourseTotalQuery, int>,
     IQueryHandlerAsync<UserCourseQuery, List<UserDTO>>,
+    IQueryHandlerAsync<CourseNotificationsQuery, List<NotificationQueryModel>>,
     IQueryHandlerAsync<CourseDetailsQuery, CourseDetailsQueryModel>,
     IQueryHandlerAsync<CourseSidebarQuery, List<SidebarContentDTO>>
   {
-    private readonly tvz2Context _context;
+    private readonly lmsContext _context;
 
-    public CourseQueryHandler(tvz2Context context)
+    public CourseQueryHandler(lmsContext context)
     {
       _context = context;
     }

@@ -17,9 +17,9 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     IQueryHandlerAsync<UserTotalQuery, int>,
     IQueryHandlerAsync<UserSubscriptionQuery, List<int>>
   {
-    private readonly tvz2Context _context;
+    private readonly lmsContext _context;
 
-    public UserQueryHandler(tvz2Context context)
+    public UserQueryHandler(lmsContext context)
     {
       _context = context;
     }

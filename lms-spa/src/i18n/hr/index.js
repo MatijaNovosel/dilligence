@@ -93,5 +93,6 @@ export default {
   home: "Početna stranica",
   participants: "Sudionici",
   exams: "Zadatci",
-  notifications: "Obavijesti"
+  notifications: "Obavijesti",
+  submittedBy: "Objavio"
 }

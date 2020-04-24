@@ -26,11 +26,11 @@ namespace tvz2api_cqrs.Controllers
     private readonly IQueryBus _queryBus;
     private readonly IHubContext<NotificationHub> _hubContext;
 
-    public NotificationController(ICommandBus commandBus, IQueryBus queryBus, IHubContext<NotificationHub> vijestiHub, tvz2Context context) : base(context)
+    public NotificationController(ICommandBus commandBus, IQueryBus queryBus, IHubContext<NotificationHub> notificationHub, lmsContext context) : base(context)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;
-      _hubContext = vijestiHub;
+      _hubContext = notificationHub;
     }
 
     [HttpGet("{id}")]
@@ -40,12 +40,26 @@ namespace tvz2api_cqrs.Controllers
       return Ok(result);
     }
 
+    [HttpGet("user/{userId}")]
+    public async Task<IActionResult> GetUserNotifications(int userId)
+    {
+      var result = await _queryBus.ExecuteAsync(new NotificationUserQuery(userId));
+      return Ok(result);
+    }
+
+    [HttpGet("user/{userId}")]
+    public async Task<IActionResult> GetUserNotificationsTotal(int userId)
+    {
+      var result = await _queryBus.ExecuteAsync(new NotificationUserTotalQuery(userId));
+      return Ok(result);
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateNew(NotificationCreateCommand command)
     {
-      var vijest = await _commandBus.ExecuteAsync<NotificationQueryModel>(command);
-      await this._hubContext.Clients.All.SendAsync("EVENT", vijest);
-      return Ok(vijest);
+      var notification = await _commandBus.ExecuteAsync<NotificationQueryModel>(command);
+      await this._hubContext.Clients.All.SendAsync("EVENT", notification);
+      return Ok(notification);
     }
   }
 }
