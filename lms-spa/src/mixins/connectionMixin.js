@@ -6,7 +6,7 @@ export default {
   },
   methods: {
     startConnection(hubName) {
-      this.connection = new HubConnectionBuilder().withUrl(`http://localhost:5000/${hubName}`).build();
+      this.connection = new HubConnectionBuilder().withUrl(`https://localhost:5001/${hubName}`).build();
       this.connection.start();
     }
   },
