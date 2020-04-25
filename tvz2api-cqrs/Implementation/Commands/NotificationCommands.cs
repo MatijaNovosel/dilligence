@@ -16,4 +16,11 @@ namespace tvz2api_cqrs.Implementation.Commands
     public int? CourseId { get; set; }
     public DateTime? SubmittedAt { get; set; }
   }
+
+  public class NotificationSeenCommand : ICommand
+  {
+    public NotificationSeenCommand() { }
+    public int? UserId { get; set; }
+    public int? Notificationid { get; set; }
+  }
 }

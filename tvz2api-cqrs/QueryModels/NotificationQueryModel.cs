@@ -11,5 +11,6 @@ namespace tvz2api_cqrs.QueryModels
     public string Description { get; set; }
     public string Course { get; set; }
     public string SubmittedBy { get; set; }
+    public int CourseId { get; set; }
   }
 }

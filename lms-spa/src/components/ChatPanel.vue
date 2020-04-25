@@ -23,6 +23,7 @@
           avatar="../assets/default-user.jpg"
           :style="message.userId == user.id ? 'text-align: right;' : 'text-align: left;'"
           size="5"
+          class="q-mr-md"
           :stamp="message.sentAt | timeStampFilter"
           :sent="message.userId == user.id"
           :bg-color="message.userId == user.id ? 'blue-5' : 'blue-2'"

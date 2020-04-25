@@ -21,7 +21,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace tvz2api_cqrs.Implementation.CommandHandlers
 {
   public class NotificationCommandHandler :
-    ICommandHandlerAsync<NotificationCreateCommand>
+    ICommandHandlerAsync<NotificationCreateCommand>,
+    ICommandHandlerAsync<NotificationSeenCommand>
   {
     private readonly lmsContext _context;
 
@@ -55,6 +56,12 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         });
       });
 
+      await _context.SaveChangesAsync();
+    }
+
+    public async Task HandleAsync(NotificationSeenCommand command)
+    {
+      _context.NotificationUserSeen.FirstOrDefault(x => x.UserId == command.UserId && x.NotificationId == command.Notificationid).Seen = true;
       await _context.SaveChangesAsync();
     }
   }

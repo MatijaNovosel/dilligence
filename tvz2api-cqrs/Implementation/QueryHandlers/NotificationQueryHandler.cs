@@ -54,7 +54,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Title = t.Title,
           Course = t.Course.Name,
           SubmittedBy = $"{t.SubmittedBy.Name} {t.SubmittedBy.Surname}",
-          Description = t.Description
+          Description = t.Description,
+          CourseId = t.Course.Id
         })
         .ToListAsync();
       return notifications;

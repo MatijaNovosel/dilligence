@@ -61,5 +61,12 @@ namespace tvz2api_cqrs.Controllers
       await this._hubContext.Clients.All.SendAsync("newNotification");
       return Ok();
     }
+
+    [HttpPost("seen")]
+    public async Task<IActionResult> Seen(NotificationSeenCommand command)
+    {
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
+    }
   }
 }

@@ -15,7 +15,7 @@
       <span class="text-grey q-ml-xs">{{ $i18n.t('author') }}</span>
       <q-space />
       <div
-        class
+        class="text-subtitle1"
         :class="($q.dark.isActive ? 'text-white' : 'text-black') + ' q-pr-md'"
       >Quasar v{{ $q.version }}</div>
       <q-btn
@@ -31,10 +31,58 @@
           color="red"
           floating
         >{{ notificationCount }}</q-badge>
-        <q-menu fit anchor="bottom left" self="top left" auto-close max-height="200px">
-          <q-list separator dense style="min-width: 300px">
-            <q-item :key="i" v-for="(notification, i) in notifications">
+        <q-menu
+          fit
+          anchor="bottom left"
+          self="top left"
+          :max-height="(notificationCount * 100) + 'px'"
+        >
+          <q-list
+            separator
+            dense
+            style="min-width: 300px; border: 1px solid white; border-radius: 10px;"
+            v-if="notificationCount > 0"
+          >
+            <q-item
+              class="no-select no-padding-item"
+              :key="i"
+              v-for="(notification, i) in notifications"
+            >
+              <q-item-section avatar class="bg-red-9 q-mr-md" />
               <q-item-section>{{ notification.title }}</q-item-section>
+              <q-item-section side>
+                <q-item-label>
+                  <q-btn
+                    round
+                    flat
+                    size="sm"
+                    icon="mdi-eye-off"
+                    @click="markAsSeen(notification.id)"
+                  >
+                    <q-tooltip>Mark as seen</q-tooltip>
+                  </q-btn>
+                  <q-btn
+                    round
+                    flat
+                    size="sm"
+                    icon="mdi-location-enter"
+                    @click="$router.push({ name: 'course-details', params: { id: notification.courseId } })"
+                  >
+                    <q-tooltip>Go to course site</q-tooltip>
+                  </q-btn>
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item
+              clickable
+              :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'"
+              class="justify-center q-py-md"
+              @click="markAllAsSeen"
+            >Mark all as seen</q-item>
+          </q-list>
+          <q-list dense style="min-width: 300px" v-else>
+            <q-item class="no-select">
+              <q-item-section>All clear!</q-item-section>
             </q-item>
           </q-list>
         </q-menu>
@@ -74,6 +122,20 @@ export default {
   },
   methods: {
     ...mapActions(["removeUserData"]),
+    markAsSeen(notificationId) {
+      NotificationService.markNotificationAsSeen(
+        notificationId,
+        this.user.id
+      ).then(() => {
+        this.notifications = this.notifications.filter(
+          x => x.id != notificationId
+        );
+        this.getNotificationCount();
+      });
+    },
+    markAllAsSeen() {
+      // Do something
+    },
     getNotifications() {
       this.loading = true;
       NotificationService.getNotifications(this.user.id)
@@ -112,9 +174,19 @@ export default {
     return {
       notificationCount: null,
       notifications: null,
-      connection: null,
       loading: false
     };
   }
 };
 </script>
+
+<style lang="sass">
+.q-item__section--avatar
+  min-width: 10px
+.no-padding-item
+  padding-top: 0px !important
+  padding-bottom: 0px !important
+  padding-left: 0px !important
+.q-item__section--avatar
+  cursor: auto !important
+</style>
