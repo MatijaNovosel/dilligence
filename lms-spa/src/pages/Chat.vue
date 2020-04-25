@@ -153,25 +153,18 @@
 import UserService from "../services/api/user";
 import ChatService from "../services/api/chat";
 import ChatPanel from "../components/ChatPanel";
-import {
-  HubConnectionBuilder,
-  LogLevel,
-  HttpTransportType
-} from "@aspnet/signalr";
-import apiConfig from "../api.config";
+import ConnectionMixin from "../mixins/connectionMixin";
 import { mapGetters } from "vuex";
 
 export default {
   name: "Chat",
+  mixins: [ConnectionMixin],
   components: {
     ChatPanel
   },
   created() {
     this.getChats(this.user.id);
-    this.connection = new HubConnectionBuilder()
-      .withUrl("http://localhost:5000/chat-hub")
-      .configureLogging(LogLevel.Information)
-      .build();
+    this.startConnection("chat-hub");
     this.connection.on("messageSent", message => {
       this.activeChatMessages = [...this.activeChatMessages, message];
       this.scrollTrigger = !this.scrollTrigger;
@@ -179,7 +172,6 @@ export default {
     this.connection.on("messageDeleted", id => {
       this.activeChatMessages = this.activeChatMessages.filter(x => x.id != id);
     });
-    this.connection.start();
   },
   computed: {
     ...mapGetters(["user"])
@@ -239,15 +231,11 @@ export default {
       newChatSearch: null,
       newChatDialog: false,
       open: true,
-      connection: null,
       message: null,
       chats: null,
       activeChat: null,
       activeChatMessages: null
     };
-  },
-  beforeDestroy() {
-    this.connection.stop();
   }
 };
 </script>

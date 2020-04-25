@@ -9,11 +9,11 @@ namespace tvz2api_cqrs.Implementation.Queries
 {
   public class NotificationQuery : IQuery<List<NotificationQueryModel>>
   {
-    public NotificationQuery(int id)
+    public NotificationQuery(int courseId)
     {
-      Id = id;
+      CourseId = courseId;
     }
-    public int Id { get; set; }
+    public int CourseId { get; set; }
   }
 
   public class NotificationUserQuery : IQuery<List<NotificationQueryModel>>

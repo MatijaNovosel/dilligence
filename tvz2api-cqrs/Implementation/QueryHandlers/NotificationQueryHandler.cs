@@ -25,7 +25,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     public async Task<List<NotificationQueryModel>> HandleAsync(NotificationQuery query)
     {
       var notifications = await _context.Notification
-        .Where(t => t.CourseId == query.Id)
+        .Where(t => t.CourseId == query.CourseId)
         .Select(t => new NotificationQueryModel
         {
           Id = t.Id,
@@ -41,8 +41,12 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
 
     public async Task<List<NotificationQueryModel>> HandleAsync(NotificationUserQuery query)
     {
+      // Filter condition: retrieve the notification if it has not been seen by the user and if it has been submitted after the user had joined the course
       var notifications = await _context.Notification
-        .Where(t => t.Course.Subscription.Any(x => x.UserId == query.UserId))
+        .Where(t =>
+          t.Course.Subscription.Any(x => x.UserId == query.UserId) &&
+          t.NotificationUserSeen.Any(x => x.UserId == query.UserId && x.NotificationId == t.Id && x.Seen == false)
+        )
         .Select(t => new NotificationQueryModel
         {
           Id = t.Id,
@@ -58,13 +62,13 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
 
     public async Task<int> HandleAsync(NotificationUserTotalQuery query)
     {
-      var count = await _context.Notification
+      var notifications = await _context.Notification
         .Where(t =>
           t.Course.Subscription.Any(x => x.UserId == query.UserId) &&
           t.NotificationUserSeen.Any(x => x.UserId == query.UserId && x.NotificationId == t.Id && x.Seen == false)
         )
-        .CountAsync();
-      return count;
+        .ToListAsync();
+      return notifications.Count;
     }
   }
 }

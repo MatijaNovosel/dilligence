@@ -49,6 +49,11 @@ namespace tvz2api_cqrs
       services.AddSignalR();
       services.AddDbContext<lmsContext>();
       services.AddControllers();
+      services.AddHttpsRedirection(options =>
+      {
+        options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+        options.HttpsPort = 5001;
+      });
       services.AddAuthorization(options =>
       {
         var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme);
@@ -61,7 +66,7 @@ namespace tvz2api_cqrs
           builder =>
           {
             builder
-              .WithOrigins(new string[] { "http://localhost:8080", "null" })
+              .WithOrigins(new string[] { "http://localhost:8080", "https://localhost:8080", "null" })
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials()

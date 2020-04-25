@@ -24,19 +24,17 @@
         round
         color="grey-8"
         :icon="(notificationCount && notificationCount > 0) ? 'mdi-bell-ring' : 'mdi-bell'"
+        @click="getNotifications"
       >
         <q-badge
           v-if="notificationCount && notificationCount > 0"
           color="red"
           floating
         >{{ notificationCount }}</q-badge>
-        <q-menu persistent auto-close>
+        <q-menu fit anchor="bottom left" self="top left" auto-close max-height="200px">
           <q-list separator dense style="min-width: 300px">
-            <q-item clickable>
-              <q-item-section>New tab</q-item-section>
-            </q-item>
-            <q-item clickable>
-              <q-item-section>New incognito tab</q-item-section>
+            <q-item :key="i" v-for="(notification, i) in notifications">
+              <q-item-section>{{ notification.title }}</q-item-section>
             </q-item>
           </q-list>
         </q-menu>
@@ -66,14 +64,26 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import NotificationService from "../services/api/notification";
+import ConnectionMixin from "../mixins/connectionMixin";
 
 export default {
   name: "Navbar",
+  mixins: [ConnectionMixin],
   computed: {
     ...mapGetters(["user"])
   },
   methods: {
     ...mapActions(["removeUserData"]),
+    getNotifications() {
+      this.loading = true;
+      NotificationService.getNotifications(this.user.id)
+        .then(({ data }) => {
+          this.notifications = data;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
     getNotificationCount() {
       NotificationService.getTotalNotifications(this.user.id).then(
         ({ data }) => {
@@ -92,11 +102,18 @@ export default {
     }
   },
   created() {
+    this.startConnection("notification-hub");
+    this.connection.on("newNotification", () => {
+      this.getNotificationCount();
+    });
     this.getNotificationCount();
   },
   data() {
     return {
-      notificationCount: null
+      notificationCount: null,
+      notifications: null,
+      connection: null,
+      loading: false
     };
   }
 };

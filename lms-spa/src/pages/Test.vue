@@ -29,12 +29,6 @@
 <script>
 import FileCabinet from "../components/FileCabinet";
 import CourseService from "../services/api/course";
-import {
-  HubConnectionBuilder,
-  LogLevel,
-  HttpTransportType
-} from "@aspnet/signalr";
-import apiConfig from "../api.config";
 
 export default {
   name: "Test",
@@ -42,17 +36,9 @@ export default {
     FileCabinet
   },
   created() {
-    this.connection = new HubConnectionBuilder()
-      .withUrl("http://localhost:5000/vijesti-hub")
-      .configureLogging(LogLevel.Information)
-      .build();
-    this.connection.on("EVENT", response => {
-      this.vijesti = [...this.vijesti, response.payload];
-    });
     CourseService.getCourseSidebar(147).then(({ data }) => {
       this.sidebarContents = data;
     });
-    this.connection.start();
     this.getData();
   },
   methods: {
@@ -67,14 +53,10 @@ export default {
   },
   data() {
     return {
-      connection: null,
       notification: null,
       vijesti: null,
       sidebarContents: null
     };
-  },
-  beforeDestroy() {
-    this.connection.stop();
   }
 };
 </script>
