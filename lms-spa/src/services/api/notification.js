@@ -7,9 +7,12 @@ export default {
   async getTotalNotifications(userId) {
     return await axios.get('Notification/user-total/' + userId);
   },
-  async markNotificationAsSeen(notificationId, userId) {
+  async markNotificationAsSeen(notificationIds, userId) {
     return await axios.post('Notification/seen', {
-      notificationId, userId
+      notificationIds, userId
     });
+  },
+  async createNotification() {
+    return await axios.post('Notification', payload);
   }
 }

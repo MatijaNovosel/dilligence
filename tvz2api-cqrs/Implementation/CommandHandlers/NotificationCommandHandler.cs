@@ -61,7 +61,12 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
     public async Task HandleAsync(NotificationSeenCommand command)
     {
-      _context.NotificationUserSeen.FirstOrDefault(x => x.UserId == command.UserId && x.NotificationId == command.Notificationid).Seen = true;
+      command.NotificationIds.ForEach(x =>
+      {
+        _context.NotificationUserSeen
+          .FirstOrDefault(t => t.UserId == command.UserId && t.NotificationId == x)
+          .Seen = true;
+      });
       await _context.SaveChangesAsync();
     }
   }

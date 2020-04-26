@@ -22,6 +22,7 @@
         flat
         dense
         round
+        :disabled="notificationMenuOpen"
         color="grey-8"
         :icon="(notificationCount && notificationCount > 0) ? 'mdi-bell-ring' : 'mdi-bell'"
         @click="getNotifications"
@@ -33,14 +34,15 @@
         >{{ notificationCount }}</q-badge>
         <q-menu
           fit
+          v-model="notificationMenuOpen"
           anchor="bottom left"
           self="top left"
-          :max-height="(notificationCount * 100) + 'px'"
+          max-height="300px"
         >
           <q-list
             separator
             dense
-            style="min-width: 300px; border: 1px solid white; border-radius: 10px;"
+            style="min-width: 300px"
             v-if="notificationCount > 0"
           >
             <q-item
@@ -81,7 +83,7 @@
             >Mark all as seen</q-item>
           </q-list>
           <q-list dense style="min-width: 300px" v-else>
-            <q-item class="no-select">
+            <q-item class="no-select text-center">
               <q-item-section>All clear!</q-item-section>
             </q-item>
           </q-list>
@@ -124,7 +126,7 @@ export default {
     ...mapActions(["removeUserData"]),
     markAsSeen(notificationId) {
       NotificationService.markNotificationAsSeen(
-        notificationId,
+        [notificationId],
         this.user.id
       ).then(() => {
         this.notifications = this.notifications.filter(
@@ -134,7 +136,13 @@ export default {
       });
     },
     markAllAsSeen() {
-      // Do something
+      NotificationService.markNotificationAsSeen(
+        this.notifications.map(x => x.id),
+        this.user.id
+      ).then(() => {
+        this.notifications = null;
+        this.getNotificationCount();
+      });
     },
     getNotifications() {
       this.loading = true;
@@ -172,6 +180,7 @@ export default {
   },
   data() {
     return {
+      notificationMenuOpen: false,
       notificationCount: null,
       notifications: null,
       loading: false

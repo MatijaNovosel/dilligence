@@ -21,6 +21,6 @@ namespace tvz2api_cqrs.Implementation.Commands
   {
     public NotificationSeenCommand() { }
     public int? UserId { get; set; }
-    public int? Notificationid { get; set; }
+    public List<int> NotificationIds { get; set; }
   }
 }
