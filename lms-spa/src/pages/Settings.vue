@@ -9,15 +9,16 @@
       </div>
       <div class="col-12">
         <div class="row">
-          <div class="col-3 text-center">
+          <div class="col-xs-12 col-md-3 text-center">
             <q-img
               class="image-box"
-              width="65%"
+              :width="$q.screen.sm || $q.screen.xs ? '300px' : '75%'"
+              :height="$q.screen.sm || $q.screen.xs ? '300px' : '75%'"
               :src="user.picture == null ? require('../assets/default-user.jpg') : 'data:image/png;base64,' + user.picture"
             />
             <div class="q-mt-md text-subtitle1">Profile picture</div>
           </div>
-          <div class="col-9">
+          <div class="col-xs-12 col-md-9">
             <div class="row q-pr-md q-gutter-sm">
               <div class="col-12">
                 <q-input label="Username" dense outlined :value="user.username" />

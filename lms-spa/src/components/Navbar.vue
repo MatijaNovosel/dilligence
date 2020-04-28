@@ -12,9 +12,13 @@
       />
       <q-img class="navbar-img q-ml-md" src="../assets/tvz-logo.svg"></q-img>
       <span :class="($q.dark.isActive ? 'text-white' : 'text-black') + ' text-h6 q-ml-sm'">LMS</span>
-      <span class="text-grey q-ml-xs">{{ $i18n.t('author') }}</span>
+      <span
+        v-show="!$q.screen.xs && !$q.screen.sm"
+        class="text-grey q-ml-xs"
+      >{{ $i18n.t('author') }}</span>
       <q-space />
       <div
+        v-show="!$q.screen.xs && !$q.screen.sm"
         class="text-subtitle1"
         :class="($q.dark.isActive ? 'text-white' : 'text-black') + ' q-pr-md'"
       >Quasar v{{ $q.version }}</div>
@@ -39,7 +43,11 @@
           self="top left"
           max-height="300px"
         >
-          <q-list separator style="min-width: 350px" v-if="notificationCount > 0">
+          <q-list
+            separator
+            style="min-width: 350px; border: 1px solid #e0dede;"
+            v-if="notificationCount > 0"
+          >
             <q-item dense class="justify-center items-center">
               <q-space />
               <span>Notifications</span>
