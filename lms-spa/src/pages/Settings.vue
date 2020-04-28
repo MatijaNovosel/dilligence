@@ -90,11 +90,13 @@ export default {
         darkMode: false,
         locale: "en"
       },
-      picture: null
+      picture: null,
+      imgSrc: null
     };
   },
   mounted() {
     this.settings = Object.assign({}, this.user.settings);
+    this.imgSrc = "data:image/png;base64," + this.user.picture;
     this.$watch(
       "settings",
       val => {
@@ -134,7 +136,9 @@ export default {
       let formData = new FormData();
       formData.append("picture", file);
       UserService.uploadPicture(this.user.id, formData).then(({ data }) => {
-        this.imgSrc = "data:image/png;base64," + data.payload.picture.data;
+        let user = { ...this.user };
+        user.picture = data.payload.picture.data;
+        this.setUserData(user);
       });
       this.picture = null;
     }
@@ -145,4 +149,5 @@ export default {
 <style lang="sass">
 .image-box
   border-radius: 25px
+  border: 1px solid #e0dede
 </style>
