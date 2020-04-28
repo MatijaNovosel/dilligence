@@ -83,7 +83,13 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
     public async Task<ICommandResult<LoginUserDTO>> HandleAsync(AuthenticationLoginCommand command)
     {
-      var user = await _context.User.Include(p => p.UserPrivileges).Include(p => p.UserSettings).FirstOrDefaultAsync(x => x.Username == command.Username);
+      var user = await _context
+        .User
+        .Include(p => p.UserPrivileges)
+        .Include(p => p.UserSettings)
+        .Include(p => p.ImageFile)
+        .FirstOrDefaultAsync(x => x.Username == command.Username);
+
       if (user == null || !verifyPasswordHash(command.Password, user.PasswordHash, user.PasswordSalt))
       {
         throw new Exception("User credentials are wrong or the hashing integrity is faulty!");
@@ -125,6 +131,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         Name = user.Name,
         Surname = user.Surname,
         Username = user.Username,
+        Picture = Convert.ToBase64String(user.ImageFile.Data),
         Settings = settings,
         Privileges = privileges.ToList(),
         Token = tokenHandler.WriteToken(token)

@@ -39,19 +39,31 @@
           self="top left"
           max-height="300px"
         >
-          <q-list
-            separator
-            dense
-            style="min-width: 300px"
-            v-if="notificationCount > 0"
-          >
+          <q-list separator style="min-width: 350px" v-if="notificationCount > 0">
+            <q-item dense class="justify-center items-center">
+              <q-space />
+              <span>Notifications</span>
+              <q-space />
+              <q-btn size="sm" flat round dense icon="mdi-dots-horizontal">
+                <q-menu>
+                  <q-list dense>
+                    <q-item clickable>
+                      <q-item-section @click="markAllAsSeen">Mark all as seen</q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-menu>
+              </q-btn>
+            </q-item>
             <q-item
               class="no-select no-padding-item"
               :key="i"
               v-for="(notification, i) in notifications"
             >
               <q-item-section avatar class="bg-red-9 q-mr-md" />
-              <q-item-section>{{ notification.title }}</q-item-section>
+              <q-item-section>
+                <q-item-label>{{ notification.title }}</q-item-label>
+                <q-item-label caption>{{ notification.course }}</q-item-label>
+              </q-item-section>
               <q-item-section side>
                 <q-item-label>
                   <q-btn
@@ -75,12 +87,6 @@
                 </q-item-label>
               </q-item-section>
             </q-item>
-            <q-item
-              clickable
-              :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'"
-              class="justify-center q-py-md"
-              @click="markAllAsSeen"
-            >Mark all as seen</q-item>
           </q-list>
           <q-list dense style="min-width: 300px" v-else>
             <q-item class="no-select text-center">

@@ -1,4 +1,5 @@
 using tvz2api_cqrs.Models;
+using tvz2api_cqrs.Models.DTO;
 using tvz2api_cqrs.Infrastructure.Commands;
 using tvz2api_cqrs.Enumerations;
 using tvz2api_cqrs.Implementation.Queries;
@@ -13,6 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using tvz2api_cqrs.Implementation.Commands;
 using tvz2api_cqrs.Custom;
+using Microsoft.AspNetCore.Http;
 
 namespace tvz2api_cqrs.Controllers
 {
@@ -23,7 +25,7 @@ namespace tvz2api_cqrs.Controllers
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
 
-    public UserController(ICommandBus commandBus, IQueryBus queryBus, lmsContext context): base(context)
+    public UserController(ICommandBus commandBus, IQueryBus queryBus, lmsContext context) : base(context)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;
@@ -79,6 +81,13 @@ namespace tvz2api_cqrs.Controllers
     {
       await _commandBus.ExecuteAsync(command);
       return Ok();
+    }
+
+    [HttpPut("image/{userId}")]
+    public async Task<IActionResult> UploadImage([FromForm]IFormFile picture, int userId)
+    {
+      var file = await _commandBus.ExecuteAsync<UserProfilePictureDTO>(new UserUploadPictureCommand(userId, picture));
+      return Ok(file);
     }
   }
 }

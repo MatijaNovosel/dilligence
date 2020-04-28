@@ -95,5 +95,7 @@ export default {
   exams: "Zadatci",
   notifications: "Obavijesti",
   submittedBy: "Objavio",
-  successfullyLoggedOut: "Uspješno ste odjavljeni"
+  successfullyLoggedOut: "Uspješno ste odjavljeni",
+  croatian: "Hrvatski",
+  english: "Engleski"
 }

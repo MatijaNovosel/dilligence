@@ -16,6 +16,7 @@ using tvz2api_cqrs.Implementation.Queries;
 using tvz2api_cqrs.Infrastructure.CommandHandlers;
 using tvz2api_cqrs.Infrastructure.Commands;
 using tvz2api_cqrs.Models;
+using tvz2api_cqrs.Models.DTO;
 using tvz2api_cqrs.QueryModels;
 
 namespace tvz2api_cqrs.Implementation.CommandHandlers
@@ -23,6 +24,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
   public class UserCommandHandler :
     ICommandHandlerAsync<UserSubscribeCommand>,
     ICommandHandlerAsync<UserUnsubscribeCommand>,
+    ICommandHandlerAsync<UserUploadPictureCommand, UserProfilePictureDTO>,
     ICommandHandlerAsync<UserUpdateSettingsCommand>
   {
     private readonly lmsContext _context;
@@ -60,6 +62,41 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       settings.DarkMode = command.DarkMode;
       settings.Locale = command.Locale;
       await _context.SaveChangesAsync();
+    }
+
+    public async Task<ICommandResult<UserProfilePictureDTO>> HandleAsync(UserUploadPictureCommand command)
+    {
+      var picture = _context.User.FirstOrDefault(x => x.Id == command.UserId).ImageFile;
+      if (picture != null)
+      {
+        _context.File.Remove(picture);
+      }
+
+      var ms = new MemoryStream();
+
+      await command.Picture.CopyToAsync(ms);
+      var fileBytes = ms.ToArray();
+
+      var fileName = ContentDispositionHeaderValue.Parse(command.Picture.ContentDisposition).FileName.Trim('"');
+      fileName = fileName.Substring(0, fileName.LastIndexOf(".")) + fileName.Substring(fileName.LastIndexOf(".")).ToLower();
+
+      Models.File file = new Models.File()
+      {
+        Name = Path.GetFileName(fileName),
+        ContentType = command.Picture.ContentType,
+        Data = fileBytes
+      };
+
+      await _context.File.AddAsync(file);
+      await _context.SaveChangesAsync();
+
+      await ms.DisposeAsync();
+
+      _context.User.FirstOrDefault(x => x.Id == command.UserId).ImageFileId = file.Id;
+
+      await _context.SaveChangesAsync();
+
+      return CommandResult<UserProfilePictureDTO>.Success(new UserProfilePictureDTO() { Picture = file });
     }
   }
 }

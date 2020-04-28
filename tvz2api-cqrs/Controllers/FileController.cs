@@ -22,7 +22,7 @@ namespace tvz2api_cqrs.Controllers
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
 
-    public FileController(ICommandBus commandBus, IQueryBus queryBus, lmsContext context): base(context)
+    public FileController(ICommandBus commandBus, IQueryBus queryBus, lmsContext context) : base(context)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;

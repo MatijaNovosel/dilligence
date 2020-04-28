@@ -48,7 +48,9 @@ namespace tvz2api_cqrs
       ConfigureAdditionalServices(services);
       services.AddSignalR();
       services.AddDbContext<lmsContext>();
-      services.AddControllers();
+      services.AddControllers().AddNewtonsoftJson(options =>
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+      );
       services.AddHttpsRedirection(options =>
       {
         options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
@@ -165,6 +167,7 @@ namespace tvz2api_cqrs
       services.AddScoped<ICommandHandlerAsync<UserSubscribeCommand>, UserCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<UserUnsubscribeCommand>, UserCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<UserUpdateSettingsCommand>, UserCommandHandler>();
+      services.AddScoped<ICommandHandlerAsync<UserUploadPictureCommand, UserProfilePictureDTO>, UserCommandHandler>();
 
       services.AddScoped<IQueryHandlerAsync<NotificationQuery, List<NotificationQueryModel>>, NotificationQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<NotificationUserQuery, List<NotificationQueryModel>>, NotificationQueryHandler>();

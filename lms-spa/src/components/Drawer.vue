@@ -9,8 +9,8 @@
       <q-list dense>
         <q-item class="q-my-md">
           <q-item-section avatar>
-            <q-avatar size="40px" @click="editPictureDialog = true">
-              <img src="../assets/default-user.jpg" />
+            <q-avatar size="45px" @click="editPictureDialog = true">
+              <img style="border: 1px solid rgba(0, 0, 0, 0.4)" :src="'data:image/png;base64,' + user.picture"  />
             </q-avatar>
           </q-item-section>
           <q-item-section>
@@ -32,48 +32,13 @@
           :key="link.text"
         >
           <q-list :key="i" dense v-for="(sublink, i) in link.sublinks">
-            <q-item @click="redirect(sublink.route)" class="text-body2" clickable v-ripple>
+            <q-item @click="$router.push(sublink.route)" class="text-body2" clickable v-ripple>
               <span class="q-pl-md">{{ $i18n.t('drawerLinks.' + sublink.text) }}</span>
             </q-item>
           </q-list>
         </q-expansion-item>
       </q-list>
     </q-drawer>
-    <q-dialog v-model="editPictureDialog" persistent>
-      <q-card class="picture-dialog">
-        <q-toolbar style="min-height: 30px;" class="bg-primary text-white dialog-toolbar">
-          <span>{{ $i18n.t('changeProfilePicture') }}</span>
-          <q-space />
-          <q-btn
-            :ripple="false"
-            dense
-            size="sm"
-            color="white"
-            flat
-            round
-            icon="mdi-close-circle"
-            @click="resetDialog"
-          />
-        </q-toolbar>
-        <q-card-section class="text-center q-pb-none">
-          <q-img src="../assets/default-user.jpg" class="border-box-image"></q-img>
-        </q-card-section>
-        <q-card-section>
-          <q-file
-            accept=".jpg, .pdf, image/*"
-            dense
-            outlined
-            v-model="picture"
-            clearable
-            :label="$i18n.t('uploadPicture')"
-          >
-            <template v-slot:prepend>
-              <q-icon name="mdi-paperclip" />
-            </template>
-          </q-file>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
   </div>
 </template>
 
@@ -85,8 +50,6 @@ export default {
   props: ["drawerTrigger"],
   data() {
     return {
-      editPictureDialog: false,
-      picture: null,
       drawerOpen: false,
       links: [
         {
@@ -132,18 +95,6 @@ export default {
         }
       ]
     };
-  },
-  methods: {
-    redirect(route) {
-      if (this.$router.currentRoute.name === route.name) {
-        return;
-      }
-      this.$router.push(route);
-    },
-    resetDialog() {
-      this.editPictureDialog = false;
-      this.picture = null;
-    }
   },
   watch: {
     drawerTrigger() {

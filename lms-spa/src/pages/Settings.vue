@@ -1,26 +1,68 @@
 <template>
   <q-page class="q-pa-md">
-    <div class="row full-width">
+    <div class="row full-width q-gutter-sm">
       <div class="col-12">
         <span class="text-weight-light text-h5">{{ $i18n.t('settings') }}</span>
       </div>
-      <div class="col-12 q-py-sm">
+      <div class="col-12 q-pb-md">
         <q-separator />
       </div>
-      <div class="col-12 q-pb-md">
-        <q-toggle size="sm" :label="$i18n.t('darkMode')" v-model="settings.darkMode"></q-toggle>
-      </div>
-      <div class="col-12 q-pb-md">
-        <q-select
-          dense
-          outlined
-          v-model="settings.locale"
-          :label="$i18n.t('locale')"
-          :options="localeOptions"
-          behavior="menu"
-          style="max-width: 30%"
-          emit-value
-        />
+      <div class="col-12">
+        <div class="row">
+          <div class="col-3 text-center">
+            <q-img
+              class="image-box"
+              width="65%"
+              :src="user.picture == null ? require('../assets/default-user.jpg') : 'data:image/png;base64,' + user.picture"
+            />
+            <div class="q-mt-md text-subtitle1">Profile picture</div>
+          </div>
+          <div class="col-9">
+            <div class="row q-pr-md q-gutter-sm">
+              <div class="col-12">
+                <q-input label="Username" dense outlined :value="user.username" />
+              </div>
+              <div class="col-12">
+                <q-input label="Name" dense outlined :value="user.name" />
+              </div>
+              <div class="col-12">
+                <q-input label="Surname" dense outlined :value="user.surname" />
+              </div>
+              <div class="col-12">
+                <q-input label="Email" dense outlined />
+              </div>
+              <div class="col-12">
+                <q-file
+                  accept=".jpg, .png"
+                  dense
+                  outlined
+                  v-model="picture"
+                  clearable
+                  label="Upload new picture"
+                  @input="uploadPicture"
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="mdi-image" />
+                  </template>
+                </q-file>
+              </div>
+              <div class="col-12">
+                <q-select
+                  dense
+                  outlined
+                  v-model="settings.locale"
+                  :label="$i18n.t('locale')"
+                  :options="localeOptions"
+                  behavior="menu"
+                  emit-value
+                />
+              </div>
+              <div class="col-12">
+                <q-toggle size="sm" :label="$i18n.t('darkMode')" v-model="settings.darkMode" />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </q-page>
@@ -37,17 +79,18 @@ export default {
       localeOptions: [
         {
           value: "hr",
-          label: "Croatian"
+          label: this.$i18n.t("croatian")
         },
         {
           value: "en",
-          label: "English"
+          label: this.$i18n.t("english")
         }
       ],
       settings: {
         darkMode: false,
         locale: "en"
-      }
+      },
+      picture: null
     };
   },
   mounted() {
@@ -55,8 +98,8 @@ export default {
     this.$watch(
       "settings",
       val => {
-        let user = Object.assign({}, this.user);
-        user.settings = Object.assign({}, val);
+        let user = { ...this.user };
+        user.settings = { ...val };
         this.setUserData(user);
         this.$i18n.locale = user.settings.locale;
         UserService.updateSettings(this.user.id, user.settings).then(() => {
@@ -65,6 +108,16 @@ export default {
             message: "Settings successfully updated!"
           });
         });
+        this.localeOptions = [
+          {
+            value: "hr",
+            label: this.$i18n.t("croatian")
+          },
+          {
+            value: "en",
+            label: this.$i18n.t("english")
+          }
+        ];
       },
       { immediate: false, deep: true }
     );
@@ -73,7 +126,23 @@ export default {
     ...mapGetters(["user"])
   },
   methods: {
-    ...mapActions(["setUserData"])
+    ...mapActions(["setUserData"]),
+    uploadPicture(file) {
+      if (!file) {
+        return;
+      }
+      let formData = new FormData();
+      formData.append("picture", file);
+      UserService.uploadPicture(this.user.id, formData).then(({ data }) => {
+        this.imgSrc = "data:image/png;base64," + data.payload.picture.data;
+      });
+      this.picture = null;
+    }
   }
 };
 </script>
+
+<style lang="sass">
+.image-box
+  border-radius: 25px
+</style>

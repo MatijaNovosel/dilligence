@@ -95,5 +95,7 @@ export default {
   exams: "Exams",
   notifications: "Notifications",
   submittedBy: "Submitted by",
-  successfullyLoggedOut: "Successfully logged out"
+  successfullyLoggedOut: "Successfully logged out",
+  croatian: "Croatian",
+  english: "English"
 }

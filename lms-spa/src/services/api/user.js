@@ -68,5 +68,8 @@ export default {
       userId,
       ...settings
     });
+  },
+  async uploadPicture(userId, picture) {
+    return await axios.put('User/image/' + userId, picture);
   }
 };
