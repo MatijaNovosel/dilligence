@@ -44,7 +44,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
       // Filter condition: retrieve the notification if it has not been seen by the user and if it has been submitted after the user had joined the course
       var notifications = await _context.Notification
         .Where(t =>
-          t.Course.Subscription.Any(x => x.UserId == query.UserId && x.JoinedAt < t.SubmittedAt) &&
+          t.Course.Subscription.Any(x => x.UserId == query.UserId && x.JoinedAt.Value.Date <= t.SubmittedAt.Value.Date) &&
           t.NotificationUserSeen.Any(x => x.UserId == query.UserId && x.NotificationId == t.Id && x.Seen == false)
         )
         .Select(t => new NotificationQueryModel
@@ -55,7 +55,9 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Course = t.Course.Name,
           SubmittedBy = $"{t.SubmittedBy.Name} {t.SubmittedBy.Surname}",
           Description = t.Description,
-          CourseId = t.Course.Id
+          CourseId = t.Course.Id,
+          Color = t.Color,
+          ExpiresAt = t.ExpiresAt
         })
         .ToListAsync();
       return notifications;
@@ -65,7 +67,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     {
       var notifications = await _context.Notification
         .Where(t =>
-          t.Course.Subscription.Any(x => x.UserId == query.UserId && x.JoinedAt < t.SubmittedAt) &&
+          t.Course.Subscription.Any(x => x.UserId == query.UserId && x.JoinedAt.Value.Date <= t.SubmittedAt.Value.Date) &&
           t.NotificationUserSeen.Any(x => x.UserId == query.UserId && x.NotificationId == t.Id && x.Seen == false)
         )
         .ToListAsync();

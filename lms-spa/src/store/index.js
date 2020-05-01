@@ -17,7 +17,8 @@ const Store = new Vuex.Store({
       picture: null,
       settings: {
         darkMode: null,
-        locale: null
+        locale: null,
+        selfNotifications: null
       }
     }
   },
@@ -36,7 +37,8 @@ const Store = new Vuex.Store({
         picture: null,
         settings: {
           darkMode: null,
-          locale: null
+          locale: null,
+          selfNotifications: null
         }
       };
     }

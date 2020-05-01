@@ -13,10 +13,10 @@
             <q-img
               class="image-box"
               :width="$q.screen.sm || $q.screen.xs ? '300px' : '75%'"
-              :height="$q.screen.sm || $q.screen.xs ? '300px' : '75%'"
+              height="300px"
               :src="user.picture == null ? require('../assets/default-user.jpg') : 'data:image/png;base64,' + user.picture"
             />
-            <div class="q-mt-md text-subtitle1">Profile picture</div>
+            <div class="q-my-md text-subtitle1">Profile picture</div>
           </div>
           <div class="col-xs-12 col-md-9">
             <div class="row q-pr-md q-gutter-sm">
@@ -61,6 +61,32 @@
               <div class="col-12">
                 <q-toggle size="sm" :label="$i18n.t('darkMode')" v-model="settings.darkMode" />
               </div>
+              <div class="col-12">
+                <q-checkbox
+                  v-model="settings.selfNotifications"
+                  size="sm"
+                  label="Disable receiving notifications created by yourself"
+                />
+              </div>
+              <div class="col-12">
+                <div :class="`border-box-${$q.dark.isActive ? 'dark' : 'light'}`">
+                  <div class="q-pa-sm">
+                    <span>Notification blacklist:</span>
+                    <div
+                      :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']"
+                    >(You will not receive notifications from these courses)</div>
+                    <q-option-group
+                      v-model="settings.blacklist"
+                      :options="options"
+                      class="q-mt-sm"
+                      dense
+                      type="checkbox"
+                      color="primary"
+                      emit-options
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -89,15 +115,29 @@ export default {
       ],
       settings: {
         darkMode: false,
-        locale: "en"
+        locale: "en",
+        selfNotifications: true,
+        blacklist: []
       },
       picture: null,
-      imgSrc: null
+      options: [
+        {
+          label: "Analogni sklopovi E",
+          value: 1
+        },
+        {
+          label: "Mehatronika",
+          value: 2
+        },
+        {
+          label: "Web aplikacije u Javi",
+          value: 3
+        }
+      ]
     };
   },
   mounted() {
     this.settings = Object.assign({}, this.user.settings);
-    this.imgSrc = "data:image/png;base64," + this.user.picture;
     this.$watch(
       "settings",
       val => {

@@ -12,7 +12,7 @@ export default {
       notificationIds, userId
     });
   },
-  async createNotification() {
+  async createNotification(payload) {
     return await axios.post('Notification', payload);
   }
 }

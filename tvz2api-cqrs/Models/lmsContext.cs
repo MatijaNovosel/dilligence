@@ -196,9 +196,15 @@ namespace tvz2api_cqrs.Models
       {
         entity.Property(e => e.Id).HasColumnName("ID");
 
+        entity.Property(e => e.Color)
+                  .HasMaxLength(255)
+                  .IsUnicode(false);
+
         entity.Property(e => e.CourseId).HasColumnName("CourseID");
 
         entity.Property(e => e.Description).IsUnicode(false);
+
+        entity.Property(e => e.ExpiresAt).HasColumnType("date");
 
         entity.Property(e => e.SubmittedAt).HasColumnType("date");
 

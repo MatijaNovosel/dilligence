@@ -131,7 +131,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         Name = user.Name,
         Surname = user.Surname,
         Username = user.Username,
-        Picture = Convert.ToBase64String(user.ImageFile.Data),
+        Picture = user.ImageFile != null ? Convert.ToBase64String(user.ImageFile.Data) : null,
         Settings = settings,
         Privileges = privileges.ToList(),
         Token = tokenHandler.WriteToken(token)

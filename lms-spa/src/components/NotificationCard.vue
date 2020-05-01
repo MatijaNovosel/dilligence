@@ -1,6 +1,6 @@
 <template>
   <q-card flat bordered>
-    <q-bar dense :class="`bg-${color}`">
+    <q-bar dense :style="`background-color: ${value.color};`">
       <span>{{ value.title }}</span>
     </q-bar>
     <q-card-section class="q-py-sm">
@@ -16,7 +16,7 @@
 <script>
 export default {
   name: "NotificationCard",
-  props: ["value", "color"],
+  props: ["value"],
   data() {
     return {};
   },

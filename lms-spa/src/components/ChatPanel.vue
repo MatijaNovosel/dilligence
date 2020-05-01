@@ -13,7 +13,8 @@
       ref="chat"
       :thumb-style="thumbStyle"
       :bar-style="barStyle"
-      class="border-box q-px-lg q-py-md"
+      :class="`border-box-${$q.dark.isActive ? 'dark' : 'light'}`"
+      class="q-px-lg q-py-md"
       style="height: 600px;"
     >
       <template v-for="message in messages">

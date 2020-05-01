@@ -10,7 +10,10 @@
         <q-item class="q-my-md">
           <q-item-section avatar>
             <q-avatar size="45px" @click="editPictureDialog = true">
-              <img style="border: 1px solid rgba(0, 0, 0, 0.4)" :src="'data:image/png;base64,' + user.picture"  />
+              <img
+                style="border: 1px solid rgba(0, 0, 0, 0.4)"
+                :src="user.picture == null ? require('../assets/default-user.jpg') : 'data:image/png;base64,' + user.picture"
+              />
             </q-avatar>
           </q-item-section>
           <q-item-section>

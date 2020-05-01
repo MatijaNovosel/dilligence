@@ -108,7 +108,7 @@
                       :fonts="fonts"
                     />
                   </div>
-                  <div class="col-12 border-box">
+                  <div class="col-12" :class="`border-box-${$q.dark.isActive ? 'dark' : 'light'}`">
                     <div class="text-h6 absolute-top-right">
                       <q-badge color="primary">{{ $i18n.t('preview') }}</q-badge>
                     </div>

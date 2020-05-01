@@ -2,9 +2,14 @@ $absolute-offset: 10px
   
 .border-box
   position: relative
-  border: 1px solid rgba(0, 0, 0, 0.12)
   border-radius: 8px
   padding: 5px
+.border-box-light
+  @extend .border-box
+  border: 1px solid rgba(0, 0, 0, 0.12)
+.border-box-dark
+  @extend .border-box
+  border: 1px solid white
 .absolute
   position: absolute
 .absolute-top
@@ -26,9 +31,18 @@ $absolute-offset: 10px
   @extend .absolute-bottom
   right: $absolute-offset
 .no-select
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  -webkit-touch-callout: none
+  -webkit-user-select: none
+  -khtml-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  user-select: none
+.error-text
+  font-size: 11px
+  color: #C10015
+.hint-text
+  font-size: 11px
+  color: rgba(0, 0, 0, 0.54)
+.hint-text-dark
+  font-size: 11px
+  color: #b8b8b8

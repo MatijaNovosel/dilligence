@@ -34,12 +34,6 @@
                   <div v-else class="col-12 q-my-sm">
                     <div>{{ $i18n.t('noData') }}</div>
                   </div>
-                  <div class="col-12 q-my-sm text-right">
-                    <q-btn
-                      :color="!$q.dark.isActive ? 'primary' : 'grey-8'"
-                      size="sm"
-                    >New notification</q-btn>
-                  </div>
                 </div>
               </q-tab-panel>
               <q-tab-panel name="participants">{{ tab }}</q-tab-panel>
@@ -49,36 +43,179 @@
         </div>
       </div>
     </template>
+    <q-dialog v-model="newNotificationDialog" persistent no-esc-dismiss>
+      <q-card style="width: 70%; max-width: 90vw;">
+        <q-toolbar
+          :style="'background-color: ' + newNotification.color"
+          class="text-white dialog-toolbar"
+        >
+          <span>Create new notification</span>
+          <q-space />
+          <q-btn
+            :ripple="false"
+            dense
+            size="sm"
+            color="white"
+            flat
+            round
+            icon="mdi-close-circle"
+            @click="resetNewNotificationDialog"
+          />
+        </q-toolbar>
+        <q-card-section class="q-gutter-sm q-pb-none">
+          <q-input
+            hint="The title of the notification"
+            :error="$v.newNotification.title.$invalid"
+            error-message="This field is required!"
+            dense
+            outlined
+            v-model="newNotification.title"
+            label="Title"
+          />
+          <q-input
+            hint="Color of the header"
+            label="Header color"
+            dense
+            outlined
+            v-model="newNotification.color"
+            readonly
+          >
+            <template v-slot:append>
+              <q-icon name="colorize" class="cursor-pointer">
+                <q-popup-proxy transition-show="scale" transition-hide="scale">
+                  <q-color v-model="newNotification.color" />
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
+          <q-input
+            dense
+            outlined
+            v-model="newNotification.expiresAt"
+            :label="$i18n.t('dueDate')"
+            readonly
+            hint="The date at which the notification becomes archived"
+          >
+            <template v-slot:append>
+              <q-icon name="mdi-calendar-month" class="cursor-pointer">
+                <q-popup-proxy transition-show="scale" transition-hide="scale">
+                  <q-date v-model="newNotification.expiresAt" mask="YYYY-MM-DD" />
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
+          <q-editor
+            :content-style="{ [$v.newNotification.description.$invalid && 'border']: '1px solid #C10015' }"
+            v-model="newNotification.description"
+            min-height="5rem"
+          />
+          <span
+            v-if="$v.newNotification.description.$invalid"
+            class="error-text q-pl-md"
+          >This field is required!</span>
+          <span v-else class="hint-text q-pl-md">The main text of the notification</span>
+        </q-card-section>
+        <q-card-actions class="justify-end q-pt-none">
+          <q-btn
+            :disabled="$v.newNotification.$invalid"
+            class="q-mr-sm"
+            color="primary"
+            size="sm"
+            @click="createNotification"
+          >Send</q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    <q-page-sticky v-show="tab == 'notifications'" position="bottom-right" :offset="[18, 18]">
+      <q-fab direction="left" :color="!$q.dark.isActive ? 'primary' : 'grey-8'" fab icon="add">
+        <q-fab-action
+          @click="newNotificationDialog = true"
+          color="primary"
+          icon="person_add"
+          label="New notification"
+        />
+      </q-fab>
+    </q-page-sticky>
   </q-page>
 </template>
 
 <script>
 import CourseService from "../services/api/course";
+import NotificationService from "../services/api/notification";
 import NotificationCard from "../components/NotificationCard";
+import { required, minLength } from "vuelidate/lib/validators";
+import UserMixin from "../mixins/userMixin";
 
 export default {
   name: "CourseDetails",
   components: { NotificationCard },
+  mixins: [ UserMixin ],
   created() {
+    this.courseId = this.$route.params.id;
     this.getData();
   },
+  validations: {
+    newNotification: {
+      title: {
+        required,
+        minLength: minLength(4)
+      },
+      description: {
+        required,
+        minLength: minLength(4)
+      }
+    }
+  },
   methods: {
+    createNotification() {
+      /*
+
+        public int? SubmittedById { get; set; }
+        public int? CourseId { get; set; }
+
+      */
+      let notification = {
+        ...this.newNotification,
+        submittedById: this.user.id,
+        courseId: this.courseId
+      };
+      NotificationService.createNotification(notification).then(() => {
+        this.getData();
+      });
+    },
+    resetNewNotificationDialog() {
+      this.newNotification = {
+        title: "Title goes here!",
+        description: "Description goes here!",
+        color: "#285de0",
+        expiresAt: "2020-07-20"
+      };
+      this.newNotificationDialog = false;
+    },
     getNotifications() {
       CourseService.getNotifications(this.course.id).then(({ data }) => {
         this.notifications = data;
       });
     },
     getData() {
-      CourseService.getCourse(this.$route.params.id).then(({ data }) => {
+      CourseService.getCourse(this.courseId).then(({ data }) => {
         this.course = data;
       });
     }
   },
   data() {
     return {
+      newNotificationDialog: false,
       course: null,
       notifications: null,
-      tab: "home"
+      courseId: null,
+      tab: "home",
+      newNotification: {
+        title: "Title goes here!",
+        description: "Description goes here!",
+        color: "#285de0",
+        expiresAt: "2020-07-20"
+      }
     };
   },
   watch: {
@@ -94,3 +231,12 @@ export default {
   }
 };
 </script>
+
+<style lang="sass">
+.q-btn--fab .q-btn__wrapper
+  padding: 10px
+  min-height: 12px
+  min-width: 12px
+.dialog-toolbar
+  min-height: 30px
+</style>

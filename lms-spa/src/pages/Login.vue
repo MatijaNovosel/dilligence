@@ -5,46 +5,17 @@
         <q-img style="width: 150px; height: 150px;" src="../assets/tvz-logo.svg"></q-img>
       </q-card-section>
       <q-card-section class="q-py-none">
-        <ValidationObserver ref="observer">
-          <ValidationProvider
-            immediate
-            mode="lazy"
-            name="username"
-            rules="required|min:4"
-            v-slot="{ invalid, dirty, errors }"
-          >
-            <q-input
-              :error="invalid && dirty"
-              :error-message="errors[0]"
-              square
-              dense
-              filled
-              :label="$i18n.t('username')"
-              v-model="username"
-              required
-            />
-          </ValidationProvider>
-          <ValidationProvider
-            immediate
-            mode="lazy"
-            name="password"
-            rules="required|min:4"
-            v-slot="{ invalid, dirty, errors }"
-          >
-            <q-input
-              :error="invalid && dirty"
-              :error-messages="errors[0]"
-              square
-              dense
-              filled
-              :label="$i18n.t('password')"
-              v-model="password"
-              type="password"
-              required
-              class="q-pt-sm"
-            />
-          </ValidationProvider>
-        </ValidationObserver>
+        <q-input square dense filled :label="$i18n.t('username')" v-model="username" required />
+        <q-input
+          square
+          dense
+          filled
+          :label="$i18n.t('password')"
+          v-model="password"
+          type="password"
+          required
+          class="q-pt-sm"
+        />
       </q-card-section>
       <q-card-actions class="justify-center">
         <q-btn @click="submit" :loading="loading" color="primary">{{ $i18n.t('signIn') }}</q-btn>
@@ -56,19 +27,6 @@
 <script>
 import AuthService from "../services/api/auth";
 import { mapActions } from "vuex";
-import { required, min } from "vee-validate/dist/rules";
-import {
-  ValidationProvider,
-  ValidationObserver,
-  extend,
-  validate
-} from "vee-validate";
-
-extend("min", min);
-extend("required", {
-  ...required,
-  message: "This field is required!"
-});
 
 export default {
   data() {
@@ -78,10 +36,6 @@ export default {
       valid: true,
       loading: false
     };
-  },
-  components: {
-    ValidationProvider,
-    ValidationObserver
   },
   methods: {
     ...mapActions(["setUserData"]),
@@ -97,6 +51,7 @@ export default {
               type: "positive",
               message: this.$i18n.t("successfullyLoggedIn")
             });
+            data.payload.settings.selfNotifications = true;
             let user = { ...data.payload };
             this.setUserData(user);
             this.$router.push("/");
@@ -115,16 +70,14 @@ export default {
         });
     },
     submit() {
-      this.$refs.observer.validate().then(result => {
-        if (result) {
-          this.login();
-        } else {
-          this.$q.notify({
-            type: "negative",
-            message: this.$i18n.t("error.invalid")
-          });
-        }
-      });
+      if (true) {
+        this.login();
+      } else {
+        this.$q.notify({
+          type: "negative",
+          message: this.$i18n.t("error.invalid")
+        });
+      }
     }
   }
 };

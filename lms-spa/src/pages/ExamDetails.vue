@@ -79,9 +79,14 @@
               <q-card-section>
                 <div class="row">
                   <div class="col-12 text-center">
-                    <span class="text-h6">{{ `${$i18n.t('question')} ${i + 1} - ${question.title}` }}</span>
+                    <span
+                      class="text-h6"
+                    >{{ `${$i18n.t('question')} ${i + 1} - ${question.title}` }}</span>
                   </div>
-                  <div class="col-12 border-box q-mt-md">
+                  <div
+                    class="col-12 q-mt-md"
+                    :class="`border-box-${$q.dark.isActive ? 'dark' : 'light'}`"
+                  >
                     <p class="q-pa-md" v-html="question.content"></p>
                   </div>
                 </div>
@@ -107,8 +112,16 @@
         <q-card-section class="text-center q-mt-md">{{ $i18n.t("areYouSure") }}</q-card-section>
         <q-card-actions class="q-pb-md">
           <q-space />
-          <q-btn color="green" class="text-white" @click="finishExamDialog = false">{{ $i18n.t("yes") }}</q-btn>
-          <q-btn color="red" class="text-white" @click="finishExamDialog = false">{{ $i18n.t("no") }}</q-btn>
+          <q-btn
+            color="green"
+            class="text-white"
+            @click="finishExamDialog = false"
+          >{{ $i18n.t("yes") }}</q-btn>
+          <q-btn
+            color="red"
+            class="text-white"
+            @click="finishExamDialog = false"
+          >{{ $i18n.t("no") }}</q-btn>
           <q-space />
         </q-card-actions>
       </q-card>

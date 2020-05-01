@@ -45,7 +45,7 @@
         >
           <q-list
             separator
-            style="min-width: 350px; border: 1px solid #e0dede;"
+            style="min-width: 350px; border: 1px solid #e0dede; border-radius: 8px;"
             v-if="notificationCount > 0"
           >
             <q-item dense class="justify-center items-center">
@@ -67,7 +67,14 @@
               :key="i"
               v-for="(notification, i) in notifications"
             >
-              <q-item-section avatar class="bg-red-9 q-mr-md" />
+              <q-item-section
+                avatar
+                :style="{ 
+                  'background-color': notification.color, 
+                  [i == notifications.length - 1 && 'border-bottom-left-radius']: '8px' 
+                }"
+                class="q-mr-md color-tag"
+              />
               <q-item-section>
                 <q-item-label>{{ notification.title }}</q-item-label>
                 <q-item-label caption>{{ notification.course }}</q-item-label>

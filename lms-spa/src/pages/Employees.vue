@@ -28,7 +28,7 @@
                 <q-input v-model="searchData.surname" dense label="Prezime" clearable />
               </div>
               <div class="col-3">
-                <div class="q-pa-sm border-box">
+                <div class="q-pa-sm" :class="`border-box-${$q.dark.isActive ? 'dark' : 'light'}`">
                   <q-btn
                     :ripple="false"
                     dense
@@ -51,7 +51,7 @@
                 </div>
               </div>
               <div class="col-3">
-                <div class="q-pa-sm border-box">
+                <div class="q-pa-sm" :class="`border-box-${$q.dark.isActive ? 'dark' : 'light'}`">
                   <q-btn
                     :ripple="false"
                     dense

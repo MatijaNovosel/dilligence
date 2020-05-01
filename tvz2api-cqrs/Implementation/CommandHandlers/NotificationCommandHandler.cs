@@ -39,7 +39,9 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         SubmittedById = command.SubmittedById,
         Title = command.Title,
         Description = command.Description,
-        SubmittedAt = DateTime.Now
+        SubmittedAt = DateTime.Now,
+        Color = command.Color,
+        ExpiresAt = command.ExpiresAt
       };
       await _context.Notification.AddAsync(notification);
       await _context.SaveChangesAsync();

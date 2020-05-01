@@ -166,7 +166,9 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Title = t.Title,
           Course = t.Course.Name,
           SubmittedAt = t.SubmittedAt,
-          SubmittedBy = $"{t.SubmittedBy.Name} {t.SubmittedBy.Surname}"
+          SubmittedBy = $"{t.SubmittedBy.Name} {t.SubmittedBy.Surname}",
+          Color = t.Color,
+          ExpiresAt = t.ExpiresAt
         })
         .ToListAsync();
       return courses;
