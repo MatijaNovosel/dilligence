@@ -1,5 +1,7 @@
 <template>
   <q-btn
+    @mouseenter="tooltipHover = true"
+    @mouseleave="tooltipHover = false"
     flat
     dense
     round
@@ -8,6 +10,9 @@
     :icon="(notificationCount && notificationCount > 0) ? 'mdi-bell-ring' : 'mdi-bell'"
     @click="getNotifications"
   >
+    <q-tooltip v-model="tooltipHover">
+      <span>Log out</span>
+    </q-tooltip>
     <q-badge
       v-if="notificationCount && notificationCount > 0"
       color="red"
@@ -112,6 +117,7 @@ export default {
       });
     },
     getNotifications() {
+      this.tooltipHover = false;
       this.loading = true;
       NotificationService.getNotifications(this.user.id)
         .then(({ data }) => {
@@ -138,6 +144,7 @@ export default {
   },
   data() {
     return {
+      tooltipHover: false,
       notificationMenuOpen: false,
       notificationCount: null,
       notifications: null,
