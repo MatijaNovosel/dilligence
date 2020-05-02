@@ -124,7 +124,7 @@
         dense
         round
         class="q-mr-md"
-        :color="$q.dark.isActive ? 'primary' : 'red-7'"
+        color="red-7"
         icon="power_settings_new"
         @click="logout"
       />

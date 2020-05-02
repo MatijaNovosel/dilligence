@@ -16,7 +16,10 @@
               height="300px"
               :src="user.picture == null ? require('../assets/default-user.jpg') : 'data:image/png;base64,' + user.picture"
             />
-            <div class="q-my-md text-subtitle1">Profile picture</div>
+            <div
+              class="q-my-md"
+              :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']"
+            >Profile picture</div>
           </div>
           <div class="col-xs-12 col-md-6">
             <div class="row q-pr-md q-gutter-sm">
@@ -25,16 +28,14 @@
                 :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']"
               >Personal information</div>
               <div class="col-12">
-                <q-input label="Username" dense outlined :value="user.username" />
+                <q-input readonly label="Username" dense outlined :value="user.username" />
               </div>
               <div class="col-12">
-                <q-input label="Name" dense outlined :value="user.name" />
-              </div>
-              <div class="col-12">
-                <q-input label="Surname" dense outlined :value="user.surname" />
-              </div>
-              <div class="col-12">
-                <q-input label="Email" dense outlined />
+                <q-form class="q-gutter-sm" @input="personalInformationChange">
+                  <q-input label="Name" dense outlined v-model="userData.name" />
+                  <q-input label="Surname" dense outlined v-model="userData.surname" />
+                  <q-input label="Email" dense outlined v-model="userData.email" />
+                </q-form>
               </div>
               <div class="col-12">
                 <q-file
@@ -59,7 +60,7 @@
                 <q-select
                   dense
                   outlined
-                  v-model="settings.locale"
+                  v-model="userData.settings.locale"
                   :label="$i18n.t('locale')"
                   :options="localeOptions"
                   emit-value
@@ -73,7 +74,8 @@
                       :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']"
                     >(You will not receive notifications from these courses)</div>
                     <q-option-group
-                      v-model="settings.blacklist"
+                      @input="blacklistChange"
+                      v-model="userData.blacklist"
                       :options="options"
                       class="q-mt-sm"
                       dense
@@ -85,7 +87,11 @@
                 </div>
               </div>
               <div class="col-12">
-                <q-toggle size="sm" :label="$i18n.t('darkMode')" v-model="settings.darkMode" />
+                <q-toggle
+                  size="sm"
+                  :label="$i18n.t('darkMode')"
+                  v-model="userData.settings.darkMode"
+                />
               </div>
             </div>
           </div>
@@ -98,14 +104,22 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import UserService from "../services/api/user";
-
-let val = true;
-let res = val && 5; // 5
+import { debounce } from "debounce";
 
 export default {
   name: "Settings",
   data() {
     return {
+      userData: {
+        name: null,
+        surname: null,
+        email: null,
+        blacklist: [],
+        settings: {
+          darkMode: false,
+          locale: "en"
+        }
+      },
       localeOptions: [
         {
           value: "hr",
@@ -116,11 +130,6 @@ export default {
           label: this.$i18n.t("english")
         }
       ],
-      settings: {
-        darkMode: false,
-        locale: "en",
-        blacklist: []
-      },
       picture: null,
       options: [
         {
@@ -139,9 +148,9 @@ export default {
     };
   },
   mounted() {
-    this.settings = Object.assign({}, this.user.settings);
+    this.userData = JSON.parse(JSON.stringify(this.user));
     this.$watch(
-      "settings",
+      "userData.settings",
       val => {
         let user = { ...this.user };
         user.settings = { ...val };
@@ -172,6 +181,12 @@ export default {
   },
   methods: {
     ...mapActions(["setUserData"]),
+    personalInformationChange: debounce(function() {
+      console.log("Autosaved personal info!");
+    }, 1500),
+    blacklistChange: debounce(function() {
+      console.log("Autosaved blacklist!");
+    }, 1500),
     uploadPicture(file) {
       if (!file) {
         return;

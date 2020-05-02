@@ -15,6 +15,7 @@
     "@quasar/extras": "^1.6.0",
     "axios": "^0.18.1",
     "copy-to-clipboard": "^3.3.1",
+    "debounce": "^1.2.0",
     "jwt-decode": "^2.2.0",
     "quasar": "^1.0.0",
     "vue-i18n": "^8.0.0",

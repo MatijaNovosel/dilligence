@@ -51,7 +51,7 @@ export default {
               type: "positive",
               message: this.$i18n.t("successfullyLoggedIn")
             });
-            data.payload.settings.blacklist = [];
+            data.payload.blacklist = [];
             let user = { ...data.payload };
             this.setUserData(user);
             this.$router.push("/");
