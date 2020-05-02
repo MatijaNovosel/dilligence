@@ -20,13 +20,13 @@ namespace tvz2api_cqrs.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  public class NotificationController : CustomController
+  public class NotificationController : ControllerBase
   {
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
     private readonly IHubContext<NotificationHub> _hubContext;
 
-    public NotificationController(ICommandBus commandBus, IQueryBus queryBus, IHubContext<NotificationHub> notificationHub, lmsContext context) : base(context)
+    public NotificationController(ICommandBus commandBus, IQueryBus queryBus, IHubContext<NotificationHub> notificationHub)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;

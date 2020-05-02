@@ -1,5 +1,5 @@
 <template>
-  <q-page class="q-pa-md">
+  <q-page class="q-px-sm q-pt-md">
     <div class="row full-width q-gutter-sm">
       <div class="col-12">
         <span class="text-weight-light text-h5">{{ $i18n.t('settings') }}</span>
@@ -18,8 +18,12 @@
             />
             <div class="q-my-md text-subtitle1">Profile picture</div>
           </div>
-          <div class="col-xs-12 col-md-9">
+          <div class="col-xs-12 col-md-6">
             <div class="row q-pr-md q-gutter-sm">
+              <div
+                class="q-pl-sm"
+                :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']"
+              >Personal information</div>
               <div class="col-12">
                 <q-input label="Username" dense outlined :value="user.username" />
               </div>
@@ -47,6 +51,10 @@
                   </template>
                 </q-file>
               </div>
+              <div
+                class="q-pl-sm q-pt-sm"
+                :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']"
+              >Application settings</div>
               <div class="col-12">
                 <q-select
                   dense
@@ -54,18 +62,7 @@
                   v-model="settings.locale"
                   :label="$i18n.t('locale')"
                   :options="localeOptions"
-                  behavior="menu"
                   emit-value
-                />
-              </div>
-              <div class="col-12">
-                <q-toggle size="sm" :label="$i18n.t('darkMode')" v-model="settings.darkMode" />
-              </div>
-              <div class="col-12">
-                <q-checkbox
-                  v-model="settings.selfNotifications"
-                  size="sm"
-                  label="Disable receiving notifications created by yourself"
                 />
               </div>
               <div class="col-12">
@@ -87,6 +84,9 @@
                   </div>
                 </div>
               </div>
+              <div class="col-12">
+                <q-toggle size="sm" :label="$i18n.t('darkMode')" v-model="settings.darkMode" />
+              </div>
             </div>
           </div>
         </div>
@@ -98,6 +98,9 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import UserService from "../services/api/user";
+
+let val = true;
+let res = val && 5; // 5
 
 export default {
   name: "Settings",
@@ -116,7 +119,6 @@ export default {
       settings: {
         darkMode: false,
         locale: "en",
-        selfNotifications: true,
         blacklist: []
       },
       picture: null,

@@ -20,12 +20,12 @@ namespace tvz2api_cqrs.Controllers
   [Route("api/auth")]
   [ApiController]
   [AllowAnonymous]
-  public class AuthenticationController : CustomController
+  public class AuthenticationController : ControllerBase
   {
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
 
-    public AuthenticationController(ICommandBus commandBus, IQueryBus queryBus, lmsContext context): base(context)
+    public AuthenticationController(ICommandBus commandBus, IQueryBus queryBus)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;

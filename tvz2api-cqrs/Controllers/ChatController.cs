@@ -21,13 +21,13 @@ namespace tvz2api_cqrs.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  public class ChatController : CustomController
+  public class ChatController : ControllerBase
   {
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
     private readonly IHubContext<ChatHub> _hubContext;
 
-    public ChatController(ICommandBus commandBus, IQueryBus queryBus, IHubContext<ChatHub> chatHub, lmsContext context): base(context)
+    public ChatController(ICommandBus commandBus, IQueryBus queryBus, IHubContext<ChatHub> chatHub)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;

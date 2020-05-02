@@ -33,8 +33,8 @@ export default {
   width: 80vh
   max-width: 80vw
 .navbar-img
-  width: 40px
-  height: 40px
+  width: 30px
+  height: 30px
 .q-item__section--avatar
   cursor: pointer
 .border-box-image

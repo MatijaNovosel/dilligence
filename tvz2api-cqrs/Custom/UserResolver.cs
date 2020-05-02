@@ -5,18 +5,30 @@ using Newtonsoft.Json;
 using System.Security.Claims;
 using System;
 using tvz2api_cqrs.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace tvz2api_cqrs.Custom
 {
-  public class CustomController : ControllerBase
+  public class UserResolver : IUserResolver
   {
-    protected lmsContext _context;
-    public CustomController(lmsContext context)
+    private readonly IHttpContextAccessor _accessor;
+    private readonly lmsContext _context;
+
+    public ClaimsPrincipal User
     {
+      get
+      {
+        return _accessor?.HttpContext?.User as ClaimsPrincipal;
+      }
+    }
+
+    public UserResolver(IHttpContextAccessor accessor, lmsContext context)
+    {
+      _accessor = accessor;
       _context = context;
     }
 
-    private bool CheckPrivileges(params PrivilegeEnum[] requestedPrivileges)
+    public bool CheckPrivileges(params PrivilegeEnum[] requestedPrivileges)
     {
       int[] privileges = JsonConvert.DeserializeObject<int[]>(User.FindFirst("Privileges").Value);
       if (!privileges.Any(userPrivilege => requestedPrivileges.ToList().Contains((PrivilegeEnum)userPrivilege)))
@@ -25,7 +37,7 @@ namespace tvz2api_cqrs.Custom
       }
       return true;
     }
-    private bool UserBelongsToCourse(int courseId)
+    public bool UserBelongsToCourse(int courseId)
     {
       int userId = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
       if (!_context.Subscription.Any(x => x.UserId == userId && x.CourseId == courseId))

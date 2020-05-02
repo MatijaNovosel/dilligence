@@ -17,12 +17,12 @@ namespace tvz2api_cqrs.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  public class FileController : CustomController
+  public class FileController : ControllerBase
   {
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
 
-    public FileController(ICommandBus commandBus, IQueryBus queryBus, lmsContext context) : base(context)
+    public FileController(ICommandBus commandBus, IQueryBus queryBus)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;

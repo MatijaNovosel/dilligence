@@ -23,12 +23,12 @@ namespace tvz2api_cqrs.Controllers
   [Authorize]
   [Route("api/[controller]")]
   [ApiController]
-  public class ExamController : CustomController
+  public class ExamController : ControllerBase
   {
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
 
-    public ExamController(ICommandBus commandBus, IQueryBus queryBus, lmsContext context): base(context)
+    public ExamController(ICommandBus commandBus, IQueryBus queryBus)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;

@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
 using tvz2api_cqrs.Models.DTO;
+using System.Security.Claims;
+using System;
+using tvz2api_cqrs.Custom;
 
 namespace tvz2api_cqrs.Implementation.QueryHandlers
 {
@@ -16,10 +19,12 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     IQueryHandlerAsync<NotificationUserTotalQuery, int>
   {
     private readonly lmsContext _context;
+    private readonly IUserResolver _userResolver;
 
-    public NotificationQueryHandler(lmsContext context)
+    public NotificationQueryHandler(lmsContext context, IUserResolver userResolver)
     {
       _context = context;
+      _userResolver = userResolver;
     }
 
     public async Task<List<NotificationQueryModel>> HandleAsync(NotificationQuery query)
@@ -42,9 +47,11 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     public async Task<List<NotificationQueryModel>> HandleAsync(NotificationUserQuery query)
     {
       // Filter condition: retrieve the notification if it has not been seen by the user and if it has been submitted after the user had joined the course
+      int userId = Int32.Parse(_userResolver.User.FindFirstValue(ClaimTypes.NameIdentifier));
       var notifications = await _context.Notification
         .Where(t =>
           t.Course.Subscription.Any(x => x.UserId == query.UserId && x.JoinedAt.Value.Date <= t.SubmittedAt.Value.Date) &&
+          t.SubmittedById != userId &&
           t.NotificationUserSeen.Any(x => x.UserId == query.UserId && x.NotificationId == t.Id && x.Seen == false)
         )
         .Select(t => new NotificationQueryModel
@@ -65,9 +72,11 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
 
     public async Task<int> HandleAsync(NotificationUserTotalQuery query)
     {
+      int userId = Int32.Parse(_userResolver.User.FindFirstValue(ClaimTypes.NameIdentifier));
       var notifications = await _context.Notification
         .Where(t =>
           t.Course.Subscription.Any(x => x.UserId == query.UserId && x.JoinedAt.Value.Date <= t.SubmittedAt.Value.Date) &&
+          t.SubmittedById != userId &&
           t.NotificationUserSeen.Any(x => x.UserId == query.UserId && x.NotificationId == t.Id && x.Seen == false)
         )
         .ToListAsync();

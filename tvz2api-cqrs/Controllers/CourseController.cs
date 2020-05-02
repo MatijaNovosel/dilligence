@@ -22,12 +22,12 @@ namespace tvz2api_cqrs.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  public class CourseController : CustomController
+  public class CourseController : ControllerBase
   {
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
 
-    public CourseController(ICommandBus commandBus, IQueryBus queryBus, lmsContext context): base(context)
+    public CourseController(ICommandBus commandBus, IQueryBus queryBus)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;

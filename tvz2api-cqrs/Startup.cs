@@ -31,6 +31,7 @@ using tvz2api_cqrs.Models;
 using tvz2api_cqrs.Models.DTO;
 using tvz2api_cqrs.QueryModels;
 using Microsoft.AspNetCore.Identity;
+using tvz2api_cqrs.Custom;
 
 namespace tvz2api_cqrs
 {
@@ -114,6 +115,8 @@ namespace tvz2api_cqrs
           }
         });
       });
+      services.AddHttpContextAccessor();
+      services.AddTransient<IUserResolver, UserResolver>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
