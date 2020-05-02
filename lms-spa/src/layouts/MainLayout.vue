@@ -1,8 +1,8 @@
 <template>
   <q-layout view="hHh LpR fFf">
     <div v-if="$router.currentRoute.path != '/login'">
-      <Navbar @drawerState="drawer = !drawer" />
-      <Drawer :drawerTrigger="drawer" />
+      <navbar @drawerState="drawer = !drawer" />
+      <drawer :drawerTrigger="drawer" />
     </div>
     <q-page-container :class="{'svg-bg': $router.currentRoute.path == '/login' }">
       <router-view />
@@ -11,14 +11,14 @@
 </template>
 
 <script>
-import Navbar from "../components/Navbar";
-import Drawer from "../components/Drawer";
+import Navbar from "../components/navbar";
+import Drawer from "../components/drawer";
 
 export default {
   name: "MainLayout",
   components: {
-    Navbar,
-    Drawer
+    navbar: Navbar,
+    drawer: Drawer
   },
   data() {
     return {

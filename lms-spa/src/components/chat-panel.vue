@@ -50,7 +50,7 @@ import { mapGetters } from "vuex";
 import Vue from "vue";
 
 export default {
-  name: "ChatPanel",
+  name: "chat-panel",
   props: ["messages", "scrollTrigger"],
   data() {
     return {

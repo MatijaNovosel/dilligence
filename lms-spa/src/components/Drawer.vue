@@ -4,12 +4,16 @@
       :width="250"
       v-model="drawerOpen"
       show-if-above
-      :content-class="($q.dark.isActive ? 'drawer-bg-dark' : 'drawer-bg') + ' drawer-base'"
+      :content-class="`drawer-bg${$q.dark.isActive ? '-dark' : ''} drawer-base`"
     >
       <q-list dense>
         <q-item class="q-my-md">
           <q-item-section avatar>
-            <q-avatar size="45px" @click="editPictureDialog = true">
+            <q-avatar
+              size="45px"
+              style="cursor: pointer;"
+              @click="$router.push({ name: 'profile', params: { id: user.id } })"
+            >
               <img
                 style="border: 1px solid rgba(0, 0, 0, 0.4)"
                 :src="user.picture == null ? require('../assets/default-user.jpg') : 'data:image/png;base64,' + user.picture"
@@ -49,7 +53,7 @@
 import { mapGetters } from "vuex";
 
 export default {
-  name: "Drawer",
+  name: "drawer",
   props: ["drawerTrigger"],
   data() {
     return {

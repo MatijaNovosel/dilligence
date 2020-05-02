@@ -15,7 +15,7 @@
               :key="i"
               class="q-pa-xs col-xs-12 col-sm-6 col-md-4 col-lg-3"
             >
-              <ExamCard :value="attempt" />
+              <exam-card :value="attempt" />
             </div>
           </template>
         </div>
@@ -25,14 +25,14 @@
 </template>
 
 <script>
-import ExamCard from "../components/ExamCard";
+import ExamCard from "../components/exam-card";
 import ExamService from "../services/api/exam";
 import { mapGetters } from "vuex";
 import UserMixin from "../mixins/userMixin";
 
 export default {
   name: "Exams",
-  components: { ExamCard },
+  components: { "exam-card": ExamCard },
   mixins: [UserMixin],
   methods: {
     getAttempts() {

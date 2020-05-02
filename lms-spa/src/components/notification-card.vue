@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  name: "NotificationCard",
+  name: "notification-card",
   props: ["value"],
   data() {
     return {};

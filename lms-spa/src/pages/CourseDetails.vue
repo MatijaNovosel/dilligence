@@ -28,7 +28,7 @@
                 <div class="row wrap justify-center items-center content-center">
                   <template v-if="notifications && notifications.length != 0">
                     <div class="col-12 q-my-sm" v-for="(notification, i) in notifications" :key="i">
-                      <NotificationCard color="green-5" :value="notification" />
+                      <notification-card color="green-5" :value="notification" />
                     </div>
                   </template>
                   <div v-else class="col-12 q-my-sm">
@@ -83,7 +83,7 @@
             <template v-slot:append>
               <q-icon name="colorize" class="cursor-pointer">
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-color v-model="newNotification.color" />
+                  <q-color class="container-border" v-model="newNotification.color" />
                 </q-popup-proxy>
               </q-icon>
             </template>
@@ -99,7 +99,11 @@
             <template v-slot:append>
               <q-icon name="mdi-calendar-month" class="cursor-pointer">
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-date v-model="newNotification.expiresAt" mask="YYYY-MM-DD" />
+                  <q-date
+                    class="container-border"
+                    v-model="newNotification.expiresAt"
+                    mask="YYYY-MM-DD"
+                  />
                 </q-popup-proxy>
               </q-icon>
             </template>
@@ -109,11 +113,15 @@
             v-model="newNotification.description"
             min-height="5rem"
           />
-          <span
+          <div
             v-if="$v.newNotification.description.$invalid"
-            class="error-text q-pl-md"
-          >This field is required!</span>
-          <span v-else class="hint-text q-pl-md">The main text of the notification</span>
+            class="error-text q-pl-sm"
+          >This field is required!</div>
+          <div
+            v-else
+            class="q-pl-sm"
+            :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']"
+          >The main text of the notification</div>
         </q-card-section>
         <q-card-actions class="justify-end q-pt-none">
           <q-btn
@@ -130,8 +138,7 @@
       <q-fab direction="left" :color="!$q.dark.isActive ? 'primary' : 'grey-8'" fab icon="add">
         <q-fab-action
           @click="newNotificationDialog = true"
-          color="primary"
-          icon="person_add"
+          icon="mdi-email-plus"
           label="New notification"
         />
       </q-fab>
@@ -142,14 +149,14 @@
 <script>
 import CourseService from "../services/api/course";
 import NotificationService from "../services/api/notification";
-import NotificationCard from "../components/NotificationCard";
+import NotificationCard from "../components/notification-card";
 import { required, minLength } from "vuelidate/lib/validators";
 import UserMixin from "../mixins/userMixin";
 
 export default {
   name: "CourseDetails",
-  components: { NotificationCard },
-  mixins: [ UserMixin ],
+  components: { "notification-card": NotificationCard },
+  mixins: [UserMixin],
   created() {
     this.courseId = this.$route.params.id;
     this.getData();
@@ -168,19 +175,14 @@ export default {
   },
   methods: {
     createNotification() {
-      /*
-
-        public int? SubmittedById { get; set; }
-        public int? CourseId { get; set; }
-
-      */
       let notification = {
         ...this.newNotification,
         submittedById: this.user.id,
         courseId: this.courseId
       };
       NotificationService.createNotification(notification).then(() => {
-        this.getData();
+        this.getNotifications(this.course.id);
+        this.resetNewNotificationDialog();
       });
     },
     resetNewNotificationDialog() {
@@ -239,4 +241,6 @@ export default {
   min-width: 12px
 .dialog-toolbar
   min-height: 30px
+.container-border
+  border: 1px solid #e0dede;
 </style>

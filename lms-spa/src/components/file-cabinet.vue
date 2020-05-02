@@ -142,7 +142,7 @@ import { download, fileIcon } from "../helpers/helpers";
 import FileService from "../services/api/file";
 
 export default {
-  name: "FileCabinet",
+  name: "file-cabinet",
   props: ["content", "headerColor"],
   data() {
     return {

@@ -11,6 +11,7 @@
 
 <script>
 export default {
+  name: "answer-footer",
   props: ["answers", "reset", "selectedAnswers", "type"],
   data() {
     return {

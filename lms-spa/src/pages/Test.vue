@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <template v-for="content in sidebarContents">
-      <FileCabinet :key="content.id" :content="content"></FileCabinet>
+      <file-cabinet :key="content.id" :content="content" />
     </template>
     <div class="row text-center justify-center q-my-md">
       <div class="col-3">
@@ -27,13 +27,13 @@
 </template>
 
 <script>
-import FileCabinet from "../components/FileCabinet";
+import FileCabinet from "../components/file-cabinet";
 import CourseService from "../services/api/course";
 
 export default {
   name: "Test",
   components: {
-    FileCabinet
+    "file-cabinet": FileCabinet
   },
   created() {
     CourseService.getCourseSidebar(147).then(({ data }) => {

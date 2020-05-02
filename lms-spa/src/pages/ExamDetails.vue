@@ -130,7 +130,7 @@
 </template>
 
 <script>
-import AnswerFooter from "../components/AnswerFooter/AnswerFooter";
+import AnswerFooter from "../components/AnswerFooter/answer-footer";
 import ExamService from "../services/api/exam";
 import UserMixin from "../mixins/userMixin";
 
@@ -138,7 +138,7 @@ export default {
   name: "ExamDetails",
   mixins: [UserMixin],
   components: {
-    AnswerFooter
+    "answer-footer": AnswerFooter
   },
   data() {
     return {

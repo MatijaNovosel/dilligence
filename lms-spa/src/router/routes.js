@@ -57,14 +57,6 @@ const routes = [
         }
       },
       {
-        path: 'settings',
-        name: 'settings',
-        component: () => import('pages/Settings.vue'),
-        meta: {
-          requiresAuth: true
-        }
-      },
-      {
         path: 'exams',
         name: 'exams',
         component: () => import('pages/Exams.vue'),
@@ -76,6 +68,14 @@ const routes = [
         path: 'exams/:id',
         name: 'exam-details',
         component: () => import('pages/ExamDetails.vue'),
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'profile/:id',
+        name: 'profile',
+        component: () => import('pages/Profile.vue'),
         meta: {
           requiresAuth: true
         }

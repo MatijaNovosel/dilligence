@@ -24,7 +24,7 @@
 
 <script>
 export default {
-  name: "ExamCard",
+  name: "exam-card",
   props: ["value"],
   data() {
     return {};

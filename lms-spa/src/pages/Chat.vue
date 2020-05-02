@@ -39,7 +39,7 @@
       <div class="col-9">
         <div class="row">
           <div class="col-12" style="position: relative;">
-            <ChatPanel
+            <chat-panel
               :scrollTrigger="scrollTrigger"
               @deleteMessage="deleteMessage"
               :messages="activeChatMessages"
@@ -157,7 +157,7 @@
 <script>
 import UserService from "../services/api/user";
 import ChatService from "../services/api/chat";
-import ChatPanel from "../components/ChatPanel";
+import ChatPanel from "../components/chat-panel";
 import ConnectionMixin from "../mixins/connectionMixin";
 import { mapGetters } from "vuex";
 
@@ -165,7 +165,7 @@ export default {
   name: "Chat",
   mixins: [ConnectionMixin],
   components: {
-    ChatPanel
+    "chat-panel": ChatPanel
   },
   created() {
     this.getChats(this.user.id);
