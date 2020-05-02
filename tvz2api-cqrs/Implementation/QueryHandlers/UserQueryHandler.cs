@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
 using tvz2api_cqrs.Models.DTO;
+using System;
 
 namespace tvz2api_cqrs.Implementation.QueryHandlers
 {
@@ -14,6 +15,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     IQueryHandlerAsync<UserQuery, List<UserQueryModel>>,
     IQueryHandlerAsync<UserChatQuery, List<UserChatQueryModel>>,
     IQueryHandlerAsync<UserSettingsQuery, UserSettingsQueryModel>,
+    IQueryHandlerAsync<UserDetailsQuery, UserDetailsDTO>,
     IQueryHandlerAsync<UserTotalQuery, int>,
     IQueryHandlerAsync<UserSubscriptionQuery, List<int>>
   {
@@ -81,6 +83,20 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
       {
         DarkMode = settings.DarkMode,
         Locale = settings.Locale
+      };
+    }
+
+    public async Task<UserDetailsDTO> HandleAsync(UserDetailsQuery query)
+    {
+      var user = await _context.User.Include(t => t.ImageFile).FirstOrDefaultAsync(x => x.Id == query.Id);
+      return new UserDetailsDTO()
+      {
+        Name = user.Name,
+        Surname = user.Surname,
+        Created = user.Created,
+        Email = user.Email,
+        Picture = user.ImageFile != null ? Convert.ToBase64String(user.ImageFile.Data) : null,
+        Username = user.Username
       };
     }
 

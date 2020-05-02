@@ -74,5 +74,8 @@ export default {
   },
   async updatePersonalInformation(payload) {
     return await axios.put('User/personal', payload);
+  },
+  async getUserDetails(userId) {
+    return await axios.get('User/' + userId);
   }
 };

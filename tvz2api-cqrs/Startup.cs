@@ -184,6 +184,7 @@ namespace tvz2api_cqrs
       services.AddScoped<IQueryHandlerAsync<UserTotalQuery, int>, UserQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<UserChatQuery, List<UserChatQueryModel>>, UserQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<UserSettingsQuery, UserSettingsQueryModel>, UserQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<UserDetailsQuery, UserDetailsDTO>, UserQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<UserSubscriptionQuery, List<int>>, UserQueryHandler>();
 
       services.AddScoped<IQueryHandlerAsync<ChatDetailsQuery, ChatQueryModel>, ChatQueryHandler>();

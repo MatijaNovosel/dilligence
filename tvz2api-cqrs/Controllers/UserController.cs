@@ -42,9 +42,9 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetSettings(int id)
+    public async Task<IActionResult> GetUserDetails(int id)
     {
-      var result = await _queryBus.ExecuteAsync(new UserSettingsQuery() { Id = id });
+      var result = await _queryBus.ExecuteAsync(new UserDetailsQuery() { Id = id });
       return Ok(result);
     }
 

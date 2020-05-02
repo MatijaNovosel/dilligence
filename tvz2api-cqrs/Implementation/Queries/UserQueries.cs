@@ -41,6 +41,12 @@ namespace tvz2api_cqrs.Implementation.Queries
     public int Id { get; set; }
   }
 
+  public class UserDetailsQuery : IQuery<UserDetailsDTO>
+  {
+    public UserDetailsQuery() { }
+    public int Id { get; set; }
+  }
+
   public class UserSubscriptionQuery : IQuery<List<int>>
   {
     public UserSubscriptionQuery(int id)
