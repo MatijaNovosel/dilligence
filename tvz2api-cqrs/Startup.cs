@@ -171,6 +171,7 @@ namespace tvz2api_cqrs
       services.AddScoped<ICommandHandlerAsync<UserUnsubscribeCommand>, UserCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<UserUpdateSettingsCommand>, UserCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<UserUploadPictureCommand, UserProfilePictureDTO>, UserCommandHandler>();
+      services.AddScoped<ICommandHandlerAsync<UserUpdatePersonalInformationCommand>, UserCommandHandler>();
 
       services.AddScoped<IQueryHandlerAsync<NotificationQuery, List<NotificationQueryModel>>, NotificationQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<NotificationUserQuery, List<NotificationQueryModel>>, NotificationQueryHandler>();

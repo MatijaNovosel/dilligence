@@ -182,10 +182,31 @@ export default {
   methods: {
     ...mapActions(["setUserData"]),
     personalInformationChange: debounce(function() {
-      console.log("Autosaved personal info!");
+      let user = { ...this.user };
+      [user.name, user.surname, user.email] = [
+        this.userData.name,
+        this.userData.surname,
+        this.userData.email
+      ];
+      let payload = {
+        userId: this.user.id,
+        name: this.userData.name,
+        surname: this.userData.surname,
+        email: this.userData.email
+      };
+      UserService.updatePersonalInformation(payload).then(() => {
+        this.setUserData(user);
+        this.$q.notify({
+          type: "positive",
+          message: "Personal info updated!"
+        });
+      });
     }, 1500),
     blacklistChange: debounce(function() {
-      console.log("Autosaved blacklist!");
+      this.$q.notify({
+        type: "positive",
+        message: "Blacklist updated!"
+      });
     }, 1500),
     uploadPicture(file) {
       if (!file) {

@@ -83,6 +83,13 @@ namespace tvz2api_cqrs.Controllers
       return Ok();
     }
 
+    [HttpPut("personal")]
+    public async Task<IActionResult> UpdatePersonalInformation(UserUpdatePersonalInformationCommand command)
+    {
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
+    }
+
     [HttpPut("image/{userId}")]
     public async Task<IActionResult> UploadImage([FromForm]IFormFile picture, int userId)
     {

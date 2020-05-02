@@ -71,5 +71,8 @@ export default {
   },
   async uploadPicture(userId, picture) {
     return await axios.put('User/image/' + userId, picture);
+  },
+  async updatePersonalInformation(payload) {
+    return await axios.put('User/personal', payload);
   }
 };

@@ -24,6 +24,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
   public class UserCommandHandler :
     ICommandHandlerAsync<UserSubscribeCommand>,
     ICommandHandlerAsync<UserUnsubscribeCommand>,
+    ICommandHandlerAsync<UserUpdatePersonalInformationCommand>,
     ICommandHandlerAsync<UserUploadPictureCommand, UserProfilePictureDTO>,
     ICommandHandlerAsync<UserUpdateSettingsCommand>
   {
@@ -61,6 +62,15 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       var settings = await _context.UserSettings.FirstOrDefaultAsync(x => x.UserId == command.UserId);
       settings.DarkMode = command.DarkMode;
       settings.Locale = command.Locale;
+      await _context.SaveChangesAsync();
+    }
+
+    public async Task HandleAsync(UserUpdatePersonalInformationCommand command)
+    {
+      var user = await _context.User.FirstOrDefaultAsync(x => x.Id == command.UserId);
+      user.Name = command.Name;
+      user.Surname = command.Surname;
+      user.Email = command.Email;
       await _context.SaveChangesAsync();
     }
 
