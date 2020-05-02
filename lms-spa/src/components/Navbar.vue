@@ -31,7 +31,11 @@
         color="grey-8"
         icon="mdi-cog"
         @click="settingsDialog = true"
-      />
+      >
+        <q-tooltip>
+          <span>Settings</span>
+        </q-tooltip>
+      </q-btn>
       <q-btn
         flat
         dense
@@ -40,7 +44,11 @@
         color="red-7"
         icon="power_settings_new"
         @click="logout"
-      />
+      >
+        <q-tooltip>
+          <span>Log out</span>
+        </q-tooltip>
+      </q-btn>
       <settings-dialog :value="settingsDialog" @closed="settingsDialog = false" />
     </q-toolbar>
   </q-header>
