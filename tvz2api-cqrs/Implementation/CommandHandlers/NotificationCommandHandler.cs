@@ -18,6 +18,7 @@ using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mail;
+using Microsoft.Extensions.Configuration;
 
 namespace tvz2api_cqrs.Implementation.CommandHandlers
 {
@@ -26,10 +27,12 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     ICommandHandlerAsync<NotificationSeenCommand>
   {
     private readonly lmsContext _context;
+    private readonly IConfiguration _configuration;
 
-    public NotificationCommandHandler(lmsContext context)
+    public NotificationCommandHandler(lmsContext context, IConfiguration configuration)
     {
       _context = context;
+      _configuration = configuration;
     }
 
     public async Task HandleAsync(NotificationCreateCommand command)
@@ -69,7 +72,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         using (SmtpClient client = new SmtpClient()
         {
           UseDefaultCredentials = false,
-          Credentials = new System.Net.NetworkCredential("mnovosel2@tvz.hr", "password"),
+          Credentials = new System.Net.NetworkCredential("mnovosel2@tvz.hr", _configuration.GetValue<string>("Secrets:EmailPassword")),
           Port = 587,
           Host = "smtp.office365.com",
           DeliveryMethod = SmtpDeliveryMethod.Network,

@@ -32,6 +32,7 @@ using tvz2api_cqrs.Models.DTO;
 using tvz2api_cqrs.QueryModels;
 using Microsoft.AspNetCore.Identity;
 using tvz2api_cqrs.Custom;
+using Microsoft.EntityFrameworkCore;
 
 namespace tvz2api_cqrs
 {
@@ -39,16 +40,17 @@ namespace tvz2api_cqrs
   {
     public Startup(IConfiguration configuration)
     {
-      Configuration = configuration;
+      _configuration = configuration;
     }
 
-    public IConfiguration Configuration { get; }
+    public IConfiguration _configuration { get; }
 
     public void ConfigureServices(IServiceCollection services)
     {
       ConfigureAdditionalServices(services);
       services.AddSignalR();
-      services.AddDbContext<lmsContext>();
+      services.AddDbContext<lmsContext>(options =>
+        options.UseSqlServer(_configuration.GetConnectionString("tvz2")));
       services.AddControllers().AddNewtonsoftJson(options =>
         options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
       );
@@ -81,7 +83,7 @@ namespace tvz2api_cqrs
         options.TokenValidationParameters = new TokenValidationParameters
         {
           ValidateIssuerSigningKey = true,
-          IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+          IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration.GetSection("AppSettings:Token").Value)),
           ValidateIssuer = false,
           ValidateAudience = false
         };
@@ -151,6 +153,7 @@ namespace tvz2api_cqrs
       services.AddScoped<IEventBus, EventBus>();
       services.AddScoped<IQueryBus, QueryBus>();
 
+      // Course queries
       services.AddScoped<IQueryHandlerAsync<CourseQuery, List<CourseQueryModel>>, CourseQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<CourseTotalQuery, int>, CourseQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<UserCourseQuery, List<UserDTO>>, CourseQueryHandler>();
@@ -159,27 +162,35 @@ namespace tvz2api_cqrs
       services.AddScoped<IQueryHandlerAsync<CourseSidebarQuery, List<SidebarContentDTO>>, CourseQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<CourseNotificationsQuery, List<NotificationQueryModel>>, CourseQueryHandler>();
 
+      // File commands
       services.AddScoped<ICommandHandlerAsync<FileUploadCommand, List<int>>, FileCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<FileUploadSidebarCommand, List<int>>, FileCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<FileDeleteCommand>, FileCommandHandler>();
+
+      // File queries
       services.AddScoped<IQueryHandlerAsync<FileQuery, List<FileQueryModel>>, FileQueryHandler>();
 
+      // Authentication commands
       services.AddScoped<ICommandHandlerAsync<AuthenticationRegisterCommand>, AuthenticationCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<AuthenticationLoginCommand, LoginUserDTO>, AuthenticationCommandHandler>();
 
+      // User commands
       services.AddScoped<ICommandHandlerAsync<UserSubscribeCommand>, UserCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<UserUnsubscribeCommand>, UserCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<UserUpdateSettingsCommand>, UserCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<UserUploadPictureCommand, UserProfilePictureDTO>, UserCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<UserUpdatePersonalInformationCommand>, UserCommandHandler>();
 
+      // Notification queries
       services.AddScoped<IQueryHandlerAsync<NotificationQuery, List<NotificationQueryModel>>, NotificationQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<NotificationUserQuery, List<NotificationQueryModel>>, NotificationQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<NotificationUserTotalQuery, int>, NotificationQueryHandler>();
 
+      // Notification commands
       services.AddScoped<ICommandHandlerAsync<NotificationCreateCommand>, NotificationCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<NotificationSeenCommand>, NotificationCommandHandler>();
 
+      // User queries
       services.AddScoped<IQueryHandlerAsync<UserQuery, List<UserQueryModel>>, UserQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<UserTotalQuery, int>, UserQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<UserChatQuery, List<UserChatQueryModel>>, UserQueryHandler>();
@@ -187,16 +198,20 @@ namespace tvz2api_cqrs
       services.AddScoped<IQueryHandlerAsync<UserDetailsQuery, UserDetailsDTO>, UserQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<UserSubscriptionQuery, List<int>>, UserQueryHandler>();
 
+      // Chat queries
       services.AddScoped<IQueryHandlerAsync<ChatDetailsQuery, ChatQueryModel>, ChatQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<ChatAvailableUsersQuery, List<UserQueryModel>>, ChatQueryHandler>();
 
+      // Chat commands
       services.AddScoped<ICommandHandlerAsync<SendMessageCommand, MessageDTO>, ChatCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<CreateNewChatCommand, NewChatDTO>, ChatCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<DeleteMessageCommand>, ChatCommandHandler>();
 
+      // Exam queries
       services.AddScoped<IQueryHandlerAsync<ExamInProgressDetailsQuery, ExamAttemptDetailsQueryModel>, ExamQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<ExamInProgressQuery, List<ExamAttemptQueryModel>>, ExamQueryHandler>();
 
+      // Exam commands
       services.AddScoped<ICommandHandlerAsync<ExamUpdateAttemptCommand>, ExamCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<ExamStartAttemptCommand>, ExamCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<ExamCreateCommand>, ExamCommandHandler>();
