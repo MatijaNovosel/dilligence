@@ -15,6 +15,7 @@ namespace tvz2api_cqrs.Implementation.Commands
     public string Color { get; set; }
     public int? SubmittedById { get; set; }
     public int? CourseId { get; set; }
+    public bool SendEmail { get; set; }
     public DateTime? ExpiresAt { get; set; }
   }
 

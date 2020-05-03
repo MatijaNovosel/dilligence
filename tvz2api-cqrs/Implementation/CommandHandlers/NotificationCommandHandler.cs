@@ -17,6 +17,7 @@ using System.IO;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Mail;
 
 namespace tvz2api_cqrs.Implementation.CommandHandlers
 {
@@ -46,10 +47,14 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       await _context.Notification.AddAsync(notification);
       await _context.SaveChangesAsync();
 
-      var course = _context.Course.Include(t => t.Subscription).FirstOrDefault(t => t.Id == command.CourseId);
-      var subscriptionUserIds = course.Subscription.Select(t => t.UserId).ToList();
+      var course = _context
+        .Course
+        .Include(t => t.Subscription)
+        .ThenInclude(x => x.User)
+        .ThenInclude(x => x.UserNotificationBlacklist)
+        .FirstOrDefault(t => t.Id == command.CourseId);
 
-      subscriptionUserIds.ForEach(x =>
+      course.Subscription.Select(t => t.UserId).ToList().ForEach(x =>
       {
         _context.NotificationUserSeen.Add(new NotificationUserSeen()
         {
@@ -57,6 +62,36 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
           UserId = x
         });
       });
+
+      // Send the emails, if the users are receiving notifications from the course
+      if (command.SendEmail == true)
+      {
+        using (SmtpClient client = new SmtpClient()
+        {
+          UseDefaultCredentials = false,
+          Credentials = new System.Net.NetworkCredential("mnovosel2@tvz.hr", "password"),
+          Port = 587,
+          Host = "smtp.office365.com",
+          DeliveryMethod = SmtpDeliveryMethod.Network,
+          TargetName = "STARTTLS/smtp.office365.com",
+          EnableSsl = true
+        })
+        {
+          MailMessage message = new MailMessage();
+          course.Subscription.Select(x => x.User).Where(x => x.Id != command.SubmittedById).ToList().ForEach(x =>
+          {
+            if (x.UserNotificationBlacklist.FirstOrDefault(y => y.CourseId == command.CourseId && y.UserId == x.Id) != null)
+            {
+              message.To.Add(x.Email);
+            }
+          });
+          message.From = new MailAddress(_context.User.FirstOrDefault(x => x.Id == command.SubmittedById).Email);
+          message.Subject = command.Title;
+          message.Body = command.Description;
+          message.IsBodyHtml = true;
+          client.Send(message);
+        }
+      }
 
       await _context.SaveChangesAsync();
     }

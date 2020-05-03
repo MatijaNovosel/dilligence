@@ -156,6 +156,7 @@ export default {
       formData.append("picture", file);
       UserService.uploadPicture(this.user.id, formData).then(({ data }) => {
         let user = { ...this.user };
+        this.userData.picture = data.payload.picture.data;
         user.picture = data.payload.picture.data;
         this.setUserData(user);
       });

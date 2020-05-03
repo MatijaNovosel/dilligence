@@ -27,10 +27,10 @@
         />
         <div class="q-my-sm" :class="[$q.dark.isActive ? 'border-box-dark' : 'border-box-light']">
           <div class="q-pa-sm">
-            <span>Notification blacklist:</span>
+            <span>Course blacklist:</span>
             <div
               :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']"
-            >(You will not receive notifications from these courses)</div>
+            >(You will not receive notifications or emails from these courses)</div>
             <q-option-group
               @input="blacklistChange"
               v-model="userData.blacklist"

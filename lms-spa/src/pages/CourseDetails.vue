@@ -122,6 +122,12 @@
             class="q-pl-sm"
             :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']"
           >The main text of the notification</div>
+          <q-checkbox
+            v-model="newNotification.sendEmail"
+            size="xs"
+            class="q-mt-none"
+            label="Send email to subscribed users"
+          />
         </q-card-section>
         <q-card-actions class="justify-end q-pt-none">
           <q-btn
@@ -190,7 +196,8 @@ export default {
         title: "Title goes here!",
         description: "Description goes here!",
         color: "#285de0",
-        expiresAt: "2020-07-20"
+        expiresAt: "2020-07-20",
+        sendEmail: false
       };
       this.newNotificationDialog = false;
     },
@@ -216,7 +223,8 @@ export default {
         title: "Title goes here!",
         description: "Description goes here!",
         color: "#285de0",
-        expiresAt: "2020-07-20"
+        expiresAt: "2020-07-20",
+        sendEmail: false
       }
     };
   },

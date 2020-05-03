@@ -11,7 +11,7 @@
     @click="getNotifications"
   >
     <q-tooltip v-model="tooltipHover">
-      <span>Log out</span>
+      <span>Notifications</span>
     </q-tooltip>
     <q-badge
       v-if="notificationCount && notificationCount > 0"

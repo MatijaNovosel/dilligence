@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 using tvz2api_cqrs.Implementation.Commands;
 using tvz2api_cqrs.Custom;
 using Microsoft.AspNetCore.Http;
-using System.Net.Mail;
 
 namespace tvz2api_cqrs.Controllers
 {
@@ -96,37 +95,6 @@ namespace tvz2api_cqrs.Controllers
     {
       var file = await _commandBus.ExecuteAsync<UserProfilePictureDTO>(new UserUploadPictureCommand(userId, picture));
       return Ok(file);
-    }
-
-    [HttpPost("mail")]
-    public async Task<IActionResult> SendMail()
-    {
-      using (SmtpClient client = new SmtpClient()
-      {
-        UseDefaultCredentials = false,
-        Credentials = new System.Net.NetworkCredential("from@tvz.hr", "password"), // Load this from config...
-        Port = 587,
-        Host = "smtp.office365.com",
-        DeliveryMethod = SmtpDeliveryMethod.Network,
-        TargetName = "STARTTLS/smtp.office365.com",
-        EnableSsl = true
-      })
-      {
-        MailMessage message = new MailMessage("from@tvz.hr", "to@tvz.hr");
-        message.Subject = "ignoriraj zadnji mail";
-        message.Body = "proradilo je";
-        message.IsBodyHtml = true;
-
-        try
-        {
-          client.Send(message);
-          return Ok("Message sent!");
-        }
-        catch (Exception ex)
-        {
-          return BadRequest(ex.Message);
-        }
-      }
     }
   }
 }

@@ -15,6 +15,7 @@ namespace tvz2api_cqrs.Models
             Notification = new HashSet<Notification>();
             NotificationUserSeen = new HashSet<NotificationUserSeen>();
             Subscription = new HashSet<Subscription>();
+            UserNotificationBlacklist = new HashSet<UserNotificationBlacklist>();
             UserPrivileges = new HashSet<UserPrivileges>();
             UserSettings = new HashSet<UserSettings>();
         }
@@ -38,6 +39,7 @@ namespace tvz2api_cqrs.Models
         public virtual ICollection<Notification> Notification { get; set; }
         public virtual ICollection<NotificationUserSeen> NotificationUserSeen { get; set; }
         public virtual ICollection<Subscription> Subscription { get; set; }
+        public virtual ICollection<UserNotificationBlacklist> UserNotificationBlacklist { get; set; }
         public virtual ICollection<UserPrivileges> UserPrivileges { get; set; }
         public virtual ICollection<UserSettings> UserSettings { get; set; }
     }

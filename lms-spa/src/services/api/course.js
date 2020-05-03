@@ -44,5 +44,8 @@ export default {
    */
   async getNotifications(courseId) {
     return await axios.get(`Course/notifications/${courseId}`);
+  },
+  async getCourseUsers(courseId) {
+    return await axios.get(`Course/users/${courseId}`);
   }
 }
