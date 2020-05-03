@@ -16,7 +16,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     IQueryHandlerAsync<CourseQuery, List<CourseQueryModel>>,
     IQueryHandlerAsync<CourseTotalQuery, int>,
     IQueryHandlerAsync<UserCourseTotalQuery, int>,
-    IQueryHandlerAsync<UserCourseQuery, List<UserDTO>>,
+    IQueryHandlerAsync<UserCourseQuery, List<UserCourseDetailsDTO>>,
     IQueryHandlerAsync<CourseNotificationsQuery, List<NotificationQueryModel>>,
     IQueryHandlerAsync<CourseDetailsQuery, CourseDetailsQueryModel>,
     IQueryHandlerAsync<CourseSidebarQuery, List<SidebarContentDTO>>
@@ -38,16 +38,6 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Name = t.Name,
           Ects = t.Ects,
           Smjer = t.Specialization.Name,
-          Users = t.Subscription
-            .Select(x => new UserDTO
-            {
-              Id = x.User.Id,
-              Name = x.User.Name,
-              Surname = x.User.Surname,
-              ImageFileId = x.User.ImageFileId,
-              Email = x.User.Email
-            })
-            .ToList(),
           SidebarContents = t.SidebarContent
             .Where(x => x.CourseId == query.Id)
             .Select(x => new SidebarContentDTO
@@ -94,18 +84,27 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
       return sidebarContent;
     }
 
-    public async Task<List<UserDTO>> HandleAsync(UserCourseQuery query)
+    public async Task<List<UserCourseDetailsDTO>> HandleAsync(UserCourseQuery query)
     {
-      var users = await _context.User
-        .Where(t => t.Subscription.Any(x => x.CourseId == query.Id))
-        .Select(t => new UserDTO
+      var course = await _context.Course
+        .Include(t => t.Subscription)
+        .ThenInclude(t => t.User)
+        .ThenInclude(t => t.ImageFile)
+        .Where(t => t.Id == query.Id)
+        .FirstOrDefaultAsync();
+      var users = course.Subscription
+        .Select(t => new UserCourseDetailsDTO
         {
-          Id = t.Id,
-          Name = t.Name,
-          Surname = t.Surname,
-          Email = t.Email
+          Id = t.User.Id,
+          Name = t.User.Name,
+          Surname = t.User.Surname,
+          Username = t.User.Username,
+          Email = t.User.Email,
+          Created = t.User.Created,
+          Picture = t.User.ImageFile != null ? Convert.ToBase64String(t.User.ImageFile.Data) : null,
+          Admin = t.User.Id == course.MadeById
         })
-        .ToListAsync();
+        .ToList();
       return users;
     }
 
@@ -144,13 +143,6 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     {
       var count = await _context.User
         .Where(t => t.Subscription.Any(x => x.CourseId == query.Id))
-        .Select(t => new UserDTO
-        {
-          Id = t.Id,
-          Name = t.Name,
-          Surname = t.Surname,
-          Email = t.Email
-        })
         .CountAsync();
       return count;
     }

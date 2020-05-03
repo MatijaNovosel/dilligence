@@ -1,15 +1,21 @@
 $absolute-offset: 10px
+$border-color-dark: rgba(255, 255, 255, 0.6)
+$border-color-light: rgba(0, 0, 0, 0.12)
   
+.border-light
+  border: 1px solid $border-color-light
+.border-dark
+  border: 1px solid $border-color-dark
 .border-box
   position: relative
   border-radius: 8px
   padding: 5px
 .border-box-light
   @extend .border-box
-  border: 1px solid rgba(0, 0, 0, 0.12)
+  @extend .border-light
 .border-box-dark
   @extend .border-box
-  border: 1px solid rgba(255, 255, 255, 0.6)
+  @extend .border-dark
 .absolute
   position: absolute
 .absolute-top

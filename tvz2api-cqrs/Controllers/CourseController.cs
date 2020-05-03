@@ -49,7 +49,7 @@ namespace tvz2api_cqrs.Controllers
     {
       var result = await _queryBus.ExecuteAsync(new UserCourseQuery(id));
       var count = await _queryBus.ExecuteAsync(new UserCourseTotalQuery(id));
-      return Ok(new PageableCollection<UserDTO>() { Results = result, Total = count });
+      return Ok(new PageableCollection<UserCourseDetailsDTO>() { Results = result, Total = count });
     }
 
     [HttpGet("{id}")]

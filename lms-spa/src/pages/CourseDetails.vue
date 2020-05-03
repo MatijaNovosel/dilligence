@@ -36,7 +36,15 @@
                   </div>
                 </div>
               </q-tab-panel>
-              <q-tab-panel name="participants">{{ tab }}</q-tab-panel>
+              <q-tab-panel name="participants">
+                <div class="row">
+                  <div class="q-pa-xs col-2">
+                    <template v-for="participant in participants">
+                      <user-card :key="participant.id" :value="participant" />
+                    </template>
+                  </div>
+                </div>
+              </q-tab-panel>
               <q-tab-panel name="exams">{{ tab }}</q-tab-panel>
             </q-tab-panels>
           </q-card>
@@ -156,12 +164,16 @@
 import CourseService from "../services/api/course";
 import NotificationService from "../services/api/notification";
 import NotificationCard from "../components/notification-card";
+import UserCard from "../components/user-card";
 import { required, minLength } from "vuelidate/lib/validators";
 import UserMixin from "../mixins/userMixin";
 
 export default {
   name: "CourseDetails",
-  components: { "notification-card": NotificationCard },
+  components: {
+    "notification-card": NotificationCard,
+    "user-card": UserCard
+  },
   mixins: [UserMixin],
   created() {
     this.courseId = this.$route.params.id;
@@ -210,10 +222,16 @@ export default {
       CourseService.getCourse(this.courseId).then(({ data }) => {
         this.course = data;
       });
+    },
+    getParticipants() {
+      CourseService.getCourseUsers(this.courseId).then(({ data }) => {
+        this.participants = data.results;
+      });
     }
   },
   data() {
     return {
+      participants: null,
       newNotificationDialog: false,
       course: null,
       notifications: null,
@@ -233,8 +251,15 @@ export default {
       deep: true,
       immediate: false,
       handler(val) {
-        if (val == "notifications") {
-          this.getNotifications();
+        switch (val) {
+          case "notifications": {
+            this.getNotifications();
+            break;
+          }
+          case "participants": {
+            this.getParticipants();
+            break;
+          }
         }
       }
     }

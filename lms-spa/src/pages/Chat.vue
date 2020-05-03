@@ -2,7 +2,7 @@
   <q-page>
     <div class="q-pa-md row justify-center">
       <div class="col-2 q-mr-lg">
-        <q-expansion-item v-model="open" :label="$i18n.t('recentChats')" class="chat-tab">
+        <q-expansion-item v-model="open" :label="$i18n.t('recentChats')" class="chat-tab" :class="$q.dark.isActive ? 'border-dark' : 'border-light'">
           <q-card>
             <q-separator />
             <div v-if="chats && chats.length != 0">
@@ -251,7 +251,6 @@ export default {
   max-width: 350px
   margin: 5px
 .chat-tab
-  border: 1px solid rgba(0, 0, 0, 0.12)
   border-top-left-radius: 6px
   border-top-right-radius: 6px
   user-select: none
