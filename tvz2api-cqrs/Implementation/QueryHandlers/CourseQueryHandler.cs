@@ -160,7 +160,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           SubmittedAt = t.SubmittedAt,
           SubmittedBy = $"{t.SubmittedBy.Name} {t.SubmittedBy.Surname}",
           Color = t.Color,
-          ExpiresAt = t.ExpiresAt
+          ExpiresAt = t.ExpiresAt,
+          Archived = t.ExpiresAt < DateTime.Now
         })
         .ToListAsync();
       return courses;

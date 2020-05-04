@@ -1,56 +1,19 @@
 <template>
-  <q-page class="q-pa-md">
-    <template v-if="course">
-      <div class="row">
-        <div class="col-12 q-pb-md text-center">
-          <span class="text-weight-light text-h5">{{ course.name }}</span>
-        </div>
-        <div class="col-12">
-          <q-card flat bordered>
-            <q-tabs
-              v-model="tab"
-              dense
-              class="text-grey"
-              active-color="primary"
-              indicator-color="primary"
-              align="justify"
-              narrow-indicator
-            >
-              <q-tab name="home" :label="$i18n.t('home')" />
-              <q-tab name="notifications" :label="$i18n.t('notifications')" />
-              <q-tab name="participants" :label="$i18n.t('participants')" />
-              <q-tab name="exams" :label="$i18n.t('exams')" />
-            </q-tabs>
-            <q-separator />
-            <q-tab-panels v-model="tab">
-              <q-tab-panel name="home">{{ tab }}</q-tab-panel>
-              <q-tab-panel name="notifications">
-                <div class="row wrap justify-center items-center content-center">
-                  <template v-if="notifications && notifications.length != 0">
-                    <div class="col-12 q-my-sm" v-for="(notification, i) in notifications" :key="i">
-                      <notification-card color="green-5" :value="notification" />
-                    </div>
-                  </template>
-                  <div v-else class="col-12 q-my-sm">
-                    <div>{{ $i18n.t('noData') }}</div>
-                  </div>
-                </div>
-              </q-tab-panel>
-              <q-tab-panel name="participants">
-                <div class="row">
-                  <div class="q-pa-xs col-2">
-                    <template v-for="participant in participants">
-                      <user-card :key="participant.id" :value="participant" />
-                    </template>
-                  </div>
-                </div>
-              </q-tab-panel>
-              <q-tab-panel name="exams">{{ tab }}</q-tab-panel>
-            </q-tab-panels>
-          </q-card>
-        </div>
+  <div>
+    <div class="row wrap">
+      <div class="col-12">
+        <q-checkbox @click.capture="changeValue" v-model="showNonArchived" size="sm" label="Show non archived" />
+        <q-checkbox v-model="showArchived" size="sm" label="Show archived" />
       </div>
-    </template>
+      <template v-if="notifications && notifications.length != 0">
+        <div class="col-12 q-pa-sm" v-for="(notification, i) in notifications" :key="i">
+          <notification-card color="green-5" :value="notification" />
+        </div>
+      </template>
+      <div v-else class="col-12 q-my-sm">
+        <div>{{ $i18n.t('noData') }}</div>
+      </div>
+    </div>
     <q-dialog v-model="newNotificationDialog" persistent no-esc-dismiss>
       <q-card style="width: 70%; max-width: 90vw;">
         <q-toolbar
@@ -148,36 +111,34 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <q-page-sticky v-show="tab == 'notifications'" position="bottom-right" :offset="[18, 18]">
+    <q-page-sticky position="bottom-right" :offset="[18, 18]">
       <q-fab direction="left" :color="!$q.dark.isActive ? 'primary' : 'grey-8'" fab icon="add">
         <q-fab-action
           @click="newNotificationDialog = true"
           icon="mdi-email-plus"
+          :color="!$q.dark.isActive ? 'primary' : 'grey-8'"
           label="New notification"
         />
       </q-fab>
     </q-page-sticky>
-  </q-page>
+  </div>
 </template>
 
 <script>
-import CourseService from "../services/api/course";
-import NotificationService from "../services/api/notification";
-import NotificationCard from "../components/notification-card";
-import UserCard from "../components/user-card";
+import CourseService from "../../services/api/course";
+import NotificationCard from "../../components/notification-card";
 import { required, minLength } from "vuelidate/lib/validators";
-import UserMixin from "../mixins/userMixin";
+import UserMixin from "../../mixins/userMixin";
 
 export default {
-  name: "CourseDetails",
+  name: "CourseDetailsHome",
   components: {
-    "notification-card": NotificationCard,
-    "user-card": UserCard
+    "notification-card": NotificationCard
   },
   mixins: [UserMixin],
   created() {
     this.courseId = this.$route.params.id;
-    this.getData();
+    this.getNotifications();
   },
   validations: {
     newNotification: {
@@ -191,7 +152,26 @@ export default {
       }
     }
   },
+  data() {
+    return {
+      showArchived: false,
+      showNonArchived: true,
+      newNotificationDialog: false,
+      notifications: null,
+      courseId: null,
+      newNotification: {
+        title: "Title goes here!",
+        description: "Description goes here!",
+        color: "#285de0",
+        expiresAt: "2020-07-20",
+        sendEmail: false
+      }
+    };
+  },
   methods: {
+    changeValue() {
+      console.log("yeet");
+    },
     createNotification() {
       let notification = {
         ...this.newNotification,
@@ -199,7 +179,7 @@ export default {
         courseId: this.courseId
       };
       NotificationService.createNotification(notification).then(() => {
-        this.getNotifications(this.course.id);
+        this.getNotifications(this.courseId);
         this.resetNewNotificationDialog();
       });
     },
@@ -214,54 +194,9 @@ export default {
       this.newNotificationDialog = false;
     },
     getNotifications() {
-      CourseService.getNotifications(this.course.id).then(({ data }) => {
+      CourseService.getNotifications(this.courseId).then(({ data }) => {
         this.notifications = data;
       });
-    },
-    getData() {
-      CourseService.getCourse(this.courseId).then(({ data }) => {
-        this.course = data;
-      });
-    },
-    getParticipants() {
-      CourseService.getCourseUsers(this.courseId).then(({ data }) => {
-        this.participants = data.results;
-      });
-    }
-  },
-  data() {
-    return {
-      participants: null,
-      newNotificationDialog: false,
-      course: null,
-      notifications: null,
-      courseId: null,
-      tab: "home",
-      newNotification: {
-        title: "Title goes here!",
-        description: "Description goes here!",
-        color: "#285de0",
-        expiresAt: "2020-07-20",
-        sendEmail: false
-      }
-    };
-  },
-  watch: {
-    tab: {
-      deep: true,
-      immediate: false,
-      handler(val) {
-        switch (val) {
-          case "notifications": {
-            this.getNotifications();
-            break;
-          }
-          case "participants": {
-            this.getParticipants();
-            break;
-          }
-        }
-      }
     }
   }
 };

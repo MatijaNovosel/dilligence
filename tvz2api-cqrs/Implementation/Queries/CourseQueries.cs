@@ -78,5 +78,7 @@ namespace tvz2api_cqrs.Implementation.Queries
       Id = id;
     }
     public int Id { get; set; }
+    public bool ShowArchived { get; set; }
+    public bool ShowNonArchived { get; set; }
   }
 }

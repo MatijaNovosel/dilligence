@@ -14,5 +14,6 @@ namespace tvz2api_cqrs.QueryModels
     public string Color { get; set; }
     public string SubmittedBy { get; set; }
     public int CourseId { get; set; }
+    public bool Archived { get; set; }
   }
 }

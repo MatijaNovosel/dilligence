@@ -43,7 +43,7 @@ const routes = [
       {
         path: 'courses',
         name: 'courses',
-        component: () => import('pages/Courses.vue'),
+        component: () => import('pages/Course/CourseList.vue'),
         meta: {
           requiresAuth: true
         }
@@ -51,7 +51,12 @@ const routes = [
       {
         path: 'course/:id',
         name: 'course-details',
-        component: () => import('pages/CourseDetails.vue'),
+        component: () => import('pages/Course/CourseDetails.vue'),
+        children: [
+          { path: 'home', name: 'course-details-home', component: () => import('pages/Course/CourseDetailsHome.vue') },
+          { path: 'notifications', name: 'course-details-notifications', component: () => import('pages/Course/CourseDetailsNotifications.vue') },
+          { path: 'participants', name: 'course-details-participants', component: () => import('pages/Course/CourseDetailsParticipants.vue') }
+        ],
         meta: {
           requiresAuth: true
         }

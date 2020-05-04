@@ -1,5 +1,5 @@
 <template>
-  <q-card flat bordered style="max-width: 65%;">
+  <q-card flat bordered style="width: 10em">
     <img
       :src="value.picture == null ? require('../assets/default-user.jpg') : 'data:image/png;base64,' + value.picture"
     />

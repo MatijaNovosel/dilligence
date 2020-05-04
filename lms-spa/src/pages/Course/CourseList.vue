@@ -115,7 +115,7 @@
                       icon="mdi-eye"
                       class="q-py-xs"
                       :class="$q.dark.isActive ? 'bg-grey-8' : 'bg-grey-2'"
-                      @click="$router.push({ name: 'course-details', params: { id: props.row.id } })"
+                      @click="$router.push({ name: 'course-details-home', params: { id: props.row.id } })"
                     >
                       <q-tooltip
                         anchor="top middle"
@@ -171,7 +171,13 @@
           />
         </q-toolbar>
         <q-card-section>
-          <q-input type="password" dense outlined v-model="password" :label="$i18n.t('enterPassword')">
+          <q-input
+            type="password"
+            dense
+            outlined
+            v-model="password"
+            :label="$i18n.t('enterPassword')"
+          >
             <template v-slot:append>
               <q-btn
                 :ripple="false"
@@ -189,10 +195,10 @@
 </template>
 
 <script>
-import CourseService from "../services/api/course";
-import UserService from "../services/api/user";
-import SMJER from "../constants/smjer";
-import UserMixin from "../mixins/userMixin";
+import CourseService from "../../services/api/course";
+import UserService from "../../services/api/user";
+import SMJER from "../../constants/smjer";
+import UserMixin from "../../mixins/userMixin";
 
 export default {
   name: "Subjects",
