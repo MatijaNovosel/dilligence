@@ -5,20 +5,36 @@
         <q-img style="width: 150px; height: 150px;" src="../assets/tvz-logo.svg"></q-img>
       </q-card-section>
       <q-card-section class="q-py-none">
-        <q-input square dense filled :label="$i18n.t('username')" v-model="username" required />
         <q-input
+          @input="$v.loginForm.username.$touch"
+          square
+          dense
+          filled
+          :label="$i18n.t('username')"
+          v-model="loginForm.username"
+          :error="$v.loginForm.username.$invalid && $v.loginForm.username.$dirty"
+          error-message="This field is required!"
+        />
+        <q-input
+          @input="$v.loginForm.password.$touch"
           square
           dense
           filled
           :label="$i18n.t('password')"
-          v-model="password"
+          v-model="loginForm.password"
           type="password"
-          required
+          :error="$v.loginForm.password.$invalid && $v.loginForm.password.$dirty"
+          error-message="This field is required!"
           class="q-pt-sm"
         />
       </q-card-section>
-      <q-card-actions class="justify-center">
-        <q-btn @click="submit" :loading="loading" color="primary">{{ $i18n.t('signIn') }}</q-btn>
+      <q-card-actions class="justify-center q-mt-sm">
+        <q-btn
+          :disabled="$v.loginForm.$invalid"
+          @click="login"
+          :loading="loading"
+          color="primary"
+        >{{ $i18n.t('signIn') }}</q-btn>
       </q-card-actions>
     </q-card>
   </q-page>
@@ -27,13 +43,27 @@
 <script>
 import AuthService from "../services/api/auth";
 import { mapActions } from "vuex";
+import { required, minLength } from "vuelidate/lib/validators";
 
 export default {
+  validations: {
+    loginForm: {
+      username: {
+        required,
+        minLength: minLength(4)
+      },
+      password: {
+        required,
+        minLength: minLength(4)
+      }
+    }
+  },
   data() {
     return {
-      username: null,
-      password: null,
-      valid: true,
+      loginForm: {
+        username: "",
+        password: ""
+      },
       loading: false
     };
   },
@@ -42,8 +72,8 @@ export default {
     login() {
       this.loading = true;
       AuthService.login({
-        Username: this.username,
-        Password: this.password
+        username: this.loginForm.username,
+        password: this.loginForm.password
       })
         .then(({ data }) => {
           if (data.isSuccess) {
@@ -68,16 +98,6 @@ export default {
         .finally(() => {
           this.loading = false;
         });
-    },
-    submit() {
-      if (true) {
-        this.login();
-      } else {
-        this.$q.notify({
-          type: "negative",
-          message: this.$i18n.t("error.invalid")
-        });
-      }
     }
   }
 };

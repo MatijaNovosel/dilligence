@@ -69,7 +69,7 @@
             <template v-slot:append>
               <q-icon name="colorize" class="cursor-pointer">
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-color class="container-border" v-model="newNotification.color" />
+                  <q-color no-header class="container-border" v-model="newNotification.color" />
                 </q-popup-proxy>
               </q-icon>
             </template>
@@ -78,6 +78,8 @@
             dense
             outlined
             v-model="newNotification.expiresAt"
+            :error="$v.newNotification.expiresAt.$invalid"
+            error-message="The date must not be before the current date!"
             :label="$i18n.t('dueDate')"
             readonly
             hint="The date at which the notification becomes archived"
@@ -86,6 +88,7 @@
               <q-icon name="mdi-calendar-month" class="cursor-pointer">
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
                   <q-date
+                    minimal
                     class="container-border"
                     v-model="newNotification.expiresAt"
                     mask="YYYY-MM-DD"
@@ -147,6 +150,12 @@ import { required, minLength } from "vuelidate/lib/validators";
 import UserMixin from "../../mixins/userMixin";
 import { debounce } from "debounce";
 
+const mustBeBeforeCurrentDate = value => {
+  let currentDate = new Date().getTime();
+  let enteredDate = new Date(value).getTime();
+  return currentDate < enteredDate;
+};
+
 export default {
   name: "CourseDetailsHome",
   components: {
@@ -166,6 +175,9 @@ export default {
       description: {
         required,
         minLength: minLength(4)
+      },
+      expiresAt: {
+        mustBeBeforeCurrentDate
       }
     }
   },
@@ -256,4 +268,5 @@ export default {
   min-height: 30px
 .container-border
   border: 1px solid #e0dede;
+  border-radius: 6px;
 </style>
