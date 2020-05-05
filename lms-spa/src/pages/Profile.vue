@@ -10,11 +10,9 @@
           round
           size="sm"
           flat
-          :icon="editMode ? 'mdi-pencil-plus' : 'mdi-pencil-off'"
+          :icon="editMode ? 'mdi-pencil-off' : 'mdi-pencil-plus'"
         >
-          <q-tooltip>
-            {{ editMode ? 'Edit information' : 'Stop editing' }}
-          </q-tooltip>
+          <q-tooltip>{{ editMode ? 'Edit information' : 'Stop editing' }}</q-tooltip>
         </q-btn>
       </div>
       <div class="col-12 q-pb-md">
