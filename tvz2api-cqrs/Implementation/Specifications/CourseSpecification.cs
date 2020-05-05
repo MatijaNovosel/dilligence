@@ -51,14 +51,18 @@ namespace tvz2api_cqrs.Implementation.Specifications
           predicate = predicate.And(t => t.Name.ToLower().Contains(Name.ToLower()));
         }
 
-        if (Subscribed)
+        // Ako je odabran ili Subscribed ili NonSubscribed, logicki XOR
+        if (Subscribed != NonSubscribed)
         {
-          predicate = predicate.And(t => t.Subscription.Any(x => x.CourseId == t.Id && x.UserId == UserId));
-        }
+          if (Subscribed)
+          {
+            predicate = predicate.And(t => t.Subscription.Any(x => x.CourseId == t.Id && x.UserId == UserId));
+          }
 
-        if (NonSubscribed)
-        {
-          predicate = predicate.And(t => !t.Subscription.Any(x => x.CourseId == t.Id && x.UserId == UserId));
+          if (NonSubscribed)
+          {
+            predicate = predicate.And(t => !t.Subscription.Any(x => x.CourseId == t.Id && x.UserId == UserId));
+          }
         }
 
         return predicate.Expand();
