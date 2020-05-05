@@ -55,7 +55,8 @@ const routes = [
         children: [
           { path: 'home', name: 'course-details-home', component: () => import('pages/Course/CourseDetailsHome.vue') },
           { path: 'notifications', name: 'course-details-notifications', component: () => import('pages/Course/CourseDetailsNotifications.vue') },
-          { path: 'participants', name: 'course-details-participants', component: () => import('pages/Course/CourseDetailsParticipants.vue') }
+          { path: 'participants', name: 'course-details-participants', component: () => import('pages/Course/CourseDetailsParticipants.vue') },
+          { path: 'exams', name: 'course-details-exams', component: () => import('pages/Course/CourseDetailsExams.vue') }
         ],
         meta: {
           requiresAuth: true

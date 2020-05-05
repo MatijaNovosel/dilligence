@@ -60,9 +60,9 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpGet("notifications/{id}")]
-    public async Task<IActionResult> GetNotifications(int id)
+    public async Task<IActionResult> GetNotifications(int id, bool showArchived, bool showNonArchived)
     {
-      var result = await _queryBus.ExecuteAsync(new CourseNotificationsQuery(id));
+      var result = await _queryBus.ExecuteAsync(new CourseNotificationsQuery() { Id = id, ShowNonArchived = showNonArchived, ShowArchived = showArchived });
       return Ok(result);
     }
 
@@ -71,21 +71,6 @@ namespace tvz2api_cqrs.Controllers
     {
       var result = await _queryBus.ExecuteAsync(new CourseSidebarQuery(id));
       return Ok(result);
-    }
-
-    [HttpPost]
-    public IActionResult SendMail()
-    {
-      SmtpClient client = new SmtpClient("mysmtpserver");
-      client.UseDefaultCredentials = false;
-      client.Credentials = new NetworkCredential("username", "password");
-      MailMessage mailMessage = new MailMessage();
-      mailMessage.From = new MailAddress("mnovosel2@tvz.hr");
-      mailMessage.To.Add("mnovosel2@tvz.hr");
-      mailMessage.Body = "Hello";
-      mailMessage.Subject = "Subject";
-      client.Send(mailMessage);
-      return Ok();
     }
   }
 }

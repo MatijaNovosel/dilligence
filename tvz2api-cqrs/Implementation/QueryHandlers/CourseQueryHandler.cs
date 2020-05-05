@@ -150,7 +150,6 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     public async Task<List<NotificationQueryModel>> HandleAsync(CourseNotificationsQuery query)
     {
       var courses = await _context.Notification
-        .Where(x => x.CourseId == query.Id)
         .Select(t => new NotificationQueryModel
         {
           Id = t.Id,
@@ -161,8 +160,10 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           SubmittedBy = $"{t.SubmittedBy.Name} {t.SubmittedBy.Surname}",
           Color = t.Color,
           ExpiresAt = t.ExpiresAt,
-          Archived = t.ExpiresAt < DateTime.Now
+          Archived = t.ExpiresAt <= DateTime.Now,
+          CourseId = t.CourseId
         })
+        .Where(x => x.CourseId == query.Id && x.Archived == query.ShowArchived || (query.ShowArchived && query.ShowNonArchived))
         .ToListAsync();
       return courses;
     }

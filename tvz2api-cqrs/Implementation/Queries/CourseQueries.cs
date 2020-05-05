@@ -73,10 +73,7 @@ namespace tvz2api_cqrs.Implementation.Queries
 
   public class CourseNotificationsQuery : IQuery<List<NotificationQueryModel>>
   {
-    public CourseNotificationsQuery(int id)
-    {
-      Id = id;
-    }
+    public CourseNotificationsQuery() { }
     public int Id { get; set; }
     public bool ShowArchived { get; set; }
     public bool ShowNonArchived { get; set; }

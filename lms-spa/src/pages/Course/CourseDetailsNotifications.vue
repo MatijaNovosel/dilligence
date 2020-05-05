@@ -2,12 +2,27 @@
   <div>
     <div class="row wrap">
       <div class="col-12">
-        <q-checkbox @click.capture="changeValue" v-model="showNonArchived" size="sm" label="Show non archived" />
-        <q-checkbox v-model="showArchived" size="sm" label="Show archived" />
+        <q-option-group
+          size="sm"
+          v-model="showNotifications"
+          :options="showNotificationsOptions"
+          type="checkbox"
+          color="primary"
+          inline
+          @input="showNotificationsValueChanged"
+        />
+        <div
+          class="q-ml-md q-mb-md"
+          :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']"
+        >* Right click on notifications for more options</div>
       </div>
       <template v-if="notifications && notifications.length != 0">
         <div class="col-12 q-pa-sm" v-for="(notification, i) in notifications" :key="i">
-          <notification-card color="green-5" :value="notification" />
+          <notification-card
+            @deleteNotification="deleteNotification"
+            color="green-5"
+            :value="notification"
+          />
         </div>
       </template>
       <div v-else class="col-12 q-my-sm">
@@ -126,9 +141,11 @@
 
 <script>
 import CourseService from "../../services/api/course";
+import NotificationService from "../../services/api/notification";
 import NotificationCard from "../../components/notification-card";
 import { required, minLength } from "vuelidate/lib/validators";
 import UserMixin from "../../mixins/userMixin";
+import { debounce } from "debounce";
 
 export default {
   name: "CourseDetailsHome",
@@ -154,8 +171,17 @@ export default {
   },
   data() {
     return {
-      showArchived: false,
-      showNonArchived: true,
+      showNotifications: [0],
+      showNotificationsOptions: [
+        {
+          label: "Show non archived",
+          value: 0
+        },
+        {
+          label: "Show archived",
+          value: 1
+        }
+      ],
       newNotificationDialog: false,
       notifications: null,
       courseId: null,
@@ -169,9 +195,9 @@ export default {
     };
   },
   methods: {
-    changeValue() {
-      console.log("yeet");
-    },
+    showNotificationsValueChanged: debounce(function() {
+      this.getNotifications();
+    }, 1500),
     createNotification() {
       let notification = {
         ...this.newNotification,
@@ -194,9 +220,28 @@ export default {
       this.newNotificationDialog = false;
     },
     getNotifications() {
-      CourseService.getNotifications(this.courseId).then(({ data }) => {
+      CourseService.getNotifications(
+        this.courseId,
+        this.showNotifications.includes(1),
+        this.showNotifications.includes(0)
+      ).then(({ data }) => {
         this.notifications = data;
       });
+    },
+    deleteNotification(id) {
+      console.log(id);
+    }
+  },
+  watch: {
+    showNotifications: {
+      deep: true,
+      immediate: false,
+      handler(newVal, oldVal) {
+        // Never allow the value to be empty!!
+        if (newVal.length == 0) {
+          this.showNotifications = oldVal;
+        }
+      }
     }
   }
 };

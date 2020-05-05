@@ -13,7 +13,7 @@
               :icon="subRoute.icon"
               size="sm"
               :label="subRoute.label"
-              :class="$route.name == subRoute.name && $q.dark.isActive ? 'border-bottom-dark' : 'border-bottom-light'"
+              :class="$route.name == subRoute.name ? $q.dark.isActive ? 'border-bottom-dark' : 'border-bottom-light' : ''"
               @click="$router.push({ name: subRoute.name })"
             />
           </q-btn-group>

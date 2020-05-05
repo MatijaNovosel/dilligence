@@ -42,8 +42,13 @@ export default {
    * @param {number} courseId - Id of the requested course.
    * @return {AxiosPromise<any>} Axios promise to be resolved in the view.
    */
-  async getNotifications(courseId) {
-    return await axios.get(`Course/notifications/${courseId}`);
+  async getNotifications(courseId, showArchived, showNonArchived) {
+    return await axios.get(`Course/notifications/${courseId}`, {
+      params: {
+        showArchived,
+        showNonArchived
+      }
+    });
   },
   async getCourseUsers(courseId) {
     return await axios.get(`Course/users/${courseId}`);

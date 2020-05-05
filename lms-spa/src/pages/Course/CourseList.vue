@@ -199,6 +199,7 @@ import CourseService from "../../services/api/course";
 import UserService from "../../services/api/user";
 import SMJER from "../../constants/smjer";
 import UserMixin from "../../mixins/userMixin";
+import { debounce } from "debounce";
 
 export default {
   name: "Subjects",

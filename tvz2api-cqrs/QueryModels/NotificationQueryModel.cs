@@ -13,7 +13,7 @@ namespace tvz2api_cqrs.QueryModels
     public DateTime? ExpiresAt { get; set; }
     public string Color { get; set; }
     public string SubmittedBy { get; set; }
-    public int CourseId { get; set; }
+    public int? CourseId { get; set; }
     public bool Archived { get; set; }
   }
 }

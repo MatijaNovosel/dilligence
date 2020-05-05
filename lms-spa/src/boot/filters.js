@@ -15,6 +15,9 @@ export default async ({ Vue }) => {
   Vue.filter("timeStampFilter", val => {
     return (new Date(Date.parse(val))).toString().slice(4, 24);
   });
+  Vue.filter("dateFilter", val => {
+    return (new Date(Date.parse(val))).toString().slice(4, 15);
+  });
   Vue.filter("countdownFilter", val => {
     /*
 

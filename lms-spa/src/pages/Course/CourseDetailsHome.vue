@@ -5,9 +5,6 @@
 <script>
 export default {
   name: "CourseDetailsHome",
-  created() {
-    console.log(this.$route.params.id);
-  },
   data() {
     return {};
   }
