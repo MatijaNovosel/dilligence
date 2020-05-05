@@ -2,7 +2,12 @@
   <q-page>
     <div class="q-pa-md row justify-center">
       <div class="col-2 q-mr-lg">
-        <q-expansion-item v-model="open" :label="$i18n.t('recentChats')" class="chat-tab" :class="$q.dark.isActive ? 'border-dark' : 'border-light'">
+        <q-expansion-item
+          v-model="open"
+          :label="$i18n.t('recentChats')"
+          class="chat-tab"
+          :class="$q.dark.isActive ? 'border-dark' : 'border-light'"
+        >
           <q-card>
             <q-separator />
             <div v-if="chats && chats.length != 0">

@@ -17,8 +17,9 @@
       class="q-px-lg q-py-md"
       style="height: 600px;"
     >
-      <template v-for="message in messages">
+      <template v-if="messages != null">
         <q-chat-message
+          v-for="message in messages"
           :key="message.id"
           :name="message.userId == user.id ? 'You' : (activeChat.firstParticipant.id == user.id ? activeChat.secondParticipant.username : activeChat.firstParticipant.username)"
           avatar="../assets/default-user.jpg"
@@ -41,6 +42,7 @@
           />
         </q-chat-message>
       </template>
+      <div v-else style="height: 585px;" class="row justify-center items-center">No chats active, start a conversation by clicking below!</div>
     </q-scroll-area>
   </div>
 </template>
@@ -62,7 +64,7 @@ export default {
         opacity: 0.75
       },
       barStyle: {
-        right: "2px",
+        right: "0px",
         borderRadius: "9px",
         backgroundColor: "#027be3",
         width: "9px",
@@ -103,7 +105,4 @@ export default {
   bottom: 20px
   left: 20px
   z-index: 200
-.aside
-  position: absolute
-  right: 5px
 </style>

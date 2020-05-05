@@ -35,7 +35,7 @@ namespace tvz2api_cqrs.Controllers
 
     [Authorize]
     [HttpGet]
-    public async Task<IActionResult> Get(int? userId = null, [FromQuery(Name = "smjerIDs[]")] List<SpecializationEnum> courseIds = null, string name = null, bool subscribed = false, bool nonSubscribed = false)
+    public async Task<IActionResult> Get(int? userId = null, [FromQuery(Name = "specializationId[]")] List<SpecializationEnum> courseIds = null, string name = null, bool subscribed = false, bool nonSubscribed = false)
     {
       // var queryOptions = QueryOptionsExtensions.GetFromRequest(Request);
       var specification = new CourseSpecification(userId, courseIds, name, subscribed, nonSubscribed);

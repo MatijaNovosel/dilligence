@@ -1,18 +1,31 @@
 <template>
   <q-page class="q-px-sm q-pt-md">
-    <template v-if="userData">
-      <div class="row full-width q-gutter-sm">
-        <div class="col-12">
-          <span class="text-weight-light text-h5">User profile</span>
-        </div>
-        <div class="col-12 q-pb-md">
-          <q-separator />
-        </div>
+    <div class="row full-width q-gutter-sm">
+      <div class="col-12">
+        <span class="text-weight-light text-h5">User profile</span>
+        <q-btn
+          @click="editMode = !editMode"
+          v-show="userId == user.id"
+          class="q-ml-sm"
+          round
+          size="sm"
+          flat
+          :icon="editMode ? 'mdi-pencil-plus' : 'mdi-pencil-off'"
+        >
+          <q-tooltip>
+            {{ editMode ? 'Edit information' : 'Stop editing' }}
+          </q-tooltip>
+        </q-btn>
+      </div>
+      <div class="col-12 q-pb-md">
+        <q-separator />
+      </div>
+      <template v-if="userData">
         <div class="col-12">
           <div class="row">
             <div class="col-xs-12 col-md-3 text-center">
               <q-img
-                class="image-box"
+                class="image-box q-mb-md"
                 :width="$q.screen.sm || $q.screen.xs ? '300px' : '75%'"
                 height="300px"
                 :src="userData.picture == null ? require('../assets/default-user.jpg') : 'data:image/png;base64,' + userData.picture"
@@ -20,7 +33,7 @@
             </div>
             <div class="col-xs-12 col-md-6">
               <div class="row q-pr-md q-gutter-sm">
-                <template v-if="userId == user.id">
+                <template v-if="userId == user.id && editMode">
                   <div
                     class="q-pl-sm"
                     :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']"
@@ -80,8 +93,8 @@
             </div>
           </div>
         </div>
-      </div>
-    </template>
+      </template>
+    </div>
   </q-page>
 </template>
 
@@ -96,7 +109,8 @@ export default {
     return {
       userId: null,
       userData: null,
-      picture: null
+      picture: null,
+      editMode: false
     };
   },
   created() {

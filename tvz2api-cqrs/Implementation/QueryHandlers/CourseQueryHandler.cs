@@ -37,7 +37,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Id = t.Id,
           Name = t.Name,
           Ects = t.Ects,
-          Smjer = t.Specialization.Name,
+          Course = t.Specialization.Name,
           SidebarContents = t.SidebarContent
             .Where(x => x.CourseId == query.Id)
             .Select(x => new SidebarContentDTO
@@ -118,7 +118,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Name = t.Name,
           Ects = t.Ects,
           Subscribed = t.Subscription.Any(x => x.UserId == query.Specification.UserId),
-          SmjerId = t.SpecializationId
+          CourseId = t.SpecializationId
         })
         .ToListAsync();
       return courses;
@@ -134,7 +134,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Name = t.Name,
           Ects = t.Ects,
           Subscribed = t.Subscription.Any(x => x.UserId == query.Specification.UserId),
-          SmjerId = t.SpecializationId
+          CourseId = t.SpecializationId
         }).CountAsync();
       return count;
     }

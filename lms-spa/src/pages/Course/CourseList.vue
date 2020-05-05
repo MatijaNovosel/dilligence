@@ -10,10 +10,18 @@
       <div class="col-12 q-pb-md">
         <div class="row justify-start">
           <div class="col-8">
-            <q-input outlined v-model="searchData.name" dense :label="$i18n.t('name')" clearable />
+            <q-input
+              @input="doSomething"
+              outlined
+              v-model="searchData.name"
+              dense
+              :label="$i18n.t('name')"
+              clearable
+            />
           </div>
           <div class="col-4 q-pl-sm">
             <q-select
+              @input="doSomething"
               outlined
               dense
               v-model="searchData.smjer"
@@ -36,30 +44,17 @@
             </q-select>
           </div>
           <div class="col-12 q-pt-sm">
-            <q-checkbox
-              size="xs"
-              v-model="searchData.showSubscribed"
-              val="xs"
-              :label="$i18n.t('showSubscribed')"
-            />
-            <q-checkbox
-              size="xs"
-              v-model="searchData.showNonSubscribed"
-              val="xs"
-              :label="$i18n.t('showNonSubscribed')"
+            <q-option-group
+              @input="doSomething"
+              size="sm"
+              v-model="searchData.showSubscriptions"
+              :options="showSubscriptionsOptions"
+              type="checkbox"
+              color="primary"
+              inline
             />
           </div>
         </div>
-      </div>
-      <div class="col-12 text-right q-py-sm">
-        <q-btn
-          size="sm"
-          :loading="loading"
-          dense
-          class="q-px-sm"
-          color="primary"
-          @click="getData"
-        >{{ $i18n.t('search') }}</q-btn>
       </div>
       <div class="col-12 q-py-sm">
         <q-separator />
@@ -240,8 +235,8 @@ export default {
         this.user.id,
         this.searchData.smjer,
         this.searchData.name,
-        this.searchData.showSubscribed,
-        this.searchData.showNonSubscribed
+        this.searchData.showSubscriptions.includes(0),
+        this.searchData.showSubscriptions.includes(1)
       )
         .then(({ data }) => {
           this.subjects = data.results;
@@ -249,7 +244,10 @@ export default {
         .finally(() => {
           this.loading = false;
         });
-    }
+    },
+    doSomething: debounce(function() {
+      this.getData();
+    }, 1500)
   },
   created() {
     this.getData();
@@ -263,11 +261,14 @@ export default {
       subscribeDialog: null,
       password: null,
       smjerOptions: [],
+      showSubscriptionsOptions: [
+        { label: "Show subscribed", value: 0 },
+        { label: "Show non subscribed", value: 1 }
+      ],
       searchData: {
         name: null,
         smjer: [],
-        showSubscribed: true,
-        showNonSubscribed: false
+        showSubscriptions: [0]
       },
       rowsPerPageOptions: [10, 15, 20],
       loading: false,
@@ -303,6 +304,16 @@ export default {
         rowsPerPage: 20
       }
     };
+  },
+  watch: {
+    "searchData.showSubscriptions": {
+      immediate: false,
+      handler(newVal, oldVal) {
+        if (newVal.length == 0) {
+          this.searchData.showSubscriptions = oldVal;
+        }
+      }
+    }
   }
 };
 </script>
