@@ -241,7 +241,9 @@ export default {
       });
     },
     deleteNotification(id) {
-      console.log(id);
+      NotificationService.deleteNotification(id).then(() => {
+        this.getNotifications();
+      });
     }
   },
   watch: {

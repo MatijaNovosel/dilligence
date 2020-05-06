@@ -63,7 +63,7 @@
         <q-table
           :pagination.sync="pagination"
           :rows-per-page-options="rowsPerPageOptions"
-          :visible-columns="['smjerId']"
+          :visible-columns="['specializationId']"
           grid
           :loading="loading"
           :data="subjects"
@@ -96,7 +96,7 @@
                       <q-item-section side>
                         <q-item-label
                           caption
-                        >{{ col.name != 'smjerId' ? col.value : col.value | smjerFilter }}</q-item-label>
+                        >{{ col.name != 'specializationId' ? col.value : col.value | smjerFilter }}</q-item-label>
                       </q-item-section>
                     </q-item>
                   </q-list>
@@ -247,7 +247,7 @@ export default {
     },
     doSomething: debounce(function() {
       this.getData();
-    }, 1500)
+    }, 1000)
   },
   created() {
     this.getData();
@@ -286,10 +286,10 @@ export default {
           field: "name"
         },
         {
-          name: "smjerId",
+          name: "specializationId",
           align: "center",
           label: this.$i18n.t("specialization"),
-          field: "smjerId"
+          field: "specializationId"
         },
         {
           name: "subscribed",

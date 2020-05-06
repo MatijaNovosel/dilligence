@@ -1,9 +1,16 @@
-function randInt(min, max) { 
-  return Math.floor(Math.random() * (max - min + 1)) + min; 
+function generateUserPictureSource(data) {
+  if (data == null) {
+    return require('../assets/default-user.jpg');
+  }
+  return 'data:image/png;base64,' + data;
 }
 
-function randColor() { 
-   return `rgb(${this.randInt(0, 255)}, ${this.randInt(0, 255)}, ${this.randInt(0, 255)})`;
+function randInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function randColor() {
+  return `rgb(${this.randInt(0, 255)}, ${this.randInt(0, 255)}, ${this.randInt(0, 255)})`;
 }
 
 function acronym(s) {
@@ -11,7 +18,7 @@ function acronym(s) {
   words = s.split(' ');
   acronym = "";
   var index = 0;
-  while(index < words.length) {
+  while (index < words.length) {
     nextWord = words[index];
     acronym = acronym + nextWord.charAt(0);
     index++;
@@ -20,7 +27,7 @@ function acronym(s) {
 }
 
 function fileIcon(fileExtension) {
-  switch(fileExtension) {
+  switch (fileExtension) {
     case 'png':
     case 'jpg':
     case 'jpeg':
@@ -59,7 +66,7 @@ function fileIcon(fileExtension) {
       return 'mdi-file-powerpoint';
     case 'mp3':
     case 'avi':
-    case 'ogg':    
+    case 'ogg':
       return 'mdi-file-music';
     case 'zip':
     case 'rar':
@@ -92,4 +99,4 @@ function download(contentType, base64Data, name) {
   document.body.removeChild(element);
 }
 
-export { randInt, randColor, acronym, fileIcon, download };
+export { generateUserPictureSource, randInt, randColor, acronym, fileIcon, download };

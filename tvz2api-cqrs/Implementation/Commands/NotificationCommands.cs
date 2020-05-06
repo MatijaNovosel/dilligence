@@ -25,4 +25,13 @@ namespace tvz2api_cqrs.Implementation.Commands
     public int? UserId { get; set; }
     public List<int> NotificationIds { get; set; }
   }
+
+  public class NotificationDeleteCommand : ICommand
+  {
+    public NotificationDeleteCommand(int id)
+    {
+      Id = id;
+    }
+    public int? Id { get; set; }
+  }
 }

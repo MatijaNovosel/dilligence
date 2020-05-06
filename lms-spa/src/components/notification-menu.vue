@@ -25,14 +25,14 @@
       self="top left"
       max-height="300px"
     >
-      <q-list separator class="list-border" v-if="notificationCount > 0">
+      <q-list separator class="list-border" v-if="notificationCount > 0" :class="$q.dark.isActive ? 'border-dark' : 'border-light'">
         <q-item dense class="justify-center items-center">
           <q-space />
           <span>Notifications</span>
           <q-space />
           <q-btn size="sm" flat round dense icon="mdi-dots-horizontal">
             <q-menu>
-              <q-list dense>
+              <q-list dense style="border-radius: 6px;" :class="$q.dark.isActive ? 'border-dark' : 'border-light'">
                 <q-item clickable>
                   <q-item-section @click="markAllAsSeen">Mark all as seen</q-item-section>
                 </q-item>
@@ -67,7 +67,7 @@
                 flat
                 size="sm"
                 icon="mdi-location-enter"
-                @click="$router.push({ name: 'course-details', params: { id: notification.courseId } })"
+                @click="$router.push({ name: 'course-details-notifications', params: { id: notification.courseId } })"
               >
                 <q-tooltip>Go to course site</q-tooltip>
               </q-btn>
@@ -75,9 +75,9 @@
           </q-item-section>
         </q-item>
       </q-list>
-      <q-list dense v-else class="list-border">
+      <q-list dense v-else class="list-border" :class="$q.dark.isActive ? 'border-dark' : 'border-light'">
         <q-item class="no-select text-center">
-          <q-item-section>All clear!</q-item-section>
+          <q-item-section>No notifications!</q-item-section>
         </q-item>
       </q-list>
     </q-menu>
@@ -140,6 +140,9 @@ export default {
     this.connection.on("newNotification", () => {
       this.getNotificationCount();
     });
+    this.connection.on("deleteNotification", () => {
+      this.getNotificationCount();
+    });
     this.getNotificationCount();
   },
   data() {
@@ -165,7 +168,6 @@ export default {
   cursor: auto !important
 .list-border
   min-width: 350px
-  border: 1px solid #e0dede;
   border-radius: 8px
 .q-menu
   box-shadow: none

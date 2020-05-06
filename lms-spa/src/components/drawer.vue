@@ -16,7 +16,7 @@
             >
               <img
                 style="border: 1px solid rgba(0, 0, 0, 0.4)"
-                :src="user.picture == null ? require('../assets/default-user.jpg') : 'data:image/png;base64,' + user.picture"
+                :src="generateUserPictureSource(user.picture)"
               />
             </q-avatar>
           </q-item-section>
@@ -51,6 +51,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { generateUserPictureSource } from "../helpers/helpers";
 
 export default {
   name: "drawer",
@@ -110,6 +111,9 @@ export default {
   },
   computed: {
     ...mapGetters(["user"])
+  },
+  methods: {
+    generateUserPictureSource
   }
 };
 </script>

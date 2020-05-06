@@ -12,7 +12,7 @@
           flat
           :icon="editMode ? 'mdi-pencil-off' : 'mdi-pencil-plus'"
         >
-          <q-tooltip>{{ editMode ? 'Edit information' : 'Stop editing' }}</q-tooltip>
+          <q-tooltip>{{ editMode ? 'Stop editing' : 'Edit information' }}</q-tooltip>
         </q-btn>
       </div>
       <div class="col-12 q-pb-md">
@@ -26,7 +26,7 @@
                 class="image-box q-mb-md"
                 :width="$q.screen.sm || $q.screen.xs ? '300px' : '75%'"
                 height="300px"
-                :src="userData.picture == null ? require('../assets/default-user.jpg') : 'data:image/png;base64,' + userData.picture"
+                :src="generateUserPictureSource(userData.picture)"
               />
             </div>
             <div class="col-xs-12 col-md-6">
@@ -100,6 +100,7 @@
 import { mapActions, mapGetters } from "vuex";
 import UserService from "../services/api/user";
 import { debounce } from "debounce";
+import { generateUserPictureSource } from "../helpers/helpers";
 
 export default {
   name: "Settings",
@@ -128,6 +129,7 @@ export default {
   },
   methods: {
     ...mapActions(["setUserData"]),
+    generateUserPictureSource,
     getUserData(userId) {
       UserService.getUserDetails(userId).then(({ data }) => {
         this.userData = data;

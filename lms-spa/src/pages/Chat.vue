@@ -11,10 +11,6 @@
           <q-card>
             <q-separator />
             <div v-if="chats && chats.length != 0">
-              <q-card-section class="q-pb-sm q-pt-none">
-                <q-input dense :label="$i18n.t('searchUsers')"></q-input>
-              </q-card-section>
-              <q-separator />
               <q-card-section class="q-py-xs q-px-none">
                 <q-list separator dense>
                   <q-item
@@ -25,7 +21,9 @@
                   >
                     <q-item-section avatar class="q-pl-md">
                       <q-avatar size="30px">
-                        <img src="../assets/default-user.jpg" />
+                        <img
+                          :src="chat.firstParticipant.id == user.id ? generateUserPictureSource(chat.secondParticipant.picture) : generateUserPictureSource(chat.firstParticipant.picture)"
+                        />
                       </q-avatar>
                     </q-item-section>
                     <q-item-section
@@ -48,46 +46,38 @@
               :scrollTrigger="scrollTrigger"
               @deleteMessage="deleteMessage"
               :messages="activeChatMessages"
+              :activeChat="activeChat"
             />
           </div>
           <div class="col-12 q-py-md">
-            <div class="row items-center">
-              <div class="col-11">
-                <q-input
-                  :readonly="!activeChat"
-                  :label="$i18n.t('enterMessage')"
-                  dense
-                  v-model="message"
-                  outlined
-                >
-                  <template v-slot:append>
-                    <q-btn
-                      :disabled="!activeChat"
-                      :ripple="false"
-                      dense
-                      size="sm"
-                      color="primary"
-                      @click="sendMessage"
-                    >{{ $i18n.t('send') }}</q-btn>
-                  </template>
-                </q-input>
-              </div>
-              <div class="col-1 text-center">
+            <q-input
+              :error="$v.message.$invalid && $v.message.$dirty"
+              error-message="This field is required!"
+              :readonly="!activeChat"
+              :label="$i18n.t('enterMessage')"
+              dense
+              v-model="message"
+              outlined
+              @input="$v.message.$touch"
+            >
+              <template v-slot:append>
                 <q-btn
-                  class="q-pa-xs"
-                  size="sm"
+                  :disabled="!activeChat || $v.message.$invalid"
+                  :ripple="false"
                   dense
+                  class="q-px-md q-mr-md"
+                  size="sm"
                   color="primary"
-                  @click="newChatDialog = true"
-                >{{ $i18n.t('newChat') }}</q-btn>
-              </div>
-            </div>
+                  @click="sendMessage"
+                >{{ $i18n.t('send') }}</q-btn>
+              </template>
+            </q-input>
           </div>
         </div>
       </div>
     </div>
     <q-dialog v-model="newChatDialog" persistent no-esc-dismiss>
-      <q-card style="width: 50vw;">
+      <q-card style="width: 70%; max-width: 50vw;">
         <q-toolbar class="bg-primary text-white dialog-toolbar">
           <q-space />
           <q-btn
@@ -125,13 +115,15 @@
           </q-input>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          <div class="text-center" v-if="foundUsers && foundUsers.length == 0">No users found!</div>
           <q-list
-            v-else
+            v-if="foundUsers"
             separator
             dense
             :class="`border-box-${$q.dark.isActive ? 'dark' : 'light'}`"
           >
+            <q-item>
+              <q-item-section class="text-center">No users found!</q-item-section>
+            </q-item>
             <q-item v-for="(user, i) in foundUsers" :key="i">
               <q-item-section avatar class="q-pl-md">
                 <q-avatar size="30px">
@@ -156,6 +148,22 @@
         </q-card-section>
       </q-card>
     </q-dialog>
+    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+      <q-fab
+        size="xs"
+        direction="left"
+        :color="!$q.dark.isActive ? 'primary' : 'grey-8'"
+        fab
+        icon="add"
+      >
+        <q-fab-action
+          @click="newChatDialog = true"
+          icon="mdi-chat-processing"
+          :color="!$q.dark.isActive ? 'primary' : 'grey-8'"
+          label="New chat"
+        />
+      </q-fab>
+    </q-page-sticky>
   </q-page>
 </template>
 
@@ -165,12 +173,20 @@ import ChatService from "../services/api/chat";
 import ChatPanel from "../components/chat-panel";
 import ConnectionMixin from "../mixins/connectionMixin";
 import { mapGetters } from "vuex";
+import { required, minLength } from "vuelidate/lib/validators";
+import { generateUserPictureSource } from "../helpers/helpers";
 
 export default {
   name: "Chat",
   mixins: [ConnectionMixin],
   components: {
     "chat-panel": ChatPanel
+  },
+  validations: {
+    message: {
+      required,
+      minLength: minLength(4)
+    }
   },
   created() {
     this.getChats(this.user.id);
@@ -182,11 +198,13 @@ export default {
     this.connection.on("messageDeleted", id => {
       this.activeChatMessages = this.activeChatMessages.filter(x => x.id != id);
     });
+    window.addEventListener("keydown", this.enterPressed, false);
   },
   computed: {
     ...mapGetters(["user"])
   },
   methods: {
+    generateUserPictureSource,
     resetNewChatDialog() {
       this.newChatDialog = false;
       this.newChatSearch = this.foundUsers = null;
@@ -215,11 +233,16 @@ export default {
       });
     },
     sendMessage() {
+      if (this.$v.message.$invalid) {
+        this.$v.message.$touch();
+        return;
+      }
       ChatService.sendMessage({
         content: this.message,
         chatId: this.activeChat.id,
         userId: this.user.id
       }).then(() => (this.message = null));
+      this.$v.$reset();
     },
     startNewChat(id) {
       ChatService.createNewChat({
@@ -232,6 +255,11 @@ export default {
     },
     deleteMessage(id) {
       ChatService.deleteMessage(id);
+    },
+    enterPressed(e) {
+      if (e.keyCode == 13) {
+        this.sendMessage();
+      }
     }
   },
   data() {
@@ -246,19 +274,22 @@ export default {
       activeChat: null,
       activeChatMessages: null
     };
+  },
+  destroyed() {
+    window.removeEventListener("keydown", this.enterPressed, false);
   }
 };
 </script>
 
-<style scoped lang="sass">
-.my-card
-  width: 100%
-  max-width: 350px
-  margin: 5px
+<style lang="sass">
 .chat-tab
   border-top-left-radius: 6px
   border-top-right-radius: 6px
   user-select: none
 .dialog-toolbar
   min-height: 30px
+.q-btn--fab .q-btn__wrapper
+  padding: 10px
+  min-height: 12px
+  min-width: 12px
 </style>

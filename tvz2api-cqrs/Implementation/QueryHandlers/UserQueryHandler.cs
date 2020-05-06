@@ -57,6 +57,10 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     public async Task<List<UserChatQueryModel>> HandleAsync(UserChatQuery query)
     {
       var chats = await _context.Chat
+        .Include(t => t.FirstParticipant)
+        .ThenInclude(t => t.ImageFile)
+        .Include(t => t.SecondParticipant)
+        .ThenInclude(t => t.ImageFile)
         .Where(t => t.FirstParticipantId == query.Id || t.SecondParticipantId == query.Id)
         .Select(t => new UserChatQueryModel
         {
@@ -64,12 +68,14 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           FirstParticipant = new UserQueryModel()
           {
             Id = t.FirstParticipant.Id,
-            Username = t.FirstParticipant.Username
+            Username = t.FirstParticipant.Username,
+            Picture = t.FirstParticipant.ImageFile != null ? Convert.ToBase64String(t.FirstParticipant.ImageFile.Data) : null,
           },
           SecondParticipant = new UserQueryModel()
           {
             Id = t.SecondParticipant.Id,
-            Username = t.SecondParticipant.Username
+            Username = t.SecondParticipant.Username,
+            Picture = t.SecondParticipant.ImageFile != null ? Convert.ToBase64String(t.SecondParticipant.ImageFile.Data) : null,
           }
         })
         .ToListAsync();

@@ -9,7 +9,7 @@ namespace tvz2api_cqrs.QueryModels
     public string Name { get; set; }
     public string Isvu { get; set; }
     public int? Ects { get; set; }
-    public int? CourseId { get; set; }
+    public int? SpecializationId { get; set; }
     public bool Subscribed { get; set; }
   }
 

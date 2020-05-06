@@ -24,7 +24,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 {
   public class NotificationCommandHandler :
     ICommandHandlerAsync<NotificationCreateCommand>,
-    ICommandHandlerAsync<NotificationSeenCommand>
+    ICommandHandlerAsync<NotificationSeenCommand>,
+    ICommandHandlerAsync<NotificationDeleteCommand>
   {
     private readonly lmsContext _context;
     private readonly IConfiguration _configuration;
@@ -57,7 +58,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         .ThenInclude(x => x.UserNotificationBlacklist)
         .FirstOrDefault(t => t.Id == command.CourseId);
 
-      course.Subscription.Select(t => t.UserId).ToList().ForEach(x =>
+      course.Subscription.Where(t => t.UserId != command.SubmittedById).Select(t => t.UserId).ToList().ForEach(x =>
       {
         _context.NotificationUserSeen.Add(new NotificationUserSeen()
         {
@@ -107,6 +108,14 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
           .FirstOrDefault(t => t.UserId == command.UserId && t.NotificationId == x)
           .Seen = true;
       });
+      await _context.SaveChangesAsync();
+    }
+
+    public async Task HandleAsync(NotificationDeleteCommand command)
+    {
+      var notification = await _context.Notification.Include(t => t.NotificationUserSeen).FirstOrDefaultAsync();
+      _context.NotificationUserSeen.RemoveRange(notification.NotificationUserSeen);
+      _context.Notification.Remove(notification);
       await _context.SaveChangesAsync();
     }
   }

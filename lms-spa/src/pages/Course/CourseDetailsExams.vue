@@ -21,3 +21,10 @@ export default {
   }
 };
 </script>
+
+<style lang="sass">
+.q-btn--fab .q-btn__wrapper
+  padding: 10px
+  min-height: 12px
+  min-width: 12px
+</style>

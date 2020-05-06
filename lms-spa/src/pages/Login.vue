@@ -67,9 +67,27 @@ export default {
       loading: false
     };
   },
+  created() {
+    window.addEventListener("keydown", this.enterPressed, false);
+  },
+  destroyed() {
+    window.removeEventListener("keydown", this.enterPressed, false);
+  },
   methods: {
     ...mapActions(["setUserData"]),
+    enterPressed(e) {
+      if (e.keyCode == 13) {
+        this.login();
+      }
+    },
     login() {
+      if (this.$v.loginForm.$invalid) {
+        this.$q.notify({
+          type: "negative",
+          message: "Invalid data!"
+        });
+        return;
+      }
       this.loading = true;
       AuthService.login({
         username: this.loginForm.username,

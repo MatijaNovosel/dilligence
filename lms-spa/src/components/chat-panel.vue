@@ -17,18 +17,18 @@
       class="q-px-lg q-py-md"
       style="height: 600px;"
     >
-      <template v-if="messages != null">
+      <template v-if="messages">
         <q-chat-message
           v-for="message in messages"
           :key="message.id"
-          :name="message.userId == user.id ? 'You' : (activeChat.firstParticipant.id == user.id ? activeChat.secondParticipant.username : activeChat.firstParticipant.username)"
-          avatar="../assets/default-user.jpg"
+          :avatar="message.userId == user.id ? generateUserPictureSource(user.picture) : (activeChat.firstParticipant.id == user.id ? generateUserPictureSource(activeChat.secondParticipant.picture) : generateUserPictureSource(activeChat.firstParticipant.picture))"
           :style="message.userId == user.id ? 'text-align: right;' : 'text-align: left;'"
-          size="5"
-          class="q-mr-md"
+          size="6"
+          class="q-mx-md"
           :stamp="message.sentAt | timeStampFilter"
           :sent="message.userId == user.id"
-          :bg-color="message.userId == user.id ? 'blue-5' : 'blue-2'"
+          :text-color="$q.dark.isActive ? 'white' : 'black'"
+          :bg-color="message.userId == user.id ? $q.dark.isActive ? 'dark' : 'blue-5' : $q.dark.isActive ? 'grey-9' : 'blue-2'"
         >
           <span>{{ message.content }}</span>
           <q-btn
@@ -42,7 +42,11 @@
           />
         </q-chat-message>
       </template>
-      <div v-else style="height: 585px;" class="row justify-center items-center">No chats active, start a conversation by clicking below!</div>
+      <div
+        v-else
+        style="height: 585px;"
+        class="row justify-center items-center"
+      >No chats active, start a conversation by clicking below!</div>
     </q-scroll-area>
   </div>
 </template>
@@ -50,10 +54,11 @@
 <script>
 import { mapGetters } from "vuex";
 import Vue from "vue";
+import { generateUserPictureSource } from "../helpers/helpers";
 
 export default {
   name: "chat-panel",
-  props: ["messages", "scrollTrigger"],
+  props: ["activeChat", "messages", "scrollTrigger"],
   data() {
     return {
       thumbStyle: {
@@ -76,6 +81,7 @@ export default {
     ...mapGetters(["user"])
   },
   methods: {
+    generateUserPictureSource,
     scrollToBottom() {
       Vue.nextTick(() => {
         /*

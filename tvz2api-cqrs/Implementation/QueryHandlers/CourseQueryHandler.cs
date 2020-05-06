@@ -118,7 +118,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Name = t.Name,
           Ects = t.Ects,
           Subscribed = t.Subscription.Any(x => x.UserId == query.Specification.UserId),
-          CourseId = t.SpecializationId
+          SpecializationId = t.SpecializationId
         })
         .ToListAsync();
       return courses;
@@ -134,7 +134,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Name = t.Name,
           Ects = t.Ects,
           Subscribed = t.Subscription.Any(x => x.UserId == query.Specification.UserId),
-          CourseId = t.SpecializationId
+          SpecializationId = t.SpecializationId
         }).CountAsync();
       return count;
     }

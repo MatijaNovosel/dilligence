@@ -16,6 +16,6 @@ export default {
     return await axios.post('Notification', payload);
   },
   async deleteNotification(id) {
-    return await axios.delete('Notification' + id);
+    return await axios.delete('Notification/' + id);
   }
 }

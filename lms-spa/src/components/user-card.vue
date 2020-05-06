@@ -1,8 +1,6 @@
 <template>
   <q-card flat bordered style="width: 10em">
-    <img
-      :src="value.picture == null ? require('../assets/default-user.jpg') : 'data:image/png;base64,' + value.picture"
-    />
+    <img :src="generateUserPictureSource(value.picture)" />
     <q-card-section>
       <div class="text-h6">{{ `${value.name} ${value.surname}` }}</div>
       <div class="text-subtitle2">{{ `Username: ${value.username}` }}</div>
@@ -11,12 +9,16 @@
 </template>
 
 <script>
+import { generateUserPictureSource } from "../helpers/helpers";
+
 export default {
   name: "user-card",
   props: ["value"],
   data() {
     return {};
   },
-  methods: {}
+  methods: {
+    generateUserPictureSource
+  }
 };
 </script>

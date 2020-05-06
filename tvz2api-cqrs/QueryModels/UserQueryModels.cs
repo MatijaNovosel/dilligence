@@ -9,6 +9,7 @@ namespace tvz2api_cqrs.QueryModels
     public int Id { get; set; }
     public string Username { get; set; }
     public DateTime? Created { get; set; }
+    public string Picture { get; set; }
   }
   public class UserChatQueryModel
   {

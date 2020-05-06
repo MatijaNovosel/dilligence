@@ -58,7 +58,7 @@ namespace tvz2api_cqrs.Controllers
     public async Task<IActionResult> CreateNew(NotificationCreateCommand command)
     {
       await _commandBus.ExecuteAsync(command);
-      await this._hubContext.Clients.All.SendAsync("newNotification");
+      await _hubContext.Clients.All.SendAsync("newNotification");
       return Ok();
     }
 
@@ -66,6 +66,14 @@ namespace tvz2api_cqrs.Controllers
     public async Task<IActionResult> Seen(NotificationSeenCommand command)
     {
       await _commandBus.ExecuteAsync(command);
+      return Ok();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+      await _commandBus.ExecuteAsync(new NotificationDeleteCommand(id));
+      await _hubContext.Clients.All.SendAsync("deleteNotification");
       return Ok();
     }
   }
