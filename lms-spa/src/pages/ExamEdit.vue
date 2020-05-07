@@ -26,14 +26,24 @@
                   <template v-slot:prepend>
                     <q-icon name="mdi-calendar-month" class="cursor-pointer">
                       <q-popup-proxy transition-show="scale" transition-hide="scale">
-                        <q-date v-model="exam.dueDate" mask="YYYY-MM-DD HH:mm" />
+                        <q-date
+                          :class="$q.dark.isActive ? 'border-dark' : 'border-light'"
+                          minimal
+                          v-model="exam.dueDate"
+                          mask="YYYY-MM-DD HH:mm"
+                        />
                       </q-popup-proxy>
                     </q-icon>
                   </template>
                   <template v-slot:append>
                     <q-icon name="mdi-alarm" class="cursor-pointer">
                       <q-popup-proxy transition-show="scale" transition-hide="scale">
-                        <q-time v-model="exam.dueDate" mask="YYYY-MM-DD HH:mm" format24h />
+                        <q-time
+                          :class="$q.dark.isActive ? 'border-dark' : 'border-light'"
+                          v-model="exam.dueDate"
+                          mask="YYYY-MM-DD HH:mm"
+                          format24h
+                        />
                       </q-popup-proxy>
                     </q-icon>
                   </template>
@@ -89,8 +99,9 @@
                       outlined
                       v-model="question.typeId"
                       :label="$i18n.t('questionType')"
-                      :options="questionTypeOptions"
-                      behavior="menu"
+                      :options="answerTypesOptions"
+                      emit-value
+                      map-options
                     />
                   </div>
                   <div class="col-1">
@@ -141,7 +152,7 @@
                             class="bg-red-6 text-white"
                           >{{ $i18n.t('remove') }}</q-btn>
                           <q-checkbox
-                            :disable="!answer.correct && question.typeId.value == 1 && question.answers.reduce((sum, x) => sum += x.correct ? 1 : 0, 0) >= 1"
+                            :disable="!answer.correct && question.typeId == 1 && question.answers.reduce((sum, x) => sum += x.correct ? 1 : 0, 0) >= 1"
                             size="xs"
                             color="green-5"
                             v-model="answer.correct"
@@ -273,21 +284,21 @@ export default {
       this.exam.questions.push({
         title: null,
         content: "",
-        typeId: this.questionTypeOptions[0],
+        typeId: 1,
         answers: []
       });
     }
   },
   created() {
-    this.questionTypes = { RADIO: 1, CHECKBOX: 2 };
-    this.questionTypeOptions = [
+    this.answerTypes = { RADIO: 1, CHECKBOX: 2 };
+    this.answerTypesOptions = [
       {
-        label: this.$i18n.t("questionTypes.radio"),
-        value: this.questionTypes.RADIO
+        label: this.$i18n.t("answerTypes.radio"),
+        value: this.answerTypes.RADIO
       },
       {
-        label: this.$i18n.t("questionTypes.checkbox"),
-        value: this.questionTypes.CHECKBOX
+        label: this.$i18n.t("answerTypes.checkbox"),
+        value: this.answerTypes.CHECKBOX
       }
     ];
     this.exam = {
@@ -299,7 +310,7 @@ export default {
           id: 1,
           title: "Question 1",
           content: "<b> Question contents </b>",
-          typeId: this.questionTypeOptions[0],
+          typeId: 1,
           answers: [
             {
               content: "Answer 1",

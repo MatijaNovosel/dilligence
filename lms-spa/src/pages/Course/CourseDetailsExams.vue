@@ -7,6 +7,7 @@
           icon="mdi-email-plus"
           :color="!$q.dark.isActive ? 'primary' : 'grey-8'"
           label="New exam"
+          @click="createNewExam"
         />
       </q-fab>
     </q-page-sticky>
@@ -16,6 +17,12 @@
 <script>
 export default {
   name: "CourseDetailsExams",
+  methods: {
+    createNewExam() {
+      // Create new exam instance, get the id and send it as a parameter to route
+      this.$router.push({ name: "exam-edit" });
+    }
+  },
   data() {
     return {};
   }

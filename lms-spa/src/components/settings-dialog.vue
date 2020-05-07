@@ -24,6 +24,7 @@
           :label="$i18n.t('locale')"
           :options="localeOptions"
           emit-value
+          map-options
         />
         <div class="q-my-sm" :class="[$q.dark.isActive ? 'border-box-dark' : 'border-box-light']">
           <div class="q-pa-sm">
@@ -39,7 +40,6 @@
               dense
               type="checkbox"
               color="primary"
-              emit-options
             />
           </div>
         </div>

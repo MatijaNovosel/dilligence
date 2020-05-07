@@ -21,8 +21,8 @@ export default {
     name: "Exam name"
   },
   answerTypes: {
-    checkbox: "Višestruki odgovor",
-    radio: "Jednostruki odgovor"
+    checkbox: "Multiple answers",
+    radio: "Single answer"
   },
   failed: "Action failed",
   success: "Action successful",
