@@ -24,7 +24,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
   public class ExamCommandHandler :
     ICommandHandlerAsync<ExamUpdateAttemptCommand>,
     ICommandHandlerAsync<ExamStartAttemptCommand>,
-    ICommandHandlerAsync<ExamCreateCommand>
+    ICommandHandlerAsync<ExamPreCreateCommand, int>,
+    ICommandHandlerAsync<ExamUpdateCommand>
   {
     private readonly lmsContext _context;
 
@@ -43,16 +44,15 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       await _context.SaveChangesAsync();
     }
 
-    public async Task HandleAsync(ExamCreateCommand command)
+    public async Task HandleAsync(ExamUpdateCommand command)
     {
-      var exam = new Exam()
-      {
-        Name = command.Name,
-        TimeNeeded = command.TimeNeeded,
-        CourseId = command.CourseId,
-        CreatedById = command.CreatedById,
-        DueDate = command.DueDate
-      };
+      var exam = await _context.Exam.FirstOrDefaultAsync(t => t.Id == command.Id);
+
+      exam.Name = command.Name;
+      exam.TimeNeeded = command.TimeNeeded;
+      exam.DueDate = command.DueDate;
+      exam.Finalized = true;
+
       await _context.Exam.AddAsync(exam);
       await _context.SaveChangesAsync();
 
@@ -78,6 +78,18 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         });
         _context.SaveChanges();
       });
+    }
+
+    public async Task<ICommandResult<int>> HandleAsync(ExamPreCreateCommand command)
+    {
+      var exam = new Exam()
+      {
+        CreatedById = command.CreatedById,
+        CourseId = command.CourseId
+      };
+      await _context.Exam.AddAsync(exam);
+      await _context.SaveChangesAsync();
+      return CommandResult<int>.Success(exam.Id);
     }
 
     public async Task HandleAsync(ExamUpdateAttemptCommand command)

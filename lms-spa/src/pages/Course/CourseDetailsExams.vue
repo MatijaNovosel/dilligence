@@ -15,16 +15,30 @@
 </template>
 
 <script>
+import ExamService from "../../services/api/exam";
+import UserMixin from "../../mixins/userMixin";
+
 export default {
   name: "CourseDetailsExams",
+  mixins: [UserMixin],
   methods: {
     createNewExam() {
       // Create new exam instance, get the id and send it as a parameter to route
-      this.$router.push({ name: "exam-edit" });
+      ExamService.createExam({
+        courseId: this.courseId,
+        createdById: this.user.id
+      }).then(({ data }) => {
+        this.$router.push({ name: "exam-edit", params: { id: data.payload } });
+      });
     }
   },
+  created() {
+    this.courseId = this.$route.params.id;
+  },
   data() {
-    return {};
+    return {
+      courseId: null
+    };
   }
 };
 </script>

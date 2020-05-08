@@ -1,5 +1,5 @@
 <template>
-  <q-card flat bordered style="width: 10em">
+  <q-card flat bordered style="width: 13em">
     <img :src="generateUserPictureSource(value.picture)" />
     <q-card-section>
       <div class="text-h6">{{ `${value.name} ${value.surname}` }}</div>

@@ -28,13 +28,11 @@ export default {
     return await axios.put('Exam/attempt', payload);
   },
   /**
-   * Creates an exam.
-   * @param {Object} payload - Attempt payload.
+   * Updates the details of an exam. 
+   * @param {Object} payload - Exam payload.
    * @param {string} payload.name - Name of the exam.
    * @param {number} payload.timeNeeded - Time needed to solve the exam (in seconds).
    * @param {string} payload.dueDate - The date when the exam expires.
-   * @param {number} payload.createdById - Id of the user that created the exam.
-   * @param {number} payload.courseId - Id of the course this exam belongs to.
    * @param {Object[]} payload.questions - List of exam questions.
    * @param {string} payload.questions.title - Title of the question.
    * @param {string} payload.questions.content - Content of the question, HTML formatting.
@@ -44,7 +42,17 @@ export default {
    * @param {boolean} payload.questions.answers.correct - Indication if the answer is correct.
    * @return {AxiosPromise<any>} Axios promise to be resolved in the view.
    */
+  async updateExam(payload) {
+    return await axios.put('Exam/update', payload);
+  },
+  /**
+   * Creates the foundations for an exam, created before entering the exam edit view.
+   * @param {Object} payload - Exam payload.
+   * @param {number} payload.createdById - Id of the user that created the exam.
+   * @param {number} payload.coureId - Id of the course the exam is being created for.
+   * @return {AxiosPromise<any>} Axios promise to be resolved in the view.
+   */
   async createExam(payload) {
-    return await axios.post('Exam/create', payload);
+    return await axios.post('Exam', payload);
   }
 }

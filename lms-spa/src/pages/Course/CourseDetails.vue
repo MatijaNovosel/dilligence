@@ -31,13 +31,9 @@
 
 <script>
 import CourseService from "../../services/api/course";
-import UserCard from "../../components/user-card";
 
 export default {
   name: "CourseDetails",
-  components: {
-    "user-card": UserCard
-  },
   created() {
     this.courseId = this.$route.params.id;
     this.getData();
@@ -46,11 +42,6 @@ export default {
     getData() {
       CourseService.getCourse(this.courseId).then(({ data }) => {
         this.course = data;
-      });
-    },
-    getParticipants() {
-      CourseService.getCourseUsers(this.courseId).then(({ data }) => {
-        this.participants = data.results;
       });
     }
   },
@@ -81,24 +72,16 @@ export default {
           name: "course-details-exams",
           label: "Exams",
           icon: "mdi-test-tube"
+        },
+        {
+          name: "course-details-discussion",
+          label: "Discussion",
+          icon: "mdi-chat"
         }
       ],
-      participants: null,
       course: null,
-      courseId: null,
-      tab: "home"
+      courseId: null
     };
   }
 };
 </script>
-
-<style lang="sass">
-.q-btn--fab .q-btn__wrapper
-  padding: 10px
-  min-height: 12px
-  min-width: 12px
-.dialog-toolbar
-  min-height: 30px
-.container-border
-  border: 1px solid #e0dede
-</style>

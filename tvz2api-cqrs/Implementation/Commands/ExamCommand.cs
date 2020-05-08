@@ -22,14 +22,20 @@ namespace tvz2api_cqrs.Implementation.Commands
     public int AttemptId { get; set; }
   }
 
-  public class ExamCreateCommand : ICommand
+  public class ExamUpdateCommand : ICommand
   {
-    public ExamCreateCommand() { }
+    public ExamUpdateCommand() { }
+    public int Id { get; set; }
     public string Name { get; set; }
     public int TimeNeeded { get; set; }
     public DateTime DueDate { get; set; }
+    public List<CreateQuestionDTO> Questions { get; set; }
+  }
+
+  public class ExamPreCreateCommand : ICommand<int>
+  {
+    public ExamPreCreateCommand() { }
     public int CreatedById { get; set; }
     public int CourseId { get; set; }
-    public List<CreateQuestionDTO> Questions { get; set; }
   }
 }

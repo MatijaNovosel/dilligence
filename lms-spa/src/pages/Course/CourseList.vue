@@ -167,11 +167,13 @@
         </q-toolbar>
         <q-card-section>
           <q-input
-            type="password"
             dense
             outlined
             v-model="password"
             :label="$i18n.t('enterPassword')"
+            @input="$v.password.$touch"
+            :error="$v.password.$invalid && $v.password.$dirty"
+            error-message="This field is required!"
           >
             <template v-slot:append>
               <q-btn
@@ -179,7 +181,9 @@
                 dense
                 size="sm"
                 color="primary"
+                class="q-mr-md"
                 @click="subscribe"
+                :disabled="$v.password.$invalid"
               >{{ $i18n.t('confirm') }}</q-btn>
             </template>
           </q-input>
@@ -195,6 +199,7 @@ import UserService from "../../services/api/user";
 import SMJER from "../../constants/smjer";
 import UserMixin from "../../mixins/userMixin";
 import { debounce } from "debounce";
+import { required, minLength } from "vuelidate/lib/validators";
 
 export default {
   name: "Subjects",
@@ -225,6 +230,7 @@ export default {
     resetSubscribeDialog() {
       this.subscribeDialog = false;
       this.password = this.activeSubjectId = null;
+      this.$v.$reset();
     },
     optionsUpdated(options) {
       this.getData();
@@ -248,6 +254,12 @@ export default {
     doSomething: debounce(function() {
       this.getData();
     }, 1000)
+  },
+  validations: {
+    password: {
+      required,
+      minLength: minLength(4)
+    }
   },
   created() {
     this.getData();

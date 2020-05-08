@@ -4,7 +4,7 @@
       <div class="col-2 q-mr-lg">
         <q-expansion-item
           v-model="open"
-          :label="$i18n.t('recentChats')"
+          label="Contacts"
           class="chat-tab"
           :class="$q.dark.isActive ? 'border-dark' : 'border-light'"
         >

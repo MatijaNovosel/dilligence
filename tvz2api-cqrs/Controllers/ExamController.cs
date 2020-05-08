@@ -62,11 +62,18 @@ namespace tvz2api_cqrs.Controllers
       return Ok();
     }
 
-    [HttpPost("create")]
-    public async Task<IActionResult> Create(ExamCreateCommand command)
+    [HttpPut("update")]
+    public async Task<IActionResult> Update(ExamUpdateCommand command)
     {
       await _commandBus.ExecuteAsync(command);
       return Ok();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(ExamPreCreateCommand command)
+    {
+      var id = await _commandBus.ExecuteAsync<int>(command);
+      return Ok(id);
     }
   }
 }

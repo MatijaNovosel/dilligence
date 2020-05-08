@@ -15,6 +15,7 @@ namespace tvz2api_cqrs.Models
         public string Name { get; set; }
         public DateTime? DueDate { get; set; }
         public int TimeNeeded { get; set; }
+        public bool? Finalized { get; set; }
         public int? CourseId { get; set; }
         public int? CreatedById { get; set; }
 

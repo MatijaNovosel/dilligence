@@ -3,7 +3,7 @@
     <div class="row justify-center">
       <div class="col-12 q-pa-md">
         <q-card>
-          <q-card-section class="bg-grey-1">
+          <q-card-section>
             <div class="row">
               <div class="col-12 q-pb-md">
                 <span class="text-weight-light text-h5">{{ $i18n.t("exam.info") }}</span>
@@ -82,7 +82,7 @@
           <q-separator />
           <template v-for="(question, i) in exam.questions">
             <div :key="i" v-if="selectedQuestion === i">
-              <q-card-section class="bg-grey-1">
+              <q-card-section>
                 <div class="row items-center text-center">
                   <div class="col-6 text-center q-pr-sm">
                     <q-input
