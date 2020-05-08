@@ -1,8 +1,10 @@
 <template>
   <div>
-    <template v-if="users">
-      <user-card :value="user" v-for="(user, i) in users" :key="i" />
-    </template>
+    <div class="row q-gutter-sm justify-center">
+      <template v-if="participants">
+        <user-card class="user-card" :value="participant" v-for="(participant, i) in participants" :key="i" />
+      </template>
+    </div>
   </div>
 </template>
 
@@ -22,15 +24,23 @@ export default {
   methods: {
     getUsers() {
       CourseService.getCourseUsers(this.courseId).then(({ data }) => {
-        this.users = data.results;
+        this.participants = data.results;
       });
     }
   },
   data() {
     return {
       courseId: null,
-      users: null
+      participants: null
     };
   }
 };
 </script>
+
+<style lang="sass">
+.user-card
+  transition: all .2s ease-in-out;
+.user-card:hover
+  transform: scale(0.9);
+  cursor: pointer
+</style>

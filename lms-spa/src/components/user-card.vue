@@ -1,5 +1,5 @@
 <template>
-  <q-card flat bordered style="width: 13em">
+  <q-card flat bordered style="width: 13em" @click="$router.push({ name: 'profile', params: { id: value.id } })">
     <img :src="generateUserPictureSource(value.picture)" />
     <q-card-section>
       <div class="text-h6">{{ `${value.name} ${value.surname}` }}</div>
