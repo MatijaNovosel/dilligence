@@ -149,7 +149,7 @@
         </q-table>
       </div>
     </div>
-    <q-dialog v-model="subscribeDialog" persistent no-esc-dismiss>
+    <q-dialog v-model="subscribeDialog" persistent>
       <q-card style="width: 50vw;">
         <q-toolbar class="bg-primary text-white dialog-toolbar">
           <span>{{ $i18n.t('subscribeToCourse') }}</span>

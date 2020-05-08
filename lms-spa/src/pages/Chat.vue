@@ -76,7 +76,7 @@
         </div>
       </div>
     </div>
-    <q-dialog v-model="newChatDialog" persistent no-esc-dismiss>
+    <q-dialog v-model="newChatDialog" persistent>
       <q-card style="width: 70%; max-width: 50vw;">
         <q-toolbar class="bg-primary text-white dialog-toolbar">
           <q-space />

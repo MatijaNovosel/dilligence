@@ -29,7 +29,7 @@
         <div>{{ $i18n.t('noData') }}</div>
       </div>
     </div>
-    <q-dialog v-model="newNotificationDialog" persistent no-esc-dismiss>
+    <q-dialog v-model="newNotificationDialog" persistent>
       <q-card style="width: 70%; max-width: 90vw;">
         <q-toolbar
           :style="'background-color: ' + newNotification.color"

@@ -10,7 +10,7 @@
         aria-label="Menu"
         @click="$emit('drawerState')"
       />
-      <q-img class="navbar-img q-ml-md" src="../assets/tvz-logo.svg"></q-img>
+      <q-img class="navbar-img q-ml-md" src="../assets/tvz-logo.svg" />
       <span :class="($q.dark.isActive ? 'text-white' : 'text-black') + ' text-h6 q-ml-sm'">LMS</span>
       <span
         v-show="!$q.screen.xs && !$q.screen.sm"

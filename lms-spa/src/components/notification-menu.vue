@@ -19,7 +19,6 @@
       floating
     >{{ notificationCount }}</q-badge>
     <q-menu
-      fit
       v-model="notificationMenuOpen"
       anchor="bottom left"
       self="top left"
@@ -171,4 +170,5 @@ export default {
   border-radius: 8px
 .q-menu
   box-shadow: none
+  max-width: none !important
 </style>

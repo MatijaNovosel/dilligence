@@ -91,7 +91,7 @@
         </q-item>
       </q-list>
     </q-card>
-    <q-dialog v-model="addFileDialog" persistent no-esc-dismiss>
+    <q-dialog v-model="addFileDialog" persistent>
       <q-card class="upload-dialog">
         <q-toolbar class="bg-primary text-white dialog-toolbar">
           <q-space />

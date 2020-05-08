@@ -1,6 +1,6 @@
 <template>
-  <q-dialog v-model="value" persistent no-esc-dismiss>
-    <q-card style="width: 50%; max-width: 90vw;">
+  <q-dialog :maximized="$q.screen.xs || $q.screen.sm" v-model="value" persistent>
+    <q-card :style="$q.screen.xs || $q.screen.sm || dialogStyle">
       <q-toolbar
         :style="`border-bottom: 1px solid ${$q.dark.isActive ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.12)'};`"
       >
@@ -62,6 +62,7 @@ export default {
   props: ["value"],
   data() {
     return {
+      dialogStyle: { width: "55%", "max-width": "90vw" },
       userData: {
         name: null,
         surname: null,

@@ -2,7 +2,12 @@
   <div>
     <div class="row q-gutter-sm justify-center">
       <template v-if="participants">
-        <user-card class="user-card" :value="participant" v-for="(participant, i) in participants" :key="i" />
+        <user-card
+          class="user-card"
+          :value="participant"
+          v-for="(participant, i) in participants"
+          :key="i"
+        />
       </template>
     </div>
   </div>

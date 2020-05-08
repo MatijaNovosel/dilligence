@@ -12,7 +12,7 @@
               :key="i"
               :icon="subRoute.icon"
               size="sm"
-              :label="subRoute.label"
+              :label="!$q.screen.xs && !$q.screen.sm ? subRoute.label : null"
               :class="$route.name == subRoute.name ? $q.dark.isActive ? 'border-bottom-dark' : 'border-bottom-light' : ''"
               @click="$router.push({ name: subRoute.name })"
             />

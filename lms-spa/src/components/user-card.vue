@@ -1,5 +1,10 @@
 <template>
-  <q-card flat bordered style="width: 13em" @click="$router.push({ name: 'profile', params: { id: value.id } })">
+  <q-card
+    flat
+    bordered
+    :style="{ 'width': cardWidth }"
+    @click="$router.push({ name: 'profile', params: { id: value.id } })"
+  >
     <img :src="generateUserPictureSource(value.picture)" />
     <q-card-section>
       <div class="text-h6">{{ `${value.name} ${value.surname}` }}</div>
@@ -16,6 +21,14 @@ export default {
   props: ["value"],
   data() {
     return {};
+  },
+  computed: {
+    cardWidth() {
+      if (this.$q.screen.xs) {
+        return "10em";
+      }
+      return "13em";
+    }
   },
   methods: {
     generateUserPictureSource
