@@ -16,6 +16,7 @@
           :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']"
         >* Right click on notifications for more options</div>
       </div>
+      <q-skeleton v-show="notificationLoading" class="q-mx-sm" width="100%" height="150px" square />
       <template v-if="notifications && notifications.length != 0">
         <div class="col-12 q-pa-sm" v-for="(notification, i) in notifications" :key="i">
           <notification-card
@@ -25,7 +26,7 @@
           />
         </div>
       </template>
-      <div v-else class="col-12 q-my-sm">
+      <div v-show="!notificationLoading" v-else class="col-12 q-my-sm">
         <div>{{ $i18n.t('noData') }}</div>
       </div>
     </div>
@@ -207,6 +208,7 @@ export default {
           value: 1
         }
       ],
+      notificationLoading: false,
       newNotificationDialog: false,
       notifications: null,
       courseId: null,
@@ -262,13 +264,19 @@ export default {
       this.newNotificationDialog = false;
     },
     getNotifications() {
+      this.notifications = null;
+      this.notificationLoading = true;
       CourseService.getNotifications(
         this.courseId,
         this.showNotifications.includes(1),
         this.showNotifications.includes(0)
-      ).then(({ data }) => {
-        this.notifications = data;
-      });
+      )
+        .then(({ data }) => {
+          this.notifications = data;
+        })
+        .finally(() => {
+          this.notificationLoading = false;
+        });
     },
     deleteNotification(id) {
       NotificationService.deleteNotification(id).then(() => {
