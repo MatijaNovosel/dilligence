@@ -7,6 +7,7 @@ using tvz2api_cqrs.Infrastructure.QueryHandlers;
 using tvz2api_cqrs.Models;
 using tvz2api_cqrs.Models.DTO;
 using tvz2api_cqrs.QueryModels;
+using System;
 
 namespace tvz2api_cqrs.Implementation.QueryHandlers
 {
@@ -45,6 +46,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     public async Task<List<UserQueryModel>> HandleAsync(ChatAvailableUsersQuery query)
     {
       var users = await _context.User
+        .Include(t => t.ImageFile)
         .Where(t =>
           t.Id != query.Id &&
           !t.ChatFirstParticipant.Any(x => x.FirstParticipantId == query.Id || x.SecondParticipantId == query.Id) &&
@@ -54,7 +56,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         {
           Id = t.Id,
           Created = t.Created,
-          Username = t.Username
+          Username = t.Username,
+          Picture = t.ImageFile != null ? Convert.ToBase64String(t.ImageFile.Data) : null,
         })
         .ToListAsync();
       return users;

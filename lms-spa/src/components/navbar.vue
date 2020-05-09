@@ -30,9 +30,11 @@
         round
         color="grey-8"
         icon="mdi-cog"
-        @click="settingsDialog = true"
+        @mouseenter="settingsTooltip = true"
+        @mouseleave="settingsTooltip = false"
+        @click="openSettingsDialog"
       >
-        <q-tooltip>
+        <q-tooltip v-model="settingsTooltip">
           <span>Settings</span>
         </q-tooltip>
       </q-btn>
@@ -67,6 +69,9 @@ export default {
   },
   methods: {
     ...mapActions(["removeUserData"]),
+    openSettingsDialog() {
+      [this.settingsDialog, this.settingsTooltip] = [true, false];
+    },
     logout() {
       this.removeUserData();
       this.$q.notify({
@@ -79,7 +84,8 @@ export default {
   },
   data() {
     return {
-      settingsDialog: false
+      settingsDialog: false,
+      settingsTooltip: false
     };
   }
 };

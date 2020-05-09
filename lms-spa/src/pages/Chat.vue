@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="q-pa-md row justify-center">
-      <div class="col-2 q-mr-lg">
+      <div class="col-2 q-mr-lg" v-if="!$q.screen.xs && !$q.screen.sm">
         <q-expansion-item
           v-model="open"
           label="Contacts"
@@ -34,12 +34,12 @@
               </q-card-section>
             </div>
             <div v-else>
-              <q-card-section class="text-center">{{ $i18n.t('noRecentChats') }}</q-card-section>
+              <q-card-section class="text-center">No contacts found!</q-card-section>
             </div>
           </q-card>
         </q-expansion-item>
       </div>
-      <div class="col-9">
+      <div :class="$q.screen.xs || $q.screen.sm ? 'col-12' : 'col-9'">
         <div class="row">
           <div class="col-12" style="position: relative;">
             <chat-panel
@@ -76,8 +76,8 @@
         </div>
       </div>
     </div>
-    <q-dialog v-model="newChatDialog" persistent>
-      <q-card style="width: 70%; max-width: 50vw;">
+    <q-dialog :maximized="$q.screen.xs || $q.screen.sm" v-model="newChatDialog" persistent>
+      <q-card :style="$q.screen.xs || $q.screen.sm || dialogStyle">
         <q-toolbar class="bg-primary text-white dialog-toolbar">
           <q-space />
           <q-btn
@@ -115,19 +115,20 @@
           </q-input>
         </q-card-section>
         <q-card-section class="q-pt-none">
+          <q-skeleton v-show="userSearchLoading" style="width: 100%" type="rect" />
           <q-list
             v-if="foundUsers"
             separator
             dense
             :class="`border-box-${$q.dark.isActive ? 'dark' : 'light'}`"
           >
-            <q-item>
+            <q-item v-if="foundUsers == null || foundUsers.length == 0">
               <q-item-section class="text-center">No users found!</q-item-section>
             </q-item>
             <q-item v-for="(user, i) in foundUsers" :key="i">
               <q-item-section avatar class="q-pl-md">
                 <q-avatar size="30px">
-                  <img src="../assets/default-user.jpg" />
+                  <img :src="generateUserPictureSource(user.picture)" />
                 </q-avatar>
               </q-item-section>
               <q-item-section>{{ user.username }}</q-item-section>
@@ -141,7 +142,9 @@
                   round
                   icon="mdi-comment-plus"
                   @click="startNewChat(user.id)"
-                />
+                >
+                  <q-tooltip>Start new chat</q-tooltip>
+                </q-btn>
               </q-item-section>
             </q-item>
           </q-list>
@@ -210,9 +213,14 @@ export default {
       this.newChatSearch = this.foundUsers = null;
     },
     searchUsers() {
-      ChatService.getAvailableUsers(this.user.id).then(({ data }) => {
-        this.foundUsers = data;
-      });
+      this.userSearchLoading = true;
+      ChatService.getAvailableUsers(this.user.id)
+        .then(({ data }) => {
+          this.foundUsers = data;
+        })
+        .finally(() => {
+          this.userSearchLoading = false;
+        });
     },
     getChats(id) {
       UserService.getChats(id).then(({ data }) => {
@@ -272,7 +280,12 @@ export default {
       message: null,
       chats: null,
       activeChat: null,
-      activeChatMessages: null
+      activeChatMessages: null,
+      userSearchLoading: false,
+      dialogStyle: {
+        width: "70%",
+        "max-width": "50vw"
+      }
     };
   },
   destroyed() {

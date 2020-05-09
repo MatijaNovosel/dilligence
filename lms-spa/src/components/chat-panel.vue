@@ -45,7 +45,7 @@
       <div
         v-else
         style="height: 585px;"
-        class="row justify-center items-center"
+        class="row justify-center items-center text-center"
       >No chats active, start a conversation by clicking below!</div>
     </q-scroll-area>
   </div>

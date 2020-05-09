@@ -1,6 +1,6 @@
 <template>
   <q-page class="row justify-center items-center">
-    <q-card flat class="login-card">
+    <q-card flat :style="$q.screen.xs || $q.screen.sm ? loginCardSmall : loginCardNormal">
       <q-card-section class="text-center">
         <q-img style="width: 150px; height: 150px;" src="../assets/tvz-logo.svg"></q-img>
       </q-card-section>
@@ -64,7 +64,15 @@ export default {
         username: "",
         password: ""
       },
-      loading: false
+      loading: false,
+      loginCardSmall: {
+        width: '90%',
+        background: 'none'
+      },
+      loginCardNormal: {
+        width: '25%',
+        background: 'none'
+      }
     };
   },
   created() {
@@ -120,9 +128,3 @@ export default {
   }
 };
 </script>
-
-<style scoped lang="sass">
-.login-card
-  width: 25%;
-  background: none;
-</style>
