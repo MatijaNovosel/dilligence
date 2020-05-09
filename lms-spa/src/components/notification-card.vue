@@ -35,6 +35,9 @@
         </div>
         <q-list dense>
           <q-item dense v-for="(attachment, i) in value.attachments" :key="i">
+            <q-item-section avatar>
+              <q-icon size="xs" :name="fileIcon(attachment.contentType)" />
+            </q-item-section>
             <q-item-section>{{ attachment.name }}</q-item-section>
             <q-item-section side>{{ attachment.size | byteCountToReadableFormat }}</q-item-section>
             <q-item-section side>
@@ -55,7 +58,7 @@
 </template>
 
 <script>
-import { download } from "../helpers/helpers";
+import { download, fileIcon } from "../helpers/helpers";
 
 export default {
   name: "notification-card",
@@ -67,6 +70,7 @@ export default {
     return {};
   },
   methods: {
+    fileIcon,
     downloadFile(attachment) {
       download(attachment.contentType, attachment.data, attachment.name);
     },
