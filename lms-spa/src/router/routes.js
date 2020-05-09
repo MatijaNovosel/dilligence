@@ -58,7 +58,8 @@ const routes = [
           { path: 'participants', name: 'course-details-participants', component: () => import('pages/Course/CourseDetailsParticipants.vue') },
           { path: 'exams', name: 'course-details-exams', component: () => import('pages/Course/CourseDetailsExams.vue') },
           { path: 'tasks', name: 'course-details-tasks', component: () => import('pages/Course/CourseDetailsTasks.vue') },
-          { path: 'discussion', name: 'course-details-discussion', component: () => import('pages/Course/CourseDetailsDiscussion.vue') }
+          { path: 'discussion', name: 'course-details-discussion', component: () => import('pages/Course/CourseDetailsDiscussion.vue') },
+          { path: 'files', name: 'course-details-files', component: () => import('pages/Course/CourseDetailsFiles.vue') }
         ],
         meta: {
           requiresAuth: true

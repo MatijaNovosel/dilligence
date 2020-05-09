@@ -9,5 +9,6 @@ namespace tvz2api_cqrs.Models.DTO
     public string Name { get; set; }
     public string ContentType { get; set; }
     public byte[] Data { get; set; }
+    public long? Size { get; set; }
   }
 }

@@ -51,7 +51,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
                   Id = y.File.Id,
                   Name = y.File.Name,
                   ContentType = y.File.ContentType,
-                  Data = y.File.Data
+                  Data = y.File.Data,
+                  Size = y.File.Size
                 })
                 .ToList()
             })
@@ -76,7 +77,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
               Id = y.File.Id,
               Name = y.File.Name,
               ContentType = y.File.ContentType,
-              Data = y.File.Data
+              Data = y.File.Data,
+              Size = y.File.Size
             })
             .ToList()
         })
@@ -150,6 +152,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     public async Task<List<NotificationQueryModel>> HandleAsync(CourseNotificationsQuery query)
     {
       var courses = await _context.Notification
+        .Include(t => t.NotificationFiles)
         .Select(t => new NotificationQueryModel
         {
           Id = t.Id,
@@ -161,7 +164,15 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Color = t.Color,
           ExpiresAt = t.ExpiresAt,
           Archived = t.ExpiresAt <= DateTime.Now,
-          CourseId = t.CourseId
+          CourseId = t.CourseId,
+          Attachments = t.NotificationFiles.Select(x => new FileDTO()
+          {
+            ContentType = x.File.ContentType,
+            Data = x.File.Data,
+            Name = x.File.Name,
+            Id = x.File.Id,
+            Size = x.File.Size
+          }).ToList()
         })
         .Where(x => x.CourseId == query.Id && x.Archived == query.ShowArchived || (query.ShowArchived && query.ShowNonArchived))
         .ToListAsync();

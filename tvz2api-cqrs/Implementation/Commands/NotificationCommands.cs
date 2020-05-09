@@ -10,13 +10,22 @@ namespace tvz2api_cqrs.Implementation.Commands
   public class NotificationCreateCommand : ICommand
   {
     public NotificationCreateCommand() { }
+    [FromForm(Name = "submittedById")]
+    public int SubmittedById { get; set; }
+    [FromForm(Name = "courseId")]
+    public int CourseId { get; set; }
+    [FromForm(Name = "title")]
     public string Title { get; set; }
+    [FromForm(Name = "description")]
     public string Description { get; set; }
+    [FromForm(Name = "color")]
     public string Color { get; set; }
-    public int? SubmittedById { get; set; }
-    public int? CourseId { get; set; }
+    [FromForm(Name = "expiresAt")]
+    public DateTime ExpiresAt { get; set; }
+    [FromForm(Name = "sendEmail")]
     public bool SendEmail { get; set; }
-    public DateTime? ExpiresAt { get; set; }
+    [FromForm(Name = "files")]
+    public List<IFormFile> Files { get; set; }
   }
 
   public class NotificationSeenCommand : ICommand

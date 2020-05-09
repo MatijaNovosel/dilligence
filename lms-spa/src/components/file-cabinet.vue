@@ -74,7 +74,12 @@
         </q-item>
         <q-item class="justify-center" v-show="downloadMultiple">
           <q-space />
-          <q-btn size="sm" dense color="primary" @click="downloadMultipleFiles">{{ $i18n.t('download') }}</q-btn>
+          <q-btn
+            size="sm"
+            dense
+            color="primary"
+            @click="downloadMultipleFiles"
+          >{{ $i18n.t('download') }}</q-btn>
           <q-space />
           <q-btn
             :ripple="false"
@@ -210,26 +215,26 @@ export default {
 
 <style lang="sass" scoped>
 .right-abs
-	position: absolute
-	right: 8px
-	top: 8px
+  position: absolute
+  right: 8px
+  top: 8px
 .nonShaded:hover
-	background-color: #ebebeb
+  background-color: #ebebeb
 .shaded
-	background-color: #f6f6f6
+  background-color: #f6f6f6
 .shaded:hover
-	background-color: #e6e6e6
+  background-color: #e6e6e6
 .cabinet-card
-	max-width: 45%
+  max-width: 45%
 .dialog-toolbar
-	min-height: 30px
+  min-height: 30px
 .upload-dialog
-	width: 80vh
-	max-width: 80vw
+  width: 80vh
+  max-width: 80vw
 .q-item__section--main ~ .q-item__section--side
-	padding-left: 0px
+  padding-left: 0px
 .select-all
-	position: absolute
-	right: 15px
-	top: 12px
+  position: absolute
+  right: 15px
+  top: 12px
 </style>

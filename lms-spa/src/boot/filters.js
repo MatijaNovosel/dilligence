@@ -43,4 +43,12 @@ export default async ({ Vue }) => {
     const [hours, minutes] = [new Number(splitText[0]), new Number(splitText[1])];
     return (hours * 3600 + minutes * 60);
   });
+  Vue.filter("byteCountToReadableFormat", b => {
+    var u = 0, s = 1024;
+    while (b >= s || -b >= s) {
+      b /= s;
+      u++;
+    }
+    return (u ? b.toFixed(1) + ' ' : b) + ' KMGTPEZY'[u] + 'B';
+  });
 }

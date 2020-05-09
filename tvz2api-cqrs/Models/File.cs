@@ -7,6 +7,7 @@ namespace tvz2api_cqrs.Models
     {
         public File()
         {
+            NotificationFiles = new HashSet<NotificationFiles>();
             SidebarContentFile = new HashSet<SidebarContentFile>();
             User = new HashSet<User>();
         }
@@ -15,7 +16,9 @@ namespace tvz2api_cqrs.Models
         public string Name { get; set; }
         public string ContentType { get; set; }
         public byte[] Data { get; set; }
+        public long? Size { get; set; }
 
+        public virtual ICollection<NotificationFiles> NotificationFiles { get; set; }
         public virtual ICollection<SidebarContentFile> SidebarContentFile { get; set; }
         public virtual ICollection<User> User { get; set; }
     }

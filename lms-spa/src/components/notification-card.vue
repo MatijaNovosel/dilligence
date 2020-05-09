@@ -26,17 +26,50 @@
     <q-card-section class="q-py-sm">
       <span v-html="value.description" />
     </q-card-section>
+    <template v-if="value.attachments && value.attachments.length != 0">
+      <q-separator />
+      <q-card-section class="q-py-sm">
+        <div style="font-size: 14px" :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']">
+          Attachments
+          <q-icon name="mdi-paperclip" />
+        </div>
+        <q-list dense>
+          <q-item dense v-for="(attachment, i) in value.attachments" :key="i">
+            <q-item-section>{{ attachment.name }}</q-item-section>
+            <q-item-section side>{{ attachment.size | byteCountToReadableFormat }}</q-item-section>
+            <q-item-section side>
+              <q-btn
+                @click="downloadFile(attachment)"
+                :loading="attachment.downloading"
+                size="sm"
+                flat
+                round
+                icon="mdi-download"
+              />
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-card-section>
+    </template>
   </q-card>
 </template>
 
 <script>
+import { download } from "../helpers/helpers";
+
 export default {
   name: "notification-card",
   props: ["value"],
+  created() {
+    this.value.attachments.forEach(x => (x.downloading = false));
+  },
   data() {
     return {};
   },
   methods: {
+    downloadFile(attachment) {
+      download(attachment.contentType, attachment.data, attachment.name);
+    },
     deleteNotificationTrigger() {
       this.$emit("deleteNotification", this.value.id);
     }

@@ -29,8 +29,8 @@
         <div>{{ $i18n.t('noData') }}</div>
       </div>
     </div>
-    <q-dialog v-model="newNotificationDialog" persistent>
-      <q-card style="width: 70%; max-width: 90vw;">
+    <q-dialog :maximized="$q.screen.xs || $q.screen.sm" v-model="newNotificationDialog" persistent>
+      <q-card :style="$q.screen.xs || $q.screen.sm || dialogStyle">
         <q-toolbar
           :style="'background-color: ' + newNotification.color"
           class="text-white dialog-toolbar"
@@ -97,6 +97,19 @@
               </q-icon>
             </template>
           </q-input>
+          <q-file
+            dense
+            multiple
+            outlined
+            v-model="newNotification.files"
+            class="q-pr-sm"
+            clearable
+            label="Attachments"
+          >
+            <template v-slot:append>
+              <q-icon name="mdi-paperclip" />
+            </template>
+          </q-file>
           <q-editor
             :content-style="{ [$v.newNotification.description.$invalid && 'border']: '1px solid #C10015' }"
             v-model="newNotification.description"
@@ -197,12 +210,17 @@ export default {
       newNotificationDialog: false,
       notifications: null,
       courseId: null,
+      dialogStyle: {
+        width: "70%",
+        "max-width": "90vw"
+      },
       newNotification: {
         title: "Title goes here!",
         description: "Description goes here!",
         color: "#285de0",
         expiresAt: "2020-07-20",
-        sendEmail: false
+        sendEmail: false,
+        files: null
       }
     };
   },
@@ -211,12 +229,23 @@ export default {
       this.getNotifications();
     }, 1500),
     createNotification() {
-      let notification = {
-        ...this.newNotification,
-        submittedById: this.user.id,
-        courseId: this.courseId
-      };
-      NotificationService.createNotification(notification).then(() => {
+      let formData = new FormData();
+      let notification = this.newNotification;
+
+      formData.append("submittedById", this.user.id);
+      formData.append("courseId", this.courseId);
+
+      for (let [key, value] of Object.entries(notification)) {
+        if (key != "files") {
+          formData.append(key, value);
+        }
+      }
+
+      if (notification.files != null) {
+        notification.files.forEach(file => formData.append("files", file));
+      }
+
+      NotificationService.createNotification(formData).then(() => {
         this.getNotifications(this.courseId);
         this.resetNewNotificationDialog();
       });
@@ -227,7 +256,8 @@ export default {
         description: "Description goes here!",
         color: "#285de0",
         expiresAt: "2020-07-20",
-        sendEmail: false
+        sendEmail: false,
+        files: null
       };
       this.newNotificationDialog = false;
     },

@@ -97,6 +97,44 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         }
       }
 
+      if (command.Files != null)
+      {
+        List<tvz2api_cqrs.Models.File> newFiles = new List<tvz2api_cqrs.Models.File>();
+
+        foreach (var file in command.Files)
+        {
+          using (var ms = new MemoryStream())
+          {
+            file.CopyTo(ms);
+            var fileBytes = ms.ToArray();
+
+            var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+            fileName = fileName.Substring(0, fileName.LastIndexOf(".")) + fileName.Substring(fileName.LastIndexOf(".")).ToLower();
+
+
+            newFiles.Add(new tvz2api_cqrs.Models.File
+            {
+              Name = Path.GetFileName(fileName),
+              ContentType = file.ContentType,
+              Data = fileBytes,
+              Size = fileBytes.Length
+            });
+          }
+        }
+
+        await _context.File.AddRangeAsync(newFiles);
+        await _context.SaveChangesAsync();
+
+        newFiles.ForEach(x =>
+        {
+          _context.NotificationFiles.Add(new NotificationFiles()
+          {
+            FileId = x.Id,
+            NotificationId = notification.Id
+          });
+        });
+      }
+
       await _context.SaveChangesAsync();
     }
 

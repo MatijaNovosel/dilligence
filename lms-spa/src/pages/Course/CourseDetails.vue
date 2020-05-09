@@ -77,6 +77,11 @@ export default {
           name: "course-details-discussion",
           label: "Discussion",
           icon: "mdi-chat"
+        },
+        {
+          name: "course-details-files",
+          label: "Files",
+          icon: "mdi-file"
         }
       ],
       course: null,

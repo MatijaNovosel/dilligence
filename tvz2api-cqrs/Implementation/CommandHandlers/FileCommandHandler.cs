@@ -50,7 +50,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
           {
             Name = Path.GetFileName(fileName),
             ContentType = file.ContentType,
-            Data = fileBytes
+            Data = fileBytes,
+            Size = fileBytes.Length
           });
         }
       }
@@ -79,7 +80,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
           {
             Name = Path.GetFileName(fileName),
             ContentType = file.ContentType,
-            Data = fileBytes
+            Data = fileBytes,
+            Size = fileBytes.Length
           });
         }
       }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using tvz2api_cqrs.Models.DTO;
 
 namespace tvz2api_cqrs.QueryModels
 {
@@ -15,5 +16,6 @@ namespace tvz2api_cqrs.QueryModels
     public string SubmittedBy { get; set; }
     public int? CourseId { get; set; }
     public bool Archived { get; set; }
+    public List<FileDTO> Attachments { get; set; }
   }
 }
