@@ -2,173 +2,180 @@
   <div>
     <div class="row justify-center">
       <div class="col-12 q-pa-md">
-        <q-card>
-          <q-card-section>
-            <div class="row">
-              <div class="col-12 q-pb-md">
-                <span class="text-weight-light text-h5">{{ $i18n.t("exam.info") }}</span>
+        <div class="row">
+          <div class="col-12 q-pb-md">
+            <span class="text-weight-light text-h5">{{ $i18n.t("exam.info") }}</span>
+          </div>
+          <div class="col-6 q-pr-sm">
+            <q-input
+              :error="$v.exam.name.$invalid && $v.exam.name.$dirty"
+              error-message="This field is required!"
+              v-model="exam.name"
+              outlined
+              dense
+              :label="$i18n.t('exam.name')"
+              @input="$v.exam.name.$touch()"
+            />
+          </div>
+          <div class="col-6">
+            <q-input
+              outlined
+              dense
+              :label="$i18n.t('timeNeeded')"
+              v-model="exam.timeNeeded"
+              mask="##:##"
+              :hint="$i18n.t('error.timeNeededFormat')"
+              :error="$v.exam.timeNeeded.$invalid && $v.exam.timeNeeded.$dirty"
+              @input="$v.exam.timeNeeded.$touch()"
+              error-message="This field is required!"
+            />
+          </div>
+          <div class="col-12 q-pt-sm">
+            <q-input
+              error-message="The date must not be before the current one!"
+              :error="$v.exam.dueDate.$invalid"
+              dense
+              outlined
+              v-model="exam.dueDate"
+              :label="$i18n.t('dueDate')"
+              readonly
+            >
+              <template v-slot:prepend>
+                <q-icon name="mdi-calendar-month" class="cursor-pointer">
+                  <q-popup-proxy transition-show="scale" transition-hide="scale">
+                    <q-date
+                      :class="$q.dark.isActive ? 'border-dark' : 'border-light'"
+                      minimal
+                      v-model="exam.dueDate"
+                      mask="YYYY-MM-DD HH:mm"
+                    />
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+              <template v-slot:append>
+                <q-icon name="mdi-alarm" class="cursor-pointer">
+                  <q-popup-proxy transition-show="scale" transition-hide="scale">
+                    <q-time
+                      :class="$q.dark.isActive ? 'border-dark' : 'border-light'"
+                      v-model="exam.dueDate"
+                      mask="YYYY-MM-DD HH:mm"
+                      format24h
+                    />
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 q-mt-md q-mb-sm">
+            <q-separator />
+          </div>
+          <div class="col-12 q-pb-sm">
+            <span class="text-weight-light text-h5">{{ $i18n.t('questions') }}</span>
+          </div>
+          <div class="col-12 q-pb-md">
+            <q-chip
+              clickable
+              class="bg-green-6 text-white"
+              square
+              style="cursor: pointer; user-select: none;"
+              @click="addNewQuestion"
+            >
+              <q-icon name="mdi-plus" />
+            </q-chip>
+            <template v-for="n in exam.questions.length">
+              <q-chip
+                clickable
+                square
+                :key="n"
+                style="cursor: pointer; user-select: none;"
+                @click="selectedQuestion = n - 1"
+              >{{ n }}</q-chip>
+            </template>
+          </div>
+        </div>
+        <template v-for="(question, i) in exam.questions">
+          <div :key="i" v-if="selectedQuestion === i">
+            <div class="row items-center text-center">
+              <div class="col-6 text-center q-pr-sm">
+                <q-input v-model="question.title" outlined dense :label="$i18n.t('questionName')" />
               </div>
-              <div class="col-6 q-pr-sm">
-                <q-input v-model="exam.name" outlined dense :label="$i18n.t('exam.name')" />
-              </div>
-              <div class="col-6">
-                <q-input
-                  outlined
+              <div class="col-5 text-center q-pr-sm">
+                <q-select
+                  @input="questionTypeChanged(question)"
                   dense
-                  :label="$i18n.t('timeNeeded')"
-                  v-model="exam.timeNeeded"
-                  mask="##:##"
-                  :hint="$i18n.t('error.timeNeededFormat')"
+                  outlined
+                  v-model="question.typeId"
+                  :label="$i18n.t('questionType')"
+                  :options="answerTypesOptions"
+                  emit-value
+                  map-options
                 />
               </div>
-              <div class="col-12 q-pt-sm">
-                <q-input dense outlined v-model="exam.dueDate" :label="$i18n.t('dueDate')" readonly>
-                  <template v-slot:prepend>
-                    <q-icon name="mdi-calendar-month" class="cursor-pointer">
-                      <q-popup-proxy transition-show="scale" transition-hide="scale">
-                        <q-date
-                          :class="$q.dark.isActive ? 'border-dark' : 'border-light'"
-                          minimal
-                          v-model="exam.dueDate"
-                          mask="YYYY-MM-DD HH:mm"
-                        />
-                      </q-popup-proxy>
-                    </q-icon>
-                  </template>
-                  <template v-slot:append>
-                    <q-icon name="mdi-alarm" class="cursor-pointer">
-                      <q-popup-proxy transition-show="scale" transition-hide="scale">
-                        <q-time
-                          :class="$q.dark.isActive ? 'border-dark' : 'border-light'"
-                          v-model="exam.dueDate"
-                          mask="YYYY-MM-DD HH:mm"
-                          format24h
-                        />
-                      </q-popup-proxy>
-                    </q-icon>
-                  </template>
-                </q-input>
+              <div class="col-1">
+                <q-btn
+                  size="sm"
+                  class="bg-red-5 text-white"
+                  @click="exam.questions.splice(i, 1)"
+                >{{ $i18n.t('remove') }}</q-btn>
+              </div>
+              <div class="col-12 q-my-md">
+                <q-editor
+                  v-model="question.content"
+                  min-height="5rem"
+                  :toolbar="toolbarOptions"
+                  :fonts="fonts"
+                />
+              </div>
+              <div class="col-12" :class="`border-box-${$q.dark.isActive ? 'dark' : 'light'}`">
+                <div class="text-h6 absolute-top-right">
+                  <q-badge color="primary">{{ $i18n.t('preview') }}</q-badge>
+                </div>
+                <p class="q-pa-md" v-html="question.content"></p>
               </div>
             </div>
-          </q-card-section>
-          <q-separator />
-          <q-card-section class="q-px-md">
             <div class="row">
-              <div class="col-12 q-pb-sm">
-                <span class="text-weight-light text-h5">{{ $i18n.t('questions') }}</span>
+              <div class="col-12 q-mt-md q-mb-sm">
+                <q-separator />
               </div>
-              <div class="col-12">
-                <q-chip
-                  clickable
-                  class="bg-green-6 text-white"
-                  square
-                  style="cursor: pointer; user-select: none;"
-                  @click="addNewQuestion"
+              <div class="col-12 q-pb-sm">
+                <span class="text-weight-light text-h5">{{ $i18n.t('answers') }}</span>
+                <q-btn
+                  dense
+                  size="sm"
+                  class="bg-green-6 text-white q-ml-md q-mb-xs"
+                  @click="addNewAnswer(question)"
                 >
                   <q-icon name="mdi-plus" />
-                </q-chip>
-                <template v-for="n in exam.questions.length">
-                  <q-chip
-                    clickable
-                    square
-                    :key="n"
-                    style="cursor: pointer; user-select: none;"
-                    @click="selectedQuestion = n - 1"
-                  >{{ n }}</q-chip>
+                </q-btn>
+              </div>
+              <div class="col-12">
+                <template v-for="(answer, i) in question.answers">
+                  <q-input v-model="answer.content" outlined dense :key="i" class="q-py-xs">
+                    <template v-slot:append>
+                      <q-btn
+                        @click="question.answers.splice(i, 1)"
+                        dense
+                        size="sm"
+                        class="bg-red-6 text-white"
+                      >{{ $i18n.t('remove') }}</q-btn>
+                      <q-checkbox
+                        :disable="!answer.correct && question.typeId == 1 && question.answers.reduce((sum, x) => sum += x.correct ? 1 : 0, 0) >= 1"
+                        size="xs"
+                        color="green-5"
+                        v-model="answer.correct"
+                      />
+                    </template>
+                  </q-input>
                 </template>
               </div>
+              <div class="col-12 q-pl-sm">
+                <span class="hint-text">* {{ $i18n.t('tickIfCorrect') }}</span>
+              </div>
             </div>
-          </q-card-section>
-          <q-separator />
-          <template v-for="(question, i) in exam.questions">
-            <div :key="i" v-if="selectedQuestion === i">
-              <q-card-section>
-                <div class="row items-center text-center">
-                  <div class="col-6 text-center q-pr-sm">
-                    <q-input
-                      v-model="question.title"
-                      outlined
-                      dense
-                      :label="$i18n.t('questionName')"
-                    />
-                  </div>
-                  <div class="col-5 text-center q-pr-sm">
-                    <q-select
-                      @input="questionTypeChanged(question)"
-                      dense
-                      outlined
-                      v-model="question.typeId"
-                      :label="$i18n.t('questionType')"
-                      :options="answerTypesOptions"
-                      emit-value
-                      map-options
-                    />
-                  </div>
-                  <div class="col-1">
-                    <q-btn
-                      size="sm"
-                      class="bg-red-5 text-white"
-                      @click="exam.questions.splice(i, 1)"
-                    >{{ $i18n.t('remove') }}</q-btn>
-                  </div>
-                  <div class="col-12 q-my-md">
-                    <q-editor
-                      v-model="question.content"
-                      min-height="5rem"
-                      :toolbar="toolbarOptions"
-                      :fonts="fonts"
-                    />
-                  </div>
-                  <div class="col-12" :class="`border-box-${$q.dark.isActive ? 'dark' : 'light'}`">
-                    <div class="text-h6 absolute-top-right">
-                      <q-badge color="primary">{{ $i18n.t('preview') }}</q-badge>
-                    </div>
-                    <p class="q-pa-md" v-html="question.content"></p>
-                  </div>
-                </div>
-              </q-card-section>
-              <q-separator />
-              <q-card-section>
-                <div class="row">
-                  <div class="col-12 q-pb-sm">
-                    <span class="text-weight-light text-h5">{{ $i18n.t('answers') }}</span>
-                    <q-btn
-                      dense
-                      size="sm"
-                      class="bg-green-6 text-white q-ml-md q-mb-xs"
-                      @click="addNewAnswer(question)"
-                    >
-                      <q-icon name="mdi-plus" />
-                    </q-btn>
-                  </div>
-                  <div class="col-12">
-                    <template v-for="(answer, i) in question.answers">
-                      <q-input v-model="answer.content" outlined dense :key="i" class="q-py-xs">
-                        <template v-slot:append>
-                          <q-btn
-                            @click="question.answers.splice(i, 1)"
-                            dense
-                            size="sm"
-                            class="bg-red-6 text-white"
-                          >{{ $i18n.t('remove') }}</q-btn>
-                          <q-checkbox
-                            :disable="!answer.correct && question.typeId == 1 && question.answers.reduce((sum, x) => sum += x.correct ? 1 : 0, 0) >= 1"
-                            size="xs"
-                            color="green-5"
-                            v-model="answer.correct"
-                          />
-                        </template>
-                      </q-input>
-                    </template>
-                  </div>
-                  <div class="col-12 q-pl-sm">
-                    <span class="hint-text">* {{ $i18n.t('tickIfCorrect') }}</span>
-                  </div>
-                </div>
-              </q-card-section>
-            </div>
-          </template>
-        </q-card>
+          </div>
+        </template>
       </div>
       <div class="col-12 text-right q-pr-md">
         <q-btn @click="createExam" size="sm" class="bg-green-5 text-white">{{ $i18n.t('save') }}</q-btn>
@@ -180,6 +187,18 @@
 <script>
 import ExamService from "../services/api/exam";
 import UserMixin from "../mixins/userMixin";
+import { required, minLength, helpers } from "vuelidate/lib/validators";
+
+const mustBeBeforeCurrentDate = value => {
+  let currentDate = new Date().getTime();
+  let enteredDate = new Date(value).getTime();
+  return currentDate < enteredDate;
+};
+
+const hoursMinutesFormat = helpers.regex(
+  "hoursMinutesFormat",
+  /^([0-5]\d):([0-5]\d)$/
+);
 
 export default {
   name: "ExamDetails",
@@ -289,6 +308,22 @@ export default {
       });
     }
   },
+  validations: {
+    exam: {
+      name: {
+        required,
+        minLength: minLength(4)
+      },
+      timeNeeded: {
+        required,
+        hoursMinutesFormat
+      },
+      dueDate: {
+        required,
+        mustBeBeforeCurrentDate
+      }
+    }
+  },
   created() {
     this.answerTypes = { RADIO: 1, CHECKBOX: 2 };
     this.answerTypesOptions = [
@@ -304,7 +339,7 @@ export default {
     this.exam = {
       name: "Exam name",
       timeNeeded: "01:00",
-      dueDate: "2019-02-01 12:44",
+      dueDate: "2020-05-24 12:44",
       questions: [
         {
           id: 1,

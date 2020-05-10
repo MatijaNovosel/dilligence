@@ -54,5 +54,13 @@ export default {
    */
   async createExam(payload) {
     return await axios.post('Exam', payload);
+  },
+  async getUnfinishedExams(userId, courseId) {
+    return await axios.get('Exam/unfinished', {
+      params: {
+        userId,
+        courseId
+      }
+    });
   }
 }

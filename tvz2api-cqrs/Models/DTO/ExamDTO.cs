@@ -10,4 +10,11 @@ namespace tvz2api_cqrs.Models.DTO
     public string Subject { get; set; }
     public int TimeNeeded { get; set; }
   }
+
+  public class UnfinishedExamDTO
+  {
+    public int Id { get; set; }
+    public int? CourseId { get; set; }
+    public int? CreatedById { get; set; }
+  }
 }

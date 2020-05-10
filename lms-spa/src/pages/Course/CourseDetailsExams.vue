@@ -1,6 +1,13 @@
 <template>
   <div>
-    Exams go here!
+    <div class="row">
+      <div
+        class="border-box-dark"
+        :key="i"
+        @click="$router.push({ name: 'exam-edit', params: { id: unfinishedExam.id } })"
+        v-for="(unfinishedExam, i) in unfinishedExams"
+      >{{ unfinishedExam.id }}</div>
+    </div>
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
       <q-fab direction="left" :color="!$q.dark.isActive ? 'primary' : 'grey-8'" fab icon="add">
         <q-fab-action
@@ -22,6 +29,13 @@ export default {
   name: "CourseDetailsExams",
   mixins: [UserMixin],
   methods: {
+    getExams() {
+      ExamService.getUnfinishedExams(this.user.id, this.courseId).then(
+        ({ data }) => {
+          this.unfinishedExams = data;
+        }
+      );
+    },
     createNewExam() {
       // Create new exam instance, get the id and send it as a parameter to route
       ExamService.createExam({
@@ -34,10 +48,12 @@ export default {
   },
   created() {
     this.courseId = this.$route.params.id;
+    this.getExams();
   },
   data() {
     return {
-      courseId: null
+      courseId: null,
+      unfinishedExams: null
     };
   }
 };

@@ -41,6 +41,17 @@ namespace tvz2api_cqrs.Controllers
       return Ok(result);
     }
 
+    [HttpGet("unfinished")]
+    public async Task<IActionResult> Get(int userId, int courseId)
+    {
+      var result = await _queryBus.ExecuteAsync(new ExamUnfinishedQuery()
+      {
+        CourseId = courseId,
+        UserId = userId
+      });
+      return Ok(result);
+    }
+
     [HttpGet("details/{id}")]
     public async Task<IActionResult> GetDetails(int id)
     {
