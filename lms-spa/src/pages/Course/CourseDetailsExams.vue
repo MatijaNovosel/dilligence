@@ -1,12 +1,14 @@
 <template>
   <div>
     <div class="row">
-      <div
-        class="border-box-dark"
+      <q-card
+        class="border-box-dark hover-card"
         :key="i"
         @click="$router.push({ name: 'exam-edit', params: { id: unfinishedExam.id } })"
         v-for="(unfinishedExam, i) in unfinishedExams"
-      >{{ unfinishedExam.id }}</div>
+      >
+        <q-card-section>{{ unfinishedExam.id }}</q-card-section>
+      </q-card>
     </div>
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
       <q-fab direction="left" :color="!$q.dark.isActive ? 'primary' : 'grey-8'" fab icon="add">
@@ -64,4 +66,6 @@ export default {
   padding: 10px
   min-height: 12px
   min-width: 12px
+.hover-card:hover
+  cursor: pointer
 </style>

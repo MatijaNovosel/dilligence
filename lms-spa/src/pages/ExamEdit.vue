@@ -15,6 +15,7 @@
               dense
               :label="$i18n.t('exam.name')"
               @input="$v.exam.name.$touch()"
+              hint="Name of the exam"
             />
           </div>
           <div class="col-6">
@@ -39,6 +40,7 @@
               v-model="exam.dueDate"
               :label="$i18n.t('dueDate')"
               readonly
+              hint="The date at which the exam can no longer be solved"
             >
               <template v-slot:prepend>
                 <q-icon name="mdi-calendar-month" class="cursor-pointer">
@@ -117,7 +119,8 @@
                 <q-btn
                   size="sm"
                   class="bg-red-5 text-white"
-                  @click="exam.questions.splice(i, 1)"
+                  :disabled="exam.questions.length == 1"
+                  @click="removeQuestion(i)"
                 >{{ $i18n.t('remove') }}</q-btn>
               </div>
               <div class="col-12 q-my-md">
@@ -156,6 +159,7 @@
                     <template v-slot:append>
                       <q-btn
                         @click="question.answers.splice(i, 1)"
+                        :disabled="question.answers.length == 1"
                         dense
                         size="sm"
                         class="bg-red-6 text-white"
@@ -178,7 +182,7 @@
         </template>
       </div>
       <div class="col-12 text-right q-pr-md">
-        <q-btn @click="createExam" size="sm" class="bg-green-5 text-white">{{ $i18n.t('save') }}</q-btn>
+        <q-btn :disabled="$v.exam.$invalid" @click="createExam" size="sm" class="bg-green-5 text-white">{{ $i18n.t('save') }}</q-btn>
       </div>
     </div>
   </div>
@@ -278,6 +282,15 @@ export default {
     };
   },
   methods: {
+    removeQuestion(i) {
+      if (this.exam.questions[i - 1] == null || this.exam.questions[i - 1] == undefined) {
+        this.exam.questions.splice(i, 1);
+        this.selectedQuestion = i + 1;
+      } else {
+        this.exam.questions.splice(i, 1);
+        this.selectedQuestion = i - 1;
+      }
+    },
     questionTypeChanged(question) {
       question.answers.forEach(x => (x.correct = false));
     },
@@ -301,10 +314,15 @@ export default {
     },
     addNewQuestion() {
       this.exam.questions.push({
-        title: null,
-        content: "",
+        title: "Question",
+        content: "<b> Question contents </b>",
         typeId: 1,
-        answers: []
+        answers: [
+          {
+            content: "Answer 1",
+            correct: true
+          }
+        ]
       });
     }
   },
