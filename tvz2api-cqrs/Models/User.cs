@@ -9,6 +9,8 @@ namespace tvz2api_cqrs.Models
         {
             ChatFirstParticipant = new HashSet<Chat>();
             ChatSecondParticipant = new HashSet<Chat>();
+            CourseTask = new HashSet<CourseTask>();
+            CourseTaskAttempt = new HashSet<CourseTaskAttempt>();
             Exam = new HashSet<Exam>();
             ExamAttempt = new HashSet<ExamAttempt>();
             Message = new HashSet<Message>();
@@ -16,7 +18,7 @@ namespace tvz2api_cqrs.Models
             NotificationUserSeen = new HashSet<NotificationUserSeen>();
             Subscription = new HashSet<Subscription>();
             UserNotificationBlacklist = new HashSet<UserNotificationBlacklist>();
-            UserPrivileges = new HashSet<UserPrivileges>();
+            UserPrivilege = new HashSet<UserPrivilege>();
             UserSettings = new HashSet<UserSettings>();
         }
 
@@ -33,6 +35,8 @@ namespace tvz2api_cqrs.Models
         public virtual File ImageFile { get; set; }
         public virtual ICollection<Chat> ChatFirstParticipant { get; set; }
         public virtual ICollection<Chat> ChatSecondParticipant { get; set; }
+        public virtual ICollection<CourseTask> CourseTask { get; set; }
+        public virtual ICollection<CourseTaskAttempt> CourseTaskAttempt { get; set; }
         public virtual ICollection<Exam> Exam { get; set; }
         public virtual ICollection<ExamAttempt> ExamAttempt { get; set; }
         public virtual ICollection<Message> Message { get; set; }
@@ -40,7 +44,7 @@ namespace tvz2api_cqrs.Models
         public virtual ICollection<NotificationUserSeen> NotificationUserSeen { get; set; }
         public virtual ICollection<Subscription> Subscription { get; set; }
         public virtual ICollection<UserNotificationBlacklist> UserNotificationBlacklist { get; set; }
-        public virtual ICollection<UserPrivileges> UserPrivileges { get; set; }
+        public virtual ICollection<UserPrivilege> UserPrivilege { get; set; }
         public virtual ICollection<UserSettings> UserSettings { get; set; }
     }
 }

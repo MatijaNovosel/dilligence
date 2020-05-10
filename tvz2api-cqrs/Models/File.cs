@@ -7,8 +7,10 @@ namespace tvz2api_cqrs.Models
     {
         public File()
         {
-            NotificationFiles = new HashSet<NotificationFiles>();
+            CourseTaskAttachment = new HashSet<CourseTaskAttachment>();
+            NotificationFile = new HashSet<NotificationFile>();
             SidebarContentFile = new HashSet<SidebarContentFile>();
+            TaskAttemptAttachment = new HashSet<TaskAttemptAttachment>();
             User = new HashSet<User>();
         }
 
@@ -18,8 +20,10 @@ namespace tvz2api_cqrs.Models
         public byte[] Data { get; set; }
         public long? Size { get; set; }
 
-        public virtual ICollection<NotificationFiles> NotificationFiles { get; set; }
+        public virtual ICollection<CourseTaskAttachment> CourseTaskAttachment { get; set; }
+        public virtual ICollection<NotificationFile> NotificationFile { get; set; }
         public virtual ICollection<SidebarContentFile> SidebarContentFile { get; set; }
+        public virtual ICollection<TaskAttemptAttachment> TaskAttemptAttachment { get; set; }
         public virtual ICollection<User> User { get; set; }
     }
 }

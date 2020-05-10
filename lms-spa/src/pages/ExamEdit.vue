@@ -182,7 +182,12 @@
         </template>
       </div>
       <div class="col-12 text-right q-pr-md">
-        <q-btn :disabled="$v.exam.$invalid" @click="createExam" size="sm" class="bg-green-5 text-white">{{ $i18n.t('save') }}</q-btn>
+        <q-btn
+          :disabled="$v.exam.$invalid"
+          @click="createExam"
+          size="sm"
+          class="bg-green-5 text-white"
+        >{{ $i18n.t('save') }}</q-btn>
       </div>
     </div>
   </div>
@@ -283,7 +288,10 @@ export default {
   },
   methods: {
     removeQuestion(i) {
-      if (this.exam.questions[i - 1] == null || this.exam.questions[i - 1] == undefined) {
+      if (
+        this.exam.questions[i - 1] == null ||
+        this.exam.questions[i - 1] == undefined
+      ) {
         this.exam.questions.splice(i, 1);
         this.selectedQuestion = i + 1;
       } else {

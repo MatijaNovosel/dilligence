@@ -7,7 +7,7 @@ namespace tvz2api_cqrs.Models
     {
         public Notification()
         {
-            NotificationFiles = new HashSet<NotificationFiles>();
+            NotificationFile = new HashSet<NotificationFile>();
             NotificationUserSeen = new HashSet<NotificationUserSeen>();
         }
 
@@ -22,7 +22,7 @@ namespace tvz2api_cqrs.Models
 
         public virtual Course Course { get; set; }
         public virtual User SubmittedBy { get; set; }
-        public virtual ICollection<NotificationFiles> NotificationFiles { get; set; }
+        public virtual ICollection<NotificationFile> NotificationFile { get; set; }
         public virtual ICollection<NotificationUserSeen> NotificationUserSeen { get; set; }
     }
 }

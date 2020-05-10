@@ -127,7 +127,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
         newFiles.ForEach(x =>
         {
-          _context.NotificationFiles.Add(new NotificationFiles()
+          _context.NotificationFile.Add(new NotificationFile()
           {
             FileId = x.Id,
             NotificationId = notification.Id

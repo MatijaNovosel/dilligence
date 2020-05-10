@@ -10,6 +10,7 @@ namespace tvz2api_cqrs.Implementation.Commands
   public class NotificationCreateCommand : ICommand
   {
     public NotificationCreateCommand() { }
+    
     [FromForm(Name = "submittedById")]
     public int SubmittedById { get; set; }
     [FromForm(Name = "courseId")]

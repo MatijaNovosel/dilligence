@@ -85,7 +85,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     {
       var user = await _context
         .User
-        .Include(p => p.UserPrivileges)
+        .Include(p => p.UserPrivilege)
         .Include(p => p.UserSettings)
         .Include(p => p.ImageFile)
         .FirstOrDefaultAsync(x => x.Username == command.Username);
@@ -95,7 +95,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         throw new Exception("User credentials are wrong or the hashing integrity is faulty!");
       }
 
-      var privileges = user.UserPrivileges.Select(x => x.PrivilegeId).ToArray();
+      var privileges = user.UserPrivilege.Select(x => x.PrivilegeId).ToArray();
 
       var claims = new[] {
         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),

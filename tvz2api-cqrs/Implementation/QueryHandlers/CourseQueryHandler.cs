@@ -152,7 +152,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     public async Task<List<NotificationQueryModel>> HandleAsync(CourseNotificationsQuery query)
     {
       var courses = await _context.Notification
-        .Include(t => t.NotificationFiles)
+        .Include(t => t.NotificationFile)
         .Select(t => new NotificationQueryModel
         {
           Id = t.Id,
@@ -165,7 +165,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           ExpiresAt = t.ExpiresAt,
           Archived = t.ExpiresAt <= DateTime.Now,
           CourseId = t.CourseId,
-          Attachments = t.NotificationFiles.Select(x => new FileDTO()
+          Attachments = t.NotificationFile.Select(x => new FileDTO()
           {
             ContentType = x.File.ContentType,
             Data = x.File.Data,

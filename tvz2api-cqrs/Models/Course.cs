@@ -7,6 +7,7 @@ namespace tvz2api_cqrs.Models
     {
         public Course()
         {
+            CourseTask = new HashSet<CourseTask>();
             Exam = new HashSet<Exam>();
             Notification = new HashSet<Notification>();
             SidebarContent = new HashSet<SidebarContent>();
@@ -23,6 +24,7 @@ namespace tvz2api_cqrs.Models
         public int? SpecializationId { get; set; }
 
         public virtual Specialization Specialization { get; set; }
+        public virtual ICollection<CourseTask> CourseTask { get; set; }
         public virtual ICollection<Exam> Exam { get; set; }
         public virtual ICollection<Notification> Notification { get; set; }
         public virtual ICollection<SidebarContent> SidebarContent { get; set; }
