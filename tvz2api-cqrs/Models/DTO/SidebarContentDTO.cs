@@ -8,7 +8,7 @@ namespace tvz2api_cqrs.Models.DTO
   public class SidebarContentDTO
   {
     public int Id { get; set; }
-    public string Naslov { get; set; }
+    public string Title { get; set; }
     public List<FileDTO> Files { get; set; }
   }
 }

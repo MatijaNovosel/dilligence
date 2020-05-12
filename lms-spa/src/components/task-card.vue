@@ -1,44 +1,54 @@
 <template>
   <q-card>
+    <q-menu touch-position context-menu>
+      <q-list
+        :class="`${$q.dark.isActive ? 'border-dark' : 'border-light'}`"
+        dense
+        separator
+        style="min-width: 100px; border-radius: 6px;"
+      >
+        <q-item clickable v-close-popup @click="$deleteTask(value.id)">
+          <q-item-section>Delete task</q-item-section>
+        </q-item>
+        <q-item clickable v-close-popup @click="$editTask(value.id)">
+          <q-item-section>Edit task</q-item-section>
+        </q-item>
+        <q-item clickable v-close-popup @click="$viewSubmissions(value.id)">
+          <q-item-section>View submissions</q-item-section>
+        </q-item>
+        <q-item clickable v-close-popup @click="$submitAttempt(value.id)">
+          <q-item-section>Submit attempt</q-item-section>
+        </q-item>
+      </q-list>
+    </q-menu>
     <q-bar dense style="height: 10px;" />
     <q-card-section class="q-py-sm">
-      <div class="text-h6">{{ value.title }}</div>
-      <div
-        class="text-subtitle2"
-      >{{ `${value.createdBy}, ${$options.filters.dateFilter(value.submittedAt)}` }}</div>
+      <span class="text-h6">{{ value.title }}</span>
     </q-card-section>
     <q-separator />
-    <q-card-section class="q-py-sm">
-      <span v-html="value.description" />
-    </q-card-section>
-    <template v-if="value.attachments && value.attachments.length != 0">
-      <q-separator />
-      <q-card-section class="q-py-sm">
-        <div style="font-size: 14px" :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']">
-          Attachments
-          <q-icon name="mdi-paperclip" />
-        </div>
-        <q-list dense>
-          <q-item dense v-for="(attachment, i) in value.attachments" :key="i">
-            <q-item-section avatar>
-              <q-icon size="xs" :name="fileIcon(attachment.contentType)" />
-            </q-item-section>
-            <q-item-section>{{ attachment.name }}</q-item-section>
-            <q-item-section side>{{ attachment.size | byteCountToReadableFormat }}</q-item-section>
-            <q-item-section side>
-              <q-btn
-                @click="downloadFile(attachment)"
-                :loading="attachment.downloading"
-                size="sm"
-                flat
-                round
-                icon="mdi-download"
-              />
-            </q-item-section>
-          </q-item>
-        </q-list>
+    <q-card-section horizontal>
+      <q-card-actions vertical class="justify-around text-subtitle1">
+        <span class="q-mr-sm">
+          <q-icon size="xs" class="q-mr-sm" color="indigo" name="mdi-account" />Created by
+        </span>
+        <span class="q-mr-sm">
+          <q-icon size="xs" class="q-mr-sm" color="blue" name="mdi-calendar-check" />Created at
+        </span>
+        <span class="q-mr-sm">
+          <q-icon size="xs" class="q-mr-sm" color="red-7" name="mdi-clock-out" />Due date
+        </span>
+      </q-card-actions>
+      <q-separator vertical />
+      <q-card-section class="text-subtitle1" :class="[ $q.dark.isActive ? 'text-grey-6' : 'text-black' ]">
+        <div>{{ value.createdBy }}</div>
+        <div class="q-my-md">{{ value.dueDate | timeStampFilter }}</div>
+        <div>{{ value.submittedAt | timeStampFilter }}</div>
       </q-card-section>
-    </template>
+    </q-card-section>
+    <q-separator />
+    <q-card-actions class="text-subtitle1 q-ml-sm">
+      Current grade: <span class="text-green-4 q-mx-xs"> 50 </span> out of <span class="text-green-5 q-ml-xs"> 100 </span>
+    </q-card-actions>
   </q-card>
 </template>
 
@@ -59,8 +69,17 @@ export default {
     downloadFile(attachment) {
       download(attachment.contentType, attachment.data, attachment.name);
     },
-    $deleteNotification() {
-      this.$emit("deleteNotification", this.value.id);
+    $deleteTask(taskId) {
+      this.$emit("delete", taskId);
+    },
+    $editTask(taskId) {
+      this.$emit("edit", taskId);
+    },
+    $viewSubmissions(taskId) {
+      this.$emit("view", taskId);
+    },
+    $submitAttempt(taskId) {
+      this.$emit("submit", taskId);
     }
   }
 };

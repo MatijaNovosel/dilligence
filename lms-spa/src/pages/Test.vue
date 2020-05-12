@@ -11,18 +11,6 @@
         <q-btn size="md" dense color="primary" @click="sendNotification">{{ $i18n.t('send') }}</q-btn>
       </div>
     </div>
-    <div class="row text-center justify-center full-width">
-      <div class="col-3">
-        <q-list bordered separator dense>
-          <q-item clickable v-ripple v-for="vijest in vijesti" :key="vijest.id">
-            <q-item-section>
-              <q-item-label>{{ vijest.naslov }}</q-item-label>
-              <q-item-label caption>{{ vijest.opis }}</q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </div>
-    </div>
   </q-page>
 </template>
 

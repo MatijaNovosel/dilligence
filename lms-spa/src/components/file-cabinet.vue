@@ -1,8 +1,11 @@
 <template>
   <div>
     <q-card flat bordered>
-      <q-toolbar style="min-height: 30px;" class="text-center justify-center items-center bg-primary">
-        <span class="caption text-white">{{ content.naslov }}</span>
+      <q-toolbar
+        style="min-height: 30px;"
+        class="text-center justify-center items-center bg-primary"
+      >
+        <span class="caption text-white">{{ content.title }}</span>
         <q-space />
         <div>
           <q-btn
@@ -34,14 +37,9 @@
       </q-toolbar>
       <q-list separator v-if="content != null">
         <q-separator />
-        <q-item
-          :class="{ shaded: index % 2, nonShaded: !(index % 2) }"
-          v-for="(file, index) in content.files"
-          :key="file.id + file.name"
-        >
+        <q-item v-for="file in content.files" :key="file.id + file.name">
           <q-item-section avatar>
             <q-icon
-              class="q-pl-md"
               color="primary"
               :name="fileIcon(file.name.slice(file.name.lastIndexOf('.') + 1))"
             />

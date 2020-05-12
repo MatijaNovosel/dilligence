@@ -43,7 +43,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
             .Select(x => new SidebarContentDTO
             {
               Id = x.Id,
-              Naslov = x.Title,
+              Title = x.Title,
               Files = x.SidebarContentFile
                 .Where(y => y.SidebarContentId == x.Id)
                 .Select(y => new FileDTO
@@ -69,7 +69,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         .Select(x => new SidebarContentDTO
         {
           Id = x.Id,
-          Naslov = x.Title,
+          Title = x.Title,
           Files = x.SidebarContentFile
             .Where(y => y.SidebarContentId == x.Id)
             .Select(y => new FileDTO

@@ -11,10 +11,10 @@
           inline
           @input="showNotificationsValueChanged"
         />
-        <div
-          class="q-ml-md q-mb-md"
-          :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']"
-        >* Right click on notifications for more options</div>
+        <div class="q-ml-md q-mb-md" :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']">
+          *
+          <q-icon size="xs" class="q-mr-xs" name="mdi-mouse" />Right click on notifications (or long tap on phones) for more options
+        </div>
       </div>
       <q-skeleton v-show="notificationLoading" class="q-mx-sm" width="100%" height="150px" square />
       <template v-if="notifications && notifications.length != 0">
@@ -136,6 +136,7 @@
             size="xs"
             class="q-mt-none"
             label="Add attachments to course files"
+            :disable="!newNotification.files"
           />
         </q-card-section>
         <q-card-actions class="justify-end q-pt-none">

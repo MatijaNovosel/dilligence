@@ -20,7 +20,7 @@
       <div class="text-h6">{{ value.title }}</div>
       <div
         class="text-subtitle2"
-      >{{ `${value.submittedBy}, ${$options.filters.dateFilter(value.submittedAt)}` }}</div>
+      >{{ `${value.submittedBy}, ${$options.filters.timeStampFilter(value.submittedAt)}` }}</div>
     </q-card-section>
     <q-separator />
     <q-card-section class="q-py-sm">

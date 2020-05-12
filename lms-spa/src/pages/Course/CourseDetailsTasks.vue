@@ -1,8 +1,30 @@
 <template>
   <div>
     <div class="row">
-      <div class="col-4" :key="i" v-for="(courseTask, i) in courseTasks">
-        <task-card :value="courseTask" />
+      <div class="col-12">
+        <q-option-group
+          size="sm"
+          v-model="showNotifications"
+          :options="showNotificationsOptions"
+          type="checkbox"
+          color="primary"
+          inline
+          @input="showNotificationsValueChanged"
+        />
+        <div class="q-ml-md q-mb-md" :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']">
+          *
+          <q-icon size="xs" class="q-mr-xs" name="mdi-mouse" />Right click on tasks (or long tap on phones) for more options
+        </div>
+      </div>
+      <div class="col-xs-12 col-md-4" :key="i" v-for="(courseTask, i) in courseTasks">
+        <task-card
+          class="q-ma-sm"
+          @edit="editTask"
+          @view="viewTask"
+          @delete="deleteTask"
+          @submit="submitTask"
+          :value="courseTask"
+        />
       </div>
     </div>
     <q-dialog :maximized="$q.screen.xs || $q.screen.sm" v-model="newTaskDialog" persistent>
@@ -130,6 +152,7 @@ import CourseTaskService from "../../services/api/course-task";
 import { required, minLength, numeric } from "vuelidate/lib/validators";
 import UserMixin from "../../mixins/userMixin";
 import TaskCard from "../../components/task-card";
+import { debounce } from "debounce";
 
 export default {
   name: "CourseDetailsTasks",
@@ -172,10 +195,24 @@ export default {
         width: "70%",
         "max-width": "90vw"
       },
-      courseTasks: null
+      courseTasks: null,
+      showNotifications: [0],
+      showNotificationsOptions: [
+        {
+          label: "Show graded",
+          value: 0
+        },
+        {
+          label: "Show ungraded",
+          value: 1
+        }
+      ]
     };
   },
   methods: {
+    showNotificationsValueChanged: debounce(function() {
+      this.getCourseTasks();
+    }, 1500),
     createCourseTask() {
       let formData = new FormData();
       let task = this.newTask;
@@ -213,6 +250,18 @@ export default {
         maximumGrade: 100
       };
       this.newTaskDialog = false;
+    },
+    deleteTask(taskId) {
+      console.log(taskId);
+    },
+    viewTask(taskId) {
+      console.log(taskId);
+    },
+    editTask(taskId) {
+      console.log(taskId);
+    },
+    submitTask(taskId) {
+      console.log(taskId);
     }
   }
 };
