@@ -12,9 +12,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using tvz2api_cqrs.Custom;
+using Microsoft.AspNetCore.Authorization;
 
 namespace tvz2api_cqrs.Controllers
 {
+  [Authorize]
   [Route("api/[controller]")]
   [ApiController]
   public class FileController : ControllerBase

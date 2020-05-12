@@ -1,9 +1,10 @@
 <template>
   <div>
-    <q-card class="q-mx-auto q-my-lg cabinet-card" flat bordered>
-      <div class="text-center justify-center q-py-sm bg-primary">
+    <q-card flat bordered>
+      <q-toolbar style="min-height: 30px;" class="text-center justify-center items-center bg-primary">
         <span class="caption text-white">{{ content.naslov }}</span>
-        <div class="right-abs">
+        <q-space />
+        <div>
           <q-btn
             :ripple="false"
             dense
@@ -30,7 +31,7 @@
             <q-tooltip>{{ $i18n.t('downloadMultiple') }}</q-tooltip>
           </q-btn>
         </div>
-      </div>
+      </q-toolbar>
       <q-list separator v-if="content != null">
         <q-separator />
         <q-item
@@ -213,19 +214,13 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
-.right-abs
-  position: absolute
-  right: 8px
-  top: 8px
+<style lang="sass">
 .nonShaded:hover
   background-color: #ebebeb
 .shaded
   background-color: #f6f6f6
 .shaded:hover
   background-color: #e6e6e6
-.cabinet-card
-  max-width: 45%
 .dialog-toolbar
   min-height: 30px
 .upload-dialog

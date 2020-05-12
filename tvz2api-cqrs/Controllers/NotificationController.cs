@@ -17,9 +17,11 @@ using tvz2api_cqrs.Hubs;
 using tvz2api_cqrs.Custom;
 using Microsoft.AspNetCore.Http;
 using tvz2api_cqrs.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace tvz2api_cqrs.Controllers
 {
+  [Authorize]
   [Route("api/[controller]")]
   [ApiController]
   public class NotificationController : ControllerBase

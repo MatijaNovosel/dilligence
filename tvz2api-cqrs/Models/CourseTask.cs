@@ -12,6 +12,7 @@ namespace tvz2api_cqrs.Models
         }
 
         public int Id { get; set; }
+        public int GradeMaximum { get; set; }
         public int CreatedById { get; set; }
         public DateTime DueDate { get; set; }
         public string Description { get; set; }

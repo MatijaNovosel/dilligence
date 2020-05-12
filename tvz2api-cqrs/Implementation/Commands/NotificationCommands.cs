@@ -10,7 +10,7 @@ namespace tvz2api_cqrs.Implementation.Commands
   public class NotificationCreateCommand : ICommand
   {
     public NotificationCreateCommand() { }
-    
+
     [FromForm(Name = "submittedById")]
     public int SubmittedById { get; set; }
     [FromForm(Name = "courseId")]
@@ -25,6 +25,8 @@ namespace tvz2api_cqrs.Implementation.Commands
     public DateTime ExpiresAt { get; set; }
     [FromForm(Name = "sendEmail")]
     public bool SendEmail { get; set; }
+    [FromForm(Name = "addFilesToCourse")]
+    public bool AddFilesToCourse { get; set; }
     [FromForm(Name = "files")]
     public List<IFormFile> Files { get; set; }
   }

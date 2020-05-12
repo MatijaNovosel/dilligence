@@ -73,7 +73,7 @@ export default {
   download: "Download",
   selectAll: "Select all",
   upload: "Upload",
-  uploadMultipleFiles: "Uplaod multiple files",
+  uploadMultipleFiles: "Upload multiple files",
   view: "View",
   continue: "Continue",
   start: "Start",

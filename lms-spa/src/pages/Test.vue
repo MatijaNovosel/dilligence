@@ -39,22 +39,9 @@ export default {
     CourseService.getCourseSidebar(147).then(({ data }) => {
       this.sidebarContents = data;
     });
-    this.getData();
-  },
-  methods: {
-    getData() {
-      this.$axios.get("Notification/147").then(({ data }) => {
-        this.vijesti = data;
-      });
-    },
-    sendNotification() {
-      this.$axios.post("Notification", { naslov: this.notification });
-    }
   },
   data() {
     return {
-      notification: null,
-      vijesti: null,
       sidebarContents: null
     };
   }

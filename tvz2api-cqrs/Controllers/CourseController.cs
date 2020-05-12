@@ -20,6 +20,7 @@ using tvz2api_cqrs.Custom;
 
 namespace tvz2api_cqrs.Controllers
 {
+  [Authorize]
   [Route("api/[controller]")]
   [ApiController]
   public class CourseController : ControllerBase
@@ -33,7 +34,6 @@ namespace tvz2api_cqrs.Controllers
       _queryBus = queryBus;
     }
 
-    [Authorize]
     [HttpGet]
     public async Task<IActionResult> Get(int? userId = null, [FromQuery(Name = "specializationId[]")] List<SpecializationEnum> courseIds = null, string name = null, bool subscribed = false, bool nonSubscribed = false)
     {

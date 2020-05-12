@@ -14,5 +14,6 @@ namespace tvz2api_cqrs.QueryModels
     public string CreatedBy { get; set; }
     public int? CourseId { get; set; }
     public List<FileDTO> Attachments { get; set; }
+    public int MaximumGrade { get; set; }
   }
 }

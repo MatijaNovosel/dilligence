@@ -54,8 +54,10 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       var course = _context
         .Course
         .Include(t => t.Subscription)
-        .ThenInclude(x => x.User)
-        .ThenInclude(x => x.UserNotificationBlacklist)
+        .ThenInclude(t => t.User)
+        .ThenInclude(t => t.UserNotificationBlacklist)
+        .Include(t => t.SidebarContent)
+        .ThenInclude(t => t.SidebarContentFile)
         .FirstOrDefault(t => t.Id == command.CourseId);
 
       course.Subscription.Where(t => t.UserId != command.SubmittedById).Select(t => t.UserId).ToList().ForEach(x =>
@@ -133,6 +135,19 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
             NotificationId = notification.Id
           });
         });
+
+        if (command.AddFilesToCourse)
+        {
+          var notificationSidebar = course.SidebarContent.FirstOrDefault(x => x.Title == "Notification files");
+          newFiles.ForEach(x =>
+          {
+            notificationSidebar.SidebarContentFile.Add(new SidebarContentFile()
+            {
+              FileId = x.Id,
+              SidebarContentId = notificationSidebar.Id
+            });
+          });
+        }
       }
 
       await _context.SaveChangesAsync();
@@ -151,7 +166,12 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
     public async Task HandleAsync(NotificationDeleteCommand command)
     {
-      var notification = await _context.Notification.Include(t => t.NotificationUserSeen).FirstOrDefaultAsync();
+      var notification = await _context
+        .Notification
+        .Include(t => t.NotificationUserSeen)
+        .Include(t => t.NotificationFile)
+        .FirstOrDefaultAsync();
+      _context.NotificationFile.RemoveRange(notification.NotificationFile);
       _context.NotificationUserSeen.RemoveRange(notification.NotificationUserSeen);
       _context.Notification.Remove(notification);
       await _context.SaveChangesAsync();

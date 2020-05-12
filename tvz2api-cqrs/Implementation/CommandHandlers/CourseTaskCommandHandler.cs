@@ -43,7 +43,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         Title = command.Title,
         Description = command.Description,
         SubmittedAt = DateTime.Now,
-        DueDate = command.DueDate
+        DueDate = command.DueDate,
+        GradeMaximum = command.MaximumGrade
       };
       await _context.CourseTask.AddAsync(courseTask);
       await _context.SaveChangesAsync();

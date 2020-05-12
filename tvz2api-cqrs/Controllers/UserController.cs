@@ -15,9 +15,11 @@ using System.Threading.Tasks;
 using tvz2api_cqrs.Implementation.Commands;
 using tvz2api_cqrs.Custom;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace tvz2api_cqrs.Controllers
 {
+  [Authorize]
   [Route("api/[controller]")]
   [ApiController]
   public class UserController : ControllerBase

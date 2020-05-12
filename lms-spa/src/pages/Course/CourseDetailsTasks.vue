@@ -2,7 +2,7 @@
   <div>
     <div class="row">
       <div class="col-4" :key="i" v-for="(courseTask, i) in courseTasks">
-        {{ courseTask.title }}
+        <task-card :value="courseTask" />
       </div>
     </div>
     <q-dialog :maximized="$q.screen.xs || $q.screen.sm" v-model="newTaskDialog" persistent>
@@ -64,6 +64,15 @@
               </q-icon>
             </template>
           </q-input>
+          <q-input
+            hint="The maximum attainable number of points"
+            :error="$v.newTask.maximumGrade.$invalid"
+            error-message="This field is required!"
+            dense
+            outlined
+            v-model="newTask.maximumGrade"
+            label="Maximum grade"
+          />
           <q-file
             dense
             multiple
@@ -118,11 +127,13 @@
 
 <script>
 import CourseTaskService from "../../services/api/course-task";
-import { required, minLength } from "vuelidate/lib/validators";
+import { required, minLength, numeric } from "vuelidate/lib/validators";
 import UserMixin from "../../mixins/userMixin";
+import TaskCard from "../../components/task-card";
 
 export default {
   name: "CourseDetailsTasks",
+  components: { "task-card": TaskCard },
   mixins: [UserMixin],
   validations: {
     newTask: {
@@ -133,6 +144,11 @@ export default {
       title: {
         required,
         minLength: minLength(4)
+      },
+      maximumGrade: {
+        required,
+        numeric,
+        minLength: minLength(2)
       }
     }
   },
@@ -149,7 +165,8 @@ export default {
         sendEmail: false,
         description: "Task description",
         dueDate: "2020-07-20 12:40",
-        files: null
+        files: null,
+        maximumGrade: 100
       },
       dialogStyle: {
         width: "70%",
@@ -192,7 +209,8 @@ export default {
         sendEmail: false,
         description: "Task description",
         dueDate: "2020-07-20 12:40",
-        files: null
+        files: null,
+        maximumGrade: 100
       };
       this.newTaskDialog = false;
     }

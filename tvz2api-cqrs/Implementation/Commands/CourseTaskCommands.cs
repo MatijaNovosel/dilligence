@@ -24,5 +24,7 @@ namespace tvz2api_cqrs.Implementation.Commands
     public bool SendEmail { get; set; }
     [FromForm(Name = "files")]
     public List<IFormFile> Files { get; set; }
+    [FromForm(Name = "maximumGrade")]
+    public int MaximumGrade { get; set; }
   }
 }

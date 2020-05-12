@@ -16,9 +16,11 @@ using tvz2api_cqrs.Models;
 using tvz2api_cqrs.Models.DTO;
 using tvz2api_cqrs.QueryModels;
 using tvz2api_cqrs.Custom;
+using Microsoft.AspNetCore.Authorization;
 
 namespace tvz2api_cqrs.Controllers
 {
+  [Authorize]
   [Route("api/[controller]")]
   [ApiController]
   public class ChatController : ControllerBase

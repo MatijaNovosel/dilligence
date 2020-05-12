@@ -131,6 +131,12 @@
             class="q-mt-none"
             label="Send email to subscribed users"
           />
+          <q-checkbox
+            v-model="newNotification.addFilesToCourse"
+            size="xs"
+            class="q-mt-none"
+            label="Add attachments to course files"
+          />
         </q-card-section>
         <q-card-actions class="justify-end q-pt-none">
           <q-btn
@@ -222,7 +228,8 @@ export default {
         color: "#285de0",
         expiresAt: "2020-07-20",
         sendEmail: false,
-        files: null
+        files: null,
+        addFilesToCourse: false
       }
     };
   },
@@ -259,7 +266,8 @@ export default {
         color: "#285de0",
         expiresAt: "2020-07-20",
         sendEmail: false,
-        files: null
+        files: null,
+        addFilesToCourse: false
       };
       this.newNotificationDialog = false;
     },
