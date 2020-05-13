@@ -165,6 +165,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           ExpiresAt = t.ExpiresAt,
           Archived = t.ExpiresAt <= DateTime.Now,
           CourseId = t.CourseId,
+          SubmittedById = t.SubmittedById,
           Attachments = t.NotificationFile.Select(x => new FileDTO()
           {
             ContentType = x.File.ContentType,

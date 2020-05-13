@@ -37,39 +37,41 @@
       </q-toolbar>
       <q-list separator v-if="content != null">
         <q-separator />
-        <q-item v-for="file in content.files" :key="file.id + file.name">
-          <q-item-section avatar>
-            <q-icon
-              color="primary"
-              :name="fileIcon(file.name.slice(file.name.lastIndexOf('.') + 1))"
-            />
-          </q-item-section>
-          <q-separator vertical />
-          <q-item-section class="q-pl-md">
-            <q-item-label>{{ file.name }}</q-item-label>
-            <q-item-label caption>{{ file.contentType }}</q-item-label>
-          </q-item-section>
-          <q-item-section side>
-            <q-btn
-              :ripple="false"
-              dense
-              size="sm"
-              flat
-              round
-              v-if="!downloadMultiple"
-              icon="mdi-download"
-              @click="addFileDialog = !addFileDialog"
-            />
-            <q-checkbox
-              class="q-pr-xs"
-              v-else
-              v-model="downloadMultipleSelection"
-              dense
-              :val="file.id"
-              color="primary"
-              size="sm"
-            ></q-checkbox>
-          </q-item-section>
+        <template v-if="content.files.length != 0">
+          <q-item v-for="file in content.files" :key="file.id + file.name">
+            <q-item-section avatar>
+              <q-icon size="xs" :name="fileIcon(file.name.slice(file.name.lastIndexOf('.') + 1))" />
+            </q-item-section>
+            <q-separator vertical />
+            <q-item-section class="q-pl-md">
+              <q-item-label>{{ file.name }}</q-item-label>
+              <q-item-label caption>{{ file.contentType }}</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-btn
+                :ripple="false"
+                dense
+                size="sm"
+                flat
+                round
+                v-if="!downloadMultiple"
+                icon="mdi-download"
+                @click="addFileDialog = !addFileDialog"
+              />
+              <q-checkbox
+                class="q-pr-xs"
+                v-else
+                v-model="downloadMultipleSelection"
+                dense
+                :val="file.id"
+                color="primary"
+                size="sm"
+              ></q-checkbox>
+            </q-item-section>
+          </q-item>
+        </template>
+        <q-item v-else>
+          <q-item-section class="q-pl-md text-center">No files found!</q-item-section>
         </q-item>
         <q-item class="justify-center" v-show="downloadMultiple">
           <q-space />

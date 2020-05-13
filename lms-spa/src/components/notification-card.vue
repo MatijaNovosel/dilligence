@@ -6,11 +6,21 @@
         dense
         separator
         style="min-width: 100px; border-radius: 6px;"
+        v-if="hasCoursePrivileges(courseId, Privileges.CanManageNotifications, Privileges.CanDeleteNotifications, Privileges.CanArchiveNotifications)"
       >
-        <q-item clickable v-close-popup @click="$deleteNotification">
+        <q-item
+          v-if="hasCoursePrivileges(courseId, Privileges.CanManageNotifications, Privileges.CanDeleteNotifications)"
+          clickable
+          v-close-popup
+          @click="$deleteNotification"
+        >
           <q-item-section>Delete notification</q-item-section>
         </q-item>
-        <q-item clickable v-close-popup>
+        <q-item
+          v-if="hasCoursePrivileges(courseId, Privileges.CanManageNotifications, Privileges.CanArchiveNotifications)"
+          clickable
+          v-close-popup
+        >
           <q-item-section>Archive notification</q-item-section>
         </q-item>
       </q-list>
@@ -59,10 +69,12 @@
 
 <script>
 import { download, fileIcon } from "../helpers/helpers";
+import UserMixin from "../mixins/userMixin";
 
 export default {
   name: "notification-card",
-  props: ["value"],
+  props: ["value", "courseId"],
+  mixins: [UserMixin],
   created() {
     this.value.attachments.forEach(x => (x.downloading = false));
   },
@@ -75,7 +87,7 @@ export default {
       download(attachment.contentType, attachment.data, attachment.name);
     },
     $deleteNotification() {
-      this.$emit("deleteNotification", this.value.id);
+      this.$emit("delete", this.value.id);
     }
   }
 };

@@ -17,5 +17,6 @@ namespace tvz2api_cqrs.QueryModels
     public int? CourseId { get; set; }
     public bool Archived { get; set; }
     public List<FileDTO> Attachments { get; set; }
+    public int? SubmittedById { get; set; }
   }
 }

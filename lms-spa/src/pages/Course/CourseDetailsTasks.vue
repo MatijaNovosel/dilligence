@@ -16,15 +16,22 @@
           <q-icon size="xs" class="q-mr-xs" name="mdi-mouse" />Right click on tasks (or long tap on phones) for more options
         </div>
       </div>
-      <div class="col-xs-12 col-md-4" :key="i" v-for="(courseTask, i) in courseTasks">
-        <task-card
-          class="q-ma-sm"
-          @edit="editTask"
-          @view="viewTask"
-          @delete="deleteTask"
-          @submit="submitTask"
-          :value="courseTask"
-        />
+      <q-skeleton v-show="tasksLoading" class="q-mx-sm" width="100%" height="150px" square />
+      <template v-if="courseTasks && courseTasks.length != 0">
+        <div class="col-xs-12 col-md-4" :key="i" v-for="(courseTask, i) in courseTasks">
+          <task-card
+            class="q-ma-sm"
+            @edit="editTask"
+            @view="viewTask"
+            @delete="deleteTask"
+            @submit="submitTask"
+            :value="courseTask"
+            :courseId="courseId"
+          />
+        </div>
+      </template>
+      <div v-show="!tasksLoading" v-else class="col-12 q-my-sm">
+        <div>{{ $i18n.t('noData') }}</div>
       </div>
     </div>
     <q-dialog :maximized="$q.screen.xs || $q.screen.sm" v-model="newTaskDialog" persistent>
@@ -181,6 +188,7 @@ export default {
   },
   data() {
     return {
+      tasksLoading: false,
       courseId: null,
       newTaskDialog: false,
       newTask: {
@@ -236,9 +244,14 @@ export default {
       });
     },
     getCourseTasks() {
-      CourseTaskService.getCourseTasks(this.courseId).then(({ data }) => {
-        this.courseTasks = data;
-      });
+      this.tasksLoading = true;
+      CourseTaskService.getCourseTasks(this.courseId)
+        .then(({ data }) => {
+          this.courseTasks = data;
+        })
+        .finally(() => {
+          this.tasksLoading = false;
+        });
     },
     resetNewTaskDialog() {
       this.newTask = {

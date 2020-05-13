@@ -6,17 +6,38 @@
         dense
         separator
         style="min-width: 100px; border-radius: 6px;"
+        v-if="hasCoursePrivileges(courseId, Privileges.CanManageTasks, Privileges.CanDeleteTasks, Privileges.CanCreateTasks)"
       >
-        <q-item clickable v-close-popup @click="$deleteTask(value.id)">
+        <q-item
+          v-if="hasCoursePrivileges(courseId, Privileges.CanManageTasks, Privileges.CanDeleteTasks)"
+          clickable
+          v-close-popup
+          @click="$deleteTask(value.id)"
+        >
           <q-item-section>Delete task</q-item-section>
         </q-item>
-        <q-item clickable v-close-popup @click="$editTask(value.id)">
+        <q-item
+          v-if="hasCoursePrivileges(courseId, Privileges.CanManageTasks, Privileges.CanCreateTasks)"
+          clickable
+          v-close-popup
+          @click="$editTask(value.id)"
+        >
           <q-item-section>Edit task</q-item-section>
         </q-item>
-        <q-item clickable v-close-popup @click="$viewSubmissions(value.id)">
+        <q-item
+          v-if="hasCoursePrivileges(courseId, Privileges.CanManageTasks, Privileges.CanGradeTasks)"
+          clickable
+          v-close-popup
+          @click="$viewSubmissions(value.id)"
+        >
           <q-item-section>View submissions</q-item-section>
         </q-item>
-        <q-item clickable v-close-popup @click="$submitAttempt(value.id)">
+        <q-item
+          v-if="!hasCoursePrivilege(courseId, Privileges.IsInvolvedToCourse)"
+          clickable
+          v-close-popup
+          @click="$submitAttempt(value.id)"
+        >
           <q-item-section>Submit attempt</q-item-section>
         </q-item>
       </q-list>
@@ -39,7 +60,10 @@
         </span>
       </q-card-actions>
       <q-separator vertical />
-      <q-card-section class="text-subtitle1" :class="[ $q.dark.isActive ? 'text-grey-6' : 'text-black' ]">
+      <q-card-section
+        class="text-subtitle1"
+        :class="[ $q.dark.isActive ? 'text-grey-6' : 'text-black' ]"
+      >
         <div>{{ value.createdBy }}</div>
         <div class="q-my-md">{{ value.dueDate | timeStampFilter }}</div>
         <div>{{ value.submittedAt | timeStampFilter }}</div>
@@ -47,17 +71,21 @@
     </q-card-section>
     <q-separator />
     <q-card-actions class="text-subtitle1 q-ml-sm">
-      Current grade: <span class="text-green-4 q-mx-xs"> 50 </span> out of <span class="text-green-5 q-ml-xs"> 100 </span>
+      Current grade:
+      <span class="text-green-4 q-mx-xs">50</span> out of
+      <span class="text-green-5 q-ml-xs">100</span>
     </q-card-actions>
   </q-card>
 </template>
 
 <script>
+import UserMixin from "../mixins/userMixin";
 import { download, fileIcon } from "../helpers/helpers";
 
 export default {
   name: "task-card",
-  props: ["value"],
+  props: ["value", "courseId"],
+  mixins: [UserMixin],
   created() {
     this.value.attachments.forEach(x => (x.downloading = false));
   },

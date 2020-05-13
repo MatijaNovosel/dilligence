@@ -39,6 +39,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           CourseId = t.CourseId,
           DueDate = t.DueDate,
           CreatedBy = $"{t.CreatedBy.Name} {t.CreatedBy.Surname}",
+          CreatedById = t.CreatedById,
           Description = t.Description,
           MaximumGrade = t.GradeMaximum,
           Attachments = t.CourseTaskAttachment.Select(x => new FileDTO()
