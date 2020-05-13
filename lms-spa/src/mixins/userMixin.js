@@ -20,8 +20,22 @@ export default {
      *  checkPrivileges(Privileges.CanInviteUsers, Privileges.CanViewSubjects);
      *  checkPrivileges(1, 2, 3, 4);
      */
-    checkPrivileges(...requestedPrivileges) {
-      return this.user.privileges.some(privilege => requestedPrivileges.includes(privilege));
+    hasPrivileges(...requestedPrivileges) {
+      return this
+        .user
+        .privileges
+        .generalPrivileges
+        .some(privilege => requestedPrivileges.includes(privilege));
+    },
+    hasCoursePrivileges(courseId, ...requestedPrivileges) {
+      if (!this.user) {
+        return false;
+      }
+      return this
+        .user
+        .privileges
+        .courses
+        .some(course => course.id == courseId && course.privileges.some(privilege => requestedPrivileges.includes(privilege)));
     }
   }
 }

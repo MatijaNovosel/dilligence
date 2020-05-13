@@ -14,7 +14,7 @@ namespace tvz2api_cqrs.Models.DTO
     public string Name { get; set; }
     public string Surname { get; set; }
     public string Picture { get; set; }
-    public List<int> Privileges { get; set; }
+    public UserPrivilegeDTO Privileges { get; set; }
     public string ImageBlob { get; set; }
     public UserSettingsQueryModel Settings { get; set; }
   }

@@ -88,14 +88,30 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         .Include(p => p.UserPrivilege)
         .Include(p => p.UserSettings)
         .Include(p => p.ImageFile)
+        .Include(p => p.UserCoursePrivilege)
         .FirstOrDefaultAsync(x => x.Username == command.Username);
 
       if (user == null || !verifyPasswordHash(command.Password, user.PasswordHash, user.PasswordSalt))
       {
-        throw new Exception("User credentials are wrong or the hashing integrity is faulty!");
+        throw new Exception("Invalid login!");
       }
 
-      var privileges = user.UserPrivilege.Select(x => x.PrivilegeId).ToArray();
+      UserPrivilegeDTO privileges = new UserPrivilegeDTO()
+      {
+        GeneralPrivileges = user.UserPrivilege.Select(x => x.PrivilegeId).ToList(),
+        Courses = user.UserCoursePrivilege
+          .GroupBy(x => x.CourseId)
+          .Select(x => new UserCoursePrivilegeDTO()
+          {
+            Id = x.FirstOrDefault().CourseId,
+            Privileges = user
+              .UserCoursePrivilege
+              .Where(y => y.CourseId == x.FirstOrDefault().CourseId)
+              .Select(y => y.PrivilegeId)
+              .ToList()
+          })
+          .ToList()
+      };
 
       var claims = new[] {
         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
@@ -133,7 +149,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         Username = user.Username,
         Picture = user.ImageFile != null ? Convert.ToBase64String(user.ImageFile.Data) : null,
         Settings = settings,
-        Privileges = privileges.ToList(),
+        Privileges = privileges,
         Token = tokenHandler.WriteToken(token)
       });
     }

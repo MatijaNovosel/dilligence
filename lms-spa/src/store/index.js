@@ -13,12 +13,15 @@ const Store = new Vuex.Store({
       name: null,
       surname: null,
       JMBAG: null,
-      privileges: null,
+      privileges: {
+        generalPrivileges: null,
+        course: null
+      },
       picture: null,
       settings: {
         darkMode: null,
         locale: null,
-        selfNotifications: null
+        popups: null
       }
     }
   },
@@ -33,12 +36,15 @@ const Store = new Vuex.Store({
         name: null,
         surname: null,
         JMBAG: null,
-        privileges: null,
+        privileges: {
+          generalPrivileges: null,
+          course: null
+        },
         picture: null,
         settings: {
           darkMode: null,
           locale: null,
-          selfNotifications: null
+          popups: null
         }
       };
     }

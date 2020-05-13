@@ -66,12 +66,12 @@ export default {
       },
       loading: false,
       loginCardSmall: {
-        width: '90%',
-        background: 'none'
+        width: "90%",
+        background: "none"
       },
       loginCardNormal: {
-        width: '25%',
-        background: 'none'
+        width: "25%",
+        background: "none"
       }
     };
   },
