@@ -34,10 +34,10 @@
         <div>{{ $i18n.t('noData') }}</div>
       </div>
     </div>
-    <q-dialog :maximized="$q.screen.xs || $q.screen.sm" v-model="newTaskDialog" persistent>
+    <q-dialog :maximized="$q.screen.xs || $q.screen.sm" v-model="taskDialog" persistent>
       <q-card :style="$q.screen.xs || $q.screen.sm || dialogStyle">
         <q-toolbar class="bg-primary dialog-toolbar">
-          <span>Create new task</span>
+          <span>{{ dialogMode == "edit" ? 'Edit task' : 'Create task' }}</span>
           <q-space />
           <q-btn
             :ripple="false"
@@ -53,17 +53,17 @@
         <q-card-section class="q-gutter-sm q-pb-none">
           <q-input
             hint="The title of the task"
-            :error="$v.newTask.title.$invalid"
+            :error="$v.task.title.$invalid"
             error-message="This field is required!"
             dense
             outlined
-            v-model="newTask.title"
+            v-model="task.title"
             label="Title"
           />
           <q-input
             dense
             outlined
-            v-model="newTask.dueDate"
+            v-model="task.dueDate"
             label="Due date"
             readonly
             hint="The date at which the task can no longer be submitted"
@@ -74,7 +74,7 @@
                   <q-date
                     :class="$q.dark.isActive ? 'border-dark' : 'border-light'"
                     minimal
-                    v-model="newTask.dueDate"
+                    v-model="task.dueDate"
                     mask="YYYY-MM-DD HH:mm"
                   />
                 </q-popup-proxy>
@@ -85,7 +85,7 @@
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
                   <q-time
                     :class="$q.dark.isActive ? 'border-dark' : 'border-light'"
-                    v-model="newTask.dueDate"
+                    v-model="task.dueDate"
                     mask="YYYY-MM-DD HH:mm"
                     format24h
                   />
@@ -95,18 +95,18 @@
           </q-input>
           <q-input
             hint="The maximum attainable number of points"
-            :error="$v.newTask.maximumGrade.$invalid"
+            :error="$v.task.maximumGrade.$invalid"
             error-message="This field is required!"
             dense
             outlined
-            v-model="newTask.maximumGrade"
+            v-model="task.maximumGrade"
             label="Maximum grade"
           />
           <q-file
             dense
             multiple
             outlined
-            v-model="newTask.files"
+            v-model="task.files"
             class="q-pr-sm"
             clearable
             label="Attachments"
@@ -116,12 +116,12 @@
             </template>
           </q-file>
           <q-editor
-            :content-style="{ [$v.newTask.description.$invalid && 'border']: '1px solid #C10015' }"
-            v-model="newTask.description"
+            :content-style="{ [$v.task.description.$invalid && 'border']: '1px solid #C10015' }"
+            v-model="task.description"
             min-height="5rem"
           />
           <div
-            v-if="$v.newTask.description.$invalid"
+            v-if="$v.task.description.$invalid"
             class="error-text q-pl-sm"
           >This field is required!</div>
           <div
@@ -130,24 +130,36 @@
             :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']"
           >The description of what the task should be</div>
           <q-checkbox
-            v-model="newTask.sendEmail"
+            v-model="task.sendEmail"
             size="xs"
             class="q-mt-none"
             label="Send email to subscribed users"
           />
         </q-card-section>
         <q-card-actions class="justify-end q-pt-none">
-          <q-btn @click="createCourseTask" class="q-mr-sm" color="primary" size="sm">Create</q-btn>
+          <q-btn
+            v-if="dialogMode == 'create'"
+            @click="createCourseTask"
+            class="q-mr-sm"
+            color="primary"
+            size="sm"
+          >Create</q-btn>
+          <q-btn v-else @click="editCourseTask" class="q-mr-sm" color="primary" size="sm">Save</q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+    <q-page-sticky
+      position="bottom-right"
+      :offset="[18, 18]"
+      v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageTasks, Privileges.CanCreateTasks) 
+      && hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
+    >
       <q-fab direction="left" :color="!$q.dark.isActive ? 'primary' : 'grey-8'" fab icon="add">
         <q-fab-action
           icon="mdi-newspaper-plus"
           :color="!$q.dark.isActive ? 'primary' : 'grey-8'"
           label="New task"
-          @click="newTaskDialog = true"
+          @click="openTaskDialog('create')"
         />
       </q-fab>
     </q-page-sticky>
@@ -168,7 +180,7 @@ export default {
   },
   mixins: [UserMixin],
   validations: {
-    newTask: {
+    task: {
       description: {
         required,
         minLength: minLength(4)
@@ -190,10 +202,12 @@ export default {
   },
   data() {
     return {
+      activeTaskId: null,
       tasksLoading: false,
       courseId: null,
-      newTaskDialog: false,
-      newTask: {
+      taskDialog: false,
+      dialogMode: "create",
+      task: {
         title: "Task title",
         sendEmail: false,
         description: "Task description",
@@ -220,12 +234,25 @@ export default {
     };
   },
   methods: {
+    openTaskDialog(mode) {
+      this.dialogMode = mode;
+
+      if (this.dialogMode == "edit") {
+        CourseTaskService.getTask(this.activeTaskId).then(({ data }) => {
+          this.task = data;
+          this.task.sendEmail = false;
+          this.task.files = data.attachments;
+        });
+      }
+
+      this.taskDialog = true;
+    },
     showNotificationsValueChanged: debounce(function() {
       this.getCourseTasks();
     }, 1500),
     createCourseTask() {
       let formData = new FormData();
-      let task = this.newTask;
+      let task = this.task;
 
       formData.append("createdById", this.user.id);
       formData.append("courseId", this.courseId);
@@ -245,6 +272,26 @@ export default {
         this.resetNewTaskDialog();
       });
     },
+    editCourseTask() {
+      let formData = new FormData();
+
+      formData.append("id", this.activeTaskId);
+      formData.append("title", this.task.title);
+      formData.append("description", this.task.description);
+      formData.append("dueDate", this.task.dueDate);
+      formData.append("sendEmail", this.task.sendEmail);
+      formData.append("maximumGrade", this.task.maximumGrade);
+      formData.append("courseId", this.courseId);
+
+      if (this.task.files != null) {
+        this.task.files.forEach(file => formData.append("files", file));
+      }
+
+      CourseTaskService.updateTask(formData).then(() => {
+        this.getCourseTasks();
+        this.resetNewTaskDialog();
+      });
+    },
     getCourseTasks() {
       this.tasksLoading = true;
       CourseTaskService.getCourseTasks(this.courseId)
@@ -256,7 +303,7 @@ export default {
         });
     },
     resetNewTaskDialog() {
-      this.newTask = {
+      this.task = {
         title: "Task title",
         sendEmail: false,
         description: "Task description",
@@ -264,7 +311,7 @@ export default {
         files: null,
         maximumGrade: 100
       };
-      this.newTaskDialog = false;
+      this.taskDialog = false;
     },
     deleteTask(taskId) {
       console.log(taskId);
@@ -273,7 +320,8 @@ export default {
       console.log(taskId);
     },
     editTask(taskId) {
-      console.log(taskId);
+      this.activeTaskId = taskId;
+      this.openTaskDialog("edit");
     },
     submitTask(taskId) {
       console.log(taskId);

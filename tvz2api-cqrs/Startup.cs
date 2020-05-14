@@ -221,9 +221,11 @@ namespace tvz2api_cqrs
 
       // CourseTask commands
       services.AddScoped<ICommandHandlerAsync<CourseTaskCreateCommand>, CourseTaskCommandHandler>();
+      services.AddScoped<ICommandHandlerAsync<CourseTaskUpdateCommand>, CourseTaskCommandHandler>();
 
       // CourseTask queries
       services.AddScoped<IQueryHandlerAsync<CourseTaskQuery, List<CourseTaskQueryModel>>, CourseTaskQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<CourseTaskDetailsQuery, CourseTaskQueryModel>, CourseTaskQueryHandler>();
     }
   }
 }

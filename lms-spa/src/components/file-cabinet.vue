@@ -28,6 +28,7 @@
             flat
             round
             class="q-ml-sm"
+            v-if="content.files.length != 0"
             :icon="downloadMultiple ? 'mdi-lock-open-variant' : 'mdi-lock'"
             @click="changeDownloadToMultiple"
           >

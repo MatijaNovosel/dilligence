@@ -46,11 +46,35 @@ namespace tvz2api_cqrs.Controllers
       return Ok(result);
     }
 
+    [HttpGet("details/{id}")]
+    public async Task<IActionResult> GetDetails(int id)
+    {
+      var result = await _queryBus.ExecuteAsync(new CourseTaskDetailsQuery()
+      {
+        Id = id
+      });
+      return Ok(result);
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateNew([FromForm] CourseTaskCreateCommand command)
     {
       if (
-        !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanCreateTasks) &&
+        !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanCreateTasks) &&
+        !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedToCourse))
+      )
+      {
+        return Unauthorized();
+      }
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> Update([FromForm] CourseTaskUpdateCommand command)
+    {
+      if (
+        !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanCreateTasks) &&
         !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedToCourse))
       )
       {

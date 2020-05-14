@@ -27,4 +27,24 @@ namespace tvz2api_cqrs.Implementation.Commands
     [FromForm(Name = "maximumGrade")]
     public int MaximumGrade { get; set; }
   }
+  public class CourseTaskUpdateCommand : ICommand
+  {
+    public CourseTaskUpdateCommand() { }
+    [FromForm(Name = "id")]
+    public int Id { get; set; }
+    [FromForm(Name = "title")]
+    public string Title { get; set; }
+    [FromForm(Name = "description")]
+    public string Description { get; set; }
+    [FromForm(Name = "dueDate")]
+    public DateTime DueDate { get; set; }
+    [FromForm(Name = "sendEmail")]
+    public bool SendEmail { get; set; }
+    [FromForm(Name = "files")]
+    public List<IFormFile> Files { get; set; }
+    [FromForm(Name = "maximumGrade")]
+    public int MaximumGrade { get; set; }
+    [FromForm(Name = "courseId")]
+    public int CourseId { get; set; }
+  }
 }

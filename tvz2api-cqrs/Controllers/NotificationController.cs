@@ -64,7 +64,7 @@ namespace tvz2api_cqrs.Controllers
     public async Task<IActionResult> CreateNew([FromForm] NotificationCreateCommand command)
     {
       if (
-        !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanSendNotifications) &&
+        !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanSendNotifications) &&
         !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedToCourse))
       )
       {
@@ -86,7 +86,7 @@ namespace tvz2api_cqrs.Controllers
     public async Task<IActionResult> Delete(NotificationDeleteCommand command)
     {
       if (
-        !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanDeleteNotifications) &&
+        !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanDeleteNotifications) &&
         !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedToCourse))
       )
       {

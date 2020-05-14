@@ -79,6 +79,13 @@
                       </template>
                     </q-file>
                   </div>
+                  <div
+                    class="q-ml-md q-mb-md"
+                    :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']"
+                  >
+                    *
+                    <q-icon size="xs" class="q-mr-xs" name="mdi-lock-check" />Your data is automatically saved after a small delay
+                  </div>
                 </template>
                 <template v-else>
                   <div class="col-12">

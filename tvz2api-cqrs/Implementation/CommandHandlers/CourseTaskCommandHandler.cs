@@ -23,7 +23,8 @@ using Microsoft.Extensions.Configuration;
 namespace tvz2api_cqrs.Implementation.CommandHandlers
 {
   public class CourseTaskCommandHandler :
-    ICommandHandlerAsync<CourseTaskCreateCommand>
+    ICommandHandlerAsync<CourseTaskCreateCommand>,
+    ICommandHandlerAsync<CourseTaskUpdateCommand>
   {
     private readonly lmsContext _context;
     private readonly IConfiguration _configuration;
@@ -48,6 +49,60 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       };
       await _context.CourseTask.AddAsync(courseTask);
       await _context.SaveChangesAsync();
+
+      if (command.Files != null)
+      {
+        List<tvz2api_cqrs.Models.File> newFiles = new List<tvz2api_cqrs.Models.File>();
+
+        foreach (var file in command.Files)
+        {
+          using (var ms = new MemoryStream())
+          {
+            file.CopyTo(ms);
+            var fileBytes = ms.ToArray();
+
+            var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+            fileName = fileName.Substring(0, fileName.LastIndexOf(".")) + fileName.Substring(fileName.LastIndexOf(".")).ToLower();
+
+            newFiles.Add(new tvz2api_cqrs.Models.File
+            {
+              Name = Path.GetFileName(fileName),
+              ContentType = file.ContentType,
+              Data = fileBytes,
+              Size = fileBytes.Length
+            });
+          }
+        }
+
+        await _context.File.AddRangeAsync(newFiles);
+        await _context.SaveChangesAsync();
+
+        newFiles.ForEach(x =>
+        {
+          _context.CourseTaskAttachment.Add(new CourseTaskAttachment()
+          {
+            FileId = x.Id,
+            CourseTaskId = courseTask.Id
+          });
+        });
+      }
+
+      await _context.SaveChangesAsync();
+    }
+
+    public async Task HandleAsync(CourseTaskUpdateCommand command)
+    {
+      CourseTask courseTask = await _context
+        .CourseTask
+        .Include(x => x.CourseTaskAttachment)
+        .FirstOrDefaultAsync(x => x.Id == command.Id);
+
+      courseTask.Title = command.Title;
+      courseTask.Description = command.Description;
+      courseTask.DueDate = command.DueDate;
+      courseTask.GradeMaximum = command.MaximumGrade;
+
+      _context.CourseTaskAttachment.RemoveRange(courseTask.CourseTaskAttachment);
 
       if (command.Files != null)
       {

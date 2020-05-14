@@ -1,11 +1,6 @@
 <template>
   <q-card>
-    <q-menu
-      touch-position
-      context-menu
-      v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageTasks, Privileges.CanDeleteTasks, Privileges.CanCreateTasks, Privileges.CanGradeTasks)
-      && hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
-    >
+    <q-menu touch-position context-menu>
       <q-list
         :class="`${$q.dark.isActive ? 'border-dark' : 'border-light'}`"
         dense
