@@ -29,12 +29,14 @@ namespace tvz2api_cqrs.Controllers
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
     private readonly IHubContext<NotificationHub> _hubContext;
+    private readonly IUserResolver _userResolver;
 
-    public NotificationController(ICommandBus commandBus, IQueryBus queryBus, IHubContext<NotificationHub> notificationHub)
+    public NotificationController(ICommandBus commandBus, IQueryBus queryBus, IHubContext<NotificationHub> notificationHub, IUserResolver userResolver)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;
       _hubContext = notificationHub;
+      _userResolver = userResolver;
     }
 
     [HttpGet("{id}")]
@@ -61,6 +63,13 @@ namespace tvz2api_cqrs.Controllers
     [HttpPost]
     public async Task<IActionResult> CreateNew([FromForm] NotificationCreateCommand command)
     {
+      if (
+        !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanSendNotifications) &&
+        !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedToCourse))
+      )
+      {
+        return Unauthorized();
+      }
       await _commandBus.ExecuteAsync(command);
       await _hubContext.Clients.All.SendAsync("newNotification");
       return Ok();
@@ -73,10 +82,17 @@ namespace tvz2api_cqrs.Controllers
       return Ok();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete]
+    public async Task<IActionResult> Delete(NotificationDeleteCommand command)
     {
-      await _commandBus.ExecuteAsync(new NotificationDeleteCommand(id));
+      if (
+        !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanDeleteNotifications) &&
+        !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedToCourse))
+      )
+      {
+        return Unauthorized();
+      }
+      await _commandBus.ExecuteAsync(command);
       await _hubContext.Clients.All.SendAsync("deleteNotification");
       return Ok();
     }

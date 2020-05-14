@@ -28,9 +28,6 @@ export default {
         .some(privilege => requestedPrivileges.includes(privilege));
     },
     hasCoursePrivileges(courseId, ...requestedPrivileges) {
-      if (!this.user) {
-        return false;
-      }
       return this
         .user
         .privileges

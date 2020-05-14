@@ -1,15 +1,20 @@
 <template>
   <q-card>
-    <q-menu touch-position context-menu>
+    <q-menu
+      touch-position
+      context-menu
+      v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageNotifications, Privileges.CanDeleteNotifications, Privileges.CanArchiveNotifications) 
+      && hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
+    >
       <q-list
         :class="`${$q.dark.isActive ? 'border-dark' : 'border-light'}`"
         dense
         separator
         style="min-width: 100px; border-radius: 6px;"
-        v-if="hasCoursePrivileges(courseId, Privileges.CanManageNotifications, Privileges.CanDeleteNotifications, Privileges.CanArchiveNotifications)"
       >
         <q-item
-          v-if="hasCoursePrivileges(courseId, Privileges.CanManageNotifications, Privileges.CanDeleteNotifications)"
+          v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageNotifications, Privileges.CanDeleteNotifications) 
+          && hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
           clickable
           v-close-popup
           @click="$deleteNotification"
@@ -17,7 +22,8 @@
           <q-item-section>Delete notification</q-item-section>
         </q-item>
         <q-item
-          v-if="hasCoursePrivileges(courseId, Privileges.CanManageNotifications, Privileges.CanArchiveNotifications)"
+          v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageNotifications, Privileges.CanArchiveNotifications) 
+          && hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
           clickable
           v-close-popup
         >

@@ -1,42 +1,49 @@
 <template>
   <q-card>
-    <q-menu touch-position context-menu>
+    <q-menu
+      touch-position
+      context-menu
+      v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageTasks, Privileges.CanDeleteTasks, Privileges.CanCreateTasks, Privileges.CanGradeTasks)
+      && hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
+    >
       <q-list
         :class="`${$q.dark.isActive ? 'border-dark' : 'border-light'}`"
         dense
         separator
         style="min-width: 100px; border-radius: 6px;"
-        v-if="hasCoursePrivileges(courseId, Privileges.CanManageTasks, Privileges.CanDeleteTasks, Privileges.CanCreateTasks)"
       >
         <q-item
-          v-if="hasCoursePrivileges(courseId, Privileges.CanManageTasks, Privileges.CanDeleteTasks)"
+          v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageTasks, Privileges.CanDeleteTasks) 
+          && hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
           clickable
           v-close-popup
-          @click="$deleteTask(value.id)"
+          @click="$deleteTask"
         >
           <q-item-section>Delete task</q-item-section>
         </q-item>
         <q-item
-          v-if="hasCoursePrivileges(courseId, Privileges.CanManageTasks, Privileges.CanCreateTasks)"
+          v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageTasks, Privileges.CanCreateTasks) 
+          && hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
           clickable
           v-close-popup
-          @click="$editTask(value.id)"
+          @click="$editTask"
         >
           <q-item-section>Edit task</q-item-section>
         </q-item>
         <q-item
-          v-if="hasCoursePrivileges(courseId, Privileges.CanManageTasks, Privileges.CanGradeTasks)"
+          v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageTasks, Privileges.CanGradeTasks) 
+          && hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
           clickable
           v-close-popup
-          @click="$viewSubmissions(value.id)"
+          @click="$viewSubmissions"
         >
           <q-item-section>View submissions</q-item-section>
         </q-item>
         <q-item
-          v-if="!hasCoursePrivilege(courseId, Privileges.IsInvolvedToCourse)"
+          v-if="!hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
           clickable
           v-close-popup
-          @click="$submitAttempt(value.id)"
+          @click="$submitAttempt"
         >
           <q-item-section>Submit attempt</q-item-section>
         </q-item>
@@ -79,8 +86,8 @@
 </template>
 
 <script>
-import UserMixin from "../mixins/userMixin";
 import { download, fileIcon } from "../helpers/helpers";
+import UserMixin from "../mixins/userMixin";
 
 export default {
   name: "task-card",
@@ -97,17 +104,17 @@ export default {
     downloadFile(attachment) {
       download(attachment.contentType, attachment.data, attachment.name);
     },
-    $deleteTask(taskId) {
-      this.$emit("delete", taskId);
+    $deleteTask() {
+      this.$emit("delete", this.value.id);
     },
-    $editTask(taskId) {
-      this.$emit("edit", taskId);
+    $editTask() {
+      this.$emit("edit", this.value.id);
     },
-    $viewSubmissions(taskId) {
-      this.$emit("view", taskId);
+    $viewSubmissions() {
+      this.$emit("view", this.value.id);
     },
-    $submitAttempt(taskId) {
-      this.$emit("submit", taskId);
+    $submitAttempt() {
+      this.$emit("submit", this.value.id);
     }
   }
 };

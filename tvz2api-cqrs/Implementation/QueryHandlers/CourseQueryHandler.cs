@@ -37,26 +37,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Id = t.Id,
           Name = t.Name,
           Ects = t.Ects,
-          Course = t.Specialization.Name,
-          SidebarContents = t.SidebarContent
-            .Where(x => x.CourseId == query.Id)
-            .Select(x => new SidebarContentDTO
-            {
-              Id = x.Id,
-              Title = x.Title,
-              Files = x.SidebarContentFile
-                .Where(y => y.SidebarContentId == x.Id)
-                .Select(y => new FileDTO
-                {
-                  Id = y.File.Id,
-                  Name = y.File.Name,
-                  ContentType = y.File.ContentType,
-                  Data = y.File.Data,
-                  Size = y.File.Size
-                })
-                .ToList()
-            })
-            .ToList()
+          Specialization = t.Specialization.Name
         })
         .FirstOrDefaultAsync();
       return course;

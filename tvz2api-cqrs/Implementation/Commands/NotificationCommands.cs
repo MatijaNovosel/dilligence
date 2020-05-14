@@ -40,10 +40,8 @@ namespace tvz2api_cqrs.Implementation.Commands
 
   public class NotificationDeleteCommand : ICommand
   {
-    public NotificationDeleteCommand(int id)
-    {
-      Id = id;
-    }
+    public NotificationDeleteCommand() { }
     public int? Id { get; set; }
+    public int CourseId { get; set; }
   }
 }

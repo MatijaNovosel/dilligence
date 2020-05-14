@@ -27,11 +27,13 @@ namespace tvz2api_cqrs.Controllers
   {
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
+    private readonly IUserResolver _userResolver;
 
-    public CourseTaskController(ICommandBus commandBus, IQueryBus queryBus)
+    public CourseTaskController(ICommandBus commandBus, IQueryBus queryBus, IUserResolver userResolver)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;
+      _userResolver = userResolver;
     }
 
     [HttpGet("{courseId}")]
@@ -47,6 +49,13 @@ namespace tvz2api_cqrs.Controllers
     [HttpPost]
     public async Task<IActionResult> CreateNew([FromForm] CourseTaskCreateCommand command)
     {
+      if (
+        !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanCreateTasks) &&
+        !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedToCourse))
+      )
+      {
+        return Unauthorized();
+      }
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }

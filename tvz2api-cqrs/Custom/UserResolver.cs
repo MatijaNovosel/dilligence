@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System.Security.Claims;
 using System;
 using tvz2api_cqrs.Models;
+using tvz2api_cqrs.Models.DTO;
 using Microsoft.AspNetCore.Http;
 
 namespace tvz2api_cqrs.Custom
@@ -22,29 +23,40 @@ namespace tvz2api_cqrs.Custom
       }
     }
 
+    public UserPrivilegeDTO Privileges
+    {
+      get
+      {
+        return JsonConvert.DeserializeObject<UserPrivilegeDTO>(User.FindFirst("Privileges").Value);
+      }
+    }
+
     public UserResolver(IHttpContextAccessor accessor, lmsContext context)
     {
       _accessor = accessor;
       _context = context;
     }
 
-    public bool CheckPrivileges(params PrivilegeEnum[] requestedPrivileges)
+    public bool HasGeneralPrivilege(params PrivilegeEnum[] requestedPrivileges)
     {
-      int[] privileges = JsonConvert.DeserializeObject<int[]>(User.FindFirst("Privileges").Value);
-      if (!privileges.Any(userPrivilege => requestedPrivileges.ToList().Contains((PrivilegeEnum)userPrivilege)))
+      var generalPrivileges = Privileges.GeneralPrivileges;
+      return generalPrivileges.Any(p => requestedPrivileges.ToList().Contains((PrivilegeEnum)p));
+    }
+
+    public bool HasCoursePrivilege(int courseId, params PrivilegeEnum[] requestedPrivileges)
+    {
+      var course = Privileges.Courses.FirstOrDefault(x => x.Id == courseId);
+      if (course == null)
       {
         return false;
       }
-      return true;
+      return course.Privileges.Any(p => requestedPrivileges.ToList().Contains((PrivilegeEnum)p));
     }
+
     public bool UserBelongsToCourse(int courseId)
     {
       int userId = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-      if (!_context.Subscription.Any(x => x.UserId == userId && x.CourseId == courseId))
-      {
-        return false;
-      }
-      return true;
+      return _context.Subscription.Any(x => x.UserId == userId && x.CourseId == courseId);
     }
   }
 }

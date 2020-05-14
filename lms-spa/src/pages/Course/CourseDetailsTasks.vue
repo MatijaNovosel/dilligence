@@ -163,7 +163,9 @@ import { debounce } from "debounce";
 
 export default {
   name: "CourseDetailsTasks",
-  components: { "task-card": TaskCard },
+  components: {
+    "task-card": TaskCard
+  },
   mixins: [UserMixin],
   validations: {
     newTask: {
