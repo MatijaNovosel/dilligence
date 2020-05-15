@@ -103,6 +103,7 @@
             label="Maximum grade"
           />
           <q-file
+            ref="filePicker"
             dense
             multiple
             outlined
@@ -110,6 +111,7 @@
             class="q-pr-sm"
             clearable
             label="Attachments"
+            counter
           >
             <template v-slot:append>
               <q-icon name="mdi-paperclip" />
@@ -172,6 +174,7 @@ import { required, minLength, numeric } from "vuelidate/lib/validators";
 import UserMixin from "../../mixins/userMixin";
 import TaskCard from "../../components/task-card";
 import { debounce } from "debounce";
+import { base64StringToBlob } from "blob-util";
 
 export default {
   name: "CourseDetailsTasks",
@@ -241,7 +244,16 @@ export default {
         CourseTaskService.getTask(this.activeTaskId).then(({ data }) => {
           this.task = data;
           this.task.sendEmail = false;
-          this.task.files = data.attachments;
+          let files = [];
+          data.attachments.forEach(attachment => {
+            files.push(
+              new File(
+                [base64StringToBlob(attachment.data, attachment.contentType)],
+                attachment.name
+              )
+            );
+          });
+          this.$refs.filePicker.addFiles(files);
         });
       }
 
@@ -294,6 +306,7 @@ export default {
     },
     getCourseTasks() {
       this.tasksLoading = true;
+      this.courseTasks = null;
       CourseTaskService.getCourseTasks(this.courseId)
         .then(({ data }) => {
           this.courseTasks = data;
