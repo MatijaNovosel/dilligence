@@ -15,7 +15,7 @@ export default {
   async createNotification(payload) {
     return await axios.post('Notification', payload);
   },
-  async deleteNotification(payload) {
-    return await axios.delete('Notification', payload);
+  async deleteNotification(courseId, id) {
+    return await axios.delete('Notification', { params: { courseId, id } });
   }
 }

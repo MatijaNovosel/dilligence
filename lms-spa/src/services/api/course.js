@@ -50,7 +50,7 @@ export default {
       }
     });
   },
-  async getCourseUsers(courseId) {
-    return await axios.get(`Course/users/${courseId}`);
+  async getCourseUsers(courseId, name, surname, username) {
+    return await axios.get(`Course/users/${courseId}`, { params: { name, surname, username } });
   }
 }

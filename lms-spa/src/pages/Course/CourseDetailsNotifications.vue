@@ -19,7 +19,12 @@
       <q-skeleton v-show="notificationLoading" class="q-mx-sm" width="100%" height="150px" square />
       <template v-if="notifications && notifications.length != 0">
         <div class="col-12 q-pa-sm" v-for="(notification, i) in notifications" :key="i">
-          <notification-card @delete="deleteNotification" color="green-5" :value="notification" :courseId="courseId" />
+          <notification-card
+            @delete="deleteNotification"
+            color="green-5"
+            :value="notification"
+            :courseId="courseId"
+          />
         </div>
       </template>
       <div v-show="!notificationLoading" v-else class="col-12 q-my-sm">
@@ -288,10 +293,7 @@ export default {
         });
     },
     deleteNotification(id) {
-      NotificationService.deleteNotification({
-        courseId: this.courseId,
-        id
-      }).then(() => {
+      NotificationService.deleteNotification(this.courseId, id).then(() => {
         this.getNotifications();
       });
     }

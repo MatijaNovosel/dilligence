@@ -55,20 +55,24 @@ namespace tvz2api_cqrs.Implementation.Queries
 
   public class UserCourseQuery : IQuery<List<UserCourseDetailsDTO>>
   {
-    public UserCourseQuery(int id)
+    public UserCourseQuery(int id, CourseUserSpecification specification)
     {
       Id = id;
+      Specification = specification;
     }
     public int Id { get; set; }
+    public CourseUserSpecification Specification { get; set; }
   }
 
   public class UserCourseTotalQuery : IQuery<int>
   {
-    public UserCourseTotalQuery(int id)
+    public UserCourseTotalQuery(int id, CourseUserSpecification specification)
     {
       Id = id;
+      Specification = specification;
     }
     public int Id { get; set; }
+    public CourseUserSpecification Specification { get; set; }
   }
 
   public class CourseNotificationsQuery : IQuery<List<NotificationQueryModel>>

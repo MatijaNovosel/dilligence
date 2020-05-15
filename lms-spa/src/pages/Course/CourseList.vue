@@ -8,10 +8,10 @@
         <q-separator />
       </div>
       <div class="col-12 q-pb-md">
-        <div class="row justify-start">
-          <div class="col-8">
+        <div class="row justify-start q-col-gutter-sm">
+          <div class="col-xs-12 col-md-8">
             <q-input
-              @input="doSomething"
+              @input="inputChanged"
               outlined
               v-model="searchData.name"
               dense
@@ -19,9 +19,9 @@
               clearable
             />
           </div>
-          <div class="col-4 q-pl-sm">
+          <div class="col-xs-12 col-md-4">
             <q-select
-              @input="doSomething"
+              @input="inputChanged"
               outlined
               dense
               v-model="searchData.smjer"
@@ -45,7 +45,7 @@
           </div>
           <div class="col-12 q-pt-sm">
             <q-option-group
-              @input="doSomething"
+              @input="inputChanged"
               size="sm"
               v-model="searchData.showSubscriptions"
               :options="showSubscriptionsOptions"
@@ -251,7 +251,7 @@ export default {
           this.loading = false;
         });
     },
-    doSomething: debounce(function() {
+    inputChanged: debounce(function() {
       this.getData();
     }, 1000)
   },

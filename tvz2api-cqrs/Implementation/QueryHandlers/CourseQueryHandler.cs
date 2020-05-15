@@ -69,25 +69,23 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
 
     public async Task<List<UserCourseDetailsDTO>> HandleAsync(UserCourseQuery query)
     {
-      var course = await _context.Course
+      var users = await _context.User
         .Include(t => t.Subscription)
-        .ThenInclude(t => t.User)
-        .ThenInclude(t => t.ImageFile)
-        .Where(t => t.Id == query.Id)
-        .FirstOrDefaultAsync();
-      var users = course.Subscription
+        .ThenInclude(t => t.Course)
+        .Include(t => t.ImageFile)
+        .Where(query.Specification.Predicate)
         .Select(t => new UserCourseDetailsDTO
         {
-          Id = t.User.Id,
-          Name = t.User.Name,
-          Surname = t.User.Surname,
-          Username = t.User.Username,
-          Email = t.User.Email,
-          Created = t.User.Created,
-          Picture = t.User.ImageFile != null ? Convert.ToBase64String(t.User.ImageFile.Data) : null,
-          Admin = t.User.Id == course.MadeById
+          Id = t.Id,
+          Name = t.Name,
+          Surname = t.Surname,
+          Username = t.Username,
+          Email = t.Email,
+          Created = t.Created,
+          Picture = t.ImageFile != null ? Convert.ToBase64String(t.ImageFile.Data) : null,
+          Admin = t.Id == t.Subscription.FirstOrDefault(x => x.CourseId == query.Id).Course.MadeById
         })
-        .ToList();
+        .ToListAsync();
       return users;
     }
 
@@ -109,23 +107,17 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
 
     public async Task<int> HandleAsync(CourseTotalQuery query)
     {
-      var count = await _context.Course
-        .Where(query.Specification.Predicate)
-        .Select(t => new CourseQueryModel
-        {
-          Id = t.Id,
-          Name = t.Name,
-          Ects = t.Ects,
-          Subscribed = t.Subscription.Any(x => x.UserId == query.Specification.UserId),
-          SpecializationId = t.SpecializationId
-        }).CountAsync();
+      var count = await _context.Course.Where(query.Specification.Predicate).CountAsync();
       return count;
     }
 
     public async Task<int> HandleAsync(UserCourseTotalQuery query)
     {
       var count = await _context.User
-        .Where(t => t.Subscription.Any(x => x.CourseId == query.Id))
+        .Include(t => t.Subscription)
+        .ThenInclude(t => t.Course)
+        .Include(t => t.ImageFile)
+        .Where(query.Specification.Predicate)
         .CountAsync();
       return count;
     }

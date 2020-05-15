@@ -18,7 +18,7 @@
             />
           </q-btn-group>
         </div>
-        <div class="col-12 q-mb-lg">
+        <div class="col-12 q-mb-md">
           <q-separator />
         </div>
         <div class="col-12">

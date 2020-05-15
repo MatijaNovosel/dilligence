@@ -8,6 +8,7 @@ using LinqKit;
 using tvz2api_cqrs.Enumerations;
 using tvz2api_cqrs.Infrastructure.Specifications;
 using tvz2api_cqrs.Models;
+using tvz2api_cqrs.Models.DTO;
 
 namespace tvz2api_cqrs.Implementation.Specifications
 {
@@ -27,7 +28,6 @@ namespace tvz2api_cqrs.Implementation.Specifications
     public bool Subscribed { get; }
     public bool NonSubscribed { get; }
     public int? UserId { get; }
-
 
     public Expression<Func<Course, bool>> Predicate
     {
@@ -64,6 +64,49 @@ namespace tvz2api_cqrs.Implementation.Specifications
             predicate = predicate.And(t => !t.Subscription.Any(x => x.CourseId == t.Id && x.UserId == UserId));
           }
         }
+
+        return predicate.Expand();
+      }
+    }
+  }
+
+  public class CourseUserSpecification : ISpecification<User>
+  {
+    public CourseUserSpecification(String name, String surname, String username, int courseId)
+    {
+      Name = name;
+      Surname = surname;
+      Username = username;
+      CourseId = courseId;
+    }
+
+    public string Name { get; }
+    public string Surname { get; }
+    public string Username { get; }
+    public int CourseId { get; set; }
+
+    public Expression<Func<User, bool>> Predicate
+    {
+      get
+      {
+        Expression<Func<User, bool>> predicate = t => true;
+
+        if (!string.IsNullOrWhiteSpace(Name))
+        {
+          predicate = predicate.And(t => t.Name.ToLower().Contains(Name.ToLower()));
+        }
+
+        if (!string.IsNullOrWhiteSpace(Surname))
+        {
+          predicate = predicate.And(t => t.Surname.ToLower().Contains(Surname.ToLower()));
+        }
+
+        if (!string.IsNullOrWhiteSpace(Username))
+        {
+          predicate = predicate.And(t => t.Username.ToLower().Contains(Username.ToLower()));
+        }
+
+        predicate = predicate.And(t => t.Subscription.Any(x => x.CourseId == CourseId));
 
         return predicate.Expand();
       }

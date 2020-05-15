@@ -170,7 +170,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         .Notification
         .Include(t => t.NotificationUserSeen)
         .Include(t => t.NotificationFile)
-        .FirstOrDefaultAsync();
+        .FirstOrDefaultAsync(x => x.Id == command.Id);
       _context.NotificationFile.RemoveRange(notification.NotificationFile);
       _context.NotificationUserSeen.RemoveRange(notification.NotificationUserSeen);
       _context.Notification.Remove(notification);

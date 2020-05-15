@@ -83,16 +83,20 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpDelete]
-    public async Task<IActionResult> Delete(NotificationDeleteCommand command)
+    public async Task<IActionResult> Delete(int courseId, int id)
     {
       if (
-        !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanDeleteNotifications) &&
-        !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedToCourse))
+        !_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanDeleteNotifications) &&
+        !(_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.IsInvolvedToCourse))
       )
       {
         return Unauthorized();
       }
-      await _commandBus.ExecuteAsync(command);
+      await _commandBus.ExecuteAsync(new NotificationDeleteCommand()
+      {
+        CourseId = courseId,
+        Id = id
+      });
       await _hubContext.Clients.All.SendAsync("deleteNotification");
       return Ok();
     }

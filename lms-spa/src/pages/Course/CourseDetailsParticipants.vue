@@ -1,9 +1,51 @@
 <template>
   <div>
-    <div class="row q-gutter-sm justify-center">
+    <div class="row justify-center">
+      <div class="col-12">
+        <div class="row q-col-gutter-sm">
+          <div class="col-xs-12 col-md-4">
+            <q-input
+              @input="inputChanged"
+              outlined
+              v-model="searchData.name"
+              dense
+              label="Name"
+              clearable
+            />
+          </div>
+          <div class="col-xs-12 col-md-4">
+            <q-input
+              @input="inputChanged"
+              outlined
+              v-model="searchData.surname"
+              dense
+              label="Surname"
+              clearable
+            />
+          </div>
+          <div class="col-xs-12 col-md-4">
+            <q-input
+              @input="inputChanged"
+              outlined
+              v-model="searchData.username"
+              dense
+              label="Username"
+              clearable
+            />
+          </div>
+          <div class="q-ml-md" :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']">
+            *
+            <q-icon size="xs" class="q-mr-xs" name="mdi-mouse" />Right click on participants (or long tap on phones) for more options
+          </div>
+        </div>
+      </div>
+      <div class="col-12 q-py-md">
+        <q-separator />
+      </div>
       <template v-if="participants">
         <user-card
-          class="user-card"
+          class="user-card q-mx-sm"
+          :courseId="courseId"
           :value="participant"
           v-for="(participant, i) in participants"
           :key="i"
@@ -16,6 +58,7 @@
 <script>
 import CourseService from "../../services/api/course";
 import UserCard from "../../components/user-card";
+import { debounce } from "debounce";
 
 export default {
   name: "CourseDetailsParticipants",
@@ -28,15 +71,28 @@ export default {
   },
   methods: {
     getUsers() {
-      CourseService.getCourseUsers(this.courseId).then(({ data }) => {
+      CourseService.getCourseUsers(
+        this.courseId,
+        this.searchData.name,
+        this.searchData.surname,
+        this.searchData.username
+      ).then(({ data }) => {
         this.participants = data.results;
       });
-    }
+    },
+    inputChanged: debounce(function() {
+      this.getUsers();
+    }, 1000)
   },
   data() {
     return {
       courseId: null,
-      participants: null
+      participants: null,
+      searchData: {
+        name: null,
+        surname: null,
+        username: null
+      }
     };
   }
 };

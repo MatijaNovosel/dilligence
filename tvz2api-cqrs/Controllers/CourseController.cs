@@ -45,10 +45,11 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpGet("users/{id}")]
-    public async Task<IActionResult> GetUsers(int id)
+    public async Task<IActionResult> GetUsers(int id, string name, string surname, string username)
     {
-      var result = await _queryBus.ExecuteAsync(new UserCourseQuery(id));
-      var count = await _queryBus.ExecuteAsync(new UserCourseTotalQuery(id));
+      var specification = new CourseUserSpecification(name, surname, username, id);
+      var result = await _queryBus.ExecuteAsync(new UserCourseQuery(id, specification));
+      var count = await _queryBus.ExecuteAsync(new UserCourseTotalQuery(id, specification));
       return Ok(new PageableCollection<UserCourseDetailsDTO>() { Results = result, Total = count });
     }
 
