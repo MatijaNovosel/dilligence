@@ -52,13 +52,31 @@
     <q-card-section horizontal>
       <q-card-actions vertical class="justify-around text-subtitle1">
         <span class="q-mr-sm">
-          <q-icon size="xs" class="q-mr-sm" color="indigo" name="mdi-account" />Created by
+          <q-icon
+            size="xs"
+            :class="!$q.screen.xs && !$q.screen.sm ? 'q-mr-sm' : 'q-ml-sm'"
+            color="indigo"
+            name="mdi-account"
+          />
+          <span v-if="!$q.screen.xs && !$q.screen.sm">Created by</span>
         </span>
         <span class="q-mr-sm">
-          <q-icon size="xs" class="q-mr-sm" color="blue" name="mdi-calendar-check" />Created at
+          <q-icon
+            size="xs"
+            :class="!$q.screen.xs && !$q.screen.sm ? 'q-mr-sm' : 'q-ml-sm'"
+            color="blue"
+            name="mdi-calendar-check"
+          />
+          <span v-if="!$q.screen.xs && !$q.screen.sm">Created at</span>
         </span>
         <span class="q-mr-sm">
-          <q-icon size="xs" class="q-mr-sm" color="red-7" name="mdi-clock-out" />Due date
+          <q-icon
+            size="xs"
+            :class="!$q.screen.xs && !$q.screen.sm ? 'q-mr-sm' : 'q-ml-sm'"
+            color="red-7"
+            name="mdi-clock-out"
+          />
+          <span v-if="!$q.screen.xs && !$q.screen.sm">Due date</span>
         </span>
       </q-card-actions>
       <q-separator vertical />
@@ -72,10 +90,17 @@
       </q-card-section>
     </q-card-section>
     <q-separator />
-    <q-card-actions class="text-subtitle1 q-ml-sm">
+    <q-card-actions
+      class="text-subtitle1 q-ml-sm"
+      v-if="!hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
+    >
       Current grade:
       <span class="text-green-4 q-mx-xs">50</span> out of
       <span class="text-green-5 q-ml-xs">100</span>
+    </q-card-actions>
+    <q-card-actions class="text-subtitle1 q-ml-sm" v-else>
+      Number of submissions:
+      <span class="text-green-4 q-mx-xs">5</span>
     </q-card-actions>
   </q-card>
 </template>

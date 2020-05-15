@@ -225,6 +225,7 @@ namespace tvz2api_cqrs
 
       // CourseTask queries
       services.AddScoped<IQueryHandlerAsync<CourseTaskQuery, List<CourseTaskQueryModel>>, CourseTaskQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<CourseTaskTotalQuery, int>, CourseTaskQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<CourseTaskDetailsQuery, CourseTaskQueryModel>, CourseTaskQueryHandler>();
     }
   }

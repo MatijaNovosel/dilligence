@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="row justify-center">
-      <div class="col-12">
+    <div class="row">
+      <div class="col-12 q-mb-md">
         <div class="row q-col-gutter-sm">
           <div class="col-xs-12 col-md-4">
             <q-input
@@ -38,9 +38,6 @@
             <q-icon size="xs" class="q-mr-xs" name="mdi-mouse" />Right click on participants (or long tap on phones) for more options
           </div>
         </div>
-      </div>
-      <div class="col-12 q-py-md">
-        <q-separator />
       </div>
       <template v-if="participants">
         <user-card

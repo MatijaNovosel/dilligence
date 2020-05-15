@@ -15,6 +15,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
 {
   public class CourseTaskQueryHandler :
     IQueryHandlerAsync<CourseTaskQuery, List<CourseTaskQueryModel>>,
+    IQueryHandlerAsync<CourseTaskTotalQuery, int>,
     IQueryHandlerAsync<CourseTaskDetailsQuery, CourseTaskQueryModel>
   {
     private readonly lmsContext _context;
@@ -31,7 +32,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
       var courseTasks = await _context.CourseTask
         .Include(t => t.CourseTaskAttachment)
         .ThenInclude(t => t.File)
-        .Where(t => t.CourseId == query.CourseId)
+        .Where(query.Specification.Predicate)
         .Select(t => new CourseTaskQueryModel
         {
           Id = t.Id,
@@ -53,6 +54,14 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           }).ToList()
         })
         .ToListAsync();
+      return courseTasks;
+    }
+
+    public async Task<int> HandleAsync(CourseTaskTotalQuery query)
+    {
+      var courseTasks = await _context.CourseTask
+        .Where(query.Specification.Predicate)
+        .CountAsync();
       return courseTasks;
     }
 

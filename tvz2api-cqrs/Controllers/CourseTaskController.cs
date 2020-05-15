@@ -37,13 +37,12 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpGet("{courseId}")]
-    public async Task<IActionResult> Get(int courseId)
+    public async Task<IActionResult> Get(int courseId, string name)
     {
-      var result = await _queryBus.ExecuteAsync(new CourseTaskQuery()
-      {
-        CourseId = courseId
-      });
-      return Ok(result);
+      var specification = new CourseTaskSpecification(courseId, name);
+      var result = await _queryBus.ExecuteAsync(new CourseTaskQuery(specification));
+      var count = await _queryBus.ExecuteAsync(new CourseTaskTotalQuery(specification));
+      return Ok(new PageableCollection<CourseTaskQueryModel>() { Results = result, Total = count });
     }
 
     [HttpGet("details/{id}")]

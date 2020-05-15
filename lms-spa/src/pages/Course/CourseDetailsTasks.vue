@@ -2,6 +2,15 @@
   <div>
     <div class="row">
       <div class="col-12">
+        <q-input
+          class="q-mb-xs"
+          outlined
+          dense
+          label="Name"
+          clearable
+          v-model="searchData.name"
+          @input="searchValuesChanged"
+        />
         <q-option-group
           size="sm"
           v-model="showNotifications"
@@ -9,7 +18,7 @@
           type="checkbox"
           color="primary"
           inline
-          @input="showNotificationsValueChanged"
+          @input="searchValuesChanged"
         />
         <div class="q-ml-md q-mb-md" :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']">
           *
@@ -18,7 +27,7 @@
       </div>
       <q-skeleton v-show="tasksLoading" class="q-mx-sm" width="100%" height="150px" square />
       <template v-if="courseTasks && courseTasks.length != 0">
-        <div class="col-xs-12 col-md-4" :key="i" v-for="(courseTask, i) in courseTasks">
+        <div class="col-xs-12 col-sm-4" :key="i" v-for="(courseTask, i) in courseTasks">
           <task-card
             class="q-ma-sm"
             @edit="editTask"
@@ -30,7 +39,7 @@
           />
         </div>
       </template>
-      <div v-show="!tasksLoading" v-else class="col-12 q-my-sm">
+      <div v-show="!tasksLoading" v-else class="col-12">
         <div>{{ $i18n.t('noData') }}</div>
       </div>
     </div>
@@ -205,6 +214,9 @@ export default {
   },
   data() {
     return {
+      searchData: {
+        name: null
+      },
       activeTaskId: null,
       tasksLoading: false,
       courseId: null,
@@ -259,7 +271,7 @@ export default {
 
       this.taskDialog = true;
     },
-    showNotificationsValueChanged: debounce(function() {
+    searchValuesChanged: debounce(function() {
       this.getCourseTasks();
     }, 1500),
     createCourseTask() {
@@ -307,9 +319,9 @@ export default {
     getCourseTasks() {
       this.tasksLoading = true;
       this.courseTasks = null;
-      CourseTaskService.getCourseTasks(this.courseId)
+      CourseTaskService.getCourseTasks(this.courseId, this.searchData.name)
         .then(({ data }) => {
-          this.courseTasks = data;
+          this.courseTasks = data.results;
         })
         .finally(() => {
           this.tasksLoading = false;
