@@ -200,11 +200,18 @@ import SMJER from "../../constants/smjer";
 import UserMixin from "../../mixins/userMixin";
 import { debounce } from "debounce";
 import { required, minLength } from "vuelidate/lib/validators";
+import saveState from "vue-save-state";
 
 export default {
   name: "Subjects",
-  mixins: [UserMixin],
+  mixins: [UserMixin, saveState],
   methods: {
+    getSaveStateConfig() {
+      return {
+        cacheKey: "course-list",
+        saveProperties: ["searchData"]
+      };
+    },
     subscribe() {
       UserService.subscribe(this.password, this.user.id, this.activeSubjectId)
         .then(() => {
