@@ -19,20 +19,25 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mail;
 using Microsoft.Extensions.Configuration;
+using tvz2api_cqrs.Custom;
 
 namespace tvz2api_cqrs.Implementation.CommandHandlers
 {
   public class CourseTaskCommandHandler :
     ICommandHandlerAsync<CourseTaskCreateCommand>,
-    ICommandHandlerAsync<CourseTaskUpdateCommand>
+    ICommandHandlerAsync<CourseTaskDeleteCommand>,
+    ICommandHandlerAsync<CourseTaskUpdateCommand>,
+    ICommandHandlerAsync<CourseTaskSubmitAttemptCommand>
   {
     private readonly lmsContext _context;
     private readonly IConfiguration _configuration;
+    private readonly IUserResolver _userResolver;
 
-    public CourseTaskCommandHandler(lmsContext context, IConfiguration configuration)
+    public CourseTaskCommandHandler(lmsContext context, IConfiguration configuration, IUserResolver userResolver)
     {
       _context = context;
       _configuration = configuration;
+      _userResolver = userResolver;
     }
 
     public async Task HandleAsync(CourseTaskCreateCommand command)
@@ -142,6 +147,74 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       }
 
       await _context.SaveChangesAsync();
+    }
+
+    public async Task HandleAsync(CourseTaskDeleteCommand command)
+    {
+      var courseTask = await _context
+        .CourseTask
+        .Include(t => t.CourseTaskAttachment)
+        .Include(t => t.CourseTaskAttempt)
+        .ThenInclude(t => t.TaskAttemptAttachment)
+        .FirstOrDefaultAsync(t => t.Id == command.Id);
+      _context.CourseTaskAttachment.RemoveRange(courseTask.CourseTaskAttachment);
+      courseTask.CourseTaskAttempt.ToList().ForEach(x =>
+      {
+        _context.TaskAttemptAttachment.RemoveRange(x.TaskAttemptAttachment);
+      });
+      _context.CourseTaskAttachment.RemoveRange(courseTask.CourseTaskAttachment);
+    }
+
+    public async Task HandleAsync(CourseTaskSubmitAttemptCommand command)
+    {
+      var newCourseTaskAttempt = new CourseTaskAttempt()
+      {
+        CourseTaskId = command.CourseTaskId,
+        Description = command.Description,
+        UserId = _userResolver.Id
+      };
+
+      await _context.CourseTaskAttempt.AddAsync(newCourseTaskAttempt);
+      await _context.SaveChangesAsync();
+
+      if (command.Files.Count != 0)
+      {
+        List<tvz2api_cqrs.Models.File> newFiles = new List<tvz2api_cqrs.Models.File>();
+
+        command.Files.ForEach(file =>
+        {
+          using (var ms = new MemoryStream())
+          {
+            file.CopyTo(ms);
+            var fileBytes = ms.ToArray();
+
+            var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+            fileName = fileName.Substring(0, fileName.LastIndexOf(".")) + fileName.Substring(fileName.LastIndexOf(".")).ToLower();
+
+            newFiles.Add(new tvz2api_cqrs.Models.File
+            {
+              Name = Path.GetFileName(fileName),
+              ContentType = file.ContentType,
+              Data = fileBytes,
+              Size = fileBytes.Length
+            });
+          }
+        });
+
+        await _context.File.AddRangeAsync(newFiles);
+        await _context.SaveChangesAsync();
+
+        newFiles.ForEach(file =>
+        {
+          _context.TaskAttemptAttachment.Add(new TaskAttemptAttachment()
+          {
+            CourseTaskAttemptId = newCourseTaskAttempt.Id,
+            FileId = file.Id
+          });
+        });
+
+        await _context.SaveChangesAsync();
+      }
     }
   }
 }

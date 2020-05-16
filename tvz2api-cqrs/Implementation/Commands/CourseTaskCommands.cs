@@ -27,6 +27,7 @@ namespace tvz2api_cqrs.Implementation.Commands
     [FromForm(Name = "maximumGrade")]
     public int MaximumGrade { get; set; }
   }
+
   public class CourseTaskUpdateCommand : ICommand
   {
     public CourseTaskUpdateCommand() { }
@@ -45,6 +46,26 @@ namespace tvz2api_cqrs.Implementation.Commands
     [FromForm(Name = "maximumGrade")]
     public int MaximumGrade { get; set; }
     [FromForm(Name = "courseId")]
+    public int CourseId { get; set; }
+  }
+
+  public class CourseTaskSubmitAttemptCommand : ICommand
+  {
+    public CourseTaskSubmitAttemptCommand() { }
+    [FromForm(Name = "courseTaskId")]
+    public int CourseTaskId { get; set; }
+    [FromForm(Name = "description")]
+    public string Description { get; set; }
+    [FromForm(Name = "files")]
+    public List<IFormFile> Files { get; set; }
+    [FromForm(Name = "courseId")]
+    public int CourseId { get; set; }
+  }
+
+  public class CourseTaskDeleteCommand : ICommand
+  {
+    public CourseTaskDeleteCommand() { }
+    public int Id { get; set; }
     public int CourseId { get; set; }
   }
 }

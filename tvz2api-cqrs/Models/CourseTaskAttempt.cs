@@ -15,7 +15,7 @@ namespace tvz2api_cqrs.Models
         public int Grade { get; set; }
         public int UserId { get; set; }
         public int CourseTaskId { get; set; }
-        public int GradedById { get; set; }
+        public int? GradedById { get; set; }
 
         public virtual CourseTask CourseTask { get; set; }
         public virtual User GradedBy { get; set; }

@@ -57,6 +57,34 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
       return courseTasks;
     }
 
+    public async Task<List<CourseTaskAttemptQueryModel>> HandleAsync(CourseTaskAttemptsQuery query)
+    {
+      var attempts = await _context
+        .CourseTaskAttempt
+        .Include(t => t.TaskAttemptAttachment)
+        .ThenInclude(t => t.File)
+        .Where(t => t.CourseTaskId == query.Id)
+        .Select(t => new CourseTaskAttemptQueryModel()
+        {
+          CourseTaskId = t.CourseTaskId,
+          Description = t.Description,
+          Grade = t.Grade,
+          GradedBy = $"{t.GradedBy.Name} {t.GradedBy.Surname}",
+          GradedById = t.GradedById,
+          Attachments = t.TaskAttemptAttachment.Select(y => new FileDTO()
+          {
+            ContentType = y.File.ContentType,
+            Data = y.File.Data,
+            Id = y.File.Id,
+            Name = y.File.Name,
+            Size = y.File.Size
+          })
+          .ToList()
+        })
+        .ToListAsync();
+      return attempts;
+    }
+
     public async Task<int> HandleAsync(CourseTaskTotalQuery query)
     {
       var courseTasks = await _context.CourseTask

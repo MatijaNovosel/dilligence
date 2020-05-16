@@ -62,6 +62,13 @@
       @close="editCreateDialog = false"
       @refresh="getCourseTasks"
     />
+    <task-new-submission-dialog
+      :mode="dialogMode"
+      :open="createSubmissionDialog"
+      :activeTaskId="activeTaskId"
+      :courseId="courseId"
+      @close="createSubmissionDialog = false"
+    />
     <q-page-sticky
       position="bottom-right"
       :offset="[18, 18]"
@@ -86,13 +93,15 @@ import UserMixin from "../../mixins/userMixin";
 import TaskCard from "../../components/task-card";
 import saveState from "vue-save-state";
 import CreateEditTaskDialog from "../../components/create-edit-task-dialog";
+import TaskNewSubmissionDialog from "../../components/task-new-submission-dialog";
 import { debounce } from "debounce";
 
 export default {
   name: "CourseDetailsTasks",
   components: {
     "task-card": TaskCard,
-    "create-edit-task-dialog": CreateEditTaskDialog
+    "create-edit-task-dialog": CreateEditTaskDialog,
+    "task-new-submission-dialog": TaskNewSubmissionDialog
   },
   mixins: [UserMixin, saveState],
   created() {
@@ -120,6 +129,7 @@ export default {
       tasksLoading: false,
       courseId: null,
       editCreateDialog: false,
+      createSubmissionDialog: false,
       dialogMode: "create",
       dialogStyle: {
         width: "70%",
@@ -157,6 +167,10 @@ export default {
         saveProperties: ["searchData", "showTasksOptions", "showOverdueOptions"]
       };
     },
+    openNewSubmissionDialog(mode) {
+      this.dialogMode = mode;
+      this.createSubmissionDialog = true;
+    },
     openTaskDialog(mode) {
       this.dialogMode = mode;
       this.editCreateDialog = true;
@@ -181,7 +195,9 @@ export default {
         });
     },
     deleteTask(taskId) {
-      console.log(taskId);
+      CourseTaskService.deleteTask(taskId, this.courseId).then(() => {
+        this.getCourseTasks();
+      });
     },
     viewTask(taskId) {
       console.log(taskId);
@@ -191,7 +207,8 @@ export default {
       this.openTaskDialog("edit");
     },
     submitTask(taskId) {
-      console.log(taskId);
+      this.activeTaskId = taskId;
+      this.openNewSubmissionDialog("create");
     }
   }
 };

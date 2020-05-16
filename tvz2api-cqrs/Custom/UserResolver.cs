@@ -31,6 +31,14 @@ namespace tvz2api_cqrs.Custom
       }
     }
 
+    public int Id
+    {
+      get
+      {
+        return Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+      }
+    }
+
     public UserResolver(IHttpContextAccessor accessor, lmsContext context)
     {
       _accessor = accessor;
@@ -55,8 +63,7 @@ namespace tvz2api_cqrs.Custom
 
     public bool UserBelongsToCourse(int courseId)
     {
-      int userId = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-      return _context.Subscription.Any(x => x.UserId == userId && x.CourseId == courseId);
+      return _context.Subscription.Any(x => x.UserId == Id && x.CourseId == courseId);
     }
   }
 }

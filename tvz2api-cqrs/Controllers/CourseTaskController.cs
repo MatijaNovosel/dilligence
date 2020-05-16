@@ -55,6 +55,53 @@ namespace tvz2api_cqrs.Controllers
       return Ok(result);
     }
 
+    [HttpGet("attempts/{id}")]
+    public async Task<IActionResult> GetAttempts(int id, int courseId)
+    {
+      if (
+        !_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanDeleteTasks) &&
+        !(_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.IsInvolvedWithCourse))
+      )
+      {
+        return Unauthorized();
+      }
+      var result = await _queryBus.ExecuteAsync(new CourseTaskAttemptsQuery()
+      {
+        Id = id,
+        CourseId = courseId
+      });
+      return Ok(result);
+    }
+
+    [HttpPost("new-attempt")]
+    public async Task<IActionResult> NewAttempt([FromForm] CourseTaskSubmitAttemptCommand command)
+    {
+      if (!_userResolver.UserBelongsToCourse(command.CourseId))
+      {
+        return Unauthorized();
+      }
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> CreateNew(int id, int courseId)
+    {
+      if (
+        !_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanDeleteTasks) &&
+        !(_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.IsInvolvedWithCourse))
+      )
+      {
+        return Unauthorized();
+      }
+      await _commandBus.ExecuteAsync(new CourseTaskDeleteCommand()
+      {
+        CourseId = courseId,
+        Id = id
+      });
+      return Ok();
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateNew([FromForm] CourseTaskCreateCommand command)
     {

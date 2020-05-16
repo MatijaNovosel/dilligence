@@ -19,7 +19,7 @@ namespace tvz2api_cqrs.QueryModels
   }
   public class UserSettingsQueryModel
   {
-    public bool DarkMode { get; set; }
+    public bool? DarkMode { get; set; }
     public string Locale { get; set; }
   }
 }

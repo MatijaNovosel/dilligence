@@ -8,6 +8,7 @@ namespace tvz2api_cqrs.Custom
   {
     ClaimsPrincipal User { get; }
     UserPrivilegeDTO Privileges { get; }
+    int Id { get; }
     bool UserBelongsToCourse(int courseId);
     bool HasGeneralPrivilege(params PrivilegeEnum[] requestedPrivileges);
     bool HasCoursePrivilege(int courseId, params PrivilegeEnum[] requestedPrivileges);
