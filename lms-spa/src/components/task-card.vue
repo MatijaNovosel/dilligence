@@ -9,7 +9,7 @@
       >
         <q-item
           v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageTasks, Privileges.CanDeleteTasks) 
-          && hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
+          && hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
           clickable
           v-close-popup
           @click="$deleteTask"
@@ -18,7 +18,7 @@
         </q-item>
         <q-item
           v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageTasks, Privileges.CanCreateTasks) 
-          && hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
+          && hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
           clickable
           v-close-popup
           @click="$editTask"
@@ -27,7 +27,7 @@
         </q-item>
         <q-item
           v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageTasks, Privileges.CanGradeTasks) 
-          && hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
+          && hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
           clickable
           v-close-popup
           @click="$viewSubmissions"
@@ -35,7 +35,7 @@
           <q-item-section>View submissions</q-item-section>
         </q-item>
         <q-item
-          v-if="!hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
+          v-if="!hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
           clickable
           v-close-popup
           @click="$submitAttempt"
@@ -85,14 +85,14 @@
         :class="[ $q.dark.isActive ? 'text-grey-6' : 'text-black' ]"
       >
         <div>{{ value.createdBy }}</div>
-        <div class="q-my-md">{{ value.dueDate | timeStampFilter }}</div>
-        <div>{{ value.submittedAt | timeStampFilter }}</div>
+        <div class="q-my-md">{{ value.submittedAt | timeStampFilter }}</div>
+        <div>{{ value.dueDate | timeStampFilter }}</div>
       </q-card-section>
     </q-card-section>
     <q-separator />
     <q-card-actions
       class="text-subtitle1 q-ml-sm"
-      v-if="!hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
+      v-if="!hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
     >
       Current grade:
       <span class="text-green-4 q-mx-xs">50</span> out of

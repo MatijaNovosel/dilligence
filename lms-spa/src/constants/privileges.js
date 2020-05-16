@@ -34,5 +34,5 @@ export default {
   CanUploadCourseFiles: 24, // Can upload files to the course
   CanDeleteCourseFiles: 25, // Can delete files, even those uploaded by others
   // Course specific -> Roles
-  IsInvolvedToCourse: 26 // If the user is involved with the course somehow, admin or other sub roles, used to differentiate users and admins
+  IsInvolvedWithCourse: 26 // If the user is involved with the course somehow, admin or other sub roles, used to differentiate users and admins
 };

@@ -99,4 +99,11 @@ function download(contentType, base64Data, name) {
   document.body.removeChild(element);
 }
 
-export { generateUserPictureSource, randInt, randColor, acronym, fileIcon, download };
+export {
+  generateUserPictureSource,
+  randInt,
+  randColor,
+  acronym,
+  fileIcon,
+  download
+};

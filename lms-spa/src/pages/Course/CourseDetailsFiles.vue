@@ -2,10 +2,15 @@
   <div>
     <div class="row">
       <div class="col-6" :key="content.id" v-for="content in sidebarContents">
-        <file-cabinet :content="content" />
+        <file-cabinet :courseId="courseId" :content="content" />
       </div>
     </div>
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+    <q-page-sticky
+      position="bottom-right"
+      :offset="[18, 18]"
+      v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageCourseFiles, Privileges.CanUploadCourseFiles)
+            && hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
+    >
       <q-fab direction="left" :color="!$q.dark.isActive ? 'primary' : 'grey-8'" fab icon="add">
         <q-fab-action
           icon="mdi-email-plus"
@@ -25,9 +30,11 @@
 <script>
 import CourseService from "../../services/api/course";
 import FileCabinet from "../../components/file-cabinet";
+import UserMixin from "../../mixins/userMixin";
 
 export default {
   name: "CourseDetailsFiles",
+  mixins: [UserMixin],
   components: {
     "file-cabinet": FileCabinet
   },

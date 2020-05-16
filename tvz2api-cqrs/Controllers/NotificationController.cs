@@ -65,7 +65,7 @@ namespace tvz2api_cqrs.Controllers
     {
       if (
         !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanSendNotifications) &&
-        !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedToCourse))
+        !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedWithCourse))
       )
       {
         return Unauthorized();
@@ -87,7 +87,7 @@ namespace tvz2api_cqrs.Controllers
     {
       if (
         !_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanDeleteNotifications) &&
-        !(_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.IsInvolvedToCourse))
+        !(_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.IsInvolvedWithCourse))
       )
       {
         return Unauthorized();

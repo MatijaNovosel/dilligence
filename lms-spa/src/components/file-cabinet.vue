@@ -17,6 +17,8 @@
             round
             icon="mdi-plus-box-multiple"
             @click="addFileDialog = !addFileDialog"
+            v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageCourseFiles, Privileges.CanUploadCourseFiles)
+            && hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
           >
             <q-tooltip>{{ $i18n.t('uploadFiles') }}</q-tooltip>
           </q-btn>
@@ -147,10 +149,12 @@
 <script>
 import { download, fileIcon } from "../helpers/helpers";
 import FileService from "../services/api/file";
+import UserMixin from "../mixins/userMixin";
 
 export default {
   name: "file-cabinet",
-  props: ["content", "headerColor"],
+  props: ["content", "headerColor", "courseId"],
+  mixins: [UserMixin],
   data() {
     return {
       downloadMultipleSelection: [],

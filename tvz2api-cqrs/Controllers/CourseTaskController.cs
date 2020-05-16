@@ -37,9 +37,9 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpGet("{courseId}")]
-    public async Task<IActionResult> Get(int courseId, string name)
+    public async Task<IActionResult> Get(int courseId, string name, bool showOverdue, bool showActive)
     {
-      var specification = new CourseTaskSpecification(courseId, name);
+      var specification = new CourseTaskSpecification(courseId, name, showOverdue, showActive);
       var result = await _queryBus.ExecuteAsync(new CourseTaskQuery(specification));
       var count = await _queryBus.ExecuteAsync(new CourseTaskTotalQuery(specification));
       return Ok(new PageableCollection<CourseTaskQueryModel>() { Results = result, Total = count });
@@ -60,7 +60,7 @@ namespace tvz2api_cqrs.Controllers
     {
       if (
         !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanCreateTasks) &&
-        !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedToCourse))
+        !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedWithCourse))
       )
       {
         return Unauthorized();
@@ -74,7 +74,7 @@ namespace tvz2api_cqrs.Controllers
     {
       if (
         !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanCreateTasks) &&
-        !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedToCourse))
+        !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedWithCourse))
       )
       {
         return Unauthorized();

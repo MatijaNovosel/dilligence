@@ -32,6 +32,6 @@ namespace tvz2api_cqrs.Enumerations
     CanManageCourseFiles = 23,
     CanUploadCourseFiles = 24,
     CanDeleteCourseFiles = 25,
-    IsInvolvedToCourse = 26
+    IsInvolvedWithCourse = 26
   }
 }

@@ -2,25 +2,36 @@
   <div>
     <div class="row">
       <div class="col-12">
-        <q-input
-          class="q-mb-xs"
-          outlined
-          dense
-          label="Name"
-          clearable
-          v-model="searchData.name"
-          @input="searchValuesChanged"
-        />
-        <q-option-group
-          size="sm"
-          v-model="showNotifications"
-          :options="showNotificationsOptions"
-          type="checkbox"
-          color="primary"
-          inline
-          @input="searchValuesChanged"
-        />
-        <div class="q-ml-md q-mb-md" :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']">
+        <div class="row q-col-gutter-sm">
+          <q-input
+            outlined
+            dense
+            label="Name"
+            clearable
+            class="full-width"
+            v-model="searchData.name"
+            @input="searchValuesChanged"
+          />
+          <q-option-group
+            size="sm"
+            v-model="showTasks"
+            :options="showTasksOptions"
+            type="checkbox"
+            color="primary"
+            inline
+            @input="searchValuesChanged"
+          />
+          <q-option-group
+            size="sm"
+            v-model="showOverdue"
+            :options="showOverdueOptions"
+            type="checkbox"
+            color="primary"
+            inline
+            @input="searchValuesChanged"
+          />
+        </div>
+        <div class="q-ml-md q-my-sm" :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']">
           *
           <q-icon size="xs" class="q-mr-xs" name="mdi-mouse" />Right click on tasks (or long tap on phones) for more options
         </div>
@@ -163,7 +174,7 @@
       position="bottom-right"
       :offset="[18, 18]"
       v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageTasks, Privileges.CanCreateTasks) 
-      && hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
+      && hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
     >
       <q-fab direction="left" :color="!$q.dark.isActive ? 'primary' : 'grey-8'" fab icon="add">
         <q-fab-action
@@ -184,6 +195,7 @@ import UserMixin from "../../mixins/userMixin";
 import TaskCard from "../../components/task-card";
 import { debounce } from "debounce";
 import { base64StringToBlob } from "blob-util";
+import { format, add } from "date-fns";
 
 export default {
   name: "CourseDetailsTasks",
@@ -226,7 +238,7 @@ export default {
         title: "Task title",
         sendEmail: false,
         description: "Task description",
-        dueDate: "2020-07-20 12:40",
+        dueDate: format(add(new Date(), { days: 1 }), "yyyy-MM-dd hh:mm"),
         files: null,
         maximumGrade: 100
       },
@@ -235,14 +247,25 @@ export default {
         "max-width": "90vw"
       },
       courseTasks: null,
-      showNotifications: [0],
-      showNotificationsOptions: [
+      showTasks: [0],
+      showOverdue: [1],
+      showTasksOptions: [
         {
           label: "Show graded",
           value: 0
         },
         {
           label: "Show ungraded",
+          value: 1
+        }
+      ],
+      showOverdueOptions: [
+        {
+          label: "Show overdue",
+          value: 0
+        },
+        {
+          label: "Show active tasks",
           value: 1
         }
       ]
@@ -319,7 +342,12 @@ export default {
     getCourseTasks() {
       this.tasksLoading = true;
       this.courseTasks = null;
-      CourseTaskService.getCourseTasks(this.courseId, this.searchData.name)
+      CourseTaskService.getCourseTasks(
+        this.courseId,
+        this.searchData.name,
+        this.showOverdue.includes(0),
+        this.showOverdue.includes(1)
+      )
         .then(({ data }) => {
           this.courseTasks = data.results;
         })
@@ -332,7 +360,7 @@ export default {
         title: "Task title",
         sendEmail: false,
         description: "Task description",
-        dueDate: "2020-07-20 12:40",
+        dueDate: format(add(new Date(), { days: 1 }), "yyyy-MM-dd hh:mm"),
         files: null,
         maximumGrade: 100
       };

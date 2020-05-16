@@ -4,7 +4,7 @@
       touch-position
       context-menu
       v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageNotifications, Privileges.CanDeleteNotifications, Privileges.CanArchiveNotifications) 
-      && hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
+      && hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
     >
       <q-list
         :class="`${$q.dark.isActive ? 'border-dark' : 'border-light'}`"
@@ -14,7 +14,7 @@
       >
         <q-item
           v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageNotifications, Privileges.CanDeleteNotifications) 
-          && hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
+          && hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
           clickable
           v-close-popup
           @click="$deleteNotification"
@@ -23,7 +23,7 @@
         </q-item>
         <q-item
           v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageNotifications, Privileges.CanArchiveNotifications) 
-          && hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
+          && hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
           clickable
           v-close-popup
         >

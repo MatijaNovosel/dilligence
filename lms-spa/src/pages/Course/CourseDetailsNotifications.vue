@@ -154,7 +154,7 @@
     <q-page-sticky
       position="bottom-right"
       :offset="[18, 18]"
-      v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageNotifications, Privileges.CanSendNotifications) && hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
+      v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageNotifications, Privileges.CanSendNotifications) && hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
     >
       <q-fab direction="left" :color="!$q.dark.isActive ? 'primary' : 'grey-8'" fab icon="add">
         <q-fab-action

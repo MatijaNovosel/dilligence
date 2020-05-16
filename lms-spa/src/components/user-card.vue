@@ -12,13 +12,13 @@
         separator
         style="min-width: 100px; border-radius: 6px;"
         v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanKickParticipants, Privileges.CanMuteParticipants) 
-          && hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
+          && hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
       >
         <q-item
           clickable
           v-close-popup
           v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanMuteParticipants) 
-          && hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
+          && hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
         >
           <q-item-section>Mute participant</q-item-section>
         </q-item>
@@ -26,7 +26,7 @@
           clickable
           v-close-popup
           v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanKickParticipants) 
-          && hasCoursePrivileges(courseId, Privileges.IsInvolvedToCourse)"
+          && hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
         >
           <q-item-section>Kick participant</q-item-section>
         </q-item>
