@@ -35,7 +35,7 @@
           <q-item-section>View submissions</q-item-section>
         </q-item>
         <q-item
-          v-if="!hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
+          v-if="!hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse) && !isExpired"
           clickable
           v-close-popup
           @click="$submitAttempt"
@@ -44,8 +44,8 @@
         </q-item>
       </q-list>
     </q-menu>
-    <q-bar dense style="height: 10px;" />
-    <q-card-section class="q-py-sm">
+    <q-bar style="height: 10px;" :class="isExpired ? 'bar-expired' : ''" />
+    <q-card-section class="q-py-sm" :class="isExpired ? 'header-expired' : ''">
       <span class="text-h6">{{ value.title }}</span>
     </q-card-section>
     <q-separator />
@@ -107,8 +107,8 @@
 
 <script>
 import { download, fileIcon } from "../helpers/helpers";
+import { format, compareAsc } from "date-fns";
 import UserMixin from "../mixins/userMixin";
-import { format } from "date-fns";
 
 export default {
   name: "task-card",
@@ -119,6 +119,11 @@ export default {
   },
   data() {
     return {};
+  },
+  computed: {
+    isExpired() {
+      return compareAsc(new Date(this.value.dueDate), new Date()) == -1;
+    }
   },
   methods: {
     format,
@@ -141,3 +146,10 @@ export default {
   }
 };
 </script>
+
+<style lang="sass">
+.bar-expired
+  background-color: rgb(138, 19, 19)
+.header-expired
+  background-color: rgb(181, 24, 24)
+</style>
