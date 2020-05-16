@@ -13,8 +13,9 @@ export default {
   },
   methods: {
     /**
-     * Checks if the current user has the requested privileges.
      * @param {...number} requestedPrivileges - Variable amount of numbers representing the requested privileges.
+     * @description
+     * Checks if the current user has the requested privileges, not contained within course specific privileges.
      * @return {boolean} A boolean indicating if the user has said privileges or not.
      * @example
      *  checkPrivileges(Privileges.CanInviteUsers, Privileges.CanViewSubjects);

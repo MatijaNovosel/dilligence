@@ -85,8 +85,8 @@
         :class="[ $q.dark.isActive ? 'text-grey-6' : 'text-black' ]"
       >
         <div>{{ value.createdBy }}</div>
-        <div class="q-my-md">{{ value.submittedAt | timeStampFilter }}</div>
-        <div>{{ value.dueDate | timeStampFilter }}</div>
+        <div class="q-my-md">{{ format(new Date(value.submittedAt), 'yyyy-MM-dd HH:mm') }}</div>
+        <div>{{ format(new Date(value.dueDate), 'yyyy-MM-dd HH:mm') }}</div>
       </q-card-section>
     </q-card-section>
     <q-separator />
@@ -108,6 +108,7 @@
 <script>
 import { download, fileIcon } from "../helpers/helpers";
 import UserMixin from "../mixins/userMixin";
+import { format } from "date-fns";
 
 export default {
   name: "task-card",
@@ -120,6 +121,7 @@ export default {
     return {};
   },
   methods: {
+    format,
     fileIcon,
     downloadFile(attachment) {
       download(attachment.contentType, attachment.data, attachment.name);
