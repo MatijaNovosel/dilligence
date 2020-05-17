@@ -230,6 +230,7 @@ namespace tvz2api_cqrs
       services.AddScoped<IQueryHandlerAsync<CourseTaskTotalQuery, int>, CourseTaskQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<CourseTaskDetailsQuery, CourseTaskQueryModel>, CourseTaskQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<CourseTaskAttemptsQuery, List<CourseTaskAttemptQueryModel>>, CourseTaskQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<CourseTaskAttemptDetailsQuery, CourseTaskAttemptDetailsQueryModel>, CourseTaskQueryHandler>();
     }
   }
 }

@@ -59,13 +59,31 @@ namespace tvz2api_cqrs.Controllers
     public async Task<IActionResult> GetAttempts(int id, int courseId)
     {
       if (
-        !_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanDeleteTasks) &&
+        !_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanGradeTasks) &&
         !(_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.IsInvolvedWithCourse))
       )
       {
         return Unauthorized();
       }
       var result = await _queryBus.ExecuteAsync(new CourseTaskAttemptsQuery()
+      {
+        Id = id,
+        CourseId = courseId
+      });
+      return Ok(result);
+    }
+
+    [HttpGet("attempts/details/{id}")]
+    public async Task<IActionResult> GetAttemptDetails(int id, int courseId)
+    {
+      if (
+        !_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanGradeTasks) &&
+        !(_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.IsInvolvedWithCourse))
+      )
+      {
+        return Unauthorized();
+      }
+      var result = await _queryBus.ExecuteAsync(new CourseTaskAttemptDetailsQuery()
       {
         Id = id,
         CourseId = courseId

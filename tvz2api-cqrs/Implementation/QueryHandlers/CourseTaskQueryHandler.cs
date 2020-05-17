@@ -17,7 +17,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     IQueryHandlerAsync<CourseTaskQuery, List<CourseTaskQueryModel>>,
     IQueryHandlerAsync<CourseTaskTotalQuery, int>,
     IQueryHandlerAsync<CourseTaskDetailsQuery, CourseTaskQueryModel>,
-    IQueryHandlerAsync<CourseTaskAttemptsQuery, List<CourseTaskAttemptQueryModel>>
+    IQueryHandlerAsync<CourseTaskAttemptsQuery, List<CourseTaskAttemptQueryModel>>,
+    IQueryHandlerAsync<CourseTaskAttemptDetailsQuery, CourseTaskAttemptDetailsQueryModel>
   {
     private readonly lmsContext _context;
     private readonly IUserResolver _userResolver;
@@ -62,11 +63,31 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     {
       var attempts = await _context
         .CourseTaskAttempt
-        .Include(t => t.TaskAttemptAttachment)
-        .ThenInclude(t => t.File)
         .Include(t => t.User)
         .Where(t => t.CourseTaskId == query.Id)
         .Select(t => new CourseTaskAttemptQueryModel()
+        {
+          Id = t.Id,
+          CourseTaskId = t.CourseTaskId,
+          Grade = t.Grade,
+          GradedBy = $"{t.GradedBy.Name} {t.GradedBy.Surname}",
+          GradedById = t.GradedById,
+          SubmittedBy = $"{t.User.Name} {t.User.Surname}",
+          SubmittedAt = t.SubmittedAt
+        })
+        .ToListAsync();
+      return attempts;
+    }
+
+    public async Task<CourseTaskAttemptDetailsQueryModel> HandleAsync(CourseTaskAttemptDetailsQuery query)
+    {
+      var attempt = await _context
+        .CourseTaskAttempt
+        .Include(t => t.TaskAttemptAttachment)
+        .ThenInclude(t => t.File)
+        .Include(t => t.User)
+        .Where(t => t.Id == query.Id)
+        .Select(t => new CourseTaskAttemptDetailsQueryModel()
         {
           CourseTaskId = t.CourseTaskId,
           Description = t.Description,
@@ -74,7 +95,6 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           GradedBy = $"{t.GradedBy.Name} {t.GradedBy.Surname}",
           GradedById = t.GradedById,
           SubmittedBy = $"{t.User.Name} {t.User.Surname}",
-          SubmittedAt = t.SubmittedAt,
           Attachments = t.TaskAttemptAttachment.Select(y => new FileDTO()
           {
             ContentType = y.File.ContentType,
@@ -85,8 +105,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           })
           .ToList()
         })
-        .ToListAsync();
-      return attempts;
+        .FirstOrDefaultAsync();
+      return attempt;
     }
 
     public async Task<int> HandleAsync(CourseTaskTotalQuery query)
@@ -96,7 +116,6 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         .CountAsync();
       return courseTasks;
     }
-
     public async Task<CourseTaskQueryModel> HandleAsync(CourseTaskDetailsQuery query)
     {
       var courseTask = await _context.CourseTask

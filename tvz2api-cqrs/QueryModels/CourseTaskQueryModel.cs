@@ -21,14 +21,22 @@ namespace tvz2api_cqrs.QueryModels
   public class CourseTaskAttemptQueryModel
   {
     public int Id { get; set; }
-    public string Description { get; set; }
     public int Grade { get; set; }
-    public int UserId { get; set; }
     public int CourseTaskId { get; set; }
     public int? GradedById { get; set; }
     public string GradedBy { get; set; }
     public string SubmittedBy { get; set; }
     public DateTime SubmittedAt { get; set; }
+  }
+
+  public class CourseTaskAttemptDetailsQueryModel
+  {
+    public string Description { get; set; }
+    public int Grade { get; set; }
+    public int CourseTaskId { get; set; }
+    public int? GradedById { get; set; }
+    public string GradedBy { get; set; }
+    public string SubmittedBy { get; set; }
     public List<FileDTO> Attachments { get; set; }
   }
 }
