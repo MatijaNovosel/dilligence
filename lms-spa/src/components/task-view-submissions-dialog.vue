@@ -15,51 +15,34 @@
           @click="reset"
         />
       </q-toolbar>
-      <q-card-section class="q-gutter-sm" v-if="submissions">
-        <q-list dense bordered class="rounded-borders">
-          <template v-if="submissions.length != 0">
-            <q-expansion-item
-              :key="i"
-              v-for="(submission, i) in submissions"
-              expand-icon-toggle
-              expand-separator
-              icon="mdi-account"
-              :label="submission.submittedBy"
-              :caption="format(new Date(submission.submittedAt), 'yyyy-MM-dd HH:mm')"
-            >
-              <q-card>
-                <q-separator />
-                <q-card-section>{{ submission.description }}</q-card-section>
-                <template v-if="submission.attachments.length != 0">
-                  <q-separator />
-                  <q-card-section>
-                    <div class="q-mb-sm">
-                      <q-icon name="mdi-paperclip" />
-                      <span class="q-ml-sm">Attachments:</span>
-                    </div>
-                    <q-list dense style="max-width: 50%">
-                      <q-item
-                        @click="download(attachment.contentType, attachment.data, attachment.name)"
-                        clickable
-                        :key="i"
-                        v-for="(attachment, i) in submission.attachments"
-                      >
-                        <q-item-section class="text-subtitle2">{{ attachment.name }}</q-item-section>
-                        <q-item-section
-                          class="text-subtitle2"
-                          side
-                        >{{ attachment.size | byteCountToReadableFormat }}</q-item-section>
-                      </q-item>
-                    </q-list>
-                  </q-card-section>
-                </template>
-              </q-card>
-            </q-expansion-item>
-          </template>
-          <q-item v-else>
-            <q-item-section>No submissions found!</q-item-section>
-          </q-item>
-        </q-list>
+      <q-card-section horizontal v-if="submissions">
+        <q-card-section style="width: 40%" class="q-pl-none">
+          <q-scroll-area
+            :thumb-style="thumbStyle"
+            :bar-style="barStyle"
+            visible
+            style="height: 450px"
+          >
+            <q-list class="q-px-md">
+              <q-item clickable v-for="(submission, i) in submissions" :key="i">
+                <q-item-section avatar>
+                  <q-icon name="mdi-account" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>{{ submission.submittedBy }}</q-item-label>
+                  <q-item-label
+                    caption
+                  >Submitted at: {{ format(new Date(submission.submittedAt), 'yyyy-MM-dd HH:mm') }}</q-item-label>
+                </q-item-section>
+                <q-item-section side>
+                  <span class="text-red-6 text-subtitle2">Ungraded</span>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-scroll-area>
+        </q-card-section>
+        <q-separator vertical />
+        <q-card-section style="width: 60%;"></q-card-section>
       </q-card-section>
     </q-card>
   </q-dialog>
@@ -77,6 +60,20 @@ export default {
   data() {
     return {
       submissions: null,
+      thumbStyle: {
+        right: "2px",
+        borderRadius: "5px",
+        backgroundColor: "#027be3",
+        width: "5px",
+        opacity: 0.75
+      },
+      barStyle: {
+        right: "0px",
+        borderRadius: "9px",
+        backgroundColor: "#027be3",
+        width: "9px",
+        opacity: 0.2
+      },
       dialogStyle: {
         width: "70%",
         "max-width": "90vw"
