@@ -22,6 +22,9 @@ export default {
      *  checkPrivileges(1, 2, 3, 4);
      */
     hasPrivileges(...requestedPrivileges) {
+      if (!this.user) {
+        return;
+      }
       return this
         .user
         .privileges
@@ -29,6 +32,9 @@ export default {
         .some(privilege => requestedPrivileges.includes(privilege));
     },
     hasCoursePrivileges(courseId, ...requestedPrivileges) {
+      if (!this.user) {
+        return;
+      }
       return this
         .user
         .privileges

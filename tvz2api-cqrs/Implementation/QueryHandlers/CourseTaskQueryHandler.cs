@@ -16,7 +16,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
   public class CourseTaskQueryHandler :
     IQueryHandlerAsync<CourseTaskQuery, List<CourseTaskQueryModel>>,
     IQueryHandlerAsync<CourseTaskTotalQuery, int>,
-    IQueryHandlerAsync<CourseTaskDetailsQuery, CourseTaskQueryModel>
+    IQueryHandlerAsync<CourseTaskDetailsQuery, CourseTaskQueryModel>,
+    IQueryHandlerAsync<CourseTaskAttemptsQuery, List<CourseTaskAttemptQueryModel>>
   {
     private readonly lmsContext _context;
     private readonly IUserResolver _userResolver;
@@ -63,6 +64,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         .CourseTaskAttempt
         .Include(t => t.TaskAttemptAttachment)
         .ThenInclude(t => t.File)
+        .Include(t => t.User)
         .Where(t => t.CourseTaskId == query.Id)
         .Select(t => new CourseTaskAttemptQueryModel()
         {
@@ -71,6 +73,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Grade = t.Grade,
           GradedBy = $"{t.GradedBy.Name} {t.GradedBy.Surname}",
           GradedById = t.GradedById,
+          SubmittedBy = $"{t.User.Name} {t.User.Surname}",
+          SubmittedAt = t.SubmittedAt,
           Attachments = t.TaskAttemptAttachment.Select(y => new FileDTO()
           {
             ContentType = y.File.ContentType,

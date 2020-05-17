@@ -5,7 +5,7 @@
     :style="{ 'width': cardWidth }"
     @click="$router.push({ name: 'profile', params: { id: value.id } })"
   >
-    <q-menu touch-position context-menu>
+    <q-menu touch-position context-menu v-if="user.id != value.id">
       <q-list
         :class="`${$q.dark.isActive ? 'border-dark' : 'border-light'}`"
         dense

@@ -15,7 +15,39 @@
           @click="reset"
         />
       </q-toolbar>
+      <q-card-section v-if="taskInfo">
+        <p class="text-subtitle1">
+          <span class="text-orange q-mr-sm">Title</span>
+          {{ taskInfo.title }}
+        </p>
+        <p
+          :class="[$q.dark.isActive ? 'border-box-dark' : 'border-box-light']"
+          v-html="taskInfo.description"
+        />
+        <div>
+          <div class="q-mb-sm">
+            <q-icon name="mdi-paperclip" />
+            <span class="q-ml-sm">Attachments:</span>
+          </div>
+          <q-list dense style="max-width: 50%">
+            <q-item
+              @click="download(attachment.contentType, attachment.data, attachment.name)"
+              clickable
+              :key="i"
+              v-for="(attachment, i) in taskInfo.attachments"
+            >
+              <q-item-section class="text-subtitle2">{{ attachment.name }}</q-item-section>
+              <q-item-section
+                class="text-subtitle2"
+                side
+              >{{ attachment.size | byteCountToReadableFormat }}</q-item-section>
+            </q-item>
+          </q-list>
+        </div>
+      </q-card-section>
+      <q-separator />
       <q-card-section class="q-gutter-sm q-pb-none">
+        <div class="q-ml-sm q-mb-md text-subtitle1">Your submission:</div>
         <q-file
           ref="filePicker"
           dense
@@ -50,6 +82,7 @@
 <script>
 import UserMixin from "../mixins/userMixin";
 import CourseTaskService from "../services/api/course-task";
+import { download } from "../helpers/helpers";
 
 export default {
   name: "task-new-submission-dialog",
@@ -57,6 +90,7 @@ export default {
   mixins: [UserMixin],
   data() {
     return {
+      taskInfo: null,
       dialogStyle: {
         width: "70%",
         "max-width": "90vw"
@@ -68,6 +102,7 @@ export default {
     };
   },
   methods: {
+    download,
     submitAttempt() {
       let formData = new FormData();
 
@@ -102,6 +137,20 @@ export default {
         files: null
       };
       this.$emit("close");
+    }
+  },
+  watch: {
+    open: {
+      immediate: false,
+      deep: true,
+      handler(val) {
+        if (!val) {
+          return;
+        }
+        CourseTaskService.getTask(this.activeTaskId).then(({ data }) => {
+          this.taskInfo = data;
+        });
+      }
     }
   }
 };

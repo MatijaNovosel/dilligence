@@ -69,6 +69,12 @@
       :courseId="courseId"
       @close="createSubmissionDialog = false"
     />
+    <task-view-submissions-dialog
+      :open="viewSubmissionsDialog"
+      :taskId="activeTaskId"
+      :courseId="courseId"
+      @close="viewSubmissionsDialog = false"
+    />
     <q-page-sticky
       position="bottom-right"
       :offset="[18, 18]"
@@ -94,6 +100,7 @@ import TaskCard from "../../components/task-card";
 import saveState from "vue-save-state";
 import CreateEditTaskDialog from "../../components/create-edit-task-dialog";
 import TaskNewSubmissionDialog from "../../components/task-new-submission-dialog";
+import taskViewSubmissionsDialogVue from "../../components/task-view-submissions-dialog.vue";
 import { debounce } from "debounce";
 
 export default {
@@ -101,7 +108,8 @@ export default {
   components: {
     "task-card": TaskCard,
     "create-edit-task-dialog": CreateEditTaskDialog,
-    "task-new-submission-dialog": TaskNewSubmissionDialog
+    "task-new-submission-dialog": TaskNewSubmissionDialog,
+    "task-view-submissions-dialog": taskViewSubmissionsDialogVue
   },
   mixins: [UserMixin, saveState],
   created() {
@@ -130,6 +138,7 @@ export default {
       courseId: null,
       editCreateDialog: false,
       createSubmissionDialog: false,
+      viewSubmissionsDialog: false,
       dialogMode: "create",
       dialogStyle: {
         width: "70%",
@@ -167,6 +176,9 @@ export default {
         saveProperties: ["searchData", "showTasksOptions", "showOverdueOptions"]
       };
     },
+    openSubmissionsDialog() {
+      this.viewSubmissionsDialog = true;
+    },
     openNewSubmissionDialog(mode) {
       this.dialogMode = mode;
       this.createSubmissionDialog = true;
@@ -200,7 +212,8 @@ export default {
       });
     },
     viewTask(taskId) {
-      console.log(taskId);
+      this.activeTaskId = taskId;
+      this.openSubmissionsDialog();
     },
     editTask(taskId) {
       this.activeTaskId = taskId;

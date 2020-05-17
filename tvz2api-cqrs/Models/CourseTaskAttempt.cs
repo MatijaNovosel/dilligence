@@ -14,6 +14,7 @@ namespace tvz2api_cqrs.Models
         public string Description { get; set; }
         public int Grade { get; set; }
         public int UserId { get; set; }
+        public DateTime SubmittedAt { get; set; }
         public int CourseTaskId { get; set; }
         public int? GradedById { get; set; }
 

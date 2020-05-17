@@ -27,6 +27,8 @@ namespace tvz2api_cqrs.QueryModels
     public int CourseTaskId { get; set; }
     public int? GradedById { get; set; }
     public string GradedBy { get; set; }
+    public string SubmittedBy { get; set; }
+    public DateTime SubmittedAt { get; set; }
     public List<FileDTO> Attachments { get; set; }
   }
 }

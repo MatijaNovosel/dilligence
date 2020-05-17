@@ -163,6 +163,9 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         _context.TaskAttemptAttachment.RemoveRange(x.TaskAttemptAttachment);
       });
       _context.CourseTaskAttachment.RemoveRange(courseTask.CourseTaskAttachment);
+      _context.CourseTaskAttempt.RemoveRange(courseTask.CourseTaskAttempt);
+      _context.CourseTask.Remove(courseTask);
+      await _context.SaveChangesAsync();
     }
 
     public async Task HandleAsync(CourseTaskSubmitAttemptCommand command)
@@ -171,7 +174,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       {
         CourseTaskId = command.CourseTaskId,
         Description = command.Description,
-        UserId = _userResolver.Id
+        UserId = _userResolver.Id,
+        SubmittedAt = DateTime.Now
       };
 
       await _context.CourseTaskAttempt.AddAsync(newCourseTaskAttempt);

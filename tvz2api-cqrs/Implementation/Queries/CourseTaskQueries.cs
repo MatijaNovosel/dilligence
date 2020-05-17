@@ -24,7 +24,7 @@ namespace tvz2api_cqrs.Implementation.Queries
     public int Id { get; set; }
   }
 
-  public class CourseTaskAttemptsQuery : IQuery<CourseTaskQueryModel>
+  public class CourseTaskAttemptsQuery : IQuery<List<CourseTaskAttemptQueryModel>>
   {
     public CourseTaskAttemptsQuery() { }
     public int Id { get; set; }
