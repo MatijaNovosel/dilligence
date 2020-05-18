@@ -27,7 +27,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     ICommandHandlerAsync<CourseTaskCreateCommand>,
     ICommandHandlerAsync<CourseTaskDeleteCommand>,
     ICommandHandlerAsync<CourseTaskUpdateCommand>,
-    ICommandHandlerAsync<CourseTaskSubmitAttemptCommand>
+    ICommandHandlerAsync<CourseTaskSubmitAttemptCommand>,
+    ICommandHandlerAsync<CourseTaskGradeAttemptCommand>
   {
     private readonly lmsContext _context;
     private readonly IConfiguration _configuration;
@@ -38,6 +39,16 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       _context = context;
       _configuration = configuration;
       _userResolver = userResolver;
+    }
+
+    public async Task HandleAsync(CourseTaskGradeAttemptCommand command)
+    {
+      var courseTaskAttempt = await _context
+        .CourseTaskAttempt
+        .FirstOrDefaultAsync(x => x.Id == command.AttemptId);
+      courseTaskAttempt.Grade = command.Grade;
+      courseTaskAttempt.GradedById = command.GradedById;
+      await _context.SaveChangesAsync();
     }
 
     public async Task HandleAsync(CourseTaskCreateCommand command)

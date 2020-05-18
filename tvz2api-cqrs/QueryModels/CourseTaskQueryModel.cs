@@ -38,5 +38,6 @@ namespace tvz2api_cqrs.QueryModels
     public string GradedBy { get; set; }
     public string SubmittedBy { get; set; }
     public List<FileDTO> Attachments { get; set; }
+    public int MaximumGrade { get; set; }
   }
 }

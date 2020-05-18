@@ -83,6 +83,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     {
       var attempt = await _context
         .CourseTaskAttempt
+        .Include(t => t.CourseTask)
         .Include(t => t.TaskAttemptAttachment)
         .ThenInclude(t => t.File)
         .Include(t => t.User)
@@ -95,6 +96,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           GradedBy = $"{t.GradedBy.Name} {t.GradedBy.Surname}",
           GradedById = t.GradedById,
           SubmittedBy = $"{t.User.Name} {t.User.Surname}",
+          MaximumGrade = t.CourseTask.GradeMaximum,
           Attachments = t.TaskAttemptAttachment.Select(y => new FileDTO()
           {
             ContentType = y.File.ContentType,

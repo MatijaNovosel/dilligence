@@ -68,4 +68,12 @@ namespace tvz2api_cqrs.Implementation.Commands
     public int Id { get; set; }
     public int CourseId { get; set; }
   }
+
+  public class CourseTaskGradeAttemptCommand : ICommand
+  {
+    public CourseTaskGradeAttemptCommand() { }
+    public int AttemptId { get; set; }
+    public int GradedById { get; set; }
+    public int Grade { get; set; }
+  }
 }
