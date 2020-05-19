@@ -16,10 +16,7 @@
         />
       </q-toolbar>
       <q-card-section v-if="taskInfo">
-        <p class="text-subtitle1">
-          <span class="text-orange q-mr-sm">Title</span>
-          {{ taskInfo.title }}
-        </p>
+        <p class="text-subtitle1">{{ taskInfo.title }}</p>
         <p
           :class="[$q.dark.isActive ? 'border-box-dark' : 'border-box-light']"
           v-html="taskInfo.description"
@@ -36,6 +33,12 @@
               :key="i"
               v-for="(attachment, i) in taskInfo.attachments"
             >
+              <q-item-section avatar>
+                <q-icon
+                  size="xs"
+                  :name="fileIcon(attachment.name.slice(attachment.name.lastIndexOf('.') + 1))"
+                />
+              </q-item-section>
               <q-item-section class="text-subtitle2">{{ attachment.name }}</q-item-section>
               <q-item-section
                 class="text-subtitle2"
@@ -82,7 +85,7 @@
 <script>
 import UserMixin from "../mixins/userMixin";
 import CourseTaskService from "../services/api/course-task";
-import { download } from "../helpers/helpers";
+import { download, fileIcon } from "../helpers/helpers";
 
 export default {
   name: "task-new-submission-dialog",
@@ -102,6 +105,7 @@ export default {
     };
   },
   methods: {
+    fileIcon,
     download,
     submitAttempt() {
       let formData = new FormData();
@@ -117,6 +121,10 @@ export default {
 
       CourseTaskService.addNewSubmission(formData).then(() => {
         this.reset();
+        this.$q.notify({
+          type: "positive",
+          message: "Submission has been successfully sent!"
+        });
       });
     },
     editSubmission() {

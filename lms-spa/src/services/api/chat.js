@@ -25,8 +25,8 @@ export default {
    * @param {number} id - Id of the user to retrieve available chats for.
    * @return {AxiosPromise<any>} Axios promise to be resolved in the view.
    */
-  async getAvailableUsers(id) {
-    return await axios.get("Chat/available/" + id);
+  async getAvailableUsers(id, searchText) {
+    return await axios.get("Chat/available/" + id, { params: { searchText } });
   },
   /**
    * Creates a new chat instance.

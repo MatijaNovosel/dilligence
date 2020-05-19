@@ -41,7 +41,7 @@
       </div>
       <template v-if="participants">
         <user-card
-          class="user-card q-mx-sm"
+          class="user-card q-ma-sm"
           :courseId="courseId"
           :value="participant"
           v-for="(participant, i) in participants"

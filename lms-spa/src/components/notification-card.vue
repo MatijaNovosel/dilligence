@@ -36,7 +36,7 @@
       <div class="text-h6">{{ value.title }}</div>
       <div
         class="text-subtitle2"
-      >{{ `${value.submittedBy}, ${$options.filters.timeStampFilter(value.submittedAt)}` }}</div>
+      >{{ `${value.submittedBy}, ${format(new Date(value.submittedAt), 'dd.MM.yyyy. HH:mm:ss')}` }}</div>
     </q-card-section>
     <q-separator />
     <q-card-section class="q-py-sm">
@@ -74,8 +74,9 @@
 </template>
 
 <script>
-import { download, fileIcon } from "../helpers/helpers";
 import UserMixin from "../mixins/userMixin";
+import { format } from "date-fns";
+import { download, fileIcon } from "../helpers/helpers";
 
 export default {
   name: "notification-card",
@@ -88,6 +89,7 @@ export default {
     return {};
   },
   methods: {
+    format,
     fileIcon,
     downloadFile(attachment) {
       download(attachment.contentType, attachment.data, attachment.name);

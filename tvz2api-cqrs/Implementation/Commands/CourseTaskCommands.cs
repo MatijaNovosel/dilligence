@@ -75,5 +75,7 @@ namespace tvz2api_cqrs.Implementation.Commands
     public int AttemptId { get; set; }
     public int GradedById { get; set; }
     public int Grade { get; set; }
+    public string Comment { get; set; }
+    public int CourseId { get; set; }
   }
 }

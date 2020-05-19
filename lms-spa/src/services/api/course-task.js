@@ -33,5 +33,8 @@ export default {
   },
   async getTaskAttemptDetails(taskAttemptId, courseId) {
     return await axios.get('CourseTask/attempts/details/' + taskAttemptId, { params: { courseId } })
+  },
+  async gradeAttempt(payload) {
+    return await axios.post('CourseTask/grade-attempt', payload);
   }
 }

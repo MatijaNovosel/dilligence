@@ -16,6 +16,7 @@ namespace tvz2api_cqrs.Models
         public int UserId { get; set; }
         public DateTime SubmittedAt { get; set; }
         public int CourseTaskId { get; set; }
+        public string GradeeComment { get; set; }
         public int? GradedById { get; set; }
 
         public virtual CourseTask CourseTask { get; set; }

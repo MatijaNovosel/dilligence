@@ -12,12 +12,6 @@ export default async ({ Vue }) => {
   Vue.filter("smjerFilter", val => {
     return Object.keys(SMJER).find(k => SMJER[k] === val);
   });
-  Vue.filter("timeStampFilter", val => {
-    return (new Date(Date.parse(val))).toString().slice(4, 24);
-  });
-  Vue.filter("dateFilter", val => {
-    return (new Date(Date.parse(val))).toString().slice(4, 15);
-  });
   Vue.filter("countdownFilter", val => {
     /*
 

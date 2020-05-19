@@ -102,6 +102,20 @@ namespace tvz2api_cqrs.Controllers
       return Ok();
     }
 
+    [HttpPost("grade-attempt")]
+    public async Task<IActionResult> GradeAttempt(CourseTaskGradeAttemptCommand command)
+    {
+      if (
+        !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanGradeTasks) &&
+        !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedWithCourse))
+      )
+      {
+        return Unauthorized();
+      }
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
+    }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> CreateNew(int id, int courseId)
     {

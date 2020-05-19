@@ -20,10 +20,10 @@ namespace tvz2api_cqrs.Implementation.Queries
 
   public class ChatAvailableUsersQuery : IQuery<List<UserQueryModel>>
   {
-    public ChatAvailableUsersQuery(int id)
+    public ChatAvailableUsersQuery(ChatSpecification specification)
     {
-      Id = id;
+      Specification = specification;
     }
-    public int Id { get; set; }
+    public ChatSpecification Specification { get; set; }
   }
 }

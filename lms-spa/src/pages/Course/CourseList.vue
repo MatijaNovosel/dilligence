@@ -169,11 +169,11 @@
           <q-input
             dense
             outlined
+            no-error-icon
             v-model="password"
             :label="$i18n.t('enterPassword')"
             @input="$v.password.$touch"
             :error="$v.password.$invalid && $v.password.$dirty"
-            error-message="This field is required!"
           >
             <template v-slot:append>
               <q-btn

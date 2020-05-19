@@ -47,16 +47,14 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     {
       var users = await _context.User
         .Include(t => t.ImageFile)
-        .Where(t =>
-          t.Id != query.Id &&
-          !t.ChatFirstParticipant.Any(x => x.FirstParticipantId == query.Id || x.SecondParticipantId == query.Id) &&
-          !t.ChatSecondParticipant.Any(x => x.FirstParticipantId == query.Id || x.SecondParticipantId == query.Id)
-        )
+        .Where(query.Specification.Predicate)
         .Select(t => new UserQueryModel
         {
           Id = t.Id,
           Created = t.Created,
           Username = t.Username,
+          Name = t.Name,
+          Surname = t.Surname,
           Picture = t.ImageFile != null ? Convert.ToBase64String(t.ImageFile.Data) : null,
         })
         .ToListAsync();

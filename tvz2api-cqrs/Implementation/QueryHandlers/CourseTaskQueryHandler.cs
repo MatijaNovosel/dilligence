@@ -97,6 +97,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           GradedById = t.GradedById,
           SubmittedBy = $"{t.User.Name} {t.User.Surname}",
           MaximumGrade = t.CourseTask.GradeMaximum,
+          GradeeComment = t.GradeeComment,
           Attachments = t.TaskAttemptAttachment.Select(y => new FileDTO()
           {
             ContentType = y.File.ContentType,

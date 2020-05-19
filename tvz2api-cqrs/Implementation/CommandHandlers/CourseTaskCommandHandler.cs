@@ -47,6 +47,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         .CourseTaskAttempt
         .FirstOrDefaultAsync(x => x.Id == command.AttemptId);
       courseTaskAttempt.Grade = command.Grade;
+      courseTaskAttempt.GradeeComment = command.Comment;
       courseTaskAttempt.GradedById = command.GradedById;
       await _context.SaveChangesAsync();
     }
@@ -192,7 +193,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       await _context.CourseTaskAttempt.AddAsync(newCourseTaskAttempt);
       await _context.SaveChangesAsync();
 
-      if (command.Files.Count != 0)
+      if (command.Files != null)
       {
         List<tvz2api_cqrs.Models.File> newFiles = new List<tvz2api_cqrs.Models.File>();
 

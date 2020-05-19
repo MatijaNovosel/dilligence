@@ -44,9 +44,13 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpGet("available/{id}")]
-    public async Task<IActionResult> GetAvailableUsers(int id)
+    public async Task<IActionResult> GetAvailableUsers(int id, string searchText)
     {
-      var users = await _queryBus.ExecuteAsync(new ChatAvailableUsersQuery(id));
+      var users = await _queryBus.ExecuteAsync(new ChatAvailableUsersQuery(new ChatSpecification()
+      {
+        Id = id,
+        SearchText = searchText
+      }));
       return Ok(users);
     }
 

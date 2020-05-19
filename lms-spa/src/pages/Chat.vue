@@ -51,8 +51,6 @@
           </div>
           <div class="col-12 q-py-md">
             <q-input
-              :error="$v.message.$invalid && $v.message.$dirty"
-              error-message="This field is required!"
               :readonly="!activeChat"
               :label="$i18n.t('enterMessage')"
               dense
@@ -78,7 +76,10 @@
     </div>
     <q-dialog :maximized="$q.screen.xs || $q.screen.sm" v-model="newChatDialog" persistent>
       <q-card :style="$q.screen.xs || $q.screen.sm || dialogStyle">
-        <q-toolbar class="bg-primary text-white dialog-toolbar">
+        <q-toolbar
+          :class="[ $q.dark.isActive ? 'dark-dialog-background' : 'bg-primary']"
+          class="text-white dialog-toolbar"
+        >
           <q-space />
           <q-btn
             :ripple="false"
@@ -92,14 +93,7 @@
           />
         </q-toolbar>
         <q-card-section>
-          <q-input
-            dense
-            multiple
-            outlined
-            v-model="newChatSearch"
-            clearable
-            :label="$i18n.t('searchUsers')"
-          >
+          <q-input dense multiple outlined v-model="newChatSearch" :label="$i18n.t('searchUsers')">
             <template v-slot:prepend>
               <q-icon name="mdi-magnify" />
             </template>
@@ -118,26 +112,24 @@
           <q-skeleton v-show="userSearchLoading" style="width: 100%" type="rect" />
           <q-list
             v-if="foundUsers"
-            separator
             dense
             :class="`border-box-${$q.dark.isActive ? 'dark' : 'light'}`"
           >
             <q-item v-if="foundUsers == null || foundUsers.length == 0">
               <q-item-section class="text-center">No users found!</q-item-section>
             </q-item>
-            <q-item v-for="(user, i) in foundUsers" :key="i">
+            <q-item class="q-my-xs" v-for="(user, i) in foundUsers" :key="i">
               <q-item-section avatar class="q-pl-md">
                 <q-avatar size="30px">
                   <img :src="generateUserPictureSource(user.picture)" />
                 </q-avatar>
               </q-item-section>
-              <q-item-section>{{ user.username }}</q-item-section>
+              <q-item-section>{{ `${user.name} ${user.surname} (${user.username})` }}</q-item-section>
               <q-item-section side>
                 <q-btn
                   :ripple="false"
                   dense
                   size="sm"
-                  color="primary"
                   flat
                   round
                   icon="mdi-comment-plus"
@@ -188,7 +180,7 @@ export default {
   validations: {
     message: {
       required,
-      minLength: minLength(4)
+      minLength: minLength(2)
     }
   },
   created() {
@@ -214,7 +206,8 @@ export default {
     },
     searchUsers() {
       this.userSearchLoading = true;
-      ChatService.getAvailableUsers(this.user.id)
+      this.foundUsers = null;
+      ChatService.getAvailableUsers(this.user.id, this.newChatSearch)
         .then(({ data }) => {
           this.foundUsers = data;
         })
@@ -295,6 +288,8 @@ export default {
 </script>
 
 <style lang="sass">
+.dark-dialog-background
+  background-color: #3f3f3f
 .chat-tab
   border-top-left-radius: 6px
   border-top-right-radius: 6px

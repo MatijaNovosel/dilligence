@@ -32,7 +32,7 @@
         </q-item>
       </q-list>
     </q-menu>
-    <img :src="generateUserPictureSource(value.picture)" />
+    <img style="width: 180px; height: 180px;" :src="generateUserPictureSource(value.picture)" />
     <q-card-section>
       <div class="text-h6">{{ `${value.name} ${value.surname}` }}</div>
       <div class="text-subtitle2">{{ `Username: ${value.username}` }}</div>

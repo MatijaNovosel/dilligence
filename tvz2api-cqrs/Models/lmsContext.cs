@@ -179,6 +179,8 @@ namespace tvz2api_cqrs.Models
                   .IsRequired()
                   .IsUnicode(false);
 
+        entity.Property(e => e.GradeeComment).IsUnicode(false);
+
         entity.Property(e => e.UserId).HasColumnName("UserID");
 
         entity.HasOne(d => d.CourseTask)

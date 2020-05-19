@@ -21,11 +21,9 @@
         <q-chat-message
           v-for="message in messages"
           :key="message.id"
-          :avatar="message.userId == user.id ? generateUserPictureSource(user.picture) : (activeChat.firstParticipant.id == user.id ? generateUserPictureSource(activeChat.secondParticipant.picture) : generateUserPictureSource(activeChat.firstParticipant.picture))"
           :style="message.userId == user.id ? 'text-align: right;' : 'text-align: left;'"
-          size="6"
           class="q-mx-md"
-          :stamp="message.sentAt | timeStampFilter"
+          :stamp="format(new Date(message.sentAt), 'dd.MM.yyyy. HH:mm:ss')"
           :sent="message.userId == user.id"
           :text-color="$q.dark.isActive ? 'white' : 'black'"
           :bg-color="message.userId == user.id ? $q.dark.isActive ? 'dark' : 'blue-5' : $q.dark.isActive ? 'grey-9' : 'blue-2'"
@@ -52,9 +50,10 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
 import Vue from "vue";
 import { generateUserPictureSource } from "../helpers/helpers";
+import { mapGetters } from "vuex";
+import { format } from "date-fns";
 
 export default {
   name: "chat-panel",
@@ -62,7 +61,7 @@ export default {
   data() {
     return {
       thumbStyle: {
-        right: "4px",
+        right: "2px",
         borderRadius: "5px",
         backgroundColor: "#027be3",
         width: "5px",
@@ -81,6 +80,7 @@ export default {
     ...mapGetters(["user"])
   },
   methods: {
+    format,
     generateUserPictureSource,
     scrollToBottom() {
       Vue.nextTick(() => {
@@ -105,10 +105,16 @@ export default {
 };
 </script>
 
-<style scoped lang="sass">
+<style lang="sass">
 .bottom-left
   position: absolute
   bottom: 20px
   left: 20px
   z-index: 200
+.q-message-text--sent:last-child:before
+  left: 0% !important
+.q-message-text--received:last-child:before
+  left: 0% !important
+.q-message-container > div
+  max-width: 60%
 </style>
