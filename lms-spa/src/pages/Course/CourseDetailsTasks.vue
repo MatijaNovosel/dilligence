@@ -67,6 +67,7 @@
       :open="createSubmissionDialog"
       :activeTaskId="activeTaskId"
       :courseId="courseId"
+      :attemptId="activeAttemptId"
       @close="createSubmissionDialog = false"
     />
     <task-view-submissions-dialog
@@ -133,6 +134,7 @@ export default {
       searchData: {
         name: null
       },
+      activeAttemptId: null,
       activeTaskId: null,
       tasksLoading: false,
       courseId: null,
@@ -219,9 +221,12 @@ export default {
       this.activeTaskId = taskId;
       this.openTaskDialog("edit");
     },
-    submitTask(taskId) {
+    submitTask(taskId, userHasSubmission, attemptId) {
       this.activeTaskId = taskId;
-      this.openNewSubmissionDialog("create");
+      if (userHasSubmission) {
+        this.activeAttemptId = attemptId;
+      }
+      this.openNewSubmissionDialog(userHasSubmission ? "edit" : "create");
     }
   }
 };

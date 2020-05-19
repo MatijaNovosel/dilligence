@@ -58,10 +58,7 @@ namespace tvz2api_cqrs.Controllers
     [HttpGet("attempts/{id}")]
     public async Task<IActionResult> GetAttempts(int id, int courseId)
     {
-      if (
-        !_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanGradeTasks) &&
-        !(_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.IsInvolvedWithCourse))
-      )
+      if (!_userResolver.UserBelongsToCourse(courseId))
       {
         return Unauthorized();
       }
@@ -76,10 +73,7 @@ namespace tvz2api_cqrs.Controllers
     [HttpGet("attempts/details/{id}")]
     public async Task<IActionResult> GetAttemptDetails(int id, int courseId)
     {
-      if (
-        !_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanGradeTasks) &&
-        !(_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.IsInvolvedWithCourse))
-      )
+      if (!_userResolver.UserBelongsToCourse(courseId))
       {
         return Unauthorized();
       }
@@ -93,6 +87,17 @@ namespace tvz2api_cqrs.Controllers
 
     [HttpPost("new-attempt")]
     public async Task<IActionResult> NewAttempt([FromForm] CourseTaskSubmitAttemptCommand command)
+    {
+      if (!_userResolver.UserBelongsToCourse(command.CourseId))
+      {
+        return Unauthorized();
+      }
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
+    }
+
+    [HttpPut("edit-attempt")]
+    public async Task<IActionResult> EditAttempt([FromForm] CourseTaskEditAttemptCommand command)
     {
       if (!_userResolver.UserBelongsToCourse(command.CourseId))
       {

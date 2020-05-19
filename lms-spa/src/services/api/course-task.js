@@ -25,6 +25,9 @@ export default {
   async addNewSubmission(payload) {
     return await axios.post('CourseTask/new-attempt', payload);
   },
+  async editSubmission(payload) {
+    return await axios.put('CourseTask/edit-attempt', payload);
+  },
   async deleteTask(id, courseId) {
     return await axios.delete('CourseTask/' + id, { params: { courseId } });
   },

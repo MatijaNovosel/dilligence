@@ -16,6 +16,7 @@ namespace tvz2api_cqrs.QueryModels
     public List<FileDTO> Attachments { get; set; }
     public int MaximumGrade { get; set; }
     public int CreatedById { get; set; }
+    public int NumberOfSubmissions { get; set; }
   }
 
   public class CourseTaskAttemptQueryModel
@@ -27,6 +28,7 @@ namespace tvz2api_cqrs.QueryModels
     public string GradedBy { get; set; }
     public string SubmittedBy { get; set; }
     public DateTime SubmittedAt { get; set; }
+    public int UserId { get; set; }
   }
 
   public class CourseTaskAttemptDetailsQueryModel

@@ -179,6 +179,10 @@ export default {
       CourseTaskService.createCourseTask(formData).then(() => {
         this.$emit("refresh");
         this.reset();
+        this.$q.notify({
+          type: "positive",
+          message: "Task successfully created!"
+        });
       });
     },
     editCourseTask() {
@@ -199,6 +203,10 @@ export default {
       CourseTaskService.updateTask(formData).then(() => {
         this.$emit("refresh");
         this.reset();
+        this.$q.notify({
+          type: "positive",
+          message: "Task successfully updated!"
+        });
       });
     },
     reset() {

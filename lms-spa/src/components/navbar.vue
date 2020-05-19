@@ -74,10 +74,6 @@ export default {
     },
     logout() {
       this.removeUserData();
-      this.$q.notify({
-        type: "positive",
-        message: this.$i18n.t("successfullyLoggedOut")
-      });
       this.$q.dark.set(false);
       this.$router.push("/login");
     }

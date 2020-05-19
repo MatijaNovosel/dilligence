@@ -46,6 +46,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           CreatedById = t.CreatedById,
           Description = t.Description,
           MaximumGrade = t.GradeMaximum,
+          NumberOfSubmissions = t.CourseTaskAttempt.Count,
           Attachments = t.CourseTaskAttachment.Select(x => new FileDTO()
           {
             ContentType = x.File.ContentType,
@@ -73,7 +74,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           GradedBy = $"{t.GradedBy.Name} {t.GradedBy.Surname}",
           GradedById = t.GradedById,
           SubmittedBy = $"{t.User.Name} {t.User.Surname}",
-          SubmittedAt = t.SubmittedAt
+          SubmittedAt = t.SubmittedAt,
+          UserId = t.UserId
         })
         .ToListAsync();
       return attempts;

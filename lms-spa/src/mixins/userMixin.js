@@ -22,7 +22,7 @@ export default {
      *  checkPrivileges(1, 2, 3, 4);
      */
     hasPrivileges(...requestedPrivileges) {
-      if (!this.user) {
+      if (this.user.privileges.generalPrivileges == null) {
         return;
       }
       return this
@@ -32,7 +32,7 @@ export default {
         .some(privilege => requestedPrivileges.includes(privilege));
     },
     hasCoursePrivileges(courseId, ...requestedPrivileges) {
-      if (!this.user) {
+      if (this.user.privileges.courses == null) {
         return;
       }
       return this

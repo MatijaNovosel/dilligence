@@ -28,6 +28,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     ICommandHandlerAsync<CourseTaskDeleteCommand>,
     ICommandHandlerAsync<CourseTaskUpdateCommand>,
     ICommandHandlerAsync<CourseTaskSubmitAttemptCommand>,
+    ICommandHandlerAsync<CourseTaskEditAttemptCommand>,
     ICommandHandlerAsync<CourseTaskGradeAttemptCommand>
   {
     private readonly lmsContext _context;
@@ -225,6 +226,56 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
           _context.TaskAttemptAttachment.Add(new TaskAttemptAttachment()
           {
             CourseTaskAttemptId = newCourseTaskAttempt.Id,
+            FileId = file.Id
+          });
+        });
+
+        await _context.SaveChangesAsync();
+      }
+    }
+
+    public async Task HandleAsync(CourseTaskEditAttemptCommand command)
+    {
+      var attempt = await _context
+        .CourseTaskAttempt
+        .Include(x => x.TaskAttemptAttachment)
+        .FirstOrDefaultAsync(x => x.Id == command.Id);
+
+      attempt.Description = command.Description;
+      _context.TaskAttemptAttachment.RemoveRange(attempt.TaskAttemptAttachment);
+
+      if (command.Files != null)
+      {
+        List<tvz2api_cqrs.Models.File> newFiles = new List<tvz2api_cqrs.Models.File>();
+
+        command.Files.ForEach(file =>
+        {
+          using (var ms = new MemoryStream())
+          {
+            file.CopyTo(ms);
+            var fileBytes = ms.ToArray();
+
+            var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+            fileName = fileName.Substring(0, fileName.LastIndexOf(".")) + fileName.Substring(fileName.LastIndexOf(".")).ToLower();
+
+            newFiles.Add(new tvz2api_cqrs.Models.File
+            {
+              Name = Path.GetFileName(fileName),
+              ContentType = file.ContentType,
+              Data = fileBytes,
+              Size = fileBytes.Length
+            });
+          }
+        });
+
+        await _context.File.AddRangeAsync(newFiles);
+        await _context.SaveChangesAsync();
+
+        newFiles.ForEach(file =>
+        {
+          _context.TaskAttemptAttachment.Add(new TaskAttemptAttachment()
+          {
+            CourseTaskAttemptId = attempt.Id,
             FileId = file.Id
           });
         });

@@ -86,10 +86,11 @@
 import UserMixin from "../mixins/userMixin";
 import CourseTaskService from "../services/api/course-task";
 import { download, fileIcon } from "../helpers/helpers";
+import { base64StringToBlob } from "blob-util";
 
 export default {
   name: "task-new-submission-dialog",
-  props: ["mode", "activeTaskId", "open", "courseId"],
+  props: ["mode", "activeTaskId", "open", "courseId", "attemptId"],
   mixins: [UserMixin],
   data() {
     return {
@@ -131,6 +132,7 @@ export default {
       let formData = new FormData();
 
       formData.append("userId", this.user.id);
+      formData.append("id", this.attemptId);
       formData.append("courseId", this.courseId);
       formData.append("description", this.submission.description);
       formData.append("courseTaskId", this.activeTaskId);
@@ -138,6 +140,13 @@ export default {
       if (this.submission.files != null) {
         this.submission.files.forEach(file => formData.append("files", file));
       }
+
+      CourseTaskService.editSubmission(formData).then(() => {
+        this.$q.notify({
+          type: "positive",
+          message: "Attempt successfully updated!"
+        });
+      });
     },
     reset() {
       this.submission = {
@@ -157,6 +166,29 @@ export default {
         }
         CourseTaskService.getTask(this.activeTaskId).then(({ data }) => {
           this.taskInfo = data;
+          if (this.mode == "edit") {
+            CourseTaskService.getTaskAttemptDetails(
+              this.attemptId,
+              this.courseId
+            ).then(({ data }) => {
+              this.submission = data;
+              let files = [];
+              data.attachments.forEach(attachment => {
+                files.push(
+                  new File(
+                    [
+                      base64StringToBlob(
+                        attachment.data,
+                        attachment.contentType
+                      )
+                    ],
+                    attachment.name
+                  )
+                );
+              });
+              this.$refs.filePicker.addFiles(files);
+            });
+          }
         });
       }
     }

@@ -62,6 +62,21 @@ namespace tvz2api_cqrs.Implementation.Commands
     public int CourseId { get; set; }
   }
 
+  public class CourseTaskEditAttemptCommand : ICommand
+  {
+    public CourseTaskEditAttemptCommand() { }
+    [FromForm(Name = "courseTaskId")]
+    public int CourseTaskId { get; set; }
+    [FromForm(Name = "description")]
+    public string Description { get; set; }
+    [FromForm(Name = "files")]
+    public List<IFormFile> Files { get; set; }
+    [FromForm(Name = "courseId")]
+    public int CourseId { get; set; }
+    [FromForm(Name = "id")]
+    public int Id { get; set; }
+  }
+
   public class CourseTaskDeleteCommand : ICommand
   {
     public CourseTaskDeleteCommand() { }

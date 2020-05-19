@@ -40,7 +40,7 @@
           v-close-popup
           @click="$submitAttempt"
         >
-          <q-item-section>Submit attempt</q-item-section>
+          <q-item-section>{{ userHasSubmittedAttempt ? 'Edit attempt' : 'Submit attempt' }}</q-item-section>
         </q-item>
       </q-list>
     </q-menu>
@@ -89,19 +89,13 @@
         <div>{{ format(new Date(value.dueDate), 'yyyy-MM-dd HH:mm') }}</div>
       </q-card-section>
     </q-card-section>
-    <q-separator />
-    <q-card-actions
-      class="text-subtitle1 q-ml-sm"
-      v-if="!hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
-    >
-      Current grade:
-      <span class="text-green-4 q-mx-xs">50</span> out of
-      <span class="text-green-5 q-ml-xs">100</span>
-    </q-card-actions>
-    <q-card-actions class="text-subtitle1 q-ml-sm" v-else>
-      Number of submissions:
-      <span class="text-green-4 q-mx-xs">5</span>
-    </q-card-actions>
+    <template v-if="hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)">
+      <q-separator />
+      <q-card-actions class="text-subtitle1 q-ml-sm">
+        Number of submissions:
+        <span class="text-green-4 q-mx-xs">{{ value.numberOfSubmissions }}</span>
+      </q-card-actions>
+    </template>
   </q-card>
 </template>
 
@@ -109,6 +103,7 @@
 import { download, fileIcon } from "../helpers/helpers";
 import { format, compareAsc } from "date-fns";
 import UserMixin from "../mixins/userMixin";
+import CourseTaskService from "../services/api/course-task";
 
 export default {
   name: "task-card",
@@ -116,9 +111,21 @@ export default {
   mixins: [UserMixin],
   created() {
     this.value.attachments.forEach(x => (x.downloading = false));
+    CourseTaskService.getTaskAttempts(this.value.id, this.courseId).then(
+      ({ data }) => {
+        let attempt = data.find(x => x.userId == this.user.id);
+        if (attempt != undefined) {
+          this.userHasSubmittedAttempt = true;
+          this.attemptId = attempt.id;
+        }
+      }
+    );
   },
   data() {
-    return {};
+    return {
+      userHasSubmittedAttempt: false,
+      attemptId: null
+    };
   },
   computed: {
     isExpired() {
@@ -141,7 +148,12 @@ export default {
       this.$emit("view", this.value.id);
     },
     $submitAttempt() {
-      this.$emit("submit", this.value.id);
+      this.$emit(
+        "submit",
+        this.value.id,
+        this.userHasSubmittedAttempt,
+        this.attemptId
+      );
     }
   }
 };

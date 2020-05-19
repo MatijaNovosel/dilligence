@@ -119,7 +119,7 @@
                     <q-editor class="q-my-sm" v-model="details.gradeeComment" min-height="5rem" />
                   </div>
                   <div class="text-subtitle1" v-if="details.gradedById != null">
-                    <span class="text-orange-8">Graded by:</span>
+                    <span class="text-orange-8">Graded by</span>
                     {{ details.gradedBy }}
                   </div>
                   <div class="text-right q-mt-md">
