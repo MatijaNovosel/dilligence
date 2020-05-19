@@ -148,7 +148,7 @@ export default {
       },
       courseTasks: null,
       showTasks: [0],
-      showOverdue: [1],
+      showOverdue: [0, 1],
       showTasksOptions: [
         {
           label: "Show graded",

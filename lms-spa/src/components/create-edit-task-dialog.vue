@@ -1,7 +1,10 @@
 <template>
   <q-dialog :maximized="$q.screen.xs || $q.screen.sm" v-model="open" persistent>
     <q-card :style="$q.screen.xs || $q.screen.sm || dialogStyle">
-      <q-toolbar class="bg-primary dialog-toolbar">
+      <q-toolbar
+        :class="[ $q.dark.isActive ? 'dark-dialog-background' : 'bg-primary']"
+        class="text-white dialog-toolbar"
+      >
         <span>{{ mode == "edit" ? 'Edit task' : 'Create task' }}</span>
         <q-space />
         <q-btn

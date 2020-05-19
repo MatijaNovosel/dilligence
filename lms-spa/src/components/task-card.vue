@@ -35,7 +35,7 @@
           <q-item-section>View submissions</q-item-section>
         </q-item>
         <q-item
-          v-if="!hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse) && !isExpired"
+          v-if="!hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
           clickable
           v-close-popup
           @click="$submitAttempt"

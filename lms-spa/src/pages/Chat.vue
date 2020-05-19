@@ -29,6 +29,9 @@
                     <q-item-section
                       class="ellipsis"
                     >{{ chat.firstParticipant.id == user.id ? chat.secondParticipant.username : chat.firstParticipant.username }}</q-item-section>
+                    <q-item-section side v-if="activeChat.id == chat.id">
+                      <q-icon color="yellow-8" name="mdi-rhombus-medium" />
+                    </q-item-section>
                   </q-item>
                 </q-list>
               </q-card-section>
@@ -288,8 +291,6 @@ export default {
 </script>
 
 <style lang="sass">
-.dark-dialog-background
-  background-color: #3f3f3f
 .chat-tab
   border-top-left-radius: 6px
   border-top-right-radius: 6px
