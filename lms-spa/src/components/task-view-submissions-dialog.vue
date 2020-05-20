@@ -65,13 +65,8 @@
                   <q-icon name="mdi-text" />
                   <span class="q-ml-sm text-subtitle1">Description</span>
                 </div>
-                <p
-                  style="word-wrap: break-word"
-                  class="text-subtitle2"
-                  v-html="details.description"
-                />
+                <html-description-box :html="details.description" />
                 <template v-if="details.attachments.length != 0">
-                  <q-separator class="q-my-md" />
                   <div class="q-mb-sm">
                     <q-icon name="mdi-paperclip" />
                     <span class="q-ml-sm text-subtitle1">Attachments</span>
@@ -144,6 +139,7 @@
 <script>
 import UserMixin from "../mixins/userMixin";
 import CourseTaskService from "../services/api/course-task";
+import HtmlDescriptionBox from "../components/html-description-box";
 import { format } from "date-fns";
 import { fileIcon, download } from "../helpers/helpers";
 import { required, integer, between } from "vuelidate/lib/validators";
@@ -152,6 +148,9 @@ export default {
   name: "task-view-submissions-dialog",
   mixins: [UserMixin],
   props: ["open", "taskId", "courseId"],
+  components: {
+    "html-description-box": HtmlDescriptionBox
+  },
   validations() {
     if (this.details) {
       return {

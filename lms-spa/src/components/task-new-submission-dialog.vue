@@ -5,7 +5,7 @@
         :class="[ $q.dark.isActive ? 'dark-dialog-background' : 'bg-primary']"
         class="text-white dialog-toolbar"
       >
-        <span>{{ mode == "edit" ? 'Edit submission' : 'New submission' }}</span>
+        <span>{{ mode == "edit" ? 'View submission' : 'New submission' }}</span>
         <q-space />
         <q-btn
           :ripple="false"
@@ -19,15 +19,18 @@
         />
       </q-toolbar>
       <q-card-section v-if="taskInfo">
-        <p class="text-subtitle1">{{ taskInfo.title }}</p>
-        <p
-          :class="[$q.dark.isActive ? 'border-box-dark' : 'border-box-light']"
-          v-html="taskInfo.description"
-        />
+        <div class="q-mb-md text-subtitle1">
+          <q-icon size="xs" class="q-mr-sm" name="mdi-calendar-check" />Task details
+        </div>
+        <p class="text-subtitle1">
+          <span class="text-grey-6" style="font-size: 12px;">Title</span>
+          {{ taskInfo.title }}
+        </p>
+        <html-description-box :html="taskInfo.description" />
         <div>
           <div class="q-mb-sm">
             <q-icon name="mdi-paperclip" />
-            <span class="q-ml-sm">Attachments:</span>
+            <span class="q-ml-sm text-subtitle1">Attachments</span>
           </div>
           <q-list dense style="max-width: 50%">
             <q-item
@@ -53,8 +56,18 @@
       </q-card-section>
       <q-separator />
       <q-card-section class="q-gutter-sm q-pb-none">
-        <div class="q-ml-sm q-mb-md text-subtitle1">Your submission:</div>
+        <div class="q-mb-md text-subtitle1">
+          <q-icon size="xs" class="q-mr-sm" name="mdi-file-multiple" />Your submission
+        </div>
+        <q-editor
+          v-if="submission.gradedById == null"
+          v-model="submission.description"
+          min-height="5rem"
+          class="q-mb-md"
+        />
+        <html-description-box v-else :html="submission.description" />
         <q-file
+          v-if="submission.gradedById == null"
           ref="filePicker"
           dense
           multiple
@@ -69,9 +82,34 @@
             <q-icon name="mdi-paperclip" />
           </template>
         </q-file>
-        <q-editor v-model="submission.description" min-height="5rem" class="q-mb-md" />
+        <div v-else class="q-mb-md">
+          <div class="q-mb-sm">
+            <q-icon name="mdi-paperclip" />
+            <span class="q-ml-sm text-subtitle1">Attachments</span>
+          </div>
+          <q-list dense style="max-width: 50%">
+            <q-item
+              @click="download(attachment.contentType, attachment.data, attachment.name)"
+              clickable
+              :key="i"
+              v-for="(attachment, i) in submission.files"
+            >
+              <q-item-section avatar>
+                <q-icon
+                  size="xs"
+                  :name="fileIcon(attachment.name.slice(attachment.name.lastIndexOf('.') + 1))"
+                />
+              </q-item-section>
+              <q-item-section class="text-subtitle2">{{ attachment.name }}</q-item-section>
+              <q-item-section
+                class="text-subtitle2"
+                side
+              >{{ attachment.size | byteCountToReadableFormat }}</q-item-section>
+            </q-item>
+          </q-list>
+        </div>
       </q-card-section>
-      <q-card-actions class="justify-end q-pt-none">
+      <q-card-section class="q-pt-none text-right" v-if="submission.gradedById == null">
         <q-btn
           v-if="mode == 'create'"
           @click="submitAttempt"
@@ -79,8 +117,24 @@
           color="primary"
           size="sm"
         >Submit</q-btn>
-        <q-btn v-else @click="editSubmission" class="q-mr-sm" color="primary" size="sm">Save</q-btn>
-      </q-card-actions>
+        <q-btn v-else @click="editSubmission" color="primary" size="sm">Save</q-btn>
+      </q-card-section>
+      <q-separator />
+      <q-card-section class="q-gutter-sm">
+        <div class="q-mb-md text-subtitle1">
+          <q-icon size="xs" class="q-mr-sm" name="fas fa-chalkboard-teacher" />Gradee details
+        </div>
+        <html-description-box :html="submission.gradeeComment" />
+        <div>
+          <q-icon name="mdi-school" class="q-mr-sm" />
+          <span class="text-green-4">{{ submission.grade }}</span>
+          / {{ submission.maximumGrade }}
+        </div>
+        <div>
+          <q-icon name="mdi-account" />
+          {{ submission.gradedBy }}
+        </div>
+      </q-card-section>
     </q-card>
   </q-dialog>
 </template>
@@ -88,6 +142,7 @@
 <script>
 import UserMixin from "../mixins/userMixin";
 import CourseTaskService from "../services/api/course-task";
+import HtmlDescriptionBox from "../components/html-description-box";
 import { download, fileIcon } from "../helpers/helpers";
 import { base64StringToBlob } from "blob-util";
 
@@ -95,6 +150,9 @@ export default {
   name: "task-new-submission-dialog",
   props: ["mode", "activeTaskId", "open", "courseId", "attemptId"],
   mixins: [UserMixin],
+  components: {
+    "html-description-box": HtmlDescriptionBox
+  },
   data() {
     return {
       taskInfo: null,
