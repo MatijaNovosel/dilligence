@@ -219,10 +219,7 @@ export default {
           this.resetSubscribeDialog();
         })
         .catch(error => {
-          this.$q.notify({
-            type: "negative",
-            message: this.$i18n.t("error.incorrectPassword")
-          });
+          NotificationService.showError("Invalid password!");
         });
     },
     unsubscribe(subjectId) {

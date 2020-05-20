@@ -12,12 +12,6 @@ axios.interceptors.request.use((config) => {
 
   config.headers.common['Authorization'] = `Bearer ${store.state.user.token}`;
 
-  /*
-  if (config.url.includes("File")) {
-    config.headers.common['Accept'] = "multipart/form-data";
-  }
-  */
-
   return config;
 }, function (error) {
   return Promise.reject(error);

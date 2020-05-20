@@ -53,8 +53,9 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
 import UserService from "../services/api/user";
+import NotificationService from "../services/notification/notifications";
+import { mapActions, mapGetters } from "vuex";
 import { debounce } from "debounce";
 
 export default {
@@ -110,20 +111,8 @@ export default {
       this.$emit("closed");
     },
     blacklistChange: debounce(function() {
-      this.$q.notify({
-        type: "positive",
-        message: "Blacklist updated!"
-      });
-    }, 1500),
-    logout() {
-      this.removeUserData();
-      this.$q.notify({
-        type: "positive",
-        message: this.$i18n.t("successfullyLoggedOut")
-      });
-      this.$q.dark.set(false);
-      this.$router.push("/login");
-    }
+      NotificationService.showSuccess("Blacklist updated!");
+    }, 1500)
   },
   mounted() {
     this.userData = JSON.parse(JSON.stringify(this.user));
@@ -135,10 +124,7 @@ export default {
         this.setUserData(user);
         this.$i18n.locale = user.settings.locale;
         UserService.updateSettings(this.user.id, user.settings).then(() => {
-          this.$q.notify({
-            type: "positive",
-            message: "Settings successfully updated!"
-          });
+          NotificationService.showSuccess("Settings successfully updated!");
         });
         this.localeOptions = [
           {

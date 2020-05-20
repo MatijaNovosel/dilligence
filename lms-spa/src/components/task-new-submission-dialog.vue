@@ -183,10 +183,7 @@ export default {
 
       CourseTaskService.addNewSubmission(formData).then(() => {
         this.reset();
-        this.$q.notify({
-          type: "positive",
-          message: "Submission has been successfully sent!"
-        });
+        NotificationService.showSuccess("Submission sent!");
       });
     },
     editSubmission() {
@@ -203,10 +200,7 @@ export default {
       }
 
       CourseTaskService.editSubmission(formData).then(() => {
-        this.$q.notify({
-          type: "positive",
-          message: "Attempt successfully updated!"
-        });
+        NotificationService.showSuccess("Submission updated!");
         this.reset();
       });
     },

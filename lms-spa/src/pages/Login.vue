@@ -90,10 +90,7 @@ export default {
     },
     login() {
       if (this.$v.loginForm.$invalid) {
-        this.$q.notify({
-          type: "negative",
-          message: "Invalid data!"
-        });
+        NotificationService.showError("Invalid data!");
         return;
       }
       this.loading = true;
@@ -103,10 +100,7 @@ export default {
       })
         .then(({ data }) => {
           if (data.isSuccess) {
-            this.$q.notify({
-              type: "positive",
-              message: this.$i18n.t("successfullyLoggedIn")
-            });
+            NotificationService.showSuccess("Successfully logged in!");
             data.payload.blacklist = [];
             let user = { ...data.payload };
             this.setUserData(user);
@@ -116,10 +110,7 @@ export default {
           }
         })
         .catch(error => {
-          this.$q.notify({
-            type: "negative",
-            message: error.message
-          });
+          NotificationService.showError(error.message);
         })
         .finally(() => {
           this.loading = false;

@@ -119,10 +119,11 @@
 
 <script>
 import UserMixin from "../mixins/userMixin";
+import CourseTaskService from "../services/api/course-task";
+import NotificationService from "../services/notification/notifications";
 import { base64StringToBlob } from "blob-util";
 import { format, add } from "date-fns";
 import { required, minLength, numeric } from "vuelidate/lib/validators";
-import CourseTaskService from "../services/api/course-task";
 
 export default {
   name: "create-edit-task-dialog",
@@ -182,10 +183,7 @@ export default {
       CourseTaskService.createCourseTask(formData).then(() => {
         this.$emit("refresh");
         this.reset();
-        this.$q.notify({
-          type: "positive",
-          message: "Task successfully created!"
-        });
+        NotificationService.showSuccess("Task successfully added!");
       });
     },
     editCourseTask() {
@@ -206,10 +204,7 @@ export default {
       CourseTaskService.updateTask(formData).then(() => {
         this.$emit("refresh");
         this.reset();
-        this.$q.notify({
-          type: "positive",
-          message: "Task successfully updated!"
-        });
+        NotificationService.showSuccess("Task successfully updated!");
       });
     },
     reset() {

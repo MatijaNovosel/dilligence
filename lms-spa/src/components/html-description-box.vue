@@ -22,5 +22,5 @@ export default {
 .dark-bg
   background-color: #2b2b2b
 .light-bg
-  background-color: rgb(239, 234, 234)
+  background-color: #f9f8f8
 </style>

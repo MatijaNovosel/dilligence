@@ -157,17 +157,11 @@ export default {
       };
       UserService.updatePersonalInformation(payload).then(() => {
         this.setUserData(user);
-        this.$q.notify({
-          type: "positive",
-          message: "Personal info updated!"
-        });
+        NotificationService.showSuccess("Personal info updated!");
       });
     }, 1500),
     blacklistChange: debounce(function() {
-      this.$q.notify({
-        type: "positive",
-        message: "Blacklist updated!"
-      });
+      NotificationService.showSuccess("Blacklist updated!");
     }, 1500),
     uploadPicture(file) {
       if (!file) {

@@ -206,10 +206,7 @@ export default {
       CourseTaskService.gradeAttempt(payload).then(() => {
         this.getTaskAttempts();
         this.getTaskAttemptDetails(this.activeTaskAttemptId);
-        this.$q.notify({
-          type: "positive",
-          message: "Submission was successfully graded!"
-        });
+        NotificationService.showSuccess("Submission successfully graded!");
       });
     },
     reset() {
