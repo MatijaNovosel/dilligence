@@ -196,6 +196,7 @@
 <script>
 import CourseService from "../../services/api/course";
 import UserService from "../../services/api/user";
+import NotificationService from "../../services/notification/notifications";
 import SMJER from "../../constants/smjer";
 import UserMixin from "../../mixins/userMixin";
 import { debounce } from "debounce";

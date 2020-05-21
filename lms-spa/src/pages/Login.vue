@@ -1,7 +1,7 @@
 <template>
   <q-page class="row justify-center items-center">
     <q-card flat :style="$q.screen.xs || $q.screen.sm ? loginCardSmall : loginCardNormal">
-      <q-card-section class="text-center">
+      <q-card-section class="text-center q-mb-lg">
         <q-img style="width: 150px; height: 150px;" src="../assets/tvz-logo.svg"></q-img>
       </q-card-section>
       <q-card-section class="q-py-none">
@@ -10,23 +10,29 @@
           square
           dense
           filled
+          no-error-icon
+          hide-bottom-space
           :label="$i18n.t('username')"
           v-model="loginForm.username"
           :error="$v.loginForm.username.$invalid && $v.loginForm.username.$dirty"
-          error-message="This field is required!"
         />
         <q-input
           @input="$v.loginForm.password.$touch"
           square
           dense
           filled
+          no-error-icon
+          hide-bottom-space
           :label="$i18n.t('password')"
           v-model="loginForm.password"
           type="password"
           :error="$v.loginForm.password.$invalid && $v.loginForm.password.$dirty"
-          error-message="This field is required!"
           class="q-pt-sm"
         />
+      </q-card-section>
+      <q-card-section class="q-pb-none q-pt-sm q-ml-md text-subtitle1">
+        New to LMS?
+        <span class="sign-up-text text-bold text-primary">SIGN UP</span>
       </q-card-section>
       <q-card-actions class="justify-center q-mt-sm">
         <q-btn
@@ -34,6 +40,7 @@
           @click="login"
           :loading="loading"
           color="primary"
+          class="q-px-lg"
         >{{ $i18n.t('signIn') }}</q-btn>
       </q-card-actions>
     </q-card>
@@ -42,6 +49,7 @@
 
 <script>
 import AuthService from "../services/api/auth";
+import NotificationService from "../services/notification/notifications";
 import { mapActions } from "vuex";
 import { required, minLength } from "vuelidate/lib/validators";
 
@@ -66,11 +74,11 @@ export default {
       },
       loading: false,
       loginCardSmall: {
-        width: "90%",
+        width: "80%",
         background: "none"
       },
       loginCardNormal: {
-        width: "25%",
+        width: "35%",
         background: "none"
       }
     };
@@ -119,3 +127,8 @@ export default {
   }
 };
 </script>
+
+<style lang="sass" scoped>
+.sign-up-text:hover
+  cursor: pointer
+</style>

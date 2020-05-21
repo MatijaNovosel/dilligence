@@ -1,7 +1,10 @@
 <template>
   <q-dialog :maximized="$q.screen.xs || $q.screen.sm" v-model="open" persistent>
     <q-card :style="$q.screen.xs || $q.screen.sm || dialogStyle">
-      <q-toolbar class="bg-primary dialog-toolbar">
+      <q-toolbar
+        :class="[ $q.dark.isActive ? 'dark-dialog-background' : 'bg-primary']"
+        class="text-white dialog-toolbar"
+      >
         <span>Submissions</span>
         <q-space />
         <q-btn
@@ -21,7 +24,7 @@
             :thumb-style="thumbStyle"
             :bar-style="barStyle"
             visible
-            style="height: 450px"
+            style="height: 650px"
           >
             <q-list>
               <q-item
@@ -57,7 +60,7 @@
             visible
             :thumb-style="thumbStyle"
             :bar-style="barStyle"
-            style="height: 450px"
+            style="height: 650px"
           >
             <div class="q-pr-md">
               <template v-if="details">
@@ -113,7 +116,7 @@
                     />
                     <q-editor class="q-my-sm" v-model="details.gradeeComment" min-height="5rem" />
                   </div>
-                  <div class="text-subtitle1" v-if="details.gradedById != null">
+                  <div class="text-subtitle1 q-ml-md" v-if="details.gradedById != null">
                     <span class="text-orange-8">Graded by</span>
                     {{ details.gradedBy }}
                   </div>

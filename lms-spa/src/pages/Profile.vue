@@ -106,6 +106,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import UserService from "../services/api/user";
+import NotificationService from "../services/notification/notifications";
 import { debounce } from "debounce";
 import { generateUserPictureSource } from "../helpers/helpers";
 

@@ -83,30 +83,32 @@
           </template>
         </q-file>
         <div v-else class="q-mb-md">
-          <div class="q-mb-sm">
-            <q-icon name="mdi-paperclip" />
-            <span class="q-ml-sm text-subtitle1">Attachments</span>
-          </div>
-          <q-list dense style="max-width: 50%">
-            <q-item
-              @click="download(attachment.contentType, attachment.data, attachment.name)"
-              clickable
-              :key="i"
-              v-for="(attachment, i) in submission.files"
-            >
-              <q-item-section avatar>
-                <q-icon
-                  size="xs"
-                  :name="fileIcon(attachment.name.slice(attachment.name.lastIndexOf('.') + 1))"
-                />
-              </q-item-section>
-              <q-item-section class="text-subtitle2">{{ attachment.name }}</q-item-section>
-              <q-item-section
-                class="text-subtitle2"
-                side
-              >{{ attachment.size | byteCountToReadableFormat }}</q-item-section>
-            </q-item>
-          </q-list>
+          <template v-if="submission.files">
+            <div class="q-mb-sm">
+              <q-icon name="mdi-paperclip" />
+              <span class="q-ml-sm text-subtitle1">Attachments</span>
+            </div>
+            <q-list dense style="max-width: 50%">
+              <q-item
+                @click="download(attachment.contentType, attachment.data, attachment.name)"
+                clickable
+                :key="i"
+                v-for="(attachment, i) in submission.files"
+              >
+                <q-item-section avatar>
+                  <q-icon
+                    size="xs"
+                    :name="fileIcon(attachment.name.slice(attachment.name.lastIndexOf('.') + 1))"
+                  />
+                </q-item-section>
+                <q-item-section class="text-subtitle2">{{ attachment.name }}</q-item-section>
+                <q-item-section
+                  class="text-subtitle2"
+                  side
+                >{{ attachment.size | byteCountToReadableFormat }}</q-item-section>
+              </q-item>
+            </q-list>
+          </template>
         </div>
       </q-card-section>
       <q-card-section class="q-pt-none text-right" v-if="submission.gradedById == null">
@@ -122,7 +124,7 @@
       <q-separator />
       <q-card-section class="q-gutter-sm">
         <div class="q-mb-md text-subtitle1">
-          <q-icon size="xs" class="q-mr-sm" name="fas fa-chalkboard-teacher" />Gradee details
+          <q-icon size="xs" class="q-mr-md" name="fas fa-chalkboard-teacher" />Gradee details
         </div>
         <html-description-box :html="submission.gradeeComment" />
         <div>
@@ -143,6 +145,7 @@
 import UserMixin from "../mixins/userMixin";
 import CourseTaskService from "../services/api/course-task";
 import HtmlDescriptionBox from "../components/html-description-box";
+import NotificationService from "../services/notification/notifications";
 import { download, fileIcon } from "../helpers/helpers";
 import { base64StringToBlob } from "blob-util";
 

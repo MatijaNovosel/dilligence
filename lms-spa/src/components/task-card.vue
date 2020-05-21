@@ -46,7 +46,7 @@
     </q-menu>
     <q-bar style="height: 10px;" :class="isExpired ? 'bar-expired' : ''" />
     <q-card-section class="q-py-sm" :class="isExpired ? 'header-expired' : ''">
-      <span class="text-h6">{{ value.title }}</span>
+      <span :class="isExpired ? 'text-white' : ''" class="text-h6">{{ value.title }}</span>
     </q-card-section>
     <q-separator />
     <q-card-section horizontal>
