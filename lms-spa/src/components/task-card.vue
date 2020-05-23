@@ -85,8 +85,8 @@
         :class="[ $q.dark.isActive ? 'text-grey-6' : 'text-black' ]"
       >
         <div>{{ value.createdBy }}</div>
-        <div class="q-my-md">{{ format(new Date(value.submittedAt), 'yyyy-MM-dd HH:mm') }}</div>
-        <div>{{ format(new Date(value.dueDate), 'yyyy-MM-dd HH:mm') }}</div>
+        <div class="q-my-md">{{ format(new Date(value.submittedAt), 'dd.MM.yyyy. HH:mm') }}</div>
+        <div>{{ format(new Date(value.dueDate), 'dd.MM.yyyy. HH:mm') }}</div>
       </q-card-section>
     </q-card-section>
     <template v-if="hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)">
