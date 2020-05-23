@@ -25,5 +25,8 @@ export default {
    */
   async upload(files) {
     return await axios.post('File/upload', files);
+  },
+  async downloadMultiple(fileIds) {
+    return await axios.get('File/download-multiple', { params: { fileIds } })
   }
 }

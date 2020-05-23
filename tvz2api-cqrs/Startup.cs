@@ -173,6 +173,7 @@ namespace tvz2api_cqrs
 
       // File queries
       services.AddScoped<IQueryHandlerAsync<FileQuery, List<FileQueryModel>>, FileQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<FileDownloadMultipleQuery, FileDTO>, FileQueryHandler>();
 
       // Authentication commands
       services.AddScoped<ICommandHandlerAsync<AuthenticationRegisterCommand>, AuthenticationCommandHandler>();

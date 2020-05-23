@@ -65,5 +65,15 @@ namespace tvz2api_cqrs.Controllers
       var files = await _queryBus.ExecuteAsync(new FileQuery(id));
       return Ok(files);
     }
+
+    [HttpGet("download-multiple")]
+    public async Task<IActionResult> DownloadMultiple([FromQuery(Name = "fileIds[]")] List<int> fileIds)
+    {
+      var zip = await _queryBus.ExecuteAsync(new FileDownloadMultipleQuery()
+      {
+        FileIds = fileIds
+      });
+      return Ok(zip);
+    }
   }
 }

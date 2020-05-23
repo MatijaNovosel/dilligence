@@ -7,11 +7,15 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
 using tvz2api_cqrs.Models.DTO;
+using System.IO;
+using System.IO.Compression;
+using System;
 
 namespace tvz2api_cqrs.Implementation.QueryHandlers
 {
   public class FileQueryHandler :
-    IQueryHandlerAsync<FileQuery, List<FileQueryModel>>
+    IQueryHandlerAsync<FileQuery, List<FileQueryModel>>,
+    IQueryHandlerAsync<FileDownloadMultipleQuery, FileDTO>
   {
     private readonly lmsContext _context;
 
@@ -33,6 +37,49 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         })
         .ToListAsync();
       return files;
+    }
+
+    public async Task<FileDTO> HandleAsync(FileDownloadMultipleQuery query)
+    {
+      var files = await _context.File
+        .Where(t => query.FileIds.Contains(t.Id))
+        .Select(t => new FileDTO
+        {
+          Id = t.Id,
+          Name = t.Name,
+          ContentType = t.ContentType,
+          Data = t.Data
+        })
+        .ToListAsync();
+
+      var memoryStream = new MemoryStream();
+
+      using (ZipArchive archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+      {
+        foreach (var file in files)
+        {
+          using (var mr = new MemoryStream(file.Data))
+          {
+            ZipArchiveEntry entry = archive.CreateEntry(file.Name);
+            using (Stream entryStream = entry.Open())
+            {
+              mr.Position = 0;
+              mr.CopyTo(entryStream);
+            }
+          }
+        }
+      }
+
+      memoryStream.Position = 0;
+      byte[] bytes = memoryStream.ToArray();
+      await memoryStream.DisposeAsync();
+
+      return new FileDTO()
+      {
+        ContentType = "application/zip",
+        Data = bytes,
+        Name = DateTime.Now.ToString("dd.MM.yyyy - HHmm") + ".zip"
+      };
     }
   }
 }

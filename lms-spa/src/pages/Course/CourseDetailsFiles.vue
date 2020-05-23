@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="row q-col-gutter-sm">
+    <div class="row q-col-gutter-md">
       <div v-if="loading" class="col-12 text-center q-mt-lg">
         <q-spinner size="3em" />
       </div>
-      <div v-else class="col-xs-12 col-md-6" :key="content.id" v-for="content in sidebarContents">
+      <div v-else class="col-12" :key="content.id" v-for="content in sidebarContents">
         <file-cabinet
           @delete="deleteSidebar"
           @doneUploading="getCourseFiles"
@@ -19,7 +19,7 @@
           :class="[ $q.dark.isActive ? 'dark-dialog-background' : 'bg-primary']"
           class="text-white dialog-toolbar"
         >
-          <span>Create new sidebar</span>
+          <span>Create new cabinet</span>
           <q-space />
           <q-btn
             :ripple="false"

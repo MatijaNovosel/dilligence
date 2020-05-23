@@ -45,9 +45,9 @@
             round
             class="q-ml-sm"
             icon="mdi-close-circle"
-            @click="$delete(content.id)"
+            @click="$deleteSidebar(content.id)"
           >
-            <q-tooltip> Delete cabinet </q-tooltip>
+            <q-tooltip>Delete cabinet</q-tooltip>
           </q-btn>
         </div>
       </q-toolbar>
@@ -64,16 +64,18 @@
               <q-item-label caption>{{ file.contentType }}</q-item-label>
             </q-item-section>
             <q-item-section side>
-              <q-btn
-                :ripple="false"
-                dense
-                size="sm"
-                flat
-                round
-                v-if="!downloadMultiple"
-                icon="mdi-download"
-                @click="addFileDialog = !addFileDialog"
-              />
+              <template v-if="!downloadMultiple">
+                <q-btn-group outline>
+                  <q-btn
+                    size="sm"
+                    flat
+                    round
+                    icon="mdi-download"
+                    @click="download(file.contentType, file.data, file.name)"
+                  />
+                  <q-btn icon="mdi-minus-circle" flat round size="sm" @click="deleteFile(file.id)" />
+                </q-btn-group>
+              </template>
               <q-checkbox
                 class="q-pr-xs"
                 v-else
@@ -92,11 +94,13 @@
         <q-item class="justify-center" v-show="downloadMultiple">
           <q-space />
           <q-btn
-            size="sm"
-            dense
+            size="xs"
+            class="q-py-xs"
             color="primary"
+            icon="mdi-download"
+            :loading="downloadingMultiple"
             @click="downloadMultipleFiles"
-          >{{ $i18n.t('download') }}</q-btn>
+          />
           <q-space />
           <q-btn
             :ripple="false"
@@ -107,6 +111,7 @@
             class="select-all"
             v-if="downloadMultiple"
             icon="mdi-check-box-multiple-outline"
+            @click="selectAllFiles"
           >
             <q-tooltip>{{ $i18n.t('selectAll') }}</q-tooltip>
           </q-btn>
@@ -119,6 +124,7 @@
           :class="[ $q.dark.isActive ? 'dark-dialog-background' : 'bg-primary']"
           class="text-white dialog-toolbar"
         >
+          <span>Upload files</span>
           <q-space />
           <q-btn
             :ripple="false"
@@ -168,6 +174,7 @@ export default {
   data() {
     return {
       downloadMultipleSelection: [],
+      downloadingMultiple: false,
       downloadMultiple: false,
       addFileDialog: false,
       files: null,
@@ -178,8 +185,29 @@ export default {
   methods: {
     download,
     fileIcon,
+    selectAllFiles() {
+      this.content.files.forEach(file => {
+        if (!this.downloadMultipleSelection.includes(file.id)) {
+          this.downloadMultipleSelection.push(file.id);
+        }
+      });
+    },
+    deleteFile(fileId) {
+      FileService.deleteFile(fileId).then(() => {
+        this.content.files = this.content.files.filter(
+          file => file.id != fileId
+        );
+      });
+    },
     downloadMultipleFiles() {
-      console.log("he hee");
+      this.downloadingMultiple = true;
+      FileService.downloadMultiple(this.downloadMultipleSelection)
+        .then(({ data }) => {
+          this.download(data.contentType, data.data, data.name);
+        })
+        .finally(() => {
+          this.downloadingMultiple = false;
+        });
     },
     changeDownloadToMultiple() {
       [this.downloadMultiple, this.downloadMultipleSelection] = [
@@ -210,14 +238,7 @@ export default {
         this.resetDialog();
       });
     },
-    deleteFile(file) {
-      file.deleting = true;
-      FileService.deleteFile(file.id).finally(() => {
-        this.content.files = this.content.files.filter(x => x.id != file.id);
-        file.deleting = false;
-      });
-    },
-    $delete(sidebarId) {
+    $deleteSidebar(sidebarId) {
       this.$emit("delete", sidebarId);
     }
   }
