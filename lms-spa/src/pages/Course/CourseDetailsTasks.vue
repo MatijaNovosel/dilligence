@@ -69,6 +69,7 @@
       :courseId="courseId"
       :attemptId="activeAttemptId"
       @close="createSubmissionDialog = false"
+      @newSubmission="getCourseTasks"
     />
     <task-view-submissions-dialog
       :open="viewSubmissionsDialog"

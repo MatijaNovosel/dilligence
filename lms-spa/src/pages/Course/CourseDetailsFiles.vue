@@ -1,10 +1,63 @@
 <template>
   <div>
-    <div class="row">
-      <div class="col-6" :key="content.id" v-for="content in sidebarContents">
-        <file-cabinet :courseId="courseId" :content="content" />
+    <div class="row q-col-gutter-sm">
+      <div v-if="loading" class="col-12 text-center q-mt-lg">
+        <q-spinner size="3em" />
+      </div>
+      <div v-else class="col-xs-12 col-md-6" :key="content.id" v-for="content in sidebarContents">
+        <file-cabinet
+          @delete="deleteSidebar"
+          @doneUploading="getCourseFiles"
+          :courseId="courseId"
+          :content="content"
+        />
       </div>
     </div>
+    <q-dialog :maximized="$q.screen.xs || $q.screen.sm" v-model="newSidebarDialog" persistent>
+      <q-card :style="$q.screen.xs || $q.screen.sm || dialogStyle">
+        <q-toolbar
+          :class="[ $q.dark.isActive ? 'dark-dialog-background' : 'bg-primary']"
+          class="text-white dialog-toolbar"
+        >
+          <span>Create new sidebar</span>
+          <q-space />
+          <q-btn
+            :ripple="false"
+            dense
+            size="sm"
+            color="white"
+            flat
+            round
+            icon="mdi-close-circle"
+            @click="reset"
+          />
+        </q-toolbar>
+        <q-card-section>
+          <q-input
+            label="Title"
+            outlined
+            dense
+            hide-bottom-space
+            no-error-icon
+            :error="$v.newSidebar.title.$invalid && $v.newSidebar.title.$dirty"
+            @input="$v.newSidebar.title.$touch()"
+            v-model="newSidebar.title"
+          />
+        </q-card-section>
+        <q-card-actions class="q-pt-none">
+          <q-space />
+          <q-btn
+            class="q-mr-sm"
+            :ripple="false"
+            :disabled="$v.newSidebar.$invalid"
+            dense
+            size="sm"
+            color="primary"
+            @click="createNewSidebar"
+          >Create</q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     <q-page-sticky
       position="bottom-right"
       :offset="[18, 18]"
@@ -13,14 +66,10 @@
     >
       <q-fab direction="left" :color="!$q.dark.isActive ? 'primary' : 'grey-8'" fab icon="add">
         <q-fab-action
-          icon="mdi-email-plus"
+          icon="mdi-file-plus"
           :color="!$q.dark.isActive ? 'primary' : 'grey-8'"
           label="New cabinet"
-        />
-        <q-fab-action
-          icon="mdi-email-plus"
-          :color="!$q.dark.isActive ? 'primary' : 'grey-8'"
-          label="Upload file"
+          @click="newSidebarDialog = true"
         />
       </q-fab>
     </q-page-sticky>
@@ -31,12 +80,21 @@
 import CourseService from "../../services/api/course";
 import FileCabinet from "../../components/file-cabinet";
 import UserMixin from "../../mixins/userMixin";
+import { required, minLength } from "vuelidate/lib/validators";
 
 export default {
   name: "CourseDetailsFiles",
   mixins: [UserMixin],
   components: {
     "file-cabinet": FileCabinet
+  },
+  validations: {
+    newSidebar: {
+      title: {
+        required,
+        minLength: minLength(4)
+      }
+    }
   },
   created() {
     this.courseId = this.$route.params.id;
@@ -45,14 +103,49 @@ export default {
   data() {
     return {
       courseId: null,
-      sidebarContents: null
+      sidebarContents: null,
+      newSidebarDialog: false,
+      loading: false,
+      dialogStyle: {
+        width: "50%",
+        "max-width": "60vw"
+      },
+      newSidebar: {
+        title: null
+      }
     };
   },
   methods: {
-    getCourseFiles() {
-      CourseService.getCourseSidebar(this.courseId).then(({ data }) => {
-        this.sidebarContents = data;
+    deleteSidebar(sidebarId) {
+      CourseService.deleteSidebar(sidebarId, this.courseId).then(() => {
+        this.getCourseFiles();
       });
+    },
+    createNewSidebar() {
+      CourseService.createNewSidebar({
+        title: this.newSidebar.title,
+        courseId: this.courseId
+      }).then(() => {
+        this.getCourseFiles();
+        this.$v.$reset();
+        this.reset();
+      });
+    },
+    getCourseFiles() {
+      this.loading = true;
+      CourseService.getCourseSidebar(this.courseId)
+        .then(({ data }) => {
+          this.sidebarContents = data;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    reset() {
+      this.newSidebar = {
+        title: null
+      };
+      this.newSidebarDialog = false;
     }
   }
 };

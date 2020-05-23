@@ -52,5 +52,11 @@ export default {
   },
   async getCourseUsers(courseId, name, surname, username) {
     return await axios.get(`Course/users/${courseId}`, { params: { name, surname, username } });
+  },
+  async createNewSidebar(payload) {
+    return await axios.post('Course/new-sidebar', payload);
+  },
+  async deleteSidebar(sidebarId, courseId) {
+    return await axios.delete('Course/delete-sidebar/' + sidebarId, { params: { courseId } });
   }
 }

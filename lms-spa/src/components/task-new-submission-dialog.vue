@@ -60,10 +60,12 @@
           <q-icon size="xs" class="q-mr-sm" name="mdi-file-multiple" />Your submission
         </div>
         <q-editor
+          ref="editor_ref"
           v-if="submission.gradedById == null"
           v-model="submission.description"
           min-height="5rem"
           class="q-mb-md"
+          @paste.native="evt => pasteCapture(evt)"
         />
         <html-description-box v-else :html="submission.description" />
         <q-file
@@ -115,28 +117,30 @@
         <q-btn
           v-if="mode == 'create'"
           @click="submitAttempt"
-          class="q-mr-sm"
+          class="q-mr-sm q-mt-md"
           color="primary"
           size="sm"
         >Submit</q-btn>
         <q-btn v-else @click="editSubmission" color="primary" size="sm">Save</q-btn>
       </q-card-section>
-      <q-separator />
-      <q-card-section class="q-gutter-sm">
-        <div class="q-mb-md text-subtitle1">
-          <q-icon size="xs" class="q-mr-md" name="fas fa-chalkboard-teacher" />Gradee details
-        </div>
-        <html-description-box :html="submission.gradeeComment" />
-        <div>
-          <q-icon name="mdi-school" class="q-mr-sm" />
-          <span class="text-green-4">{{ submission.grade }}</span>
-          / {{ submission.maximumGrade }}
-        </div>
-        <div>
-          <q-icon name="mdi-account" />
-          {{ submission.gradedBy }}
-        </div>
-      </q-card-section>
+      <template v-else>
+        <q-separator />
+        <q-card-section class="q-gutter-sm">
+          <div class="q-mb-md text-subtitle1">
+            <q-icon size="xs" class="q-mr-md" name="fas fa-chalkboard-teacher" />Gradee details
+          </div>
+          <html-description-box :html="submission.gradeeComment" />
+          <div>
+            <q-icon name="mdi-account" class="q-mr-xs" />
+            {{ submission.gradedBy }}
+          </div>
+          <div>
+            <q-icon name="mdi-school" class="q-mr-sm" />
+            <span class="text-green-4">{{ submission.grade }}</span>
+            / {{ submission.maximumGrade }}
+          </div>
+        </q-card-section>
+      </template>
     </q-card>
   </q-dialog>
 </template>
@@ -172,6 +176,23 @@ export default {
   methods: {
     fileIcon,
     download,
+    pasteCapture(evt) {
+      let text, onPasteStripFormattingIEPaste;
+      evt.preventDefault();
+      if (evt.originalEvent && evt.originalEvent.clipboardData.getData) {
+        text = evt.originalEvent.clipboardData.getData("text/plain");
+        this.$refs.editor_ref.runCmd("insertText", text);
+      } else if (evt.clipboardData && evt.clipboardData.getData) {
+        text = evt.clipboardData.getData("text/plain");
+        this.$refs.editor_ref.runCmd("insertText", text);
+      } else if (window.clipboardData && window.clipboardData.getData) {
+        if (!onPasteStripFormattingIEPaste) {
+          onPasteStripFormattingIEPaste = true;
+          this.$refs.editor_ref.runCmd("ms-pasteTextOnly", text);
+        }
+        onPasteStripFormattingIEPaste = false;
+      }
+    },
     submitAttempt() {
       let formData = new FormData();
 
@@ -187,6 +208,7 @@ export default {
       CourseTaskService.addNewSubmission(formData).then(() => {
         this.reset();
         NotificationService.showSuccess("Submission sent!");
+        this.$emit("newSubmission");
       });
     },
     editSubmission() {

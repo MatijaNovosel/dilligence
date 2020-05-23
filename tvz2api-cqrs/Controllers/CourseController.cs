@@ -17,6 +17,7 @@ using Newtonsoft.Json;
 using System.Net.Mail;
 using System.Net;
 using tvz2api_cqrs.Custom;
+using tvz2api_cqrs.Implementation.Commands;
 
 namespace tvz2api_cqrs.Controllers
 {
@@ -27,11 +28,13 @@ namespace tvz2api_cqrs.Controllers
   {
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
+    private readonly IUserResolver _userResolver;
 
-    public CourseController(ICommandBus commandBus, IQueryBus queryBus)
+    public CourseController(ICommandBus commandBus, IQueryBus queryBus, IUserResolver userResolver)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;
+      _userResolver = userResolver;
     }
 
     [HttpGet]
@@ -72,6 +75,38 @@ namespace tvz2api_cqrs.Controllers
     {
       var result = await _queryBus.ExecuteAsync(new CourseSidebarQuery(id));
       return Ok(result);
+    }
+
+    [HttpPost("new-sidebar")]
+    public async Task<IActionResult> CreateNewSidebar(CourseCreateNewSidebarCommand command)
+    {
+      if (
+        !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanUploadCourseFiles) &&
+        !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedWithCourse))
+      )
+      {
+        return Unauthorized();
+      }
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
+    }
+
+    [HttpDelete("delete-sidebar/{id}")]
+    public async Task<IActionResult> DeleteSidebar(int id, int courseId)
+    {
+      if (
+        !_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanDeleteCourseFiles) &&
+        !(_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.IsInvolvedWithCourse))
+      )
+      {
+        return Unauthorized();
+      }
+      await _commandBus.ExecuteAsync(new CourseDeleteSidebarCommand()
+      {
+        SidebarId = id,
+        CourseId = courseId
+      });
+      return Ok();
     }
   }
 }

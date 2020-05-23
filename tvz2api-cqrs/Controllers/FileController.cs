@@ -41,14 +41,14 @@ namespace tvz2api_cqrs.Controllers
       return Ok(uploadedFileIds);
     }
 
-    [HttpPost("uploadSidebar/{id}")]
-    public async Task<IActionResult> UploadFiles([FromForm]List<IFormFile> files, int id)
+    [HttpPost("upload-sidebar/{sidebarId}")]
+    public async Task<IActionResult> UploadFiles([FromForm] List<IFormFile> files, int sidebarId)
     {
       if (files == null || files.Count == 0)
       {
         throw new Exception("No files present!");
       }
-      var uploadedFileIds = await _commandBus.ExecuteAsync<List<int>>(new FileUploadSidebarCommand(id, files));
+      var uploadedFileIds = await _commandBus.ExecuteAsync<List<int>>(new FileUploadSidebarCommand(sidebarId, files));
       return Ok(uploadedFileIds);
     }
 

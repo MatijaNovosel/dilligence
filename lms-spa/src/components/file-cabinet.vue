@@ -2,8 +2,8 @@
   <div>
     <q-card flat bordered>
       <q-toolbar
-        style="min-height: 30px;"
-        class="text-center justify-center items-center bg-primary"
+        :class="[ $q.dark.isActive ? 'dark-dialog-background' : 'bg-primary']"
+        class="text-center justify-center items-center text-white dialog-toolbar"
       >
         <span class="caption text-white">{{ content.title }}</span>
         <q-space />
@@ -30,11 +30,24 @@
             flat
             round
             class="q-ml-sm"
-            v-if="content.files.length != 0"
+            v-if="content.files.length > 1"
             :icon="downloadMultiple ? 'mdi-lock-open-variant' : 'mdi-lock'"
             @click="changeDownloadToMultiple"
           >
             <q-tooltip>{{ $i18n.t('downloadMultiple') }}</q-tooltip>
+          </q-btn>
+          <q-btn
+            :ripple="false"
+            dense
+            size="sm"
+            color="white"
+            flat
+            round
+            class="q-ml-sm"
+            icon="mdi-close-circle"
+            @click="$delete(content.id)"
+          >
+            <q-tooltip> Delete cabinet </q-tooltip>
           </q-btn>
         </div>
       </q-toolbar>
@@ -102,7 +115,10 @@
     </q-card>
     <q-dialog v-model="addFileDialog" persistent>
       <q-card class="upload-dialog">
-        <q-toolbar class="bg-primary text-white dialog-toolbar">
+        <q-toolbar
+          :class="[ $q.dark.isActive ? 'dark-dialog-background' : 'bg-primary']"
+          class="text-white dialog-toolbar"
+        >
           <q-space />
           <q-btn
             :ripple="false"
@@ -116,14 +132,7 @@
           />
         </q-toolbar>
         <q-card-section>
-          <q-file
-            dense
-            multiple
-            outlined
-            v-model="files"
-            clearable
-            :label="$i18n.t('uploadMultipleFiles')"
-          >
+          <q-file dense multiple outlined v-model="files" clearable label="Files">
             <template v-slot:prepend>
               <q-icon name="mdi-paperclip" />
             </template>
@@ -139,6 +148,7 @@
             size="sm"
             color="primary"
             @click="upload"
+            class="q-mr-sm q-mb-sm"
           >{{ $i18n.t('upload') }}</q-btn>
         </q-card-actions>
       </q-card>
@@ -190,15 +200,6 @@ export default {
       this.itemUploading = true;
       var formData = new FormData();
       this.files.forEach(x => formData.append("files", x));
-      FileService.upload(formData).finally(() => {
-        this.$emit("doneUploading");
-        this.itemUploading = false;
-      });
-    },
-    uploadMultipleWithSidebar() {
-      this.itemUploading = true;
-      var formData = new FormData();
-      this.files.forEach(x => formData.append("files", x));
       FileService.uploadSidebar(formData, this.content.id).finally(() => {
         this.$emit("doneUploading");
         this.itemUploading = false;
@@ -206,6 +207,7 @@ export default {
           this.addFileDialog = false;
         }
         this.files = null;
+        this.resetDialog();
       });
     },
     deleteFile(file) {
@@ -214,18 +216,15 @@ export default {
         this.content.files = this.content.files.filter(x => x.id != file.id);
         file.deleting = false;
       });
+    },
+    $delete(sidebarId) {
+      this.$emit("delete", sidebarId);
     }
   }
 };
 </script>
 
 <style lang="sass">
-.nonShaded:hover
-  background-color: #ebebeb
-.shaded
-  background-color: #f6f6f6
-.shaded:hover
-  background-color: #e6e6e6
 .dialog-toolbar
   min-height: 30px
 .upload-dialog

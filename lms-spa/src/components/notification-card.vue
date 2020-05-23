@@ -61,6 +61,7 @@
                 @click="downloadFile(attachment)"
                 :loading="attachment.downloading"
                 size="sm"
+                class="q-ml-md"
                 flat
                 round
                 icon="mdi-download"

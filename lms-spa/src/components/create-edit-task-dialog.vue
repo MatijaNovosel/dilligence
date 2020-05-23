@@ -106,6 +106,7 @@
       <q-card-actions class="justify-end q-pt-none">
         <q-btn
           v-if="mode == 'create'"
+          :disabled="$v.task.$invalid"
           @click="createCourseTask"
           class="q-mr-sm"
           color="primary"

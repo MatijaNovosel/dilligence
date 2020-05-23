@@ -7,8 +7,8 @@ export default {
    * @param {number} id - The sidebar id.
    * @return {AxiosPromise<any>} Axios promise to be resolved in the view.
    */
-  async uploadSidebar(files, id) {
-    return await axios.post(`File/uploadSidebar/${id}`, files);
+  async uploadSidebar(files, sidebarId) {
+    return await axios.post(`File/upload-sidebar/${sidebarId}`, files);
   },
   /**
    * Deletes a file.

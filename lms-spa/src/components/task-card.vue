@@ -18,7 +18,7 @@
         </q-item>
         <q-item
           v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageTasks, Privileges.CanCreateTasks) 
-          && hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
+          && hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse) && !isExpired"
           clickable
           v-close-popup
           @click="$editTask"
