@@ -4,6 +4,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 tvz2api-cqrs/appsettings.json
+scripts/script.sql
 
 # User-specific files
 *.rsuser
