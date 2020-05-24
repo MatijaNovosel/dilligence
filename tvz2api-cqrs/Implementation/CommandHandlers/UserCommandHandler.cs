@@ -62,6 +62,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       var settings = await _context.UserSettings.FirstOrDefaultAsync(x => x.UserId == command.UserId);
       settings.DarkMode = command.DarkMode;
       settings.Locale = command.Locale;
+      settings.Popups = command.Popups;
       await _context.SaveChangesAsync();
     }
 

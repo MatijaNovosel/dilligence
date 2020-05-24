@@ -28,6 +28,7 @@ namespace tvz2api_cqrs.Implementation.Commands
     public int UserId { get; set; }
     public bool DarkMode { get; set; }
     public string Locale { get; set; }
+    public bool Popups { get; set; }
   }
 
   public class UserUploadPictureCommand : ICommand<UserProfilePictureDTO>

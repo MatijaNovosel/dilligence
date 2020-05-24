@@ -139,6 +139,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       {
         DarkMode = userSettings.DarkMode,
         Locale = userSettings.Locale,
+        Popups = userSettings.Popups
       };
 
       return CommandResult<LoginUserDTO>.Success(new LoginUserDTO()

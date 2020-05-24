@@ -23,5 +23,6 @@ namespace tvz2api_cqrs.QueryModels
   {
     public bool? DarkMode { get; set; }
     public string Locale { get; set; }
+    public bool? Popups { get; set; }
   }
 }

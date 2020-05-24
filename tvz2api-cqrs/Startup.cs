@@ -26,7 +26,6 @@ using tvz2api_cqrs.Infrastructure.CommandHandlers;
 using tvz2api_cqrs.Infrastructure.Commands;
 using tvz2api_cqrs.Infrastructure.Messaging;
 using tvz2api_cqrs.Infrastructure.QueryHandlers;
-using tvz2api_cqrs.Middleware;
 using tvz2api_cqrs.Models;
 using tvz2api_cqrs.Models.DTO;
 using tvz2api_cqrs.QueryModels;
@@ -128,7 +127,6 @@ namespace tvz2api_cqrs
         app.UseDeveloperExceptionPage();
       }
       app.UseCors();
-      app.UseOptions();
       app.UseHttpsRedirection();
       app.UseWebSockets();
       app.UseSwagger();

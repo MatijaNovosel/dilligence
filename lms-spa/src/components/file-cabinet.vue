@@ -45,6 +45,8 @@
             round
             class="q-ml-sm"
             icon="mdi-close-circle"
+            v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageCourseFiles, Privileges.CanDeleteCourseFiles) 
+            && hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
             @click="$deleteSidebar(content.id)"
           >
             <q-tooltip>Delete cabinet</q-tooltip>
@@ -73,7 +75,15 @@
                     icon="mdi-download"
                     @click="download(file.contentType, file.data, file.name)"
                   />
-                  <q-btn icon="mdi-minus-circle" flat round size="sm" @click="deleteFile(file.id)" />
+                  <q-btn
+                    icon="mdi-minus-circle"
+                    flat
+                    round
+                    size="sm"
+                    @click="deleteFile(file.id)"
+                    v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageCourseFiles, Privileges.CanDeleteCourseFiles) 
+                    && hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
+                  />
                 </q-btn-group>
               </template>
               <q-checkbox

@@ -45,8 +45,13 @@
       </q-list>
     </q-menu>
     <q-bar style="height: 10px;" :class="isExpired ? 'bar-expired' : ''" />
-    <q-card-section class="q-py-sm" :class="isExpired ? 'header-expired' : ''">
-      <span :class="isExpired ? 'text-white' : ''" class="text-h6">{{ value.title }}</span>
+    <q-card-section
+      class="q-py-sm"
+      :class="isExpired ? 'header-expired' : ''"
+      style="overflow: hidden;"
+    >
+      <span :class="isExpired ? 'text-white' : ''" class="text-h6 ellipsis">{{ value.title }}</span>
+      <q-tooltip anchor="top middle" self="center middle">{{value.title}}</q-tooltip>
     </q-card-section>
     <q-separator />
     <q-card-section horizontal>
