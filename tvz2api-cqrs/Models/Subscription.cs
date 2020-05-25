@@ -7,6 +7,7 @@ namespace tvz2api_cqrs.Models
     {
         public int Id { get; set; }
         public DateTime? JoinedAt { get; set; }
+        public bool? Blacklisted { get; set; }
         public int? UserId { get; set; }
         public int? CourseId { get; set; }
 

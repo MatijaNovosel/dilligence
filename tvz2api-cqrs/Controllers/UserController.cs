@@ -50,6 +50,20 @@ namespace tvz2api_cqrs.Controllers
       return Ok(result);
     }
 
+    [HttpPut("update-blacklist")]
+    public async Task<IActionResult> UpdateBlacklist(UserUpdateBlacklistCommand command)
+    {
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
+    }
+
+    [HttpGet("blacklist/{id}")]
+    public async Task<IActionResult> GetBlacklist(int id)
+    {
+      var result = await _queryBus.ExecuteAsync(new UserBlacklistQuery() { UserId = id });
+      return Ok(result);
+    }
+
     [HttpGet("chat/{id}")]
     public async Task<IActionResult> GetChats(int id)
     {
@@ -93,7 +107,7 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPut("image/{userId}")]
-    public async Task<IActionResult> UploadImage([FromForm]IFormFile picture, int userId)
+    public async Task<IActionResult> UploadImage([FromForm] IFormFile picture, int userId)
     {
       var file = await _commandBus.ExecuteAsync<UserProfilePictureDTO>(new UserUploadPictureCommand(userId, picture));
       return Ok(file);

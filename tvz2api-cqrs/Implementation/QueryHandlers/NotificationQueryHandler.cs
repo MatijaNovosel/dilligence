@@ -48,9 +48,12 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     {
       // Filter condition: retrieve the notification if it has not been seen by the user and if it has been submitted after the user had joined the course
       int userId = Int32.Parse(_userResolver.User.FindFirstValue(ClaimTypes.NameIdentifier));
-      var notifications = await _context.Notification
+      var notifications = await _context
+        .Notification
+        .Include(t => t.Course)
+        .ThenInclude(t => t.Subscription)
         .Where(t =>
-          t.Course.Subscription.Any(x => x.UserId == query.UserId && x.JoinedAt.Value.Date <= t.SubmittedAt.Value.Date) &&
+          t.Course.Subscription.Any(x => x.UserId == query.UserId && x.JoinedAt.Value.Date <= t.SubmittedAt.Value.Date && !(bool)x.Blacklisted) &&
           t.SubmittedById != userId &&
           t.NotificationUserSeen.Any(x => x.UserId == query.UserId && x.NotificationId == t.Id && x.Seen == false)
         )
@@ -75,7 +78,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
       int userId = Int32.Parse(_userResolver.User.FindFirstValue(ClaimTypes.NameIdentifier));
       var notifications = await _context.Notification
         .Where(t =>
-          t.Course.Subscription.Any(x => x.UserId == query.UserId && x.JoinedAt.Value.Date <= t.SubmittedAt.Value.Date) &&
+          t.Course.Subscription.Any(x => x.UserId == query.UserId && x.JoinedAt.Value.Date <= t.SubmittedAt.Value.Date && !(bool)x.Blacklisted) &&
           t.SubmittedById != userId &&
           t.NotificationUserSeen.Any(x => x.UserId == query.UserId && x.NotificationId == t.Id && x.Seen == false)
         )

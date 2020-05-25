@@ -8,6 +8,7 @@ using System.Linq;
 using System.Collections.Generic;
 using tvz2api_cqrs.Models.DTO;
 using System;
+using tvz2api_cqrs.Enumerations;
 
 namespace tvz2api_cqrs.Implementation.QueryHandlers
 {
@@ -16,6 +17,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     IQueryHandlerAsync<UserChatQuery, List<UserChatQueryModel>>,
     IQueryHandlerAsync<UserSettingsQuery, UserSettingsQueryModel>,
     IQueryHandlerAsync<UserDetailsQuery, UserDetailsDTO>,
+    IQueryHandlerAsync<UserBlacklistQuery, List<BlacklistDTO>>,
     IQueryHandlerAsync<UserTotalQuery, int>,
     IQueryHandlerAsync<UserSubscriptionQuery, List<int>>
   {
@@ -38,6 +40,22 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         })
         .ToListAsync();
       return korisnici;
+    }
+
+    public async Task<List<BlacklistDTO>> HandleAsync(UserBlacklistQuery query)
+    {
+      var blacklist = await _context.Subscription
+        .Include(t => t.Course)
+        .ThenInclude(t => t.UserCoursePrivilege)
+        .Where(t => t.UserId == query.UserId && t.Course.UserCoursePrivilege.Where(x => x.UserId == query.UserId).Count() == 0)
+        .Select(t => new BlacklistDTO
+        {
+          Blacklisted = t.Blacklisted,
+          CourseId = t.CourseId,
+          Name = t.Course.Name
+        })
+        .ToListAsync();
+      return blacklist;
     }
 
     public async Task<int> HandleAsync(UserTotalQuery query)

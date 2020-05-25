@@ -77,5 +77,11 @@ export default {
   },
   async getUserDetails(userId) {
     return await axios.get('User/' + userId);
+  },
+  async getBlacklist(userId) {
+    return await axios.get('User/blacklist/' + userId);
+  },
+  async updateBlacklist(payload) {
+    return await axios.put('User/update-blacklist/', payload);
   }
 };

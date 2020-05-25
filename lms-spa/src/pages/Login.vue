@@ -109,7 +109,6 @@ export default {
         .then(({ data }) => {
           if (data.isSuccess) {
             NotificationService.showSuccess("Successfully logged in!");
-            data.payload.blacklist = [];
             let user = { ...data.payload };
             this.setUserData(user);
             this.$router.push("/");

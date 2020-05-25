@@ -14,6 +14,13 @@ namespace tvz2api_cqrs.Models.DTO
     public string Picture { get; set; }
   }
 
+  public class BlacklistDTO
+  {
+    public int? CourseId { get; set; }
+    public bool? Blacklisted { get; set; }
+    public string Name { get; set; }
+  }
+
   public class UserCourseDetailsDTO
   {
     public int Id { get; set; }

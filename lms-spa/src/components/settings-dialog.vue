@@ -32,15 +32,19 @@
             <div
               :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']"
             >(You will not receive notifications or emails from these courses)</div>
-            <q-option-group
-              @input="blacklistChange"
-              v-model="userData.blacklist"
-              :options="options"
-              class="q-mt-sm"
-              dense
-              type="checkbox"
-              color="primary"
-            />
+            <template v-if="options">
+              <q-option-group
+                v-if="options.length != 0"
+                @input="blacklistChange"
+                v-model="blacklist"
+                :options="options"
+                class="q-mt-sm"
+                dense
+                type="checkbox"
+                color="primary"
+              />
+              <div class="q-my-sm text-subtitle1" v-else>You are not subscribed to any courses!</div>
+            </template>
           </div>
         </div>
         <div>
@@ -68,7 +72,6 @@ export default {
         name: null,
         surname: null,
         email: null,
-        blacklist: [],
         settings: {
           darkMode: false,
           locale: "en",
@@ -85,20 +88,8 @@ export default {
           label: this.$i18n.t("english")
         }
       ],
-      options: [
-        {
-          label: "Analogni sklopovi E",
-          value: 1
-        },
-        {
-          label: "Mehatronika",
-          value: 2
-        },
-        {
-          label: "Web aplikacije u Javi",
-          value: 3
-        }
-      ]
+      options: null,
+      blacklist: []
     };
   },
   computed: {
@@ -111,10 +102,29 @@ export default {
       this.$emit("closed");
     },
     blacklistChange: debounce(function() {
-      NotificationService.showSuccess("Blacklist updated!");
+      UserService.updateBlacklist({
+        userId: this.user.id,
+        courseIds: this.blacklist
+      }).then(() => {
+        NotificationService.showSuccess("Blacklist updated!");
+      });
     }, 1500)
   },
   mounted() {
+    UserService.getBlacklist(this.user.id).then(({ data }) => {
+      let blacklistOptions = [];
+      data.forEach(x =>
+        blacklistOptions.push({ label: x.name, value: x.courseId })
+      );
+      this.options = blacklistOptions;
+      this.blacklist = data
+        .map(x => {
+          if (x.blacklisted) {
+            return x.courseId;
+          }
+        })
+        .filter(x => x != null);
+    });
     this.userData = JSON.parse(JSON.stringify(this.user));
     this.$watch(
       "userData.settings",

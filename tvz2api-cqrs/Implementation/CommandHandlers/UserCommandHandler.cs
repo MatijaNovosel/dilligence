@@ -26,7 +26,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     ICommandHandlerAsync<UserUnsubscribeCommand>,
     ICommandHandlerAsync<UserUpdatePersonalInformationCommand>,
     ICommandHandlerAsync<UserUploadPictureCommand, UserProfilePictureDTO>,
-    ICommandHandlerAsync<UserUpdateSettingsCommand>
+    ICommandHandlerAsync<UserUpdateSettingsCommand>,
+    ICommandHandlerAsync<UserUpdateBlacklistCommand>
   {
     private readonly lmsContext _context;
 
@@ -72,6 +73,20 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       user.Name = command.Name;
       user.Surname = command.Surname;
       user.Email = command.Email;
+      await _context.SaveChangesAsync();
+    }
+
+    public async Task HandleAsync(UserUpdateBlacklistCommand command)
+    {
+      var user = await _context
+        .User
+        .Include(t => t.Subscription)
+        .FirstOrDefaultAsync(x => x.Id == command.UserId);
+
+      user.Subscription.ToList().ForEach(x => {
+        x.Blacklisted = command.CourseIds.Contains((int)x.CourseId);
+      });
+
       await _context.SaveChangesAsync();
     }
 

@@ -31,6 +31,13 @@ namespace tvz2api_cqrs.Implementation.Commands
     public bool Popups { get; set; }
   }
 
+  public class UserUpdateBlacklistCommand : ICommand
+  {
+    public UserUpdateBlacklistCommand() { }
+    public int UserId { get; set; }
+    public List<int> CourseIds { get; set; }
+  }
+
   public class UserUploadPictureCommand : ICommand<UserProfilePictureDTO>
   {
     public UserUploadPictureCommand() { }
