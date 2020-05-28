@@ -1,16 +1,24 @@
 <template>
   <div>
-    <div class="row wrap">
+    <div class="row">
       <div class="col-12">
-        <q-option-group
-          size="sm"
-          v-model="showNotifications"
-          :options="showNotificationsOptions"
-          type="checkbox"
-          color="primary"
-          inline
-          @input="showNotificationsValueChanged"
-        />
+        <div class="row q-col-gutter-sm">
+          <q-option-group
+            size="sm"
+            v-model="showNotifications"
+            :options="showNotificationsOptions"
+            type="checkbox"
+            color="primary"
+            inline
+            @input="showNotificationsValueChanged"
+          />
+          <q-toggle
+            @input="showNotificationsValueChanged"
+            v-model="sortByNew"
+            size="sm"
+            label="Sort by newer"
+          />
+        </div>
         <div class="q-ml-md q-mb-md" :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']">
           *
           <q-icon size="xs" class="q-mr-xs" name="mdi-mouse" />Right click on notifications (or long tap on phones) for more options
@@ -86,14 +94,26 @@
             readonly
             hint="The date at which the notification becomes archived"
           >
-            <template v-slot:append>
+            <template v-slot:prepend>
               <q-icon name="mdi-calendar-month" class="cursor-pointer">
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
                   <q-date
                     minimal
                     class="container-border"
                     v-model="newNotification.expiresAt"
-                    mask="YYYY-MM-DD"
+                    mask="YYYY-MM-DD HH:mm"
+                  />
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+            <template v-slot:append>
+              <q-icon name="mdi-alarm" class="cursor-pointer">
+                <q-popup-proxy transition-show="scale" transition-hide="scale">
+                  <q-time
+                    :class="$q.dark.isActive ? 'border-dark' : 'border-light'"
+                    v-model="newNotification.expiresAt"
+                    mask="YYYY-MM-DD HH:mm"
+                    format24h
                   />
                 </q-popup-proxy>
               </q-icon>
@@ -175,6 +195,7 @@ import NotificationCard from "../../components/notification-card";
 import { required, minLength } from "vuelidate/lib/validators";
 import UserMixin from "../../mixins/userMixin";
 import { debounce } from "debounce";
+import { format, add } from "date-fns";
 
 const mustBeBeforeCurrentDate = value => {
   let currentDate = new Date().getTime();
@@ -209,6 +230,7 @@ export default {
   },
   data() {
     return {
+      sortByNew: true,
       showNotifications: [0],
       showNotificationsOptions: [
         {
@@ -232,7 +254,7 @@ export default {
         title: "Title goes here!",
         description: "Description goes here!",
         color: "#285de0",
-        expiresAt: "2020-07-20",
+        expiresAt: format(add(new Date(), { days: 1 }), "yyyy-MM-dd HH:mm"),
         sendEmail: false,
         files: null,
         addFilesToCourse: false
@@ -240,6 +262,7 @@ export default {
     };
   },
   methods: {
+    format,
     showNotificationsValueChanged: debounce(function() {
       this.getNotifications();
     }, 1500),
@@ -270,7 +293,7 @@ export default {
         title: "Title goes here!",
         description: "Description goes here!",
         color: "#285de0",
-        expiresAt: "2020-07-20",
+        expiresAt: format(add(new Date(), { days: 1 }), "yyyy-MM-dd HH:mm"),
         sendEmail: false,
         files: null,
         addFilesToCourse: false
@@ -283,7 +306,8 @@ export default {
       CourseService.getNotifications(
         this.courseId,
         this.showNotifications.includes(1),
-        this.showNotifications.includes(0)
+        this.showNotifications.includes(0),
+        this.sortByNew
       )
         .then(({ data }) => {
           this.notifications = data;

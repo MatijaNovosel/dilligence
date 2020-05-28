@@ -113,7 +113,6 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
             var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
             fileName = fileName.Substring(0, fileName.LastIndexOf(".")) + fileName.Substring(fileName.LastIndexOf(".")).ToLower();
 
-
             newFiles.Add(new tvz2api_cqrs.Models.File
             {
               Name = Path.GetFileName(fileName),

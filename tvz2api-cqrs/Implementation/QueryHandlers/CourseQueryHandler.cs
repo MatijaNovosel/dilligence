@@ -124,8 +124,9 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
 
     public async Task<List<NotificationQueryModel>> HandleAsync(CourseNotificationsQuery query)
     {
-      var courses = await _context.Notification
+      var courses = _context.Notification
         .Include(t => t.NotificationFile)
+        .Where(query.Specification.Predicate)
         .Select(t => new NotificationQueryModel
         {
           Id = t.Id,
@@ -147,10 +148,14 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
             Id = x.File.Id,
             Size = x.File.Size
           }).ToList()
-        })
-        .Where(x => x.CourseId == query.Id && x.Archived == query.ShowArchived || (query.ShowArchived && query.ShowNonArchived))
-        .ToListAsync();
-      return courses;
+        });
+
+      if (query.SortByNew)
+      {
+        courses = courses.OrderByDescending(t => t.SubmittedAt);
+      }
+      
+      return await courses.ToListAsync();
     }
   }
 }

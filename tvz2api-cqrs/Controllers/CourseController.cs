@@ -64,9 +64,13 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpGet("notifications/{id}")]
-    public async Task<IActionResult> GetNotifications(int id, bool showArchived, bool showNonArchived)
+    public async Task<IActionResult> GetNotifications(int id, bool showArchived, bool showNonArchived, bool sortByNew)
     {
-      var result = await _queryBus.ExecuteAsync(new CourseNotificationsQuery() { Id = id, ShowNonArchived = showNonArchived, ShowArchived = showArchived });
+      var specification = new CourseNotificationsSpecification(id, showArchived, showNonArchived);
+      var result = await _queryBus.ExecuteAsync(new CourseNotificationsQuery(specification)
+      {
+        SortByNew = sortByNew
+      });
       return Ok(result);
     }
 

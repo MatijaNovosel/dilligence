@@ -33,7 +33,7 @@
     </q-menu>
     <q-bar dense :style="`background-color: ${value.color}; height: 10px;`" />
     <q-card-section class="q-py-sm">
-      <div class="text-h6">{{ value.title }}</div>
+      <div class="text-h6">{{ value.title }}<span class="text-red-7" v-show="isArchived"> (Archived) </span></div>
       <div
         class="text-subtitle2"
       >{{ `${value.submittedBy}, ${format(new Date(value.submittedAt), 'dd.MM.yyyy. HH:mm:ss')}` }}</div>
@@ -76,7 +76,7 @@
 
 <script>
 import UserMixin from "../mixins/userMixin";
-import { format } from "date-fns";
+import { format, compareAsc } from "date-fns";
 import { download, fileIcon } from "../helpers/helpers";
 
 export default {
@@ -85,6 +85,11 @@ export default {
   mixins: [UserMixin],
   created() {
     this.value.attachments.forEach(x => (x.downloading = false));
+  },
+  computed: {
+    isArchived() {
+      return compareAsc(new Date(this.value.expiresAt), new Date()) == -1;
+    }
   },
   data() {
     return {};

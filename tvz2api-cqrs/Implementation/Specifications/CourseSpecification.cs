@@ -112,4 +112,42 @@ namespace tvz2api_cqrs.Implementation.Specifications
       }
     }
   }
+
+  public class CourseNotificationsSpecification : ISpecification<Notification>
+  {
+    public CourseNotificationsSpecification(int courseId, bool showArchived, bool showNonArchived)
+    {
+      CourseId = courseId;
+      ShowArchived = showArchived;
+      ShowNonArchived = showNonArchived;
+    }
+
+    public int CourseId { get; }
+    public bool ShowArchived { get; }
+    public bool ShowNonArchived { get; }
+
+    public Expression<Func<Notification, bool>> Predicate
+    {
+      get
+      {
+        Expression<Func<Notification, bool>> predicate = t => true;
+
+        predicate = predicate.And(t => t.CourseId == CourseId);
+
+        if (ShowArchived != ShowNonArchived)
+        {
+          if (ShowArchived)
+          {
+            predicate = predicate.And(t => t.ExpiresAt <= DateTime.Now);
+          }
+          if (ShowNonArchived)
+          {
+            predicate = predicate.And(t => t.ExpiresAt > DateTime.Now);
+          }
+        }
+
+        return predicate.Expand();
+      }
+    }
+  }
 }

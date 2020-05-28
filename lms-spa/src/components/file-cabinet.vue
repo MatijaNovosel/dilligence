@@ -7,7 +7,7 @@
       >
         <span class="caption text-white">{{ content.title }}</span>
         <q-space />
-        <div>
+        <div class="q-mr-sm">
           <q-btn
             :ripple="false"
             dense
