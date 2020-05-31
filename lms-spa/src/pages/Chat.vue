@@ -22,7 +22,7 @@
                     <q-item-section avatar class="q-pl-md">
                       <q-avatar size="30px">
                         <img
-                          :src="chat.firstParticipant.id == user.id ? generateUserPictureSource(chat.secondParticipant.picture) : generateUserPictureSource(chat.firstParticipant.picture)"
+                          :src="chat.firstParticipant.id == user.id ? generatePictureSource(chat.secondParticipant.picture) : generatePictureSource(chat.firstParticipant.picture)"
                         />
                       </q-avatar>
                     </q-item-section>
@@ -124,7 +124,7 @@
             <q-item class="q-my-xs" v-for="(user, i) in foundUsers" :key="i">
               <q-item-section avatar class="q-pl-md">
                 <q-avatar size="30px">
-                  <img :src="generateUserPictureSource(user.picture)" />
+                  <img :src="generatePictureSource(user.picture)" />
                 </q-avatar>
               </q-item-section>
               <q-item-section>{{ `${user.name} ${user.surname} (${user.username})` }}</q-item-section>
@@ -172,7 +172,7 @@ import ChatPanel from "../components/chat-panel";
 import ConnectionMixin from "../mixins/connectionMixin";
 import { mapGetters } from "vuex";
 import { required, minLength } from "vuelidate/lib/validators";
-import { generateUserPictureSource } from "../helpers/helpers";
+import { generatePictureSource } from "../helpers/helpers";
 
 export default {
   name: "Chat",
@@ -202,7 +202,7 @@ export default {
     ...mapGetters(["user"])
   },
   methods: {
-    generateUserPictureSource,
+    generatePictureSource,
     resetNewChatDialog() {
       this.newChatDialog = false;
       this.newChatSearch = this.foundUsers = null;

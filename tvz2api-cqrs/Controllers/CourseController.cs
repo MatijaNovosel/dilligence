@@ -95,6 +95,17 @@ namespace tvz2api_cqrs.Controllers
       return Ok();
     }
 
+    [HttpPost("new-discussion")]
+    public async Task<IActionResult> CreateNewDiscussion(CourseCreateDiscussionCommand command)
+    {
+      if (!_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageDiscussion, PrivilegeEnum.CanCreateNewDiscussion))
+      {
+        return Unauthorized();
+      }
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
+    }
+
     [HttpDelete("delete-sidebar/{id}")]
     public async Task<IActionResult> DeleteSidebar(int id, int courseId)
     {

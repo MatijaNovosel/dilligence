@@ -26,7 +26,7 @@
                 class="image-box q-mb-md"
                 :width="$q.screen.sm || $q.screen.xs ? '300px' : '75%'"
                 height="300px"
-                :src="generateUserPictureSource(userData.picture)"
+                :src="generatePictureSource(userData.picture)"
               />
             </div>
             <div class="col-xs-12 col-md-6">
@@ -108,7 +108,7 @@ import { mapActions, mapGetters } from "vuex";
 import UserService from "../services/api/user";
 import NotificationService from "../services/notification/notifications";
 import { debounce } from "debounce";
-import { generateUserPictureSource } from "../helpers/helpers";
+import { generatePictureSource } from "../helpers/helpers";
 
 export default {
   name: "Settings",
@@ -137,7 +137,7 @@ export default {
   },
   methods: {
     ...mapActions(["setUserData"]),
-    generateUserPictureSource,
+    generatePictureSource,
     getUserData(userId) {
       UserService.getUserDetails(userId).then(({ data }) => {
         this.userData = data;

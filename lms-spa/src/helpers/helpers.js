@@ -1,4 +1,4 @@
-function generateUserPictureSource(data) {
+function generatePictureSource(data) {
   if (data == null) {
     return require('../assets/default-user.jpg');
   }
@@ -100,7 +100,7 @@ function download(contentType, base64Data, name) {
 }
 
 export {
-  generateUserPictureSource,
+  generatePictureSource,
   randInt,
   randColor,
   acronym,

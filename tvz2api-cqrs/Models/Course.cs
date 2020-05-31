@@ -13,7 +13,6 @@ namespace tvz2api_cqrs.Models
             SidebarContent = new HashSet<SidebarContent>();
             Subscription = new HashSet<Subscription>();
             UserCoursePrivilege = new HashSet<UserCoursePrivilege>();
-            UserNotificationBlacklist = new HashSet<UserNotificationBlacklist>();
         }
 
         public int Id { get; set; }
@@ -31,6 +30,5 @@ namespace tvz2api_cqrs.Models
         public virtual ICollection<SidebarContent> SidebarContent { get; set; }
         public virtual ICollection<Subscription> Subscription { get; set; }
         public virtual ICollection<UserCoursePrivilege> UserCoursePrivilege { get; set; }
-        public virtual ICollection<UserNotificationBlacklist> UserNotificationBlacklist { get; set; }
     }
 }

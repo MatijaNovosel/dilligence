@@ -12,6 +12,8 @@ namespace tvz2api_cqrs.Models
             CourseTask = new HashSet<CourseTask>();
             CourseTaskAttemptGradedBy = new HashSet<CourseTaskAttempt>();
             CourseTaskAttemptUser = new HashSet<CourseTaskAttempt>();
+            Discussion = new HashSet<Discussion>();
+            DiscussionComment = new HashSet<DiscussionComment>();
             Exam = new HashSet<Exam>();
             ExamAttempt = new HashSet<ExamAttempt>();
             Message = new HashSet<Message>();
@@ -19,7 +21,6 @@ namespace tvz2api_cqrs.Models
             NotificationUserSeen = new HashSet<NotificationUserSeen>();
             Subscription = new HashSet<Subscription>();
             UserCoursePrivilege = new HashSet<UserCoursePrivilege>();
-            UserNotificationBlacklist = new HashSet<UserNotificationBlacklist>();
             UserPrivilege = new HashSet<UserPrivilege>();
             UserSettings = new HashSet<UserSettings>();
         }
@@ -40,6 +41,8 @@ namespace tvz2api_cqrs.Models
         public virtual ICollection<CourseTask> CourseTask { get; set; }
         public virtual ICollection<CourseTaskAttempt> CourseTaskAttemptGradedBy { get; set; }
         public virtual ICollection<CourseTaskAttempt> CourseTaskAttemptUser { get; set; }
+        public virtual ICollection<Discussion> Discussion { get; set; }
+        public virtual ICollection<DiscussionComment> DiscussionComment { get; set; }
         public virtual ICollection<Exam> Exam { get; set; }
         public virtual ICollection<ExamAttempt> ExamAttempt { get; set; }
         public virtual ICollection<Message> Message { get; set; }
@@ -47,7 +50,6 @@ namespace tvz2api_cqrs.Models
         public virtual ICollection<NotificationUserSeen> NotificationUserSeen { get; set; }
         public virtual ICollection<Subscription> Subscription { get; set; }
         public virtual ICollection<UserCoursePrivilege> UserCoursePrivilege { get; set; }
-        public virtual ICollection<UserNotificationBlacklist> UserNotificationBlacklist { get; set; }
         public virtual ICollection<UserPrivilege> UserPrivilege { get; set; }
         public virtual ICollection<UserSettings> UserSettings { get; set; }
     }

@@ -51,7 +51,7 @@
 
 <script>
 import Vue from "vue";
-import { generateUserPictureSource } from "../helpers/helpers";
+import { generatePictureSource } from "../helpers/helpers";
 import { mapGetters } from "vuex";
 import { format } from "date-fns";
 
@@ -81,7 +81,7 @@ export default {
   },
   methods: {
     format,
-    generateUserPictureSource,
+    generatePictureSource,
     scrollToBottom() {
       Vue.nextTick(() => {
         /*

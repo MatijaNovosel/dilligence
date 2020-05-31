@@ -32,7 +32,7 @@
         </q-item>
       </q-list>
     </q-menu>
-    <img style="width: 180px; height: 180px;" :src="generateUserPictureSource(value.picture)" />
+    <img style="width: 180px; height: 180px;" :src="generatePictureSource(value.picture)" />
     <q-card-section>
       <div class="text-h6">{{ `${value.name} ${value.surname}` }}</div>
       <div class="text-subtitle2">{{ `Username: ${value.username}` }}</div>
@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { generateUserPictureSource } from "../helpers/helpers";
+import { generatePictureSource } from "../helpers/helpers";
 import UserMixin from "../mixins/userMixin";
 
 export default {
@@ -60,7 +60,7 @@ export default {
     }
   },
   methods: {
-    generateUserPictureSource
+    generatePictureSource
   }
 };
 </script>
