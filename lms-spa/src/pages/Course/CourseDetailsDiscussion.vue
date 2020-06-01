@@ -1,5 +1,30 @@
 <template>
 	<div>
+		<div class="row">
+			<div class="col-12">
+				<div class="row q-col-gutter-sm justify-center">
+					<div :key="i" v-for="(discussion, i) in discussions" class="col-xs-12 col-md-8">
+						<q-item class="border-dark discussion-root-box">
+							<q-item-section avatar top>
+								<q-avatar color="primary" text-color="white">
+									<img :src="generatePictureSource(discussion.userPictureBase64String)" />
+								</q-avatar>
+							</q-item-section>
+							<q-item-section>
+								<q-item-label>{{ `${discussion.submittedBy} says:` }}</q-item-label>
+								<q-item-label caption style="max-width: 85%;">{{discussion.content}}</q-item-label>
+							</q-item-section>
+							<q-item-section side>
+								<q-item-label caption>5 min ago</q-item-label>
+							</q-item-section>
+              <div>
+                <q-btn size="xs"> View comments </q-btn>
+              </div>
+						</q-item>
+					</div>
+				</div>
+			</div>
+		</div>
 		<q-dialog :maximized="$q.screen.xs || $q.screen.sm" v-model="newDiscussionDialog" persistent>
 			<q-card :style="$q.screen.xs || $q.screen.sm || dialogStyle">
 				<q-toolbar
@@ -22,7 +47,13 @@
 				<q-card-section class="q-gutter-sm">
 					<q-editor
 						ref="editor_ref"
-						:content-style="{ [$v.newDiscussion.content.$invalid && $v.newDiscussion.content.$dirty && 'border']: '1px solid #C10015', 'background-color': newDiscussion.backgroundColor }"
+						:toolbar="[]"
+						:key="rerenderEditorKey"
+						:content-style="{ 
+              [$v.newDiscussion.content.$invalid && $v.newDiscussion.content.$dirty && 'border']: '1px solid #C10015', 
+              'background-color': newDiscussion.backgroundColor,
+              'color': newDiscussion.textColor
+            }"
 						v-model="newDiscussion.content"
 						min-height="5rem"
 						@input="$v.newDiscussion.content.$touch()"
@@ -32,10 +63,15 @@
 						v-if="$v.newDiscussion.content.$invalid && $v.newDiscussion.content.$dirty"
 						class="error-text q-pl-sm"
 					>This field is required!</div>
+					<div
+						v-else
+						class="q-pl-sm"
+						:class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']"
+					>Discussion contents</div>
 					<q-input
 						label="Background color"
 						dense
-            class="q-py-sm"
+						class="q-py-sm"
 						outlined
 						v-model="newDiscussion.backgroundColor"
 						readonly
@@ -127,13 +163,18 @@
 
 <script>
 import UserMixin from "../../mixins/userMixin";
+import CourseService from "../../services/api/course";
 import { required, minLength, numeric } from "vuelidate/lib/validators";
+import { generatePictureSource } from "../../helpers/helpers";
 
 export default {
 	name: "CourseDetailsDiscussion",
 	mixins: [UserMixin],
 	data() {
 		return {
+			discussions: [],
+			creatingDiscussion: false,
+			rerenderEditorKey: 0,
 			newDiscussionDialog: false,
 			imageBase64Strings: [],
 			newDiscussion: {
@@ -159,8 +200,16 @@ export default {
 	},
 	created() {
 		this.courseId = this.$route.params.id;
+		this.getDiscussions();
 	},
 	watch: {
+		"newDiscussion.backgroundColor": {
+			immediate: false,
+			deep: false,
+			handler(val) {
+				this.rerenderEditorKey++;
+			}
+		},
 		"newDiscussion.images": {
 			immediate: false,
 			deep: true,
@@ -181,6 +230,12 @@ export default {
 		}
 	},
 	methods: {
+		generatePictureSource,
+		getDiscussions() {
+			CourseService.getDiscussions(this.courseId, true).then(({ data }) => {
+				this.discussions = data;
+			});
+		},
 		pasteCapture(evt) {
 			let text, onPasteStripFormattingIEPaste;
 			evt.preventDefault();
@@ -200,10 +255,42 @@ export default {
 		},
 		resetNewDiscussionDialog() {
 			this.newDiscussionDialog = false;
+
+			this.newDiscussion = {
+				content: "",
+				attachments: null,
+				images: null,
+				backgroundColor: null,
+				textColor: null
+			};
+
 			this.$v.$reset();
 		},
 		createNewDiscussion() {
-			console.log("Kurcina!");
+			let formData = new FormData();
+			let newDiscussion = this.newDiscussion;
+			this.creatingDiscussion = true;
+
+			formData.append("submittedById", this.user.id);
+			formData.append("courseId", this.courseId);
+			formData.append("backgroundColor", newDiscussion.backgroundColor);
+			formData.append("textColor", newDiscussion.textColor);
+			formData.append("body", newDiscussion.content);
+
+			if (newDiscussion.attachments != null) {
+				newDiscussion.attachments.forEach(file =>
+					formData.append("attachments", file)
+				);
+			}
+
+			if (newDiscussion.images != null) {
+				newDiscussion.images.forEach(file => formData.append("images", file));
+			}
+
+			CourseService.createNewDiscussion(formData).finally(() => {
+				this.creatingDiscussion = false;
+				this.resetNewDiscussionDialog();
+			});
 		}
 	}
 };
@@ -216,4 +303,8 @@ export default {
   min-width: 12px
 .dialog-toolbar
   min-height: 30px
+.discussion-root-box
+  position: relative
+  border-radius: 8px
+  padding: 25px
 </style>

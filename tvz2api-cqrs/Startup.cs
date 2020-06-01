@@ -159,6 +159,7 @@ namespace tvz2api_cqrs
       services.AddScoped<IQueryHandlerAsync<CourseDetailsQuery, CourseDetailsQueryModel>, CourseQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<CourseSidebarQuery, List<SidebarContentDTO>>, CourseQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<CourseNotificationsQuery, List<NotificationQueryModel>>, CourseQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<CourseDiscussionsQuery, List<DiscussionDTO>>, CourseQueryHandler>();
 
       // Course commands
       services.AddScoped<ICommandHandlerAsync<CourseCreateNewSidebarCommand>, CourseCommandHandler>();

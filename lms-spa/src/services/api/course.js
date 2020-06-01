@@ -59,5 +59,11 @@ export default {
   },
   async deleteSidebar(sidebarId, courseId) {
     return await axios.delete('Course/delete-sidebar/' + sidebarId, { params: { courseId } });
+  },
+  async createNewDiscussion(payload) {
+    return await axios.post('Course/new-discussion', payload);
+  },
+  async getDiscussions(courseId, sortByNewer) {
+    return await axios.get('Course/discussions', { params: { courseId, sortByNewer } });
   }
 }

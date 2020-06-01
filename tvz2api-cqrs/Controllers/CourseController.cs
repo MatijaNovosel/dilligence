@@ -81,6 +81,13 @@ namespace tvz2api_cqrs.Controllers
       return Ok(result);
     }
 
+    [HttpGet("discussions")]
+    public async Task<IActionResult> GetDiscussions(int courseId, bool sortByNewer)
+    {
+      var result = await _queryBus.ExecuteAsync(new CourseDiscussionsQuery(courseId, sortByNewer));
+      return Ok(result);
+    }
+
     [HttpPost("new-sidebar")]
     public async Task<IActionResult> CreateNewSidebar(CourseCreateNewSidebarCommand command)
     {
@@ -96,7 +103,7 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPost("new-discussion")]
-    public async Task<IActionResult> CreateNewDiscussion(CourseCreateDiscussionCommand command)
+    public async Task<IActionResult> CreateNewDiscussion([FromForm] CourseCreateDiscussionCommand command)
     {
       if (!_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageDiscussion, PrivilegeEnum.CanCreateNewDiscussion))
       {

@@ -19,7 +19,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     IQueryHandlerAsync<UserCourseQuery, List<UserCourseDetailsDTO>>,
     IQueryHandlerAsync<CourseNotificationsQuery, List<NotificationQueryModel>>,
     IQueryHandlerAsync<CourseDetailsQuery, CourseDetailsQueryModel>,
-    IQueryHandlerAsync<CourseSidebarQuery, List<SidebarContentDTO>>
+    IQueryHandlerAsync<CourseSidebarQuery, List<SidebarContentDTO>>,
+    IQueryHandlerAsync<CourseDiscussionsQuery, List<DiscussionDTO>>
   {
     private readonly lmsContext _context;
 
@@ -100,6 +101,28 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Ects = t.Ects,
           Subscribed = t.Subscription.Any(x => x.UserId == query.Specification.UserId),
           SpecializationId = t.SpecializationId
+        })
+        .ToListAsync();
+      return courses;
+    }
+
+    public async Task<List<DiscussionDTO>> HandleAsync(CourseDiscussionsQuery query)
+    {
+      var courses = await _context.Discussion
+        .Include(t => t.SubmittedBy)
+        .ThenInclude(t => t.ImageFile)
+        .Where(t => t.CourseId == query.CourseId)
+        .Select(t => new DiscussionDTO() 
+        {
+          BackgroundColor = t.BackgroundColor,
+          Content = t.Content,
+          CourseId = t.CourseId,
+          SubmittedAt = t.SubmittedAt,
+          SubmittedById = t.SubmittedById,
+          Id = t.Id,
+          TextColor = t.TextColor,
+          UserPictureBase64String = t.SubmittedBy.ImageFile != null ? Convert.ToBase64String(t.SubmittedBy.ImageFile.Data) : null,
+          SubmittedBy = $"{t.SubmittedBy.Name} {t.SubmittedBy.Surname}"
         })
         .ToListAsync();
       return courses;

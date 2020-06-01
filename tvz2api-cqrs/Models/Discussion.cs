@@ -20,6 +20,7 @@ namespace tvz2api_cqrs.Models
         public int? CourseId { get; set; }
         public int? SubmittedById { get; set; }
 
+        public virtual Course Course { get; set; }
         public virtual User SubmittedBy { get; set; }
         public virtual ICollection<DiscussionAttachment> DiscussionAttachment { get; set; }
         public virtual ICollection<DiscussionComment> DiscussionComment { get; set; }
