@@ -17,5 +17,8 @@ export default {
   },
   async deleteNotification(courseId, id) {
     return await axios.delete('Notification', { params: { courseId, id } });
+  },
+  async archiveNotification(courseId, id) {
+    return await axios.post('Notification/archive', { courseId, id });
   }
 }

@@ -25,7 +25,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
   public class NotificationCommandHandler :
     ICommandHandlerAsync<NotificationCreateCommand>,
     ICommandHandlerAsync<NotificationSeenCommand>,
-    ICommandHandlerAsync<NotificationDeleteCommand>
+    ICommandHandlerAsync<NotificationDeleteCommand>,
+    ICommandHandlerAsync<NotificationArchiveCommand>
   {
     private readonly lmsContext _context;
     private readonly IConfiguration _configuration;
@@ -55,7 +56,6 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         .Course
         .Include(t => t.Subscription)
         .ThenInclude(t => t.User)
-        .ThenInclude(t => t.UserNotificationBlacklist)
         .Include(t => t.SidebarContent)
         .ThenInclude(t => t.SidebarContentFile)
         .FirstOrDefault(t => t.Id == command.CourseId);
@@ -86,7 +86,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
           MailMessage message = new MailMessage();
           course.Subscription.Select(x => x.User).Where(x => x.Id != command.SubmittedById).ToList().ForEach(x =>
           {
-            if (x.UserNotificationBlacklist.FirstOrDefault(y => y.CourseId == command.CourseId && y.UserId == x.Id) != null)
+            if (x.Subscription.Any(y => y.Blacklisted == false && y.UserId == x.Id))
             {
               message.To.Add(x.Email);
             }
@@ -160,6 +160,13 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
           .FirstOrDefault(t => t.UserId == command.UserId && t.NotificationId == x)
           .Seen = true;
       });
+      await _context.SaveChangesAsync();
+    }
+
+    public async Task HandleAsync(NotificationArchiveCommand command)
+    {
+      var notification = await _context.Notification.FirstOrDefaultAsync(x => x.Id == command.Id);
+      notification.ExpiresAt = DateTime.Now.AddDays(-1);
       await _context.SaveChangesAsync();
     }
 

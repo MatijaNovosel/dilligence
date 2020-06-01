@@ -44,4 +44,11 @@ namespace tvz2api_cqrs.Implementation.Commands
     public int? Id { get; set; }
     public int CourseId { get; set; }
   }
+
+  public class NotificationArchiveCommand : ICommand
+  {
+    public NotificationArchiveCommand() { }
+    public int? Id { get; set; }
+    public int CourseId { get; set; }
+  }
 }

@@ -61,8 +61,6 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         TextColor = command.TextColor
       });
 
-      
-
       await _context.SaveChangesAsync();
     }
 

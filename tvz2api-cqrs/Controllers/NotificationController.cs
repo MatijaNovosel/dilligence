@@ -82,6 +82,20 @@ namespace tvz2api_cqrs.Controllers
       return Ok();
     }
 
+    [HttpPost("archive")]
+    public async Task<IActionResult> Archive(NotificationArchiveCommand command)
+    {
+      if (
+        !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanArchiveNotifications) &&
+        !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedWithCourse))
+      )
+      {
+        return Unauthorized();
+      }
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
+    }
+
     [HttpDelete]
     public async Task<IActionResult> Delete(int courseId, int id)
     {

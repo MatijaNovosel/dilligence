@@ -26,6 +26,7 @@
           && hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
           clickable
           v-close-popup
+          @click="$archiveNotification"
         >
           <q-item-section>Archive notification</q-item-section>
         </q-item>
@@ -102,6 +103,9 @@ export default {
     },
     $deleteNotification() {
       this.$emit("delete", this.value.id);
+    },
+    $archiveNotification() {
+      this.$emit("archive", this.value.id);
     }
   }
 };
