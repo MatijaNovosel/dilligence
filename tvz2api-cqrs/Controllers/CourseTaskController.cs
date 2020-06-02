@@ -17,6 +17,7 @@ using Newtonsoft.Json;
 using System.Net.Mail;
 using System.Net;
 using tvz2api_cqrs.Custom;
+using tvz2api_cqrs.Custom.Attributes;
 
 namespace tvz2api_cqrs.Controllers
 {
@@ -27,16 +28,15 @@ namespace tvz2api_cqrs.Controllers
   {
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
-    private readonly IUserResolver _userResolver;
 
-    public CourseTaskController(ICommandBus commandBus, IQueryBus queryBus, IUserResolver userResolver)
+    public CourseTaskController(ICommandBus commandBus, IQueryBus queryBus)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;
-      _userResolver = userResolver;
     }
 
-    [HttpGet("{courseId}")]
+    [HttpGet]
+    [AuthorizeBelongsToCourse]
     public async Task<IActionResult> Get(int courseId, string name, bool showOverdue, bool showActive)
     {
       var specification = new CourseTaskSpecification(courseId, name, showOverdue, showActive);
@@ -46,7 +46,8 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpGet("details/{id}")]
-    public async Task<IActionResult> GetDetails(int id)
+    [AuthorizeBelongsToCourse]
+    public async Task<IActionResult> GetDetails(int id, int courseId)
     {
       var result = await _queryBus.ExecuteAsync(new CourseTaskDetailsQuery()
       {
@@ -56,12 +57,9 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpGet("attempts/{id}")]
+    [AuthorizeBelongsToCourse]
     public async Task<IActionResult> GetAttempts(int id, int courseId)
     {
-      /* if (!_userResolver.UserBelongsToCourse(courseId))
-      {
-        return Unauthorized();
-      } */
       var result = await _queryBus.ExecuteAsync(new CourseTaskAttemptsQuery()
       {
         Id = id,
@@ -71,12 +69,9 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpGet("attempts/details/{id}")]
+    [AuthorizeBelongsToCourse]
     public async Task<IActionResult> GetAttemptDetails(int id, int courseId)
     {
-      /* if (!_userResolver.UserBelongsToCourse(courseId))
-      {
-        return Unauthorized();
-      } */
       var result = await _queryBus.ExecuteAsync(new CourseTaskAttemptDetailsQuery()
       {
         Id = id,
@@ -86,51 +81,33 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPost("new-attempt")]
-    public async Task<IActionResult> NewAttempt([FromForm] CourseTaskSubmitAttemptCommand command)
+    [AuthorizeBelongsToCourse]
+    public async Task<IActionResult> NewAttempt(int courseId, [FromForm] CourseTaskSubmitAttemptCommand command)
     {
-      /* if (!_userResolver.UserBelongsToCourse(command.CourseId))
-      {
-        return Unauthorized();
-      } */
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
 
     [HttpPut("edit-attempt")]
-    public async Task<IActionResult> EditAttempt([FromForm] CourseTaskEditAttemptCommand command)
+    [AuthorizeBelongsToCourse]
+    public async Task<IActionResult> EditAttempt(int courseId, [FromForm] CourseTaskEditAttemptCommand command)
     {
-      /* if (!_userResolver.UserBelongsToCourse(command.CourseId))
-      {
-        return Unauthorized();
-      } */
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
 
     [HttpPost("grade-attempt")]
-    public async Task<IActionResult> GradeAttempt(CourseTaskGradeAttemptCommand command)
+    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanGradeTasks)]
+    public async Task<IActionResult> GradeAttempt(int courseId, CourseTaskGradeAttemptCommand command)
     {
-      /* if (
-        !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanGradeTasks) &&
-        !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedWithCourse))
-      )
-      {
-        return Unauthorized();
-      } */
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
 
     [HttpDelete("{id}")]
+    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanDeleteTasks)]
     public async Task<IActionResult> CreateNew(int id, int courseId)
     {
-      /* if (
-        !_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanDeleteTasks) &&
-        !(_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.IsInvolvedWithCourse))
-      )
-      {
-        return Unauthorized();
-      } */
       await _commandBus.ExecuteAsync(new CourseTaskDeleteCommand()
       {
         CourseId = courseId,
@@ -140,29 +117,17 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateNew([FromForm] CourseTaskCreateCommand command)
+    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanCreateTasks)]
+    public async Task<IActionResult> CreateNew(int courseId, [FromForm] CourseTaskCreateCommand command)
     {
-      /* if (
-        !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanCreateTasks) &&
-        !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedWithCourse))
-      )
-      {
-        return Unauthorized();
-      } */
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
 
     [HttpPut]
-    public async Task<IActionResult> Update([FromForm] CourseTaskUpdateCommand command)
+    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanCreateTasks)]
+    public async Task<IActionResult> Update(int courseId, [FromForm] CourseTaskUpdateCommand command)
     {
-      /* if (
-        !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanCreateTasks) &&
-        !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedWithCourse))
-      )
-      {
-        return Unauthorized();
-      } */
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }

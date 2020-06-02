@@ -21,12 +21,10 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     IQueryHandlerAsync<CourseTaskAttemptDetailsQuery, CourseTaskAttemptDetailsQueryModel>
   {
     private readonly lmsContext _context;
-    private readonly IUserResolver _userResolver;
 
-    public CourseTaskQueryHandler(lmsContext context, IUserResolver userResolver)
+    public CourseTaskQueryHandler(lmsContext context)
     {
       _context = context;
-      _userResolver = userResolver;
     }
 
     public async Task<List<CourseTaskQueryModel>> HandleAsync(CourseTaskQuery query)

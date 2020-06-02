@@ -213,7 +213,7 @@ export default {
         comment: this.details.gradeeComment,
         courseId: this.courseId
       };
-      CourseTaskService.gradeAttempt(payload).then(() => {
+      CourseTaskService.gradeAttempt(payload, this.courseId).then(() => {
         this.getTaskAttempts();
         this.getTaskAttemptDetails(this.activeTaskAttemptId);
         NotificationService.showSuccess("Submission successfully graded!");

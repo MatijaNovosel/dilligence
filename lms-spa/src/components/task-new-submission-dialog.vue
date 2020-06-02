@@ -200,12 +200,13 @@ export default {
       formData.append("courseId", this.courseId);
       formData.append("description", this.submission.description);
       formData.append("courseTaskId", this.activeTaskId);
+      formData.append("submittedById", this.user.id);
 
       if (this.submission.files != null) {
         this.submission.files.forEach(file => formData.append("files", file));
       }
 
-      CourseTaskService.addNewSubmission(formData).then(() => {
+      CourseTaskService.addNewSubmission(formData, this.courseId).then(() => {
         this.reset();
         NotificationService.showSuccess("Submission sent!");
         this.$emit("newSubmission");
@@ -224,7 +225,7 @@ export default {
         this.submission.files.forEach(file => formData.append("files", file));
       }
 
-      CourseTaskService.editSubmission(formData).then(() => {
+      CourseTaskService.editSubmission(formData, this.courseId).then(() => {
         NotificationService.showSuccess("Submission updated!");
         this.reset();
       });
@@ -245,7 +246,7 @@ export default {
         if (!val) {
           return;
         }
-        CourseTaskService.getTask(this.activeTaskId).then(({ data }) => {
+        CourseTaskService.getTask(this.activeTaskId, this.courseId).then(({ data }) => {
           this.taskInfo = data;
           if (this.mode == "edit") {
             CourseTaskService.getTaskAttemptDetails(

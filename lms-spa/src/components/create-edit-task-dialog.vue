@@ -181,7 +181,7 @@ export default {
         task.files.forEach(file => formData.append("files", file));
       }
 
-      CourseTaskService.createCourseTask(formData).then(() => {
+      CourseTaskService.createCourseTask(formData, this.courseId).then(() => {
         this.$emit("refresh");
         this.reset();
         NotificationService.showSuccess("Task successfully added!");
@@ -202,7 +202,7 @@ export default {
         this.task.files.forEach(file => formData.append("files", file));
       }
 
-      CourseTaskService.updateTask(formData).then(() => {
+      CourseTaskService.updateTask(formData, this.courseId).then(() => {
         this.$emit("refresh");
         this.reset();
         NotificationService.showSuccess("Task successfully updated!");
@@ -229,7 +229,7 @@ export default {
           return;
         }
         if (this.mode == "edit") {
-          CourseTaskService.getTask(this.activeTaskId).then(({ data }) => {
+          CourseTaskService.getTask(this.activeTaskId, this.courseId).then(({ data }) => {
             this.task = data;
             this.task.dueDate = format(
               add(new Date(this.task.dueDate), { days: 1 }),

@@ -284,7 +284,7 @@ export default {
 				notification.files.forEach(file => formData.append("files", file));
 			}
 
-			NotificationService.createNotification(formData).then(() => {
+			NotificationService.createNotification(formData, this.courseId).then(() => {
 				this.getNotifications(this.courseId);
 				this.resetNewNotificationDialog();
 			});

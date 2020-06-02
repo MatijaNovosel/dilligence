@@ -60,6 +60,8 @@ namespace tvz2api_cqrs.Implementation.Commands
     public List<IFormFile> Files { get; set; }
     [FromForm(Name = "courseId")]
     public int CourseId { get; set; }
+    [FromForm(Name = "submittedById")]
+    public int SubmittedById { get; set; }
   }
 
   public class CourseTaskEditAttemptCommand : ICommand

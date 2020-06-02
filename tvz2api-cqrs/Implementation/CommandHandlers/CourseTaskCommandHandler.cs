@@ -33,13 +33,11 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
   {
     private readonly lmsContext _context;
     private readonly IConfiguration _configuration;
-    private readonly IUserResolver _userResolver;
 
-    public CourseTaskCommandHandler(lmsContext context, IConfiguration configuration, IUserResolver userResolver)
+    public CourseTaskCommandHandler(lmsContext context, IConfiguration configuration)
     {
       _context = context;
       _configuration = configuration;
-      _userResolver = userResolver;
     }
 
     public async Task HandleAsync(CourseTaskGradeAttemptCommand command)
@@ -187,7 +185,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       {
         CourseTaskId = command.CourseTaskId,
         Description = command.Description,
-        UserId = _userResolver.Id,
+        UserId = command.SubmittedById,
         SubmittedAt = DateTime.Now
       };
 

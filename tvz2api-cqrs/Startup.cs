@@ -117,7 +117,6 @@ namespace tvz2api_cqrs
         });
       });
       services.AddHttpContextAccessor();
-      services.AddTransient<IUserResolver, UserResolver>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

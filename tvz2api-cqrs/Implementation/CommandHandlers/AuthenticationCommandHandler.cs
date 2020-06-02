@@ -89,6 +89,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         .Include(p => p.UserSettings)
         .Include(p => p.ImageFile)
         .Include(p => p.UserCoursePrivilege)
+        .Include(p => p.Subscription)
         .FirstOrDefaultAsync(x => x.Username == command.Username);
 
       if (user == null || !verifyPasswordHash(command.Password, user.PasswordHash, user.PasswordSalt))
@@ -113,10 +114,13 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
           .ToList()
       };
 
+      List<int> subscriptions = user.Subscription.Select(x => (int)x.CourseId).ToList();
+
       var claims = new[] {
         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
         new Claim(ClaimTypes.Name, user.Username),
-        new Claim("Privileges", JsonConvert.SerializeObject(privileges))
+        new Claim("Privileges", JsonConvert.SerializeObject(privileges)),
+        new Claim("Subscriptions", JsonConvert.SerializeObject(subscriptions))
       };
 
       // In order to make sure the claims are valid, created a key and hash it

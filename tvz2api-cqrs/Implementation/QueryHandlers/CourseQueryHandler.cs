@@ -131,8 +131,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
             Data = x.File.Data,
             Name = x.File.Name,
             Size = x.File.Size
-          }).ToList(),
-          Images = t.DiscussionImage.Select(x => Convert.ToBase64String(t.SubmittedBy.ImageFile.Data)).ToList()
+          }).ToList()//,
+          //Images = t.DiscussionImage.Count != 0 && t.DiscussionImage != null ? t.DiscussionImage.Select(x => Convert.ToBase64String(t.SubmittedBy.ImageFile.Data)).ToList() : null
         })
         .ToListAsync();
       return courses;

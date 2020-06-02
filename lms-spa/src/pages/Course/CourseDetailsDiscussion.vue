@@ -33,6 +33,7 @@
 						</q-item>
 						<div class="q-mt-sm">
 							<q-btn flat size="xs">Show replies</q-btn>
+							<q-btn flat size="xs">Reply</q-btn>
 						</div>
 					</div>
 				</div>
@@ -302,7 +303,7 @@ export default {
 				newDiscussion.images.forEach(file => formData.append("images", file));
 			}
 
-			CourseService.createNewDiscussion(formData).finally(() => {
+			CourseService.createNewDiscussion(formData, this.courseId).finally(() => {
 				this.creatingDiscussion = false;
 				this.resetNewDiscussionDialog();
 			});

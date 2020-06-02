@@ -18,6 +18,7 @@ using tvz2api_cqrs.Custom;
 using Microsoft.AspNetCore.Http;
 using tvz2api_cqrs.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
+using tvz2api_cqrs.Custom.Attributes;
 
 namespace tvz2api_cqrs.Controllers
 {
@@ -29,14 +30,12 @@ namespace tvz2api_cqrs.Controllers
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
     private readonly IHubContext<NotificationHub> _hubContext;
-    private readonly IUserResolver _userResolver;
 
-    public NotificationController(ICommandBus commandBus, IQueryBus queryBus, IHubContext<NotificationHub> notificationHub, IUserResolver userResolver)
+    public NotificationController(ICommandBus commandBus, IQueryBus queryBus, IHubContext<NotificationHub> notificationHub)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;
       _hubContext = notificationHub;
-      _userResolver = userResolver;
     }
 
     [HttpGet("{id}")]
@@ -61,15 +60,9 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateNew([FromForm] NotificationCreateCommand command)
+    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanSendNotifications)]
+    public async Task<IActionResult> CreateNew(int courseId, [FromForm] NotificationCreateCommand command)
     {
-      /* if (
-        !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanSendNotifications) &&
-        !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedWithCourse))
-      )
-      {
-        return Unauthorized();
-      } */
       await _commandBus.ExecuteAsync(command);
       await _hubContext.Clients.All.SendAsync("newNotification");
       return Ok();
@@ -83,29 +76,17 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPost("archive")]
-    public async Task<IActionResult> Archive(NotificationArchiveCommand command)
+    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanArchiveNotifications)]
+    public async Task<IActionResult> Archive(int courseId, NotificationArchiveCommand command)
     {
-      /* if (
-        !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanArchiveNotifications) &&
-        !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedWithCourse))
-      )
-      {
-        return Unauthorized();
-      } */
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
 
     [HttpDelete]
+    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanDeleteNotifications)]
     public async Task<IActionResult> Delete(int courseId, int id)
     {
-      /* if (
-        !_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanDeleteNotifications) &&
-        !(_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.IsInvolvedWithCourse))
-      )
-      {
-        return Unauthorized();
-      } */
       await _commandBus.ExecuteAsync(new NotificationDeleteCommand()
       {
         CourseId = courseId,

@@ -29,19 +29,16 @@ namespace tvz2api_cqrs.Controllers
   {
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
-    private readonly IUserResolver _userResolver;
 
-    public CourseController(ICommandBus commandBus, IQueryBus queryBus, IUserResolver userResolver)
+    public CourseController(ICommandBus commandBus, IQueryBus queryBus)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;
-      _userResolver = userResolver;
     }
 
     [HttpGet]
     public async Task<IActionResult> Get(int? userId = null, [FromQuery(Name = "specializationId[]")] List<SpecializationEnum> courseIds = null, string name = null, bool subscribed = false, bool nonSubscribed = false)
     {
-      // var queryOptions = QueryOptionsExtensions.GetFromRequest(Request);
       var specification = new CourseSpecification(userId, courseIds, name, subscribed, nonSubscribed);
       var result = await _queryBus.ExecuteAsync(new CourseQuery(specification));
       var count = await _queryBus.ExecuteAsync(new CourseTotalQuery(specification));
@@ -90,41 +87,25 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPost("new-sidebar")]
-    [AuthorizeCoursePrivilege(, PrivilegeEnum.CanCreateCourse, PrivilegeEnum.CanArchiveNotifications)]
-    public async Task<IActionResult> CreateNewSidebar(CourseCreateNewSidebarCommand command)
+    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanUploadCourseFiles)]
+    public async Task<IActionResult> CreateNewSidebar(int courseId, CourseCreateNewSidebarCommand command)
     {
-      /* if (
-        !_userResolver.HasCoursePrivilege(command.CourseId, new List<PrivilegeEnum>() { PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanUploadCourseFiles }) &&
-        !(_userResolver.HasCoursePrivilege(command.CourseId, new List<PrivilegeEnum>() { PrivilegeEnum.IsInvolvedWithCourse }))
-      )
-      {
-        return Unauthorized();
-      } */
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
 
     [HttpPost("new-discussion")]
-    public async Task<IActionResult> CreateNewDiscussion([FromForm] CourseCreateDiscussionCommand command)
+    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageDiscussion, PrivilegeEnum.CanCreateNewDiscussion)]
+    public async Task<IActionResult> CreateNewDiscussion(int courseId, [FromForm] CourseCreateDiscussionCommand command)
     {
-      /* if (!_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageDiscussion, PrivilegeEnum.CanCreateNewDiscussion))
-      {
-        return Unauthorized();
-      } */
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
 
     [HttpDelete("delete-sidebar/{id}")]
+    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanDeleteCourseFiles)]
     public async Task<IActionResult> DeleteSidebar(int id, int courseId)
     {
-      /* if (
-        !_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanDeleteCourseFiles) &&
-        !(_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.IsInvolvedWithCourse))
-      )
-      {
-        return Unauthorized();
-      } */
       await _commandBus.ExecuteAsync(new CourseDeleteSidebarCommand()
       {
         SidebarId = id,

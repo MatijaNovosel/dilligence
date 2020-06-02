@@ -54,14 +54,14 @@ export default {
   async getCourseUsers(courseId, name, surname, username) {
     return await axios.get(`Course/users/${courseId}`, { params: { name, surname, username } });
   },
-  async createNewSidebar(payload) {
-    return await axios.post('Course/new-sidebar', payload);
+  async createNewSidebar(payload, courseId) {
+    return await axios.post('Course/new-sidebar', payload, { params: { courseId } });
   },
   async deleteSidebar(sidebarId, courseId) {
     return await axios.delete('Course/delete-sidebar/' + sidebarId, { params: { courseId } });
   },
-  async createNewDiscussion(payload) {
-    return await axios.post('Course/new-discussion', payload);
+  async createNewDiscussion(payload, courseId) {
+    return await axios.post('Course/new-discussion', payload, { params: { courseId } });
   },
   async getDiscussions(courseId, sortByNewer) {
     return await axios.get('Course/discussions', { params: { courseId, sortByNewer } });

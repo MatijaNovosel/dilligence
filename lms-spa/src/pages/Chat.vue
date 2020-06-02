@@ -30,7 +30,7 @@
                       class="ellipsis"
                     >{{ chat.firstParticipant.id == user.id ? chat.secondParticipant.username : chat.firstParticipant.username }}</q-item-section>
                     <q-item-section side v-if="activeChat.id == chat.id">
-                      <q-icon color="yellow-8" name="mdi-rhombus-medium" />
+                      <q-icon size="xs" name="mdi-arrow-left-bold" />
                     </q-item-section>
                   </q-item>
                 </q-list>
