@@ -55,7 +55,7 @@
         </div>
       </q-card-section>
       <q-separator />
-      <q-card-section class="q-gutter-sm q-pb-none">
+      <q-card-section class="q-gutter-sm q-pb-none" v-if="!expired">
         <div class="q-mb-md text-subtitle1">
           <q-icon size="xs" class="q-mr-sm" name="mdi-file-multiple" />Your submission
         </div>
@@ -114,14 +114,16 @@
         </div>
       </q-card-section>
       <q-card-section class="q-pt-none text-right" v-if="submission.gradedById == null">
-        <q-btn
-          v-if="mode == 'create'"
-          @click="submitAttempt"
-          class="q-mr-sm q-mt-md"
-          color="primary"
-          size="sm"
-        >Submit</q-btn>
-        <q-btn v-else @click="editSubmission" color="primary" size="sm">Save</q-btn>
+        <template v-if="!expired">
+          <q-btn
+            v-if="mode == 'create'"
+            @click="submitAttempt"
+            class="q-mr-sm q-mt-md"
+            color="primary"
+            size="sm"
+          >Submit</q-btn>
+          <q-btn v-else @click="editSubmission" color="primary" size="sm">Save</q-btn>
+        </template>
       </q-card-section>
       <template v-else>
         <q-separator />
@@ -152,6 +154,7 @@ import HtmlDescriptionBox from "../components/html-description-box";
 import NotificationService from "../services/notification/notifications";
 import { download, fileIcon } from "../helpers/helpers";
 import { base64StringToBlob } from "blob-util";
+import { isPast } from "date-fns";
 
 export default {
   name: "task-new-submission-dialog",
@@ -172,6 +175,14 @@ export default {
         files: null
       }
     };
+  },
+  computed: {
+    expired() {
+      if (this.taskInfo != null) {
+        return isPast(new Date(this.taskInfo.dueDate));
+      }
+      return false;
+    }
   },
   methods: {
     fileIcon,
@@ -246,32 +257,36 @@ export default {
         if (!val) {
           return;
         }
-        CourseTaskService.getTask(this.activeTaskId, this.courseId).then(({ data }) => {
-          this.taskInfo = data;
-          if (this.mode == "edit") {
-            CourseTaskService.getTaskAttemptDetails(
-              this.attemptId,
-              this.courseId
-            ).then(({ data }) => {
-              this.submission = data;
-              let files = [];
-              data.attachments.forEach(attachment => {
-                files.push(
-                  new File(
-                    [
-                      base64StringToBlob(
-                        attachment.data,
-                        attachment.contentType
+        CourseTaskService.getTask(this.activeTaskId, this.courseId).then(
+          ({ data }) => {
+            this.taskInfo = data;
+            if (this.mode == "edit") {
+              CourseTaskService.getTaskAttemptDetails(
+                this.attemptId,
+                this.courseId
+              ).then(({ data }) => {
+                this.submission = data;
+                if (this.submission.gradedById == null) {
+                  let files = [];
+                  data.attachments.forEach(attachment => {
+                    files.push(
+                      new File(
+                        [
+                          base64StringToBlob(
+                            attachment.data,
+                            attachment.contentType
+                          )
+                        ],
+                        attachment.name
                       )
-                    ],
-                    attachment.name
-                  )
-                );
+                    );
+                  });
+                  this.$refs.filePicker.addFiles(files);
+                }
               });
-              this.$refs.filePicker.addFiles(files);
-            });
+            }
           }
-        });
+        );
       }
     }
   }

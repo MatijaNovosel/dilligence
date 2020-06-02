@@ -12,13 +12,13 @@ export default {
     });
   },
   async createCourseTask(payload, courseId) {
-    return await axios.post('CourseTask', payload, { params: courseId });
+    return await axios.post('CourseTask', payload, { params: { courseId } });
   },
   async getTask(taskId, courseId) {
     return await axios.get('CourseTask/details/' + taskId, { params: { courseId } });
   },
   async updateTask(payload, courseId) {
-    return await axios.put('CourseTask', payload, { params: { courseId } } );
+    return await axios.put('CourseTask', payload, { params: { courseId } });
   },
   async deleteTask(id, courseId) {
     return await axios.delete('CourseTask/' + id, { params: { courseId } });
