@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using tvz2api_cqrs.Enumerations;
 using tvz2api_cqrs.Models.DTO;
+using System.Collections.Generic;
 
 namespace tvz2api_cqrs.Custom
 {
@@ -10,7 +11,7 @@ namespace tvz2api_cqrs.Custom
     UserPrivilegeDTO Privileges { get; }
     int Id { get; }
     bool UserBelongsToCourse(int courseId);
-    bool HasGeneralPrivilege(params PrivilegeEnum[] requestedPrivileges);
-    bool HasCoursePrivilege(int courseId, params PrivilegeEnum[] requestedPrivileges);
+    bool HasGeneralPrivilege(List<PrivilegeEnum> requestedPrivileges);
+    bool HasCoursePrivilege(int courseId, List<PrivilegeEnum> requestedPrivileges);
   }
 }

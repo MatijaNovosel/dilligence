@@ -17,6 +17,7 @@ using Newtonsoft.Json;
 using System.Net.Mail;
 using System.Net;
 using tvz2api_cqrs.Custom;
+using tvz2api_cqrs.Custom.Attributes;
 using tvz2api_cqrs.Implementation.Commands;
 
 namespace tvz2api_cqrs.Controllers
@@ -89,15 +90,16 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPost("new-sidebar")]
+    [AuthorizeCoursePrivilege(, PrivilegeEnum.CanCreateCourse, PrivilegeEnum.CanArchiveNotifications)]
     public async Task<IActionResult> CreateNewSidebar(CourseCreateNewSidebarCommand command)
     {
-      if (
-        !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanUploadCourseFiles) &&
-        !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedWithCourse))
+      /* if (
+        !_userResolver.HasCoursePrivilege(command.CourseId, new List<PrivilegeEnum>() { PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanUploadCourseFiles }) &&
+        !(_userResolver.HasCoursePrivilege(command.CourseId, new List<PrivilegeEnum>() { PrivilegeEnum.IsInvolvedWithCourse }))
       )
       {
         return Unauthorized();
-      }
+      } */
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
@@ -105,10 +107,10 @@ namespace tvz2api_cqrs.Controllers
     [HttpPost("new-discussion")]
     public async Task<IActionResult> CreateNewDiscussion([FromForm] CourseCreateDiscussionCommand command)
     {
-      if (!_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageDiscussion, PrivilegeEnum.CanCreateNewDiscussion))
+      /* if (!_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageDiscussion, PrivilegeEnum.CanCreateNewDiscussion))
       {
         return Unauthorized();
-      }
+      } */
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
@@ -116,13 +118,13 @@ namespace tvz2api_cqrs.Controllers
     [HttpDelete("delete-sidebar/{id}")]
     public async Task<IActionResult> DeleteSidebar(int id, int courseId)
     {
-      if (
+      /* if (
         !_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanDeleteCourseFiles) &&
         !(_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.IsInvolvedWithCourse))
       )
       {
         return Unauthorized();
-      }
+      } */
       await _commandBus.ExecuteAsync(new CourseDeleteSidebarCommand()
       {
         SidebarId = id,

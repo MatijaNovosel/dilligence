@@ -14,5 +14,7 @@ namespace tvz2api_cqrs.Models.DTO
     public int? SubmittedById { get; set; }
     public string UserPictureBase64String { get; set; }
     public string SubmittedBy { get; set; }
+    public List<string> Images { get; set; }
+    public List<FileDTO> Attachments { get; set; }
   }
 }

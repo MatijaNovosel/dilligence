@@ -106,7 +106,7 @@
 
 <script>
 import { download, fileIcon } from "../helpers/helpers";
-import { format, compareAsc } from "date-fns";
+import { format, isPast } from "date-fns";
 import UserMixin from "../mixins/userMixin";
 import CourseTaskService from "../services/api/course-task";
 
@@ -134,7 +134,7 @@ export default {
   },
   computed: {
     isExpired() {
-      return compareAsc(new Date(this.value.dueDate), new Date()) == -1;
+      return isPast(new Date(this.value.dueDate));
     }
   },
   methods: {

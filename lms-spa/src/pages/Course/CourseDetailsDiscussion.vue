@@ -1,26 +1,39 @@
 <template>
 	<div>
-		<div class="row">
+		<div class="row q-mt-md">
 			<div class="col-12">
 				<div class="row q-col-gutter-sm justify-center">
-					<div :key="i" v-for="(discussion, i) in discussions" class="col-xs-12 col-md-8">
-						<q-item class="border-dark discussion-root-box">
+					<div
+						:key="i"
+						v-for="(discussion, i) in discussions"
+						class="col-xs-12 col-md-8 discussion-root-box q-mb-md"
+						:class="[$q.dark.isActive ? 'border-dark' : 'border-light']"
+					>
+						<q-item>
 							<q-item-section avatar top>
 								<q-avatar color="primary" text-color="white">
 									<img :src="generatePictureSource(discussion.userPictureBase64String)" />
 								</q-avatar>
 							</q-item-section>
 							<q-item-section>
-								<q-item-label>{{ `${discussion.submittedBy} says:` }}</q-item-label>
+								<q-item-label>{{ discussion.submittedBy }}</q-item-label>
 								<q-item-label caption style="max-width: 85%;">{{discussion.content}}</q-item-label>
+								<div v-for="(image, i) in discussion.images" :key="i" style="width: 100px; height: 100px;">
+									<img
+										style="border: 1px solid rgba(0, 0, 0, 0.4); border-radius: 10px; height: 100%; width: 100%;"
+										:src="generatePictureSource(image)"
+									/>
+								</div>
 							</q-item-section>
 							<q-item-section side>
-								<q-item-label caption>5 min ago</q-item-label>
+								<q-item-label
+									style="font-size: 10px;"
+								>{{ formatDistanceToNow(new Date(discussion.submittedAt)) }} ago</q-item-label>
 							</q-item-section>
-              <div>
-                <q-btn size="xs"> View comments </q-btn>
-              </div>
 						</q-item>
+						<div class="q-mt-sm">
+							<q-btn flat size="xs">Show replies</q-btn>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -166,6 +179,7 @@ import UserMixin from "../../mixins/userMixin";
 import CourseService from "../../services/api/course";
 import { required, minLength, numeric } from "vuelidate/lib/validators";
 import { generatePictureSource } from "../../helpers/helpers";
+import { formatDistanceToNow } from "date-fns";
 
 export default {
 	name: "CourseDetailsDiscussion",
@@ -230,6 +244,7 @@ export default {
 		}
 	},
 	methods: {
+		formatDistanceToNow,
 		generatePictureSource,
 		getDiscussions() {
 			CourseService.getDiscussions(this.courseId, true).then(({ data }) => {
@@ -306,5 +321,5 @@ export default {
 .discussion-root-box
   position: relative
   border-radius: 8px
-  padding: 25px
+  padding: 15px
 </style>

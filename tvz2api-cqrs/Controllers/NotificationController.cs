@@ -63,13 +63,13 @@ namespace tvz2api_cqrs.Controllers
     [HttpPost]
     public async Task<IActionResult> CreateNew([FromForm] NotificationCreateCommand command)
     {
-      if (
+      /* if (
         !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanSendNotifications) &&
         !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedWithCourse))
       )
       {
         return Unauthorized();
-      }
+      } */
       await _commandBus.ExecuteAsync(command);
       await _hubContext.Clients.All.SendAsync("newNotification");
       return Ok();
@@ -85,13 +85,13 @@ namespace tvz2api_cqrs.Controllers
     [HttpPost("archive")]
     public async Task<IActionResult> Archive(NotificationArchiveCommand command)
     {
-      if (
+      /* if (
         !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanArchiveNotifications) &&
         !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedWithCourse))
       )
       {
         return Unauthorized();
-      }
+      } */
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
@@ -99,13 +99,13 @@ namespace tvz2api_cqrs.Controllers
     [HttpDelete]
     public async Task<IActionResult> Delete(int courseId, int id)
     {
-      if (
+      /* if (
         !_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanDeleteNotifications) &&
         !(_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.IsInvolvedWithCourse))
       )
       {
         return Unauthorized();
-      }
+      } */
       await _commandBus.ExecuteAsync(new NotificationDeleteCommand()
       {
         CourseId = courseId,

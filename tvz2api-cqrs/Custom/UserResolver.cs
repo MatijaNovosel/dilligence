@@ -7,6 +7,7 @@ using System;
 using tvz2api_cqrs.Models;
 using tvz2api_cqrs.Models.DTO;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 
 namespace tvz2api_cqrs.Custom
 {
@@ -45,20 +46,20 @@ namespace tvz2api_cqrs.Custom
       _context = context;
     }
 
-    public bool HasGeneralPrivilege(params PrivilegeEnum[] requestedPrivileges)
+    public bool HasGeneralPrivilege(List<PrivilegeEnum> requestedPrivileges)
     {
       var generalPrivileges = Privileges.GeneralPrivileges;
-      return generalPrivileges.Any(p => requestedPrivileges.ToList().Contains((PrivilegeEnum)p));
+      return generalPrivileges.Any(p => requestedPrivileges.Contains((PrivilegeEnum)p));
     }
 
-    public bool HasCoursePrivilege(int courseId, params PrivilegeEnum[] requestedPrivileges)
+    public bool HasCoursePrivilege(int courseId, List<PrivilegeEnum> requestedPrivileges)
     {
       var course = Privileges.Courses.FirstOrDefault(x => x.Id == courseId);
       if (course == null)
       {
         return false;
       }
-      return course.Privileges.Any(p => requestedPrivileges.ToList().Contains((PrivilegeEnum)p));
+      return course.Privileges.Any(p => requestedPrivileges.Contains((PrivilegeEnum)p));
     }
 
     public bool UserBelongsToCourse(int courseId)

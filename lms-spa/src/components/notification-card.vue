@@ -77,7 +77,7 @@
 
 <script>
 import UserMixin from "../mixins/userMixin";
-import { format, compareAsc } from "date-fns";
+import { format, isPast } from "date-fns";
 import { download, fileIcon } from "../helpers/helpers";
 
 export default {
@@ -89,7 +89,7 @@ export default {
   },
   computed: {
     isArchived() {
-      return compareAsc(new Date(this.value.expiresAt), new Date()) == -1;
+      return isPast(new Date(this.value.expiresAt));
     }
   },
   data() {

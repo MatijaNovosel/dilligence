@@ -111,6 +111,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
       var courses = await _context.Discussion
         .Include(t => t.SubmittedBy)
         .ThenInclude(t => t.ImageFile)
+        .Include(t => t.DiscussionImage)
+        .Include(t => t.DiscussionAttachment)
         .Where(t => t.CourseId == query.CourseId)
         .Select(t => new DiscussionDTO() 
         {
@@ -122,7 +124,15 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Id = t.Id,
           TextColor = t.TextColor,
           UserPictureBase64String = t.SubmittedBy.ImageFile != null ? Convert.ToBase64String(t.SubmittedBy.ImageFile.Data) : null,
-          SubmittedBy = $"{t.SubmittedBy.Name} {t.SubmittedBy.Surname}"
+          SubmittedBy = $"{t.SubmittedBy.Name} {t.SubmittedBy.Surname}",
+          Attachments = t.DiscussionAttachment.Select(x => new FileDTO() 
+          {
+            ContentType = x.File.ContentType,
+            Data = x.File.Data,
+            Name = x.File.Name,
+            Size = x.File.Size
+          }).ToList(),
+          Images = t.DiscussionImage.Select(x => Convert.ToBase64String(t.SubmittedBy.ImageFile.Data)).ToList()
         })
         .ToListAsync();
       return courses;

@@ -58,10 +58,10 @@ namespace tvz2api_cqrs.Controllers
     [HttpGet("attempts/{id}")]
     public async Task<IActionResult> GetAttempts(int id, int courseId)
     {
-      if (!_userResolver.UserBelongsToCourse(courseId))
+      /* if (!_userResolver.UserBelongsToCourse(courseId))
       {
         return Unauthorized();
-      }
+      } */
       var result = await _queryBus.ExecuteAsync(new CourseTaskAttemptsQuery()
       {
         Id = id,
@@ -73,10 +73,10 @@ namespace tvz2api_cqrs.Controllers
     [HttpGet("attempts/details/{id}")]
     public async Task<IActionResult> GetAttemptDetails(int id, int courseId)
     {
-      if (!_userResolver.UserBelongsToCourse(courseId))
+      /* if (!_userResolver.UserBelongsToCourse(courseId))
       {
         return Unauthorized();
-      }
+      } */
       var result = await _queryBus.ExecuteAsync(new CourseTaskAttemptDetailsQuery()
       {
         Id = id,
@@ -88,10 +88,10 @@ namespace tvz2api_cqrs.Controllers
     [HttpPost("new-attempt")]
     public async Task<IActionResult> NewAttempt([FromForm] CourseTaskSubmitAttemptCommand command)
     {
-      if (!_userResolver.UserBelongsToCourse(command.CourseId))
+      /* if (!_userResolver.UserBelongsToCourse(command.CourseId))
       {
         return Unauthorized();
-      }
+      } */
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
@@ -99,10 +99,10 @@ namespace tvz2api_cqrs.Controllers
     [HttpPut("edit-attempt")]
     public async Task<IActionResult> EditAttempt([FromForm] CourseTaskEditAttemptCommand command)
     {
-      if (!_userResolver.UserBelongsToCourse(command.CourseId))
+      /* if (!_userResolver.UserBelongsToCourse(command.CourseId))
       {
         return Unauthorized();
-      }
+      } */
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
@@ -110,13 +110,13 @@ namespace tvz2api_cqrs.Controllers
     [HttpPost("grade-attempt")]
     public async Task<IActionResult> GradeAttempt(CourseTaskGradeAttemptCommand command)
     {
-      if (
+      /* if (
         !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanGradeTasks) &&
         !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedWithCourse))
       )
       {
         return Unauthorized();
-      }
+      } */
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
@@ -124,13 +124,13 @@ namespace tvz2api_cqrs.Controllers
     [HttpDelete("{id}")]
     public async Task<IActionResult> CreateNew(int id, int courseId)
     {
-      if (
+      /* if (
         !_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanDeleteTasks) &&
         !(_userResolver.HasCoursePrivilege(courseId, PrivilegeEnum.IsInvolvedWithCourse))
       )
       {
         return Unauthorized();
-      }
+      } */
       await _commandBus.ExecuteAsync(new CourseTaskDeleteCommand()
       {
         CourseId = courseId,
@@ -142,13 +142,13 @@ namespace tvz2api_cqrs.Controllers
     [HttpPost]
     public async Task<IActionResult> CreateNew([FromForm] CourseTaskCreateCommand command)
     {
-      if (
+      /* if (
         !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanCreateTasks) &&
         !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedWithCourse))
       )
       {
         return Unauthorized();
-      }
+      } */
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
@@ -156,13 +156,13 @@ namespace tvz2api_cqrs.Controllers
     [HttpPut]
     public async Task<IActionResult> Update([FromForm] CourseTaskUpdateCommand command)
     {
-      if (
+      /* if (
         !_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanCreateTasks) &&
         !(_userResolver.HasCoursePrivilege(command.CourseId, PrivilegeEnum.IsInvolvedWithCourse))
       )
       {
         return Unauthorized();
-      }
+      } */
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
