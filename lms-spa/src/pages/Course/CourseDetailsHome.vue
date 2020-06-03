@@ -2,12 +2,18 @@
 	<div>
 		<div class="absolute-top-right">
 			<q-btn
+				v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse)"
 				@click="editLandingPage"
 				size="sm"
 				class="q-mr-sm"
 				flat
 			>{{`${editMode ? 'Stop editing' : 'Edit landing page'}`}}</q-btn>
-			<q-btn size="sm" flat v-if="editMode" @click="saveLandingPage">Save</q-btn>
+			<q-btn
+				size="sm"
+				flat
+				v-if="editMode && hasCoursePrivileges(courseId, Privileges.CanManageCourse)"
+				@click="saveLandingPage"
+			>Save</q-btn>
 		</div>
 		<div class="row" v-if="editMode">
 			<div class="col-12">
@@ -23,9 +29,12 @@
 
 <script>
 import CourseService from "../../services/api/course";
+import UserMixin from "../../mixins/userMixin";
+import NotificationService from "../../services/notification/notifications";
 
 export default {
 	name: "CourseDetailsHome",
+	mixins: [UserMixin],
 	created() {
 		this.courseId = this.$route.params.id;
 		this.getLandingPage();
@@ -35,8 +44,10 @@ export default {
 			CourseService.updateLandingPage(
 				{ content: this.landingPage, courseId: this.courseId },
 				this.courseId
-      );
-      this.editMode = !this.editMode;
+			).then(() => {
+				NotificationService.showSuccess("Landing page successfully updated!");
+			});
+			this.editMode = !this.editMode;
 		},
 		editLandingPage() {
 			this.editMode = !this.editMode;

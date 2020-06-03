@@ -18,6 +18,7 @@ using tvz2api_cqrs.Infrastructure.Commands;
 using tvz2api_cqrs.Models;
 using tvz2api_cqrs.Models.DTO;
 using tvz2api_cqrs.QueryModels;
+using tvz2api_cqrs.Enumerations;
 
 namespace tvz2api_cqrs.Implementation.CommandHandlers
 {
@@ -48,6 +49,14 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         UserId = command.UserId,
         JoinedAt = DateTime.Now,
       });
+
+      _context.UserCoursePrivilege.Add(new UserCoursePrivilege() 
+      {
+        CourseId = command.CourseId,
+        PrivilegeId = (int)PrivilegeEnum.CanCreateNewDiscussion,
+        UserId = command.UserId
+      });
+
       await _context.SaveChangesAsync();
     }
 

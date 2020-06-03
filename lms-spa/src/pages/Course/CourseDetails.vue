@@ -2,8 +2,9 @@
 	<q-page class="q-pa-md">
 		<template v-if="course">
 			<div class="absolute-top-left">
-				<q-btn flat size="sm" @click="openChangePasswordDialog">Change password</q-btn>
-				<q-btn class="q-ml-sm" flat size="sm">Delete course</q-btn>
+				<q-btn v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse)" flat size="sm" @click="openChangePasswordDialog">Change password</q-btn>
+				<q-btn v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse)" class="q-ml-sm" flat size="sm">Delete course</q-btn>
+        <q-btn v-if="!hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)" class="q-ml-sm" flat size="sm">Unsubscribe</q-btn>
 			</div>
 			<div class="row">
 				<div class="col-12 q-pb-md q-pt-lg text-center">
@@ -89,10 +90,12 @@
 <script>
 import CourseService from "../../services/api/course";
 import NotificationService from "../../services/notification/notifications";
+import UserMixin from "../../mixins/userMixin";
 import { debounce } from "debounce";
 
 export default {
 	name: "CourseDetails",
+	mixins: [UserMixin],
 	created() {
 		this.courseId = this.$route.params.id;
 		this.getData();
@@ -100,8 +103,8 @@ export default {
 	methods: {
 		passwordUpdated: debounce(function() {
 			CourseService.updatePassword(this.courseId, this.newPassword).then(() => {
-        this.getData();
-        NotificationService.showSuccess("Password successfully changed!");
+				this.getData();
+				NotificationService.showSuccess("Password successfully changed!");
 			});
 		}, 1500),
 		closeDialog() {
