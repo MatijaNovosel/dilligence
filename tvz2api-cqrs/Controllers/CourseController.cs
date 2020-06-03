@@ -115,6 +115,14 @@ namespace tvz2api_cqrs.Controllers
       return Ok();
     }
 
+    [HttpPost("landing-page")]
+    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanUploadCourseFiles)]
+    public async Task<IActionResult> UpdateLandingPage(int courseId, CourseUpdateLandingPageCommand command)
+    {
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
+    }
+
     [HttpPost("reply")]
     public async Task<IActionResult> ReplyToDiscussion(int courseId, CourseDiscussionReplyCommand command)
     {

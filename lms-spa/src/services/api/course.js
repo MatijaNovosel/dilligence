@@ -77,5 +77,8 @@ export default {
   },
   async deleteDiscussion(discussionId) {
     return await axios.delete('Course/discussion', { params: { discussionId } });
+  },
+  async updateLandingPage(payload, courseId) {
+    return await axios.post('Course/landing-page', payload, { params: { courseId } });
   }
 }

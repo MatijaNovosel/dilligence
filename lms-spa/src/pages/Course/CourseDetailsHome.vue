@@ -1,9 +1,21 @@
 <template>
 	<div>
 		<div class="absolute-top-right">
-			<q-btn size="sm" flat>Edit landing page</q-btn>
+			<q-btn
+				@click="editLandingPage"
+				size="sm"
+				class="q-mr-sm"
+				flat
+			>{{`${editMode ? 'Stop editing' : 'Edit landing page'}`}}</q-btn>
+			<q-btn size="sm" flat v-if="editMode" @click="saveLandingPage">Save</q-btn>
+		</div>
+		<div class="row" v-if="editMode">
+			<div class="col-12">
+				<q-editor v-model="landingPage" />
+			</div>
 		</div>
 		<div
+			v-else
 			v-html="landingPage"
 		>This is the landing page of the course, make sure to keep it pretty for the students!</div>
 	</div>
@@ -19,6 +31,15 @@ export default {
 		this.getLandingPage();
 	},
 	methods: {
+		saveLandingPage() {
+			CourseService.updateLandingPage(
+				{ content: this.landingPage, courseId: this.courseId },
+				this.courseId
+			);
+		},
+		editLandingPage() {
+			this.editMode = !this.editMode;
+		},
 		getLandingPage() {
 			CourseService.getLandingPage(this.courseId).then(({ data }) => {
 				this.landingPage = data;
@@ -27,6 +48,7 @@ export default {
 	},
 	data() {
 		return {
+			editMode: false,
 			courseId: null,
 			landingPage: ""
 		};

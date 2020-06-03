@@ -23,6 +23,18 @@ namespace tvz2api_cqrs.Implementation.Commands
     public int DiscussionId { get; set; }   
   }
 
+  public class CourseUpdateLandingPageCommand : ICommand
+  {
+    public CourseUpdateLandingPageCommand() { }
+    public CourseUpdateLandingPageCommand(int courseId, string content)
+    {
+      CourseId = courseId;
+      Content = content;
+    }
+    public int CourseId { get; set; } 
+    public string Content { get; set; } 
+  }
+
   public class CourseDeleteSidebarCommand : ICommand
   {
     public CourseDeleteSidebarCommand() { }
