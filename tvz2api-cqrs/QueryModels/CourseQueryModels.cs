@@ -19,6 +19,7 @@ namespace tvz2api_cqrs.QueryModels
     public string Name { get; set; }
     public string Isvu { get; set; }
     public int? Ects { get; set; }
+    public string Password { get; set; }
     public string Specialization { get; set; }
   }
 }

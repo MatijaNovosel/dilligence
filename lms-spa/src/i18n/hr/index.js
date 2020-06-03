@@ -8,7 +8,8 @@ export default {
     availableSubjects: "Dostupni kolegiji",
     exams: "Zadatci",
     availableExams: "Dostupni zadatci",
-    courses: "Kolegiji"
+    courses: "Kolegiji",
+    adminConsole: "Administratorska konzola"
   },
   error: {
     timeNeededFormat: "Format mora biti 'sati:minute'",

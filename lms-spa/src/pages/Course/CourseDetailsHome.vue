@@ -35,7 +35,8 @@ export default {
 			CourseService.updateLandingPage(
 				{ content: this.landingPage, courseId: this.courseId },
 				this.courseId
-			);
+      );
+      this.editMode = !this.editMode;
 		},
 		editLandingPage() {
 			this.editMode = !this.editMode;

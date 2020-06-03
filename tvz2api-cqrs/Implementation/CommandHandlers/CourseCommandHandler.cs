@@ -29,7 +29,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     ICommandHandlerAsync<CourseCreateDiscussionCommand>,
     ICommandHandlerAsync<CourseDiscussionReplyCommand>,
     ICommandHandlerAsync<CourseDeleteDiscussionCommand>,
-    ICommandHandlerAsync<CourseUpdateLandingPageCommand>
+    ICommandHandlerAsync<CourseUpdateLandingPageCommand>,
+    ICommandHandlerAsync<CourseUpdatePasswordCommand>
   {
     private readonly lmsContext _context;
     private readonly IConfiguration _configuration;
@@ -47,6 +48,13 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         CourseId = command.CourseId,
         Title = command.Title
       });
+      await _context.SaveChangesAsync();
+    }
+
+    public async Task HandleAsync(CourseUpdatePasswordCommand command)
+    {
+      var course = _context.Course.FirstOrDefault(x => x.Id == command.CourseId);
+      course.Password = command.NewPassword;
       await _context.SaveChangesAsync();
     }
 

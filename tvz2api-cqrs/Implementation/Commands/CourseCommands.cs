@@ -14,6 +14,13 @@ namespace tvz2api_cqrs.Implementation.Commands
     public string Title { get; set; }
   }
 
+  public class CourseUpdatePasswordCommand : ICommand
+  {
+    public CourseUpdatePasswordCommand() { }
+    public int CourseId { get; set; }
+    public string NewPassword { get; set; }
+  }
+
   public class CourseDeleteDiscussionCommand : ICommand
   {
     public CourseDeleteDiscussionCommand(int discussionId)

@@ -115,6 +115,14 @@ namespace tvz2api_cqrs.Controllers
       return Ok();
     }
 
+    [HttpPut("password")]
+    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse)]
+    public async Task<IActionResult> ChangePassword(int courseId, CourseUpdatePasswordCommand command)
+    {
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
+    }
+
     [HttpPost("landing-page")]
     [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanUploadCourseFiles)]
     public async Task<IActionResult> UpdateLandingPage(int courseId, CourseUpdateLandingPageCommand command)

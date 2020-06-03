@@ -8,7 +8,8 @@ export default {
     availableSubjects: "Available courses",
     exams: "Exams",
     availableExams: "Available exams",
-    courses: "Courses"
+    courses: "Courses",
+    adminConsole: "Admin console"
   },
   error: {
     timeNeededFormat: "Format must be 'hours:minutes'",

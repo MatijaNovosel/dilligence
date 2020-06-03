@@ -80,5 +80,8 @@ export default {
   },
   async updateLandingPage(payload, courseId) {
     return await axios.post('Course/landing-page', payload, { params: { courseId } });
+  },
+  async updatePassword(courseId, newPassword) {
+    return await axios.put('Course/password', { courseId, newPassword }, { params: { courseId } });
   }
 }

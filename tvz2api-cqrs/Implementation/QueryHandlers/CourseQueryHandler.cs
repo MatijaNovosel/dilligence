@@ -40,7 +40,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Id = t.Id,
           Name = t.Name,
           Ects = t.Ects,
-          Specialization = t.Specialization.Name
+          Specialization = t.Specialization.Name,
+          Password = t.Password
         })
         .FirstOrDefaultAsync();
       return course;
