@@ -15,15 +15,20 @@
 				@click="saveLandingPage"
 			>Save</q-btn>
 		</div>
-		<div class="row" v-if="editMode">
-			<div class="col-12">
-				<q-editor v-model="landingPage" />
-			</div>
+		<div v-if="loading" class="col-12 text-center q-mt-lg">
+			<q-spinner size="3em" />
 		</div>
-		<div
-			v-else
-			v-html="landingPage"
-		>This is the landing page of the course, make sure to keep it pretty for the students!</div>
+		<template v-else>
+			<div class="row" v-if="editMode">
+				<div class="col-12">
+					<q-editor v-model="landingPage" />
+				</div>
+			</div>
+			<div
+				v-else
+				v-html="landingPage"
+			>This is the landing page of the course, make sure to keep it pretty for the students!</div>
+		</template>
 	</div>
 </template>
 
@@ -53,13 +58,19 @@ export default {
 			this.editMode = !this.editMode;
 		},
 		getLandingPage() {
-			CourseService.getLandingPage(this.courseId).then(({ data }) => {
-				this.landingPage = data;
-			});
+			this.loading = true;
+			CourseService.getLandingPage(this.courseId)
+				.then(({ data }) => {
+					this.landingPage = data;
+				})
+				.finally(() => {
+					this.loading = false;
+				});
 		}
 	},
 	data() {
 		return {
+			loading: false,
 			editMode: false,
 			courseId: null,
 			landingPage: ""

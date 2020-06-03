@@ -3,7 +3,7 @@ import { Notify } from 'quasar'
 
 export default {
   showSuccess(message) {
-    if (!store.getters.user.settings.popups) {
+    if (store.getters.user.id != null && !store.getters.user.settings.popups) {
       return;
     }
     Notify.create({
@@ -12,7 +12,7 @@ export default {
     });
   },
   showError(message) {
-    if (!store.getters.user.settings.popups) {
+    if (store.getters.user.id != null && !store.getters.user.settings.popups) {
       return;
     }
     Notify.create({
