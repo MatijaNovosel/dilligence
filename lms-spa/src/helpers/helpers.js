@@ -1,3 +1,11 @@
+const mustNotBeEmptyHtml = value => {
+	return value.replace(/<\/?("[^"]*"|'[^']*'|[^>])*(>|$)/g, "") !== "";
+}
+
+const clearedHtmlMustBeAtLeastNCharacters = value => {
+	return value.replace(/<\/?("[^"]*"|'[^']*'|[^>])*(>|$)/g, "").length >= 8;
+}
+
 function generatePictureSource(data) {
   if (data == null) {
     return require('../assets/default-user.jpg');
@@ -99,11 +107,20 @@ function download(contentType, base64Data, name) {
   document.body.removeChild(element);
 }
 
+const mustBeBeforeCurrentDate = value => {
+	let currentDate = new Date().getTime();
+	let enteredDate = new Date(value).getTime();
+	return currentDate < enteredDate;
+}
+
 export {
   generatePictureSource,
   randInt,
   randColor,
   acronym,
   fileIcon,
-  download
+  download,
+  mustNotBeEmptyHtml,
+  clearedHtmlMustBeAtLeastNCharacters,
+  mustBeBeforeCurrentDate
 };

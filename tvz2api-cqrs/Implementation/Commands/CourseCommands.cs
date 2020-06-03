@@ -29,14 +29,6 @@ namespace tvz2api_cqrs.Implementation.Commands
     public int CourseId { get; set; }
     [FromForm(Name = "body")]
     public string Body { get; set; }
-    [FromForm(Name = "backgroundColor")]
-    public string BackgroundColor { get; set; }
-    [FromForm(Name = "textColor")]
-    public string TextColor { get; set; }
-    [FromForm(Name = "attachments")]
-    public List<IFormFile> Attachments { get; set; }
-    [FromForm(Name = "images")]
-    public List<IFormFile> Images { get; set; }
     [FromForm(Name = "submittedById")]
     public int SubmittedById { get; set; }
   }

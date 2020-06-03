@@ -52,86 +52,12 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       var discussion = new Discussion()
       {
         CourseId = command.CourseId,
-        BackgroundColor = command.BackgroundColor,
         Content = command.Body,
         SubmittedAt = DateTime.Now,
-        SubmittedById = command.SubmittedById,
-        TextColor = command.TextColor
+        SubmittedById = command.SubmittedById
       };
       
       _context.Discussion.Add(discussion);
-      _context.SaveChanges();
-
-      if (command.Attachments != null && command.Attachments.Count != 0) 
-      {
-        List<tvz2api_cqrs.Models.File> newFiles = new List<tvz2api_cqrs.Models.File>();
-
-        foreach (var file in command.Attachments)
-        {
-          using (var ms = new MemoryStream())
-          {
-            file.CopyTo(ms);
-            var fileBytes = ms.ToArray();
-
-            var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-            fileName = fileName.Substring(0, fileName.LastIndexOf(".")) + fileName.Substring(fileName.LastIndexOf(".")).ToLower();
-
-            newFiles.Add(new tvz2api_cqrs.Models.File
-            {
-              Name = Path.GetFileName(fileName),
-              ContentType = file.ContentType,
-              Data = fileBytes,
-              Size = fileBytes.Length
-            });
-          }
-        }
-
-        await _context.File.AddRangeAsync(newFiles);
-        await _context.SaveChangesAsync();
-
-        newFiles.ForEach(x => {
-          _context.DiscussionAttachment.Add(new DiscussionAttachment() {
-            DiscussionId = discussion.Id,
-            FileId = x.Id
-          });
-        });
-      }
-
-      if (command.Images != null && command.Images.Count != 0) 
-      {
-        List<tvz2api_cqrs.Models.File> newFiles = new List<tvz2api_cqrs.Models.File>();
-
-        foreach (var file in command.Images)
-        {
-          using (var ms = new MemoryStream())
-          {
-            file.CopyTo(ms);
-            var fileBytes = ms.ToArray();
-
-            var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-            fileName = fileName.Substring(0, fileName.LastIndexOf(".")) + fileName.Substring(fileName.LastIndexOf(".")).ToLower();
-
-            newFiles.Add(new tvz2api_cqrs.Models.File
-            {
-              Name = Path.GetFileName(fileName),
-              ContentType = file.ContentType,
-              Data = fileBytes,
-              Size = fileBytes.Length
-            });
-          }
-        }
-
-        await _context.File.AddRangeAsync(newFiles);
-        await _context.SaveChangesAsync();
-
-        newFiles.ForEach(x => {
-          _context.DiscussionImage.Add(new DiscussionImage() {
-            DiscussionId = discussion.Id,
-            FileId = x.Id
-          });
-        });
-      }
-
       await _context.SaveChangesAsync();
     }
 

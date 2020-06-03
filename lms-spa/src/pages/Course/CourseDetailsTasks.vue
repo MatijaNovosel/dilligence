@@ -16,6 +16,7 @@
             size="sm"
             v-model="showTasks"
             :options="showTasksOptions"
+            v-if="!hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
             type="checkbox"
             color="primary"
             inline

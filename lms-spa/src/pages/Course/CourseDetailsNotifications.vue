@@ -29,7 +29,7 @@
 				<div class="col-12 q-pa-sm" v-for="(notification, i) in notifications" :key="i">
 					<notification-card
 						@delete="deleteNotification"
-            @archive="archiveNotification"
+						@archive="archiveNotification"
 						color="green-5"
 						:value="notification"
 						:courseId="courseId"
@@ -134,12 +134,13 @@
 						</template>
 					</q-file>
 					<q-editor
-						:content-style="{ [$v.newNotification.description.$invalid && 'border']: '1px solid #C10015' }"
+						:content-style="{ [$v.newNotification.description.$invalid && $v.newNotification.description.$dirty && 'border']: '1px solid #C10015' }"
 						v-model="newNotification.description"
+						@input="$v.newNotification.description.$touch()"
 						min-height="5rem"
 					/>
 					<div
-						v-if="$v.newNotification.description.$invalid"
+						v-if="$v.newNotification.description.$invalid && $v.newNotification.description.$dirty"
 						class="error-text q-pl-sm"
 					>This field is required!</div>
 					<div
@@ -197,12 +198,11 @@ import { required, minLength } from "vuelidate/lib/validators";
 import UserMixin from "../../mixins/userMixin";
 import { debounce } from "debounce";
 import { format, add } from "date-fns";
-
-const mustBeBeforeCurrentDate = value => {
-	let currentDate = new Date().getTime();
-	let enteredDate = new Date(value).getTime();
-	return currentDate < enteredDate;
-};
+import {
+	mustBeBeforeCurrentDate,
+	mustNotBeEmptyHtml,
+	clearedHtmlMustBeAtLeastNCharacters
+} from "../../helpers/helpers";
 
 export default {
 	name: "CourseDetailsHome",
@@ -221,8 +221,8 @@ export default {
 				minLength: minLength(4)
 			},
 			description: {
-				required,
-				minLength: minLength(4)
+				mustNotBeEmptyHtml,
+				clearedHtmlMustBeAtLeastNCharacters
 			},
 			expiresAt: {
 				mustBeBeforeCurrentDate
@@ -284,11 +284,13 @@ export default {
 				notification.files.forEach(file => formData.append("files", file));
 			}
 
-			NotificationService.createNotification(formData, this.courseId).then(() => {
-				this.getNotifications(this.courseId);
-				this.resetNewNotificationDialog();
-			});
-    },
+			NotificationService.createNotification(formData, this.courseId).then(
+				() => {
+					this.getNotifications(this.courseId);
+					this.resetNewNotificationDialog();
+				}
+			);
+		},
 		resetNewNotificationDialog() {
 			this.newNotification = {
 				title: "Title goes here!",
@@ -321,12 +323,12 @@ export default {
 			NotificationService.deleteNotification(this.courseId, id).then(() => {
 				this.getNotifications();
 			});
-    },
-    archiveNotification(id) {
-      NotificationService.archiveNotification(this.courseId, id).then(() => {
-        this.getNotifications();
-      });
-    }
+		},
+		archiveNotification(id) {
+			NotificationService.archiveNotification(this.courseId, id).then(() => {
+				this.getNotifications();
+			});
+		}
 	},
 	watch: {
 		showNotifications: {
