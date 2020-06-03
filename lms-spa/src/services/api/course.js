@@ -74,5 +74,8 @@ export default {
   },
   async getReplies(discussionId) {
     return await axios.get('Course/discussion-replies', { params: { discussionId } });
+  },
+  async deleteDiscussion(discussionId) {
+    return await axios.delete('Course/discussion', { params: { discussionId } });
   }
 }

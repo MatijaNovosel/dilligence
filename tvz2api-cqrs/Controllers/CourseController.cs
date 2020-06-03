@@ -100,6 +100,13 @@ namespace tvz2api_cqrs.Controllers
       return Ok(result);
     }
 
+    [HttpDelete("discussion")]
+    public async Task<IActionResult> DeleteDiscussion(int discussionId)
+    {
+      await _commandBus.ExecuteAsync(new CourseDeleteDiscussionCommand(discussionId));
+      return Ok();
+    }
+
     [HttpPost("new-sidebar")]
     [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanUploadCourseFiles)]
     public async Task<IActionResult> CreateNewSidebar(int courseId, CourseCreateNewSidebarCommand command)
