@@ -20,7 +20,9 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     IQueryHandlerAsync<CourseNotificationsQuery, List<NotificationQueryModel>>,
     IQueryHandlerAsync<CourseDetailsQuery, CourseDetailsQueryModel>,
     IQueryHandlerAsync<CourseSidebarQuery, List<SidebarContentDTO>>,
-    IQueryHandlerAsync<CourseDiscussionsQuery, List<DiscussionDTO>>
+    IQueryHandlerAsync<CourseDiscussionsQuery, List<DiscussionDTO>>,
+    IQueryHandlerAsync<CourseLandingPageQuery, string>,
+    IQueryHandlerAsync<CourseDiscussionRepliesQuery, List<DiscussionReplyDTO>>
   {
     private readonly lmsContext _context;
 
@@ -66,6 +68,31 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         })
         .ToListAsync();
       return sidebarContent;
+    }
+
+    public async Task<string> HandleAsync(CourseLandingPageQuery query)
+    {
+      var course = await _context.Course.FirstOrDefaultAsync(x => x.Id == query.CourseId);
+      return course.LandingPage;
+    }
+
+    public async Task<List<DiscussionReplyDTO>> HandleAsync(CourseDiscussionRepliesQuery query)
+    {
+      var replies = await _context.DiscussionComment
+        .Include(t => t.SubmittedBy)
+        .ThenInclude(t => t.ImageFile)
+        .Where(t => t.DiscussionId == query.DiscussionId)
+        .Select(t => new DiscussionReplyDTO() 
+        {
+          Content = t.Content,
+          Id = t.Id,
+          SubmittedAt = t.SubmittedAt,
+          SubmittedBy = $"{t.SubmittedBy.Name} {t.SubmittedBy.Surname}",
+          SubmittedById = (int)t.SubmittedById,
+          UserPicture = t.SubmittedBy.ImageFile != null ? Convert.ToBase64String(t.SubmittedBy.ImageFile.Data) : null,
+        })
+        .ToListAsync();
+      return replies;
     }
 
     public async Task<List<UserCourseDetailsDTO>> HandleAsync(UserCourseQuery query)

@@ -21,6 +21,14 @@ namespace tvz2api_cqrs.Implementation.Commands
     public int CourseId { get; set; }
   }
 
+  public class CourseDiscussionReplyCommand : ICommand
+  {
+    public CourseDiscussionReplyCommand() {}
+    public int DiscussionId { get; set; }
+    public int SubmittedById { get; set; }
+    public string Content { get; set; }
+  }
+
   public class CourseCreateDiscussionCommand : ICommand
   {
     public CourseCreateDiscussionCommand() { }

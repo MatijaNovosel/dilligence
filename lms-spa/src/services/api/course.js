@@ -65,5 +65,14 @@ export default {
   },
   async getDiscussions(courseId, sortByNewer) {
     return await axios.get('Course/discussions', { params: { courseId, sortByNewer } });
+  },
+  async getLandingPage(courseId) {
+    return await axios.get('Course/landing-page', { params: { courseId } });
+  },
+  async sendReply(payload) {
+    return await axios.post('Course/reply', payload);
+  },
+  async getReplies(discussionId) {
+    return await axios.get('Course/discussion-replies', { params: { discussionId } });
   }
 }

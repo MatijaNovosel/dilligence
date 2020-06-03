@@ -26,7 +26,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
   public class CourseCommandHandler :
     ICommandHandlerAsync<CourseCreateNewSidebarCommand>,
     ICommandHandlerAsync<CourseDeleteSidebarCommand>,
-    ICommandHandlerAsync<CourseCreateDiscussionCommand>
+    ICommandHandlerAsync<CourseCreateDiscussionCommand>,
+    ICommandHandlerAsync<CourseDiscussionReplyCommand>
   {
     private readonly lmsContext _context;
     private readonly IConfiguration _configuration;
@@ -43,6 +44,18 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       {
         CourseId = command.CourseId,
         Title = command.Title
+      });
+      await _context.SaveChangesAsync();
+    }
+
+    public async Task HandleAsync(CourseDiscussionReplyCommand command)
+    {
+      _context.DiscussionComment.Add(new DiscussionComment() 
+      {
+        Content = command.Content,
+        DiscussionId = command.DiscussionId,
+        SubmittedAt = DateTime.Now,
+        SubmittedById = command.SubmittedById
       });
       await _context.SaveChangesAsync();
     }

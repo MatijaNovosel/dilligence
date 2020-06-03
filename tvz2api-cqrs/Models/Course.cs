@@ -20,6 +20,7 @@ namespace tvz2api_cqrs.Models
         public string Name { get; set; }
         public string Isvu { get; set; }
         public int? Ects { get; set; }
+        public string LandingPage { get; set; }
         public string Password { get; set; }
         public int? MadeById { get; set; }
         public int? SpecializationId { get; set; }

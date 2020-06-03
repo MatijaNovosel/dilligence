@@ -43,6 +43,24 @@ namespace tvz2api_cqrs.Implementation.Queries
     public int Id { get; set; }
   }
 
+  public class CourseLandingPageQuery : IQuery<string>
+  {
+    public CourseLandingPageQuery(int courseId)
+    {
+      CourseId = courseId;
+    }
+    public int CourseId { get; set; }
+  }
+
+  public class CourseDiscussionRepliesQuery : IQuery<List<DiscussionReplyDTO>>
+  {
+    public CourseDiscussionRepliesQuery(int discussionId) 
+    {
+      DiscussionId = discussionId;
+    }
+    public int DiscussionId { get; set; }
+  }
+
   public class CourseDiscussionsQuery : IQuery<List<DiscussionDTO>>
   {
     public CourseDiscussionsQuery(int courseId, bool sortByNewer)
