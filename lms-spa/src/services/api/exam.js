@@ -62,5 +62,12 @@ export default {
         courseId
       }
     });
+  },
+  async deleteExam(examId) {
+    return await axios.delete('Exam', {
+      params: {
+        examId
+      }
+    });
   }
 }

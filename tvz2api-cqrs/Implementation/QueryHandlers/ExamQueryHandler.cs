@@ -85,7 +85,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     public async Task<List<UnfinishedExamDTO>> HandleAsync(ExamUnfinishedQuery query)
     {
       var exams = await _context.Exam
-        .Where(t => t.CreatedById == query.UserId)
+        .Where(t => t.CreatedById == query.UserId && t.Finalized == false)
         .Select(t => new UnfinishedExamDTO
         {
           CourseId = t.CourseId,

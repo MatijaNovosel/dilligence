@@ -197,6 +197,7 @@
 import ExamService from "../services/api/exam";
 import UserMixin from "../mixins/userMixin";
 import { required, minLength, helpers } from "vuelidate/lib/validators";
+import { format, add } from "date-fns";
 
 const mustBeBeforeCurrentDate = value => {
   let currentDate = new Date().getTime();
@@ -287,6 +288,7 @@ export default {
     };
   },
   methods: {
+    format,
     removeQuestion(i) {
       if (
         this.exam.questions[i - 1] == null ||
@@ -365,7 +367,7 @@ export default {
     this.exam = {
       name: "Exam name",
       timeNeeded: "01:00",
-      dueDate: "2020-05-24 12:44",
+      dueDate: format(add(new Date(), { days: 1 }), "yyyy-MM-dd HH:mm"),
       questions: [
         {
           id: 1,

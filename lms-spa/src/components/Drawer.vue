@@ -28,7 +28,7 @@
             </q-item-label>
           </q-item-section>
         </q-item>
-        <q-separator />
+        <q-separator class="q-mb-sm" />
         <q-expansion-item
           group="drawer"
           dense
@@ -70,7 +70,7 @@ export default {
               route: { name: "home" }
             },
             {
-              text: "employees",
+              text: "adminConsole",
               route: { name: "employees" }
             },
             {

@@ -1,14 +1,38 @@
 <template>
   <div>
     <div class="row">
-      <q-card
-        class="border-box-dark hover-card"
-        :key="i"
-        @click="$router.push({ name: 'exam-edit', params: { id: unfinishedExam.id } })"
-        v-for="(unfinishedExam, i) in unfinishedExams"
-      >
-        <q-card-section>{{ unfinishedExam.id }}</q-card-section>
-      </q-card>
+      <div class="col-12 q-pb-md">
+        <span>Unfinished exams</span>
+      </div>
+      <div class="col-12 q-pb-md">
+        <div class="row">
+          <div class="col-3">
+            <q-card class="border-box-dark" :key="i" v-for="(unfinishedExam, i) in unfinishedExams">
+              <q-card-section
+                class="q-py-sm text-center text-subtitle2"
+              >Unfinished exam (ID {{ unfinishedExam.id }})</q-card-section>
+              <q-separator />
+              <q-card-actions class="justify-center">
+                <q-btn
+                  size="sm"
+                  class="q-px-md"
+                  :color="!$q.dark.isActive ? 'primary' : 'grey-8'"
+                  @click="$router.push({ name: 'exam-edit', params: { id: unfinishedExam.id } })"
+                >View</q-btn>
+                <q-btn
+                  size="sm"
+                  class="q-px-md"
+                  :color="!$q.dark.isActive ? 'primary' : 'grey-8'"
+                  @click="deleteExam(unfinishedExam.id)"
+                >Delete</q-btn>
+              </q-card-actions>
+            </q-card>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 q-pb-md">
+        <span>Created exams</span>
+      </div>
     </div>
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
       <q-fab direction="left" :color="!$q.dark.isActive ? 'primary' : 'grey-8'" fab icon="add">
@@ -31,7 +55,15 @@ export default {
   name: "CourseDetailsExams",
   mixins: [UserMixin],
   methods: {
-    getExams() {
+    deleteExam(id) {
+      // Delete exam which is unfinished ...
+      /*
+      ExamService.deleteExam(id).then(() => {
+        this.getUnfinishedExams();
+      });
+      */
+    },
+    getUnfinishedExams() {
       ExamService.getUnfinishedExams(this.user.id, this.courseId).then(
         ({ data }) => {
           this.unfinishedExams = data;
@@ -50,7 +82,7 @@ export default {
   },
   created() {
     this.courseId = this.$route.params.id;
-    this.getExams();
+    this.getUnfinishedExams();
   },
   data() {
     return {
@@ -66,6 +98,4 @@ export default {
   padding: 10px
   min-height: 12px
   min-width: 12px
-.hover-card:hover
-  cursor: pointer
 </style>
