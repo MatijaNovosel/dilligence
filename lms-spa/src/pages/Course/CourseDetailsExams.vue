@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div class="row">
+    <div class="row" v-if="hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)">
       <div class="col-12 q-pb-md">
         <span>Unfinished exams</span>
       </div>
       <div class="col-12 q-pb-md">
-        <div class="row">
-          <div class="col-3">
-            <q-card class="border-box-dark" :key="i" v-for="(unfinishedExam, i) in unfinishedExams">
+        <div class="row q-col-gutter-sm">
+          <div class="col-3" :key="i" v-for="(unfinishedExam, i) in unfinishedExams">
+            <q-card class="border-box-dark">
               <q-card-section
                 class="q-py-sm text-center text-subtitle2"
               >Unfinished exam (ID {{ unfinishedExam.id }})</q-card-section>

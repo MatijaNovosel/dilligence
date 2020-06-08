@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="exam">
     <div class="row justify-center">
       <div class="col-12 q-pa-md">
         <div class="row">
@@ -14,7 +14,7 @@
               outlined
               dense
               :label="$i18n.t('exam.name')"
-              @input="$v.exam.name.$touch()"
+              @input="inputExamNameTouch"
               hint="Name of the exam"
             />
           </div>
@@ -27,7 +27,7 @@
               mask="##:##"
               :hint="$i18n.t('error.timeNeededFormat')"
               :error="$v.exam.timeNeeded.$invalid && $v.exam.timeNeeded.$dirty"
-              @input="$v.exam.timeNeeded.$touch()"
+              @input="inputTimeNeededTouch"
               error-message="This field is required!"
             />
           </div>
@@ -48,6 +48,7 @@
                     <q-date
                       :class="$q.dark.isActive ? 'border-dark' : 'border-light'"
                       minimal
+                      @input="examDataChanged"
                       v-model="exam.dueDate"
                       mask="YYYY-MM-DD HH:mm"
                     />
@@ -59,6 +60,7 @@
                   <q-popup-proxy transition-show="scale" transition-hide="scale">
                     <q-time
                       :class="$q.dark.isActive ? 'border-dark' : 'border-light'"
+                      @input="examDataChanged"
                       v-model="exam.dueDate"
                       mask="YYYY-MM-DD HH:mm"
                       format24h
@@ -101,7 +103,13 @@
           <div :key="i" v-if="selectedQuestion === i">
             <div class="row items-center text-center">
               <div class="col-6 text-center q-pr-sm">
-                <q-input v-model="question.title" outlined dense :label="$i18n.t('questionName')" />
+                <q-input
+                  @input="examDataChanged"
+                  v-model="question.title"
+                  outlined
+                  dense
+                  :label="$i18n.t('questionName')"
+                />
               </div>
               <div class="col-5 text-center q-pr-sm">
                 <q-select
@@ -127,6 +135,7 @@
                 <q-editor
                   v-model="question.content"
                   min-height="5rem"
+                  @input="examDataChanged"
                   :toolbar="toolbarOptions"
                   :fonts="fonts"
                 />
@@ -155,7 +164,14 @@
               </div>
               <div class="col-12">
                 <template v-for="(answer, i) in question.answers">
-                  <q-input v-model="answer.content" outlined dense :key="i" class="q-py-xs">
+                  <q-input
+                    @input="examDataChanged"
+                    v-model="answer.content"
+                    outlined
+                    dense
+                    :key="i"
+                    class="q-py-xs"
+                  >
                     <template v-slot:append>
                       <q-btn
                         @click="question.answers.splice(i, 1)"
@@ -168,6 +184,7 @@
                         :disable="!answer.correct && question.typeId == 1 && question.answers.reduce((sum, x) => sum += x.correct ? 1 : 0, 0) >= 1"
                         size="xs"
                         color="green-5"
+                        @input="examDataChanged"
                         v-model="answer.correct"
                       />
                     </template>
@@ -184,10 +201,15 @@
       <div class="col-12 text-right q-pr-md">
         <q-btn
           :disabled="$v.exam.$invalid"
-          @click="createExam"
+          @click="finalizeExam"
           size="sm"
           class="bg-green-5 text-white"
-        >{{ $i18n.t('save') }}</q-btn>
+        >Finalize</q-btn>
+        <q-btn
+          @click="$router.push({ name: 'course-details-exams', params: { id: courseId } })"
+          size="sm"
+          class="bg-primary text-white q-ml-md"
+        >Back</q-btn>
       </div>
     </div>
   </div>
@@ -195,15 +217,16 @@
 
 <script>
 import ExamService from "../services/api/exam";
+import NotificationService from "../services/notification/notifications";
 import UserMixin from "../mixins/userMixin";
+import { debounce } from "debounce";
 import { required, minLength, helpers } from "vuelidate/lib/validators";
 import { format, add } from "date-fns";
-
-const mustBeBeforeCurrentDate = value => {
-  let currentDate = new Date().getTime();
-  let enteredDate = new Date(value).getTime();
-  return currentDate < enteredDate;
-};
+import {
+  mustBeBeforeCurrentDate,
+  mustNotBeEmptyHtml,
+  clearedHtmlMustBeAtLeastNCharacters
+} from "../helpers/helpers";
 
 const hoursMinutesFormat = helpers.regex(
   "hoursMinutesFormat",
@@ -217,6 +240,7 @@ export default {
     return {
       selectedQuestion: 0,
       exam: null,
+      courseId: null,
       toolbarOptions: [
         [
           {
@@ -289,6 +313,29 @@ export default {
   },
   methods: {
     format,
+    examDataChanged: debounce(function() {
+      if (!this.$v.exam.$invalid) {
+        let exam = JSON.parse(JSON.stringify(this.exam));
+        exam.timeNeeded = this.$options.filters.hoursMinutesToSecondsFilter(
+          exam.timeNeeded
+        );
+        exam.dueDate = new Date(exam.dueDate);
+        console.log(exam);
+        ExamService.updateExam(exam).then(() => {
+          NotificationService.showSuccess("Exam data was automatically saved!");
+        });
+      } else {
+        NotificationService.showError("Exam data could not be saved!");
+      }
+    }, 1500),
+    inputTimeNeededTouch() {
+      this.$v.exam.timeNeeded.$touch();
+      this.examDataChanged();
+    },
+    inputExamNameTouch() {
+      this.$v.exam.name.$touch();
+      this.examDataChanged();
+    },
     removeQuestion(i) {
       if (
         this.exam.questions[i - 1] == null ||
@@ -300,27 +347,31 @@ export default {
         this.exam.questions.splice(i, 1);
         this.selectedQuestion = i - 1;
       }
+      this.examDataChanged();
+    },
+    getUnfinishedExamDetails() {
+      ExamService.getUnfinishedExamDetails(this.examId).then(({ data }) => {
+        data.dueDate = format(new Date(data.dueDate), "yyyy-MM-dd HH:mm");
+        data.timeNeeded = this.$options.filters.countdownFilter(
+          data.timeNeeded
+        );
+        this.exam = data;
+        this.courseId = this.exam.courseId;
+      });
     },
     questionTypeChanged(question) {
       question.answers.forEach(x => (x.correct = false));
+      this.examDataChanged();
     },
-    createExam() {
-      let newExam = JSON.parse(JSON.stringify(this.exam));
-      newExam.questions.forEach(x => (x.typeId = x.typeId.value));
-      newExam.timeNeeded = this.$options.filters.hoursMinutesToSecondsFilter(
-        newExam.timeNeeded
-      );
-      newExam.dueDate = new Date(newExam.dueDate);
-      newExam.createdById = this.user.id;
-      newExam.subjectId = 147;
-      ExamService.createExam(newExam);
+    finalizeExam() {
+      // Finalize
     },
     addNewAnswer(question) {
       question.answers.push({
-        id: 1,
         content: this.$i18n.t("newAnswer"),
         correct: false
       });
+      this.examDataChanged();
     },
     addNewQuestion() {
       this.exam.questions.push({
@@ -334,6 +385,7 @@ export default {
           }
         ]
       });
+      this.examDataChanged();
     }
   },
   validations: {
@@ -353,6 +405,7 @@ export default {
     }
   },
   created() {
+    this.examId = this.$route.params.id;
     this.answerTypes = { RADIO: 1, CHECKBOX: 2 };
     this.answerTypesOptions = [
       {
@@ -364,25 +417,7 @@ export default {
         value: this.answerTypes.CHECKBOX
       }
     ];
-    this.exam = {
-      name: "Exam name",
-      timeNeeded: "01:00",
-      dueDate: format(add(new Date(), { days: 1 }), "yyyy-MM-dd HH:mm"),
-      questions: [
-        {
-          id: 1,
-          title: "Question 1",
-          content: "<b> Question contents </b>",
-          typeId: 1,
-          answers: [
-            {
-              content: "Answer 1",
-              correct: true
-            }
-          ]
-        }
-      ]
-    };
+    this.getUnfinishedExamDetails();
   }
 };
 </script>

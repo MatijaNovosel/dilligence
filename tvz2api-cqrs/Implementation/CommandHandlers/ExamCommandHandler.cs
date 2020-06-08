@@ -46,14 +46,21 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
     public async Task HandleAsync(ExamUpdateCommand command)
     {
-      var exam = await _context.Exam.FirstOrDefaultAsync(t => t.Id == command.Id);
+      var exam = await _context.Exam
+        .Include(x => x.Question)
+        .ThenInclude(x => x.Answer)
+        .FirstOrDefaultAsync(t => t.Id == command.Id);
 
       exam.Name = command.Name;
       exam.TimeNeeded = command.TimeNeeded;
       exam.DueDate = command.DueDate;
-      exam.Finalized = true;
 
-      await _context.Exam.AddAsync(exam);
+      exam.Question.ToList().ForEach(x => {
+        _context.Answer.RemoveRange(x.Answer);
+      });
+
+      _context.Question.RemoveRange(exam.Question);
+
       await _context.SaveChangesAsync();
 
       command.Questions.ForEach(x =>
@@ -85,10 +92,44 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       var exam = new Exam()
       {
         CreatedById = command.CreatedById,
-        CourseId = command.CourseId
+        CourseId = command.CourseId,
+        DueDate = DateTime.Now.AddDays(1),
+        Finalized = false,
+        Name = "New exam",
+        TimeNeeded = 3600
       };
+
       await _context.Exam.AddAsync(exam);
       await _context.SaveChangesAsync();
+
+      var baseQuestion = new Question()
+      {
+        ExamId = exam.Id,
+        Content = "Question template",
+        TypeId = 1,
+        Title = "Question template"
+      };
+
+      await _context.Question.AddAsync(baseQuestion);
+      await _context.SaveChangesAsync();
+
+      var baseAnswer1 = new Answer()
+      {
+        Content = "Answer template",
+        Correct = true,
+        QuestionId = baseQuestion.Id
+      };
+
+      var baseAnswer2 = new Answer()
+      {
+        Content = "Answer template",
+        Correct = false,
+        QuestionId = baseQuestion.Id
+      };
+
+      await _context.Answer.AddRangeAsync(new List<Answer>() { baseAnswer1, baseAnswer2 });
+      await _context.SaveChangesAsync();
+
       return CommandResult<int>.Success(exam.Id);
     }
 

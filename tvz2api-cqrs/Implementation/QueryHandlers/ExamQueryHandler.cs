@@ -13,7 +13,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
   public class ExamQueryHandler :
     IQueryHandlerAsync<ExamInProgressDetailsQuery, ExamAttemptDetailsQueryModel>,
     IQueryHandlerAsync<ExamInProgressQuery, List<ExamAttemptQueryModel>>,
-    IQueryHandlerAsync<ExamUnfinishedQuery, List<UnfinishedExamDTO>>
+    IQueryHandlerAsync<ExamUnfinishedQuery, List<UnfinishedExamDTO>>,
+    IQueryHandlerAsync<ExamUnfinishedDetailsQuery, ExamUnfinishedDetailsQueryModel>
   {
     private readonly lmsContext _context;
 
@@ -93,6 +94,37 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           CreatedById = t.CreatedById
         }).ToListAsync();
       return exams;
+    }
+
+    public async Task<ExamUnfinishedDetailsQueryModel> HandleAsync(ExamUnfinishedDetailsQuery query)
+    {
+      var unfinishedEaxm = await _context.Exam
+        .Include(x => x.CreatedBy)
+        .Include(x => x.Question)
+        .ThenInclude(x => x.Answer)
+        .Where(x => x.Id == query.Id)
+        .Select(x => new ExamUnfinishedDetailsQueryModel()
+        {
+          CreatedById = (int)x.CreatedById,
+          CreatedBy = $"{x.CreatedBy.Name} {x.CreatedBy.Surname}",
+          DueDate = x.DueDate,
+          Name = x.Name,
+          CourseId = (int)x.CourseId,
+          TimeNeeded = x.TimeNeeded,
+          Id = x.Id,
+          Questions = x.Question.Select(y => new CreateQuestionDTO()
+          {
+            Content = y.Content,
+            Title = y.Title,
+            TypeId = y.TypeId,
+            Answers = y.Answer.Select(z => new CreateAnswerDTO()
+            {
+              Content = z.Content,
+              Correct = (bool)z.Correct
+            }).ToList()
+          }).ToList()
+        }).FirstOrDefaultAsync();
+      return unfinishedEaxm;
     }
   }
 }
