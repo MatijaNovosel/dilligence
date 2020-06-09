@@ -32,7 +32,7 @@
               v-for="(subRoute, i) in subRoutes"
               :key="i"
               :icon="subRoute.icon"
-              size="sm"
+              size="xs"
               :label="!$q.screen.xs && !$q.screen.sm ? subRoute.label : null"
               :class="$route.name == subRoute.name ? $q.dark.isActive ? 'border-bottom-dark' : 'border-bottom-light' : ''"
               @click="$router.push({ name: subRoute.name })"
@@ -132,6 +132,18 @@ export default {
   created() {
     this.courseId = this.$route.params.id;
     this.getData();
+    if (
+      !this.hasCoursePrivileges(
+        this.courseId,
+        this.Privileges.IsInvolvedWithCourse
+      )
+    ) {
+      this.subRoutes.push({
+        name: "course-details-grades",
+        label: "Grades",
+        icon: "mdi-star"
+      });
+    }
   },
   methods: {
     deleteCourse() {
@@ -210,3 +222,8 @@ export default {
   }
 };
 </script>
+
+<style lang="sass">
+.q-btn-group
+  flex-wrap: wrap;
+</style>

@@ -14,6 +14,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     IQueryHandlerAsync<ExamInProgressDetailsQuery, ExamAttemptDetailsQueryModel>,
     IQueryHandlerAsync<ExamInProgressQuery, List<ExamAttemptQueryModel>>,
     IQueryHandlerAsync<ExamUnfinishedQuery, List<UnfinishedExamDTO>>,
+    IQueryHandlerAsync<ExamFinishedQuery, List<UnfinishedExamDTO>>,
     IQueryHandlerAsync<ExamUnfinishedDetailsQuery, ExamUnfinishedDetailsQueryModel>
   {
     private readonly lmsContext _context;
@@ -88,6 +89,19 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     {
       var exams = await _context.Exam
         .Where(t => t.CreatedById == query.UserId && t.Finalized == false)
+        .Select(t => new UnfinishedExamDTO
+        {
+          CourseId = t.CourseId,
+          Id = t.Id,
+          CreatedById = t.CreatedById
+        }).ToListAsync();
+      return exams;
+    }
+
+    public async Task<List<UnfinishedExamDTO>> HandleAsync(ExamFinishedQuery query)
+    {
+      var exams = await _context.Exam
+        .Where(t => t.CreatedById == query.UserId && t.Finalized == true)
         .Select(t => new UnfinishedExamDTO
         {
           CourseId = t.CourseId,

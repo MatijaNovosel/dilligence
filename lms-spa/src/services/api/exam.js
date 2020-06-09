@@ -66,6 +66,14 @@ export default {
       }
     });
   },
+  async getFinishedExams(userId, courseId) {
+    return await axios.get('Exam/finished', {
+      params: {
+        userId,
+        courseId
+      }
+    })
+  },
   async deleteExam(examId) {
     return await axios.delete('Exam', {
       params: {

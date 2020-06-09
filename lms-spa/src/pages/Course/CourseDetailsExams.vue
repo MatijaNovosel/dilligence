@@ -33,6 +33,32 @@
       <div class="col-12 q-pb-md">
         <span>Created exams</span>
       </div>
+      <div class="col-12 q-pb-md">
+        <div class="row q-col-gutter-sm">
+          <div class="col-3" :key="i" v-for="(unfinishedExam, i) in finishedExams">
+            <q-card class="border-box-dark">
+              <q-card-section
+                class="q-py-sm text-center text-subtitle2"
+              >Exam (ID {{ unfinishedExam.id }})</q-card-section>
+              <q-separator />
+              <q-card-actions class="justify-center q-gutter-sm">
+                <q-btn
+                  size="sm"
+                  class="q-px-md"
+                  :color="!$q.dark.isActive ? 'primary' : 'grey-8'"
+                  @click="$router.push({ name: 'exam-edit', params: { id: unfinishedExam.id } })"
+                >View grades</q-btn>
+                <q-btn
+                  size="sm"
+                  class="q-px-md"
+                  :color="!$q.dark.isActive ? 'primary' : 'grey-8'"
+                  @click="deleteExam(unfinishedExam.id)"
+                >Delete</q-btn>
+              </q-card-actions>
+            </q-card>
+          </div>
+        </div>
+      </div>
     </div>
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
       <q-fab direction="left" :color="!$q.dark.isActive ? 'primary' : 'grey-8'" fab icon="add">
@@ -70,6 +96,13 @@ export default {
         }
       );
     },
+    getFinishedExams() {
+      ExamService.getFinishedExams(this.user.id, this.courseId).then(
+        ({ data }) => {
+          this.finishedExams = data;
+        }
+      );
+    },
     createNewExam() {
       // Create new exam instance, get the id and send it as a parameter to route
       ExamService.createExam({
@@ -83,11 +116,13 @@ export default {
   created() {
     this.courseId = this.$route.params.id;
     this.getUnfinishedExams();
+    this.getFinishedExams();
   },
   data() {
     return {
       courseId: null,
-      unfinishedExams: null
+      unfinishedExams: null,
+      finishedExams: null
     };
   }
 };
