@@ -14,6 +14,7 @@ namespace tvz2api_cqrs.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
+        public int Value { get; set; }
         public int? ExamId { get; set; }
         public int? TypeId { get; set; }
 

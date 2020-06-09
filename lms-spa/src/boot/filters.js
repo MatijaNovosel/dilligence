@@ -26,6 +26,14 @@ export default async ({ Vue }) => {
       .map(format)
       .join(":");
   });
+  Vue.filter("hoursMinutesFormat", val => {
+    const format = x => `0${Math.floor(x)}`.slice(-2);
+    const hours = val / 3600;
+    const minutes = (val % 3600) / 60;
+    return [hours, minutes]
+      .map(format)
+      .join(":");
+  });
   Vue.filter("hoursMinutesToSecondsFilter", val => {
     /*
 

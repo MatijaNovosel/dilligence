@@ -72,5 +72,8 @@ export default {
         examId
       }
     });
+  },
+  async finalizeExam(payload, courseId) {
+    return await axios.post('Exam/finalize', payload, { params: { courseId } })
   }
 }

@@ -24,7 +24,6 @@
               dense
               :label="$i18n.t('timeNeeded')"
               v-model="exam.timeNeeded"
-              mask="##:##"
               :hint="$i18n.t('error.timeNeededFormat')"
               :error="$v.exam.timeNeeded.$invalid && $v.exam.timeNeeded.$dirty"
               @input="inputTimeNeededTouch"
@@ -101,8 +100,8 @@
         </div>
         <template v-for="(question, i) in exam.questions">
           <div :key="i" v-if="selectedQuestion === i">
-            <div class="row items-center text-center">
-              <div class="col-6 text-center q-pr-sm">
+            <div class="row items-center text-center q-col-gutter-sm">
+              <div class="col-xs-12 col-md-4 text-center">
                 <q-input
                   @input="examDataChanged"
                   v-model="question.title"
@@ -111,7 +110,7 @@
                   :label="$i18n.t('questionName')"
                 />
               </div>
-              <div class="col-5 text-center q-pr-sm">
+              <div class="col-xs-12 col-md-4 text-center">
                 <q-select
                   @input="questionTypeChanged(question)"
                   dense
@@ -123,10 +122,19 @@
                   map-options
                 />
               </div>
-              <div class="col-1">
+              <div class="col-xs-12 col-md-4 text-center">
+                <q-input
+                  @input="examDataChanged"
+                  v-model="question.value"
+                  outlined
+                  dense
+                  label="Value"
+                />
+              </div>
+              <div class="col-12 q-my-sm">
                 <q-btn
                   size="sm"
-                  class="bg-red-5 text-white"
+                  class="bg-red-5 text-white q-px-md"
                   :disabled="exam.questions.length == 1"
                   @click="removeQuestion(i)"
                 >{{ $i18n.t('remove') }}</q-btn>
@@ -221,7 +229,7 @@ import NotificationService from "../services/notification/notifications";
 import UserMixin from "../mixins/userMixin";
 import { debounce } from "debounce";
 import { required, minLength, helpers } from "vuelidate/lib/validators";
-import { format, add } from "date-fns";
+import { format, add, isBefore } from "date-fns";
 import {
   mustBeBeforeCurrentDate,
   mustNotBeEmptyHtml,
@@ -320,7 +328,6 @@ export default {
           exam.timeNeeded
         );
         exam.dueDate = new Date(exam.dueDate);
-        console.log(exam);
         ExamService.updateExam(exam).then(() => {
           NotificationService.showSuccess("Exam data was automatically saved!");
         });
@@ -352,7 +359,7 @@ export default {
     getUnfinishedExamDetails() {
       ExamService.getUnfinishedExamDetails(this.examId).then(({ data }) => {
         data.dueDate = format(new Date(data.dueDate), "yyyy-MM-dd HH:mm");
-        data.timeNeeded = this.$options.filters.countdownFilter(
+        data.timeNeeded = this.$options.filters.hoursMinutesFormat(
           data.timeNeeded
         );
         this.exam = data;
@@ -364,7 +371,14 @@ export default {
       this.examDataChanged();
     },
     finalizeExam() {
-      // Finalize
+      ExamService.finalizeExam({ examId: this.exam.id }, this.courseId).then(
+        () => {
+          this.$router.push({
+            name: "course-details-exams",
+            params: { id: this.courseId }
+          });
+        }
+      );
     },
     addNewAnswer(question) {
       question.answers.push({
@@ -377,6 +391,7 @@ export default {
       this.exam.questions.push({
         title: "Question",
         content: "<b> Question contents </b>",
+        value: 1,
         typeId: 1,
         answers: [
           {
@@ -401,6 +416,26 @@ export default {
       dueDate: {
         required,
         mustBeBeforeCurrentDate
+      },
+      questions: {
+        $each: {
+          title: {
+            required,
+            minLength: minLength(4)
+          },
+          content: {
+            mustNotBeEmptyHtml,
+            clearedHtmlMustBeAtLeastNCharacters
+          },
+          answers: {
+            minLength: minLength(1),
+            $each: {
+              content: {
+                minLength: minLength(4)
+              }
+            }
+          }
+        }
       }
     }
   },

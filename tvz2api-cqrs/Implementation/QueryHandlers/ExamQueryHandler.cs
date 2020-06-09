@@ -46,6 +46,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
               Content = x.Content,
               Title = x.Title,
               TypeId = x.TypeId,
+              Value = x.Value,
               UserAnswers = x.UserAnswer
                 .Where(y => y.QuestionId == x.Id && y.AttemptId == query.Id)
                 .Select(y => (int)y.AnswerId)
@@ -117,6 +118,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
             Content = y.Content,
             Title = y.Title,
             TypeId = y.TypeId,
+            Value = y.Value,
             Answers = y.Answer.Select(z => new CreateAnswerDTO()
             {
               Content = z.Content,

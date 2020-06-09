@@ -25,7 +25,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     ICommandHandlerAsync<ExamUpdateAttemptCommand>,
     ICommandHandlerAsync<ExamStartAttemptCommand>,
     ICommandHandlerAsync<ExamPreCreateCommand, int>,
-    ICommandHandlerAsync<ExamUpdateCommand>
+    ICommandHandlerAsync<ExamUpdateCommand>,
+    ICommandHandlerAsync<ExamFinalizeCommand>
   {
     private readonly lmsContext _context;
 
@@ -44,6 +45,13 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       await _context.SaveChangesAsync();
     }
 
+    public async Task HandleAsync(ExamFinalizeCommand command)
+    {
+      var exam = _context.Exam.FirstOrDefault(x => x.Id == command.ExamId);
+      exam.Finalized = true;
+      await _context.SaveChangesAsync();
+    }
+
     public async Task HandleAsync(ExamUpdateCommand command)
     {
       var exam = await _context.Exam
@@ -55,7 +63,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       exam.TimeNeeded = command.TimeNeeded;
       exam.DueDate = command.DueDate;
 
-      exam.Question.ToList().ForEach(x => {
+      exam.Question.ToList().ForEach(x =>
+      {
         _context.Answer.RemoveRange(x.Answer);
       });
 
@@ -70,7 +79,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
           Content = x.Content,
           Title = x.Title,
           TypeId = x.TypeId,
-          ExamId = exam.Id
+          ExamId = exam.Id,
+          Value = x.Value
         };
         _context.Question.Add(question);
         _context.SaveChanges();
@@ -107,7 +117,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         ExamId = exam.Id,
         Content = "Question template",
         TypeId = 1,
-        Title = "Question template"
+        Title = "Question template",
+        Value = 1
       };
 
       await _context.Question.AddAsync(baseQuestion);

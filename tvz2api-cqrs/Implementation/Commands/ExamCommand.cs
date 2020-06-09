@@ -16,6 +16,11 @@ namespace tvz2api_cqrs.Implementation.Commands
     public UpdateAttemptDTO Exam { get; set; }
   }
 
+  public class ExamFinalizeCommand : ICommand
+  {
+    public int ExamId { get; set; }
+  }
+
   public class ExamStartAttemptCommand : ICommand
   {
     public ExamStartAttemptCommand() { }

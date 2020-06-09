@@ -12,7 +12,7 @@
                 class="q-py-sm text-center text-subtitle2"
               >Unfinished exam (ID {{ unfinishedExam.id }})</q-card-section>
               <q-separator />
-              <q-card-actions class="justify-center">
+              <q-card-actions class="justify-center q-gutter-sm">
                 <q-btn
                   size="sm"
                   class="q-px-md"
