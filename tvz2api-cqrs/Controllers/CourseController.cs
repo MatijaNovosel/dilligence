@@ -61,6 +61,13 @@ namespace tvz2api_cqrs.Controllers
       return Ok(result);
     }
 
+    [HttpGet("grades/{userId}")]
+    public async Task<IActionResult> GetUserGrades(int userId, int courseId)
+    {
+      var result = await _queryBus.ExecuteAsync(new CourseUserGradesQuery(userId, courseId));
+      return Ok(result);
+    }
+
     [HttpGet("notifications/{id}")]
     public async Task<IActionResult> GetNotifications(int id, bool showArchived, bool showNonArchived, bool sortByNew)
     {

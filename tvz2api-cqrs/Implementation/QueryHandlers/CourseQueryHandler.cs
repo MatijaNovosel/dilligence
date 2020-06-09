@@ -22,7 +22,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     IQueryHandlerAsync<CourseSidebarQuery, List<SidebarContentDTO>>,
     IQueryHandlerAsync<CourseDiscussionsQuery, List<DiscussionDTO>>,
     IQueryHandlerAsync<CourseLandingPageQuery, string>,
-    IQueryHandlerAsync<CourseDiscussionRepliesQuery, List<DiscussionReplyDTO>>
+    IQueryHandlerAsync<CourseDiscussionRepliesQuery, List<DiscussionReplyDTO>>,
+    IQueryHandlerAsync<CourseUserGradesQuery, List<CourseUserGradesQueryModel>>
   {
     private readonly lmsContext _context;
 
@@ -45,6 +46,21 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         })
         .FirstOrDefaultAsync();
       return course;
+    }
+
+    public async Task<List<CourseUserGradesQueryModel>> HandleAsync(CourseUserGradesQuery query)
+    {
+      var grades = await _context
+        .CourseTaskAttempt
+        .Include(t => t.CourseTask)
+        .Where(t => t.UserId == query.UserId && t.CourseTask.CourseId == query.CourseId)
+        .Select(t => new CourseUserGradesQueryModel()
+        {
+          Grade = t.Grade,
+          MaximumGrade = t.CourseTask.GradeMaximum,
+          Name = t.CourseTask.Title
+        }).ToListAsync();
+      return grades;
     }
 
     public async Task<List<SidebarContentDTO>> HandleAsync(CourseSidebarQuery query)
@@ -83,7 +99,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         .Include(t => t.SubmittedBy)
         .ThenInclude(t => t.ImageFile)
         .Where(t => t.DiscussionId == query.DiscussionId)
-        .Select(t => new DiscussionReplyDTO() 
+        .Select(t => new DiscussionReplyDTO()
         {
           Content = t.Content,
           Id = t.Id,
@@ -140,7 +156,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         .Include(t => t.SubmittedBy)
         .ThenInclude(t => t.ImageFile)
         .Where(t => t.CourseId == query.CourseId)
-        .Select(t => new DiscussionDTO() 
+        .Select(t => new DiscussionDTO()
         {
           Content = t.Content,
           CourseId = t.CourseId,
@@ -203,7 +219,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
       {
         courses = courses.OrderByDescending(t => t.SubmittedAt);
       }
-      
+
       return await courses.ToListAsync();
     }
   }

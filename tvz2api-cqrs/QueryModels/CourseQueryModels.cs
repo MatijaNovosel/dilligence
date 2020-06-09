@@ -22,4 +22,11 @@ namespace tvz2api_cqrs.QueryModels
     public string Password { get; set; }
     public string Specialization { get; set; }
   }
+
+  public class CourseUserGradesQueryModel
+  {
+    public string Name { get; set; }
+    public int Grade { get; set; }
+    public int MaximumGrade { get; set; }
+  }
 }

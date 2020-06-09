@@ -34,6 +34,17 @@ namespace tvz2api_cqrs.Implementation.Queries
     public int Id { get; set; }
   }
 
+  public class CourseUserGradesQuery : IQuery<List<CourseUserGradesQueryModel>>
+  {
+    public CourseUserGradesQuery(int userId, int courseId)
+    {
+      UserId = userId;
+      CourseId = courseId;
+    }
+    public int UserId { get; set; }
+    public int CourseId { get; set; }
+  }
+
   public class CourseSidebarQuery : IQuery<List<SidebarContentDTO>>
   {
     public CourseSidebarQuery(int id)
@@ -54,7 +65,7 @@ namespace tvz2api_cqrs.Implementation.Queries
 
   public class CourseDiscussionRepliesQuery : IQuery<List<DiscussionReplyDTO>>
   {
-    public CourseDiscussionRepliesQuery(int discussionId) 
+    public CourseDiscussionRepliesQuery(int discussionId)
     {
       DiscussionId = discussionId;
     }
