@@ -34,7 +34,7 @@ namespace tvz2api_cqrs.Implementation.Queries
     public int Id { get; set; }
   }
 
-  public class CourseUserGradesQuery : IQuery<List<CourseUserGradesQueryModel>>
+  public class CourseUserGradesQuery : IQuery<CourseUserGradesQueryModel>
   {
     public CourseUserGradesQuery(int userId, int courseId)
     {

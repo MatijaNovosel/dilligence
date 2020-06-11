@@ -43,10 +43,16 @@ namespace tvz2api_cqrs.Implementation.Queries
     public int CourseId { get; set; }
   }
 
-  public class ExamFinishedQuery : IQuery<List<UnfinishedExamDTO>>
+  public class ExamFinishedQuery : IQuery<List<FinishedExamDTO>>
   {
     public ExamFinishedQuery() { }
     public int UserId { get; set; }
     public int CourseId { get; set; }
+  }
+
+  public class ExamPreviewQuery : IQuery<ExamPreviewQueryModel>
+  {
+    public ExamPreviewQuery() { }
+    public int ExamId { get; set; }
   }
 }

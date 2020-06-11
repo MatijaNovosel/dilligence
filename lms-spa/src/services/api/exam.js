@@ -83,5 +83,8 @@ export default {
   },
   async finalizeExam(payload, courseId) {
     return await axios.post('Exam/finalize', payload, { params: { courseId } })
+  },
+  async getExamPreview(examId) {
+    return await axios.get('Exam/preview', { params: { examId } });
   }
 }

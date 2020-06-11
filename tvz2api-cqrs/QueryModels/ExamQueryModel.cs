@@ -33,4 +33,16 @@ namespace tvz2api_cqrs.QueryModels
     public DateTime? DueDate { get; set; }
     public List<CreateQuestionDTO> Questions { get; set; }
   }
+
+  public class ExamPreviewQueryModel
+  {
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public int TimeNeeded { get; set; }
+    public string CreatedBy { get; set; }
+    public int CreatedById { get; set; }
+    public int CourseId { get; set; }
+    public DateTime? DueDate { get; set; }
+    public List<QuestionDTO> Questions { get; set; }
+  }
 }

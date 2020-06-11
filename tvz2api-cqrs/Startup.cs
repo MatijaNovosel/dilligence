@@ -161,7 +161,7 @@ namespace tvz2api_cqrs
       services.AddScoped<IQueryHandlerAsync<CourseDiscussionsQuery, List<DiscussionDTO>>, CourseQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<CourseLandingPageQuery, string>, CourseQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<CourseDiscussionRepliesQuery, List<DiscussionReplyDTO>>, CourseQueryHandler>();
-      services.AddScoped<IQueryHandlerAsync<CourseUserGradesQuery, List<CourseUserGradesQueryModel>>, CourseQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<CourseUserGradesQuery, CourseUserGradesQueryModel>, CourseQueryHandler>();
 
       // Course commands
       services.AddScoped<ICommandHandlerAsync<CourseCreateNewSidebarCommand>, CourseCommandHandler>();
@@ -226,8 +226,9 @@ namespace tvz2api_cqrs
       services.AddScoped<IQueryHandlerAsync<ExamInProgressDetailsQuery, ExamAttemptDetailsQueryModel>, ExamQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<ExamInProgressQuery, List<ExamAttemptQueryModel>>, ExamQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<ExamUnfinishedQuery, List<UnfinishedExamDTO>>, ExamQueryHandler>();
-      services.AddScoped<IQueryHandlerAsync<ExamFinishedQuery, List<UnfinishedExamDTO>>, ExamQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<ExamFinishedQuery, List<FinishedExamDTO>>, ExamQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<ExamUnfinishedDetailsQuery, ExamUnfinishedDetailsQueryModel>, ExamQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<ExamPreviewQuery, ExamPreviewQueryModel>, ExamQueryHandler>();
 
       // Exam commands
       services.AddScoped<ICommandHandlerAsync<ExamUpdateAttemptCommand>, ExamCommandHandler>();

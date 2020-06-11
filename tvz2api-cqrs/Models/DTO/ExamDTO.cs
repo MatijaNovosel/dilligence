@@ -18,7 +18,23 @@ namespace tvz2api_cqrs.Models.DTO
     public int? CreatedById { get; set; }
   }
 
-  public class GradeDetailsDTO
+  public class FinishedExamDTO
+  {
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public bool Enabled { get; set; }
+    public int? CourseId { get; set; }
+    public int? CreatedById { get; set; }
+  }
+
+  public class CourseGradesTaskDTO
+  {
+    public string Name { get; set; }
+    public int Grade { get; set; }
+    public int MaximumGrade { get; set; }
+  }
+
+  public class CourseGradesExamDTO
   {
     public string Name { get; set; }
     public int Grade { get; set; }

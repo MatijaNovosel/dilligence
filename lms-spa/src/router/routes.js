@@ -83,6 +83,14 @@ const routes = [
         }
       },
       {
+        path: 'exam-preview/:id',
+        name: 'exam-preview',
+        component: () => import('pages/ExamPreview.vue'),
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
         path: 'profile/:id',
         name: 'profile',
         component: () => import('pages/Profile.vue'),

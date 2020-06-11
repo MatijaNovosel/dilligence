@@ -23,7 +23,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     IQueryHandlerAsync<CourseDiscussionsQuery, List<DiscussionDTO>>,
     IQueryHandlerAsync<CourseLandingPageQuery, string>,
     IQueryHandlerAsync<CourseDiscussionRepliesQuery, List<DiscussionReplyDTO>>,
-    IQueryHandlerAsync<CourseUserGradesQuery, List<CourseUserGradesQueryModel>>
+    IQueryHandlerAsync<CourseUserGradesQuery, CourseUserGradesQueryModel>
   {
     private readonly lmsContext _context;
 
@@ -48,13 +48,14 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
       return course;
     }
 
-    public async Task<List<CourseUserGradesQueryModel>> HandleAsync(CourseUserGradesQuery query)
+    public async Task<CourseUserGradesQueryModel> HandleAsync(CourseUserGradesQuery query)
     {
-      var grades = await _context
+      var grades = new CourseUserGradesQueryModel();
+      grades.Tasks = await _context
         .CourseTaskAttempt
         .Include(t => t.CourseTask)
         .Where(t => t.UserId == query.UserId && t.CourseTask.CourseId == query.CourseId)
-        .Select(t => new CourseUserGradesQueryModel()
+        .Select(t => new CourseGradesTaskDTO()
         {
           Grade = t.Grade,
           MaximumGrade = t.CourseTask.GradeMaximum,

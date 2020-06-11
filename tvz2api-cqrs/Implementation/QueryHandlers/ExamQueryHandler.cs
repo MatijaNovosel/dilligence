@@ -14,8 +14,9 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     IQueryHandlerAsync<ExamInProgressDetailsQuery, ExamAttemptDetailsQueryModel>,
     IQueryHandlerAsync<ExamInProgressQuery, List<ExamAttemptQueryModel>>,
     IQueryHandlerAsync<ExamUnfinishedQuery, List<UnfinishedExamDTO>>,
-    IQueryHandlerAsync<ExamFinishedQuery, List<UnfinishedExamDTO>>,
-    IQueryHandlerAsync<ExamUnfinishedDetailsQuery, ExamUnfinishedDetailsQueryModel>
+    IQueryHandlerAsync<ExamFinishedQuery, List<FinishedExamDTO>>,
+    IQueryHandlerAsync<ExamUnfinishedDetailsQuery, ExamUnfinishedDetailsQueryModel>,
+    IQueryHandlerAsync<ExamPreviewQuery, ExamPreviewQueryModel>
   {
     private readonly lmsContext _context;
 
@@ -98,22 +99,24 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
       return exams;
     }
 
-    public async Task<List<UnfinishedExamDTO>> HandleAsync(ExamFinishedQuery query)
+    public async Task<List<FinishedExamDTO>> HandleAsync(ExamFinishedQuery query)
     {
       var exams = await _context.Exam
         .Where(t => t.CreatedById == query.UserId && t.Finalized == true)
-        .Select(t => new UnfinishedExamDTO
+        .Select(t => new FinishedExamDTO
         {
           CourseId = t.CourseId,
           Id = t.Id,
-          CreatedById = t.CreatedById
+          CreatedById = t.CreatedById,
+          Enabled = false,
+          Name = t.Name
         }).ToListAsync();
       return exams;
     }
 
     public async Task<ExamUnfinishedDetailsQueryModel> HandleAsync(ExamUnfinishedDetailsQuery query)
     {
-      var unfinishedEaxm = await _context.Exam
+      var unfinishedExam = await _context.Exam
         .Include(x => x.CreatedBy)
         .Include(x => x.Question)
         .ThenInclude(x => x.Answer)
@@ -140,7 +143,39 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
             }).ToList()
           }).ToList()
         }).FirstOrDefaultAsync();
-      return unfinishedEaxm;
+      return unfinishedExam;
+    }
+
+    public async Task<ExamPreviewQueryModel> HandleAsync(ExamPreviewQuery query)
+    {
+      var exam = await _context.Exam
+        .Include(x => x.CreatedBy)
+        .Include(x => x.Question)
+        .ThenInclude(x => x.Answer)
+        .Where(x => x.Id == query.ExamId)
+        .Select(x => new ExamPreviewQueryModel()
+        {
+          CreatedById = (int)x.CreatedById,
+          CreatedBy = $"{x.CreatedBy.Name} {x.CreatedBy.Surname}",
+          DueDate = x.DueDate,
+          Name = x.Name,
+          CourseId = (int)x.CourseId,
+          TimeNeeded = x.TimeNeeded,
+          Id = x.Id,
+          Questions = x.Question.Select(y => new QuestionDTO()
+          {
+            Content = y.Content,
+            Title = y.Title,
+            TypeId = y.TypeId,
+            Value = y.Value,
+            Answers = y.Answer.Select(z => new AnswerDTO()
+            {
+              Label = z.Content,
+              Value = z.Id
+            }).ToList()
+          }).ToList()
+        }).FirstOrDefaultAsync();
+      return exam;
     }
   }
 }

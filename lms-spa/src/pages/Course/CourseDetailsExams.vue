@@ -6,26 +6,30 @@
       </div>
       <div class="col-12 q-pb-md">
         <div class="row q-col-gutter-sm">
-          <div class="col-3" :key="i" v-for="(unfinishedExam, i) in unfinishedExams">
+          <div class="col-xs-6 col-md-4" :key="i" v-for="(unfinishedExam, i) in unfinishedExams">
             <q-card class="border-box-dark">
+              <q-menu touch-position context-menu>
+                <q-list
+                  :class="`${$q.dark.isActive ? 'border-dark' : 'border-light'}`"
+                  dense
+                  separator
+                  style="min-width: 100px; border-radius: 6px;"
+                >
+                  <q-item
+                    @click="$router.push({ name: 'exam-edit', params: { id: unfinishedExam.id } })"
+                    clickable
+                    v-close-popup
+                  >
+                    <q-item-section>View</q-item-section>
+                  </q-item>
+                  <q-item @click="deleteExam(unfinishedExam.id)" clickable v-close-popup>
+                    <q-item-section>Delete</q-item-section>
+                  </q-item>
+                </q-list>
+              </q-menu>
               <q-card-section
                 class="q-py-sm text-center text-subtitle2"
               >Unfinished exam (ID {{ unfinishedExam.id }})</q-card-section>
-              <q-separator />
-              <q-card-actions class="justify-center q-gutter-sm">
-                <q-btn
-                  size="sm"
-                  class="q-px-md"
-                  :color="!$q.dark.isActive ? 'primary' : 'grey-8'"
-                  @click="$router.push({ name: 'exam-edit', params: { id: unfinishedExam.id } })"
-                >View</q-btn>
-                <q-btn
-                  size="sm"
-                  class="q-px-md"
-                  :color="!$q.dark.isActive ? 'primary' : 'grey-8'"
-                  @click="deleteExam(unfinishedExam.id)"
-                >Delete</q-btn>
-              </q-card-actions>
             </q-card>
           </div>
         </div>
@@ -35,26 +39,51 @@
       </div>
       <div class="col-12 q-pb-md">
         <div class="row q-col-gutter-sm">
-          <div class="col-3" :key="i" v-for="(unfinishedExam, i) in finishedExams">
+          <div class="col-xs-6 col-md-4" :key="i" v-for="(finishedExam, i) in finishedExams">
             <q-card class="border-box-dark">
+              <q-menu touch-position context-menu>
+                <q-list
+                  :class="`${$q.dark.isActive ? 'border-dark' : 'border-light'}`"
+                  dense
+                  separator
+                  style="min-width: 100px; border-radius: 6px;"
+                >
+                  <q-item clickable v-close-popup>
+                    <q-item-section>View grades</q-item-section>
+                  </q-item>
+                  <q-item clickable v-close-popup>
+                    <q-item-section>Delete</q-item-section>
+                  </q-item>
+                  <q-item clickable v-close-popup v-if="!finishedExam.enabled">
+                    <q-item-section>Enable solving</q-item-section>
+                  </q-item>
+                  <q-item
+                    clickable
+                    v-close-popup
+                    @click="$router.push({ name: 'exam-preview', params: { id: finishedExam.id } })"
+                  >
+                    <q-item-section>Preview</q-item-section>
+                  </q-item>
+                </q-list>
+              </q-menu>
               <q-card-section
                 class="q-py-sm text-center text-subtitle2"
-              >Exam (ID {{ unfinishedExam.id }})</q-card-section>
+              >Exam (ID {{ finishedExam.id }})</q-card-section>
               <q-separator />
-              <q-card-actions class="justify-center q-gutter-sm">
-                <q-btn
-                  size="sm"
-                  class="q-px-md"
-                  :color="!$q.dark.isActive ? 'primary' : 'grey-8'"
-                  @click="$router.push({ name: 'exam-edit', params: { id: unfinishedExam.id } })"
-                >View grades</q-btn>
-                <q-btn
-                  size="sm"
-                  class="q-px-md"
-                  :color="!$q.dark.isActive ? 'primary' : 'grey-8'"
-                  @click="deleteExam(unfinishedExam.id)"
-                >Delete</q-btn>
-              </q-card-actions>
+              <q-card-section class="q-py-sm">
+                <span class="text-subtitle2">Name:</span>
+                <span class="q-ml-sm">{{ finishedExam.name }}</span>
+              </q-card-section>
+              <q-separator />
+              <q-card-section class="q-py-sm">
+                <q-icon
+                  size="xs"
+                  :color="finishedExam.enabled ? 'green' : 'red'"
+                  class="q-mr-md"
+                  :name="finishedExam.enabled ? 'mdi-check' : 'mdi-close-thick'"
+                />
+                <span class="text-subtitle2">{{ finishedExam.enabled ? 'Enabled' : 'Not enabled' }}</span>
+              </q-card-section>
             </q-card>
           </div>
         </div>

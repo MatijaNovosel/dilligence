@@ -52,6 +52,16 @@ namespace tvz2api_cqrs.Controllers
       return Ok(result);
     }
 
+    [HttpGet("preview")]
+    public async Task<IActionResult> GetExamPreview(int examId)
+    {
+      var result = await _queryBus.ExecuteAsync(new ExamPreviewQuery()
+      {
+        ExamId = examId
+      });
+      return Ok(result);
+    }
+
     [HttpGet("finished")]
     public async Task<IActionResult> GetFinishedExams(int userId, int courseId)
     {

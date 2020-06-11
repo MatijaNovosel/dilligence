@@ -25,8 +25,7 @@ namespace tvz2api_cqrs.QueryModels
 
   public class CourseUserGradesQueryModel
   {
-    public string Name { get; set; }
-    public int Grade { get; set; }
-    public int MaximumGrade { get; set; }
+    public List<CourseGradesTaskDTO> Tasks { get; set; }
+    public List<CourseGradesExamDTO> Exams { get; set; }
   }
 }

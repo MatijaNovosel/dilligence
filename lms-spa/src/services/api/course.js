@@ -83,5 +83,8 @@ export default {
   },
   async updatePassword(courseId, newPassword) {
     return await axios.put('Course/password', { courseId, newPassword }, { params: { courseId } });
+  },
+  async getUserGrades(courseId, userId) {
+    return await axios.get('Course/grades/' + userId, { params: { courseId } });
   }
 }
