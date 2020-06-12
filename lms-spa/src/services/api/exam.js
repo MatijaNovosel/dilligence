@@ -87,7 +87,10 @@ export default {
   async getExamPreview(examId) {
     return await axios.get('Exam/preview', { params: { examId } });
   },
-  async enableExamSolving(courseId) {
-    return await axios.post('Exam/enable', { courseId }, { params: { courseId } });
+  async enableExamSolving(examId, courseId) {
+    return await axios.post('Exam/enable', { examId }, { params: { courseId } });
+  },
+  async getAvailableExams(courseId, userId) {
+    return await axios.get('Exam/available', { params: { courseId, userId } });
   }
 }

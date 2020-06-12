@@ -229,6 +229,7 @@ namespace tvz2api_cqrs
       services.AddScoped<IQueryHandlerAsync<ExamFinishedQuery, List<FinishedExamDTO>>, ExamQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<ExamUnfinishedDetailsQuery, ExamUnfinishedDetailsQueryModel>, ExamQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<ExamPreviewQuery, ExamPreviewQueryModel>, ExamQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<ExamAvailableQuery, List<FinishedExamDTO>>, ExamQueryHandler>();
 
       // Exam commands
       services.AddScoped<ICommandHandlerAsync<ExamUpdateAttemptCommand>, ExamCommandHandler>();

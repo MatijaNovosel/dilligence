@@ -87,6 +87,13 @@ namespace tvz2api_cqrs.Controllers
       return Ok(result);
     }
 
+    [HttpGet("available")]
+    public async Task<IActionResult> GetAvailableExams(int courseId, int userId)
+    {
+      var result = await _queryBus.ExecuteAsync(new ExamAvailableQuery(courseId, userId));
+      return Ok(result);
+    }
+
     [HttpPut("attempt")]
     public async Task<IActionResult> Register(ExamUpdateAttemptCommand command)
     {

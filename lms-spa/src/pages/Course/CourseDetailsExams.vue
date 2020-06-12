@@ -54,7 +54,12 @@
                   <q-item clickable v-close-popup>
                     <q-item-section>Delete</q-item-section>
                   </q-item>
-                  <q-item clickable v-close-popup v-if="!finishedExam.enabled">
+                  <q-item
+                    @click="enableExamSolving(finishedExam.id)"
+                    clickable
+                    v-close-popup
+                    v-if="!finishedExam.enabled"
+                  >
                     <q-item-section>Enable solving</q-item-section>
                   </q-item>
                   <q-item
@@ -83,6 +88,39 @@
                   :name="finishedExam.enabled ? 'mdi-check' : 'mdi-close-thick'"
                 />
                 <span class="text-subtitle2">{{ finishedExam.enabled ? 'Enabled' : 'Not enabled' }}</span>
+              </q-card-section>
+            </q-card>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-else class="row">
+      <div class="col-12 q-pb-md">
+        <span>Available exams</span>
+      </div>
+      <div class="col-12 q-pb-md">
+        <div class="row q-col-gutter-sm">
+          <div class="col-xs-6 col-md-4" :key="i" v-for="(finishedExam, i) in availableExams">
+            <q-card class="border-box-dark">
+              <q-menu touch-position context-menu>
+                <q-list
+                  :class="`${$q.dark.isActive ? 'border-dark' : 'border-light'}`"
+                  dense
+                  separator
+                  style="min-width: 100px; border-radius: 6px;"
+                >
+                  <q-item clickable v-close-popup>
+                    <q-item-section>Start attempt</q-item-section>
+                  </q-item>
+                </q-list>
+              </q-menu>
+              <q-card-section
+                class="q-py-sm text-center text-subtitle2"
+              >Exam (ID {{ finishedExam.id }})</q-card-section>
+              <q-separator />
+              <q-card-section class="q-py-sm">
+                <span class="text-subtitle2">Name:</span>
+                <span class="q-ml-sm">{{ finishedExam.name }}</span>
               </q-card-section>
             </q-card>
           </div>
@@ -123,6 +161,11 @@ export default {
       });
       */
     },
+    enableExamSolving(id) {
+      ExamService.enableExamSolving(id, this.courseId).then(() => {
+        this.getFinishedExams();
+      });
+    },
     getUnfinishedExams() {
       ExamService.getUnfinishedExams(this.user.id, this.courseId).then(
         ({ data }) => {
@@ -137,6 +180,11 @@ export default {
         }
       );
     },
+    getFinishedExamsForUser() {
+      ExamService.getAvailableExams(this.courseId, this.user.id).then(({ data }) => {
+        this.availableExams = data;
+      });
+    },
     createNewExam() {
       // Create new exam instance, get the id and send it as a parameter to route
       ExamService.createExam({
@@ -149,14 +197,24 @@ export default {
   },
   created() {
     this.courseId = this.$route.params.id;
-    this.getUnfinishedExams();
-    this.getFinishedExams();
+    if (
+      this.hasCoursePrivileges(
+        this.courseId,
+        this.Privileges.IsInvolvedWithCourse
+      )
+    ) {
+      this.getUnfinishedExams();
+      this.getFinishedExams();
+    } else {
+      this.getFinishedExamsForUser();
+    }
   },
   data() {
     return {
       courseId: null,
       unfinishedExams: null,
-      finishedExams: null
+      finishedExams: null,
+      availableExams: null
     };
   }
 };
