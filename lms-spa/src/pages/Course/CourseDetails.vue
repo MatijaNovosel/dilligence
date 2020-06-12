@@ -17,6 +17,7 @@
         >Delete course</q-btn>
         <q-btn
           v-if="!hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
+          @click="confirmUnsubscribeDialog = true"
           class="q-ml-sm"
           flat
           size="sm"
@@ -113,15 +114,22 @@
       @close="confirmDialog = false"
       @confirm="deleteCourse"
     />
+    <confirmation-dialog
+      :open="confirmUnsubscribeDialog"
+      @close="confirmUnsubscribeDialog = false"
+      @confirm="unsubscribeFromCourse"
+    />
   </q-page>
 </template>
 
 <script>
 import CourseService from "../../services/api/course";
 import NotificationService from "../../services/notification/notifications";
+import UserService from "../../services/api/user";
 import UserMixin from "../../mixins/userMixin";
 import { debounce } from "debounce";
 import ConfirmationDialog from "../../components/confirmation-dialog";
+import { mapActions } from "vuex";
 
 export default {
   name: "CourseDetails",
@@ -146,8 +154,15 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["removePrivelege"]),
     deleteCourse() {
       // delete course
+    },
+    unsubscribeFromCourse() {
+      UserService.unsubscribe(this.user.id, this.courseId).then(() => {
+        this.removePrivelege(this.courseId);
+        this.$router.push({ name: "courses" });
+      });
     },
     passwordUpdated: debounce(function() {
       CourseService.updatePassword(this.courseId, this.newPassword).then(() => {
@@ -173,6 +188,7 @@ export default {
       confirmDialog: false,
       currentPasswordShow: false,
       newPasswordShow: true,
+      confirmUnsubscribeDialog: false,
       dialogStyle: {
         width: "60%",
         "max-width": "90vw"

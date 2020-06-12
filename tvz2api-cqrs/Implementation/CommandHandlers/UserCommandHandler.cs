@@ -50,7 +50,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         JoinedAt = DateTime.Now,
       });
 
-      _context.UserCoursePrivilege.Add(new UserCoursePrivilege() 
+      _context.UserCoursePrivilege.Add(new UserCoursePrivilege()
       {
         CourseId = command.CourseId,
         PrivilegeId = (int)PrivilegeEnum.CanCreateNewDiscussion,
@@ -62,8 +62,40 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
     public async Task HandleAsync(UserUnsubscribeCommand command)
     {
-      var subscriptiom = await _context.Subscription.Where(x => x.CourseId == command.CourseId && x.UserId == command.UserId).FirstOrDefaultAsync();
-      _context.Subscription.Remove(subscriptiom);
+      var user = await _context
+        .User
+        .Include(t => t.CourseTaskAttemptUser)
+          .ThenInclude(t => t.CourseTask)
+        .Include(t => t.CourseTaskAttemptUser)
+          .ThenInclude(t => t.TaskAttemptAttachment)
+        .Include(t => t.DiscussionComment)
+          .ThenInclude(t => t.Discussion)
+        .Include(t => t.Discussion)
+        .Include(t => t.ExamAttempt)
+          .ThenInclude(t => t.Exam)
+        .Include(t => t.UserCoursePrivilege)
+        .FirstOrDefaultAsync(x => x.Id == command.UserId);
+
+      var userTaskAttempts = user.CourseTaskAttemptUser.Where(x => x.CourseTask.CourseId == command.CourseId);
+      var userTaskAttemptAttachments = new List<TaskAttemptAttachment>();
+
+      userTaskAttempts.ToList().ForEach(x =>
+      {
+        x.TaskAttemptAttachment.ToList().ForEach(y => userTaskAttemptAttachments.Add(y));
+      });
+
+      _context.TaskAttemptAttachment.RemoveRange(userTaskAttemptAttachments);
+      _context.CourseTaskAttempt.RemoveRange(userTaskAttempts);
+
+
+      _context.DiscussionComment.RemoveRange(user.DiscussionComment.Where(x => x.Discussion.CourseId == command.CourseId));
+      _context.Discussion.RemoveRange(user.Discussion.Where(x => x.CourseId == command.CourseId));
+      _context.ExamAttempt.RemoveRange(user.ExamAttempt.Where(x => x.Exam.CourseId == command.CourseId));
+      _context.UserCoursePrivilege.RemoveRange(user.UserCoursePrivilege.Where(x => x.CourseId == command.CourseId));
+
+      var subscription = await _context.Subscription.Where(x => x.CourseId == command.CourseId && x.UserId == command.UserId).FirstOrDefaultAsync();
+      _context.Subscription.Remove(subscription);
+
       await _context.SaveChangesAsync();
     }
 
@@ -92,7 +124,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         .Include(t => t.Subscription)
         .FirstOrDefaultAsync(x => x.Id == command.UserId);
 
-      user.Subscription.ToList().ForEach(x => {
+      user.Subscription.ToList().ForEach(x =>
+      {
         x.Blacklisted = command.CourseIds.Contains((int)x.CourseId);
       });
 

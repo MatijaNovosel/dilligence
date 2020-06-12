@@ -89,7 +89,12 @@
         </div>
       </div>
     </div>
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+    <q-page-sticky
+      position="bottom-right"
+      :offset="[18, 18]"
+      v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanManageExams, Privileges.CanCreateExams) 
+      && hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
+    >
       <q-fab direction="left" :color="!$q.dark.isActive ? 'primary' : 'grey-8'" fab icon="add">
         <q-fab-action
           icon="mdi-email-plus"

@@ -103,7 +103,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       {
         CreatedById = command.CreatedById,
         CourseId = command.CourseId,
-        DueDate = DateTime.Now.AddDays(1),
+        DueDate = DateTime.Now.AddDays(30),
         Finalized = false,
         Name = "New exam",
         TimeNeeded = 3600

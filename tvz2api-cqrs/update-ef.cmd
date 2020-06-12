@@ -1,0 +1,1 @@
+dotnet ef dbcontext scaffold "Server=.;Database=tvz2;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -o Models -c lmsContext -f

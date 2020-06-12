@@ -108,7 +108,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           CourseId = t.CourseId,
           Id = t.Id,
           CreatedById = t.CreatedById,
-          Enabled = false,
+          Enabled = (bool)t.Enabled,
           Name = t.Name
         }).ToListAsync();
       return exams;
