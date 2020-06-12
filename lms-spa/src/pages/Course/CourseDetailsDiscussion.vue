@@ -297,6 +297,9 @@ export default {
     },
     scrollToBottom() {
       Vue.nextTick(() => {
+        if (this.replies.length == 0) {
+          return;
+        }
         /*
         
           Component is rendered independently of the chat messages, so relying on the reference is a bad idea, 
@@ -371,13 +374,13 @@ export default {
 
 <style lang="sass">
 .q-btn--fab .q-btn__wrapper
-	padding: 10px
-	min-height: 12px
-	min-width: 12px
+  padding: 10px
+  min-height: 12px
+  min-width: 12px
 .dialog-toolbar
-	min-height: 30px
+  min-height: 30px
 .discussion-root-box
-	position: relative
-	border-radius: 8px
-	padding: 15px
+  position: relative
+  border-radius: 8px
+  padding: 15px
 </style>
