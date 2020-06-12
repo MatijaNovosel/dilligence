@@ -26,7 +26,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     ICommandHandlerAsync<ExamStartAttemptCommand>,
     ICommandHandlerAsync<ExamPreCreateCommand, int>,
     ICommandHandlerAsync<ExamUpdateCommand>,
-    ICommandHandlerAsync<ExamFinalizeCommand>
+    ICommandHandlerAsync<ExamFinalizeCommand>,
+    ICommandHandlerAsync<ExamEnableSolvingCommand>
   {
     private readonly lmsContext _context;
 
@@ -37,10 +38,20 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
     public async Task HandleAsync(ExamStartAttemptCommand command)
     {
+      // Write different logic here!!! Add a new record to the database when the user chooses to start an attempt!
       var attempt = await _context.ExamAttempt.FirstOrDefaultAsync(x => x.Id == command.AttemptId);
 
       attempt.Started = true;
       attempt.StartedAt = DateTime.Now;
+
+      await _context.SaveChangesAsync();
+    }
+
+    public async Task HandleAsync(ExamEnableSolvingCommand command)
+    {
+      var exam = await _context.Exam.FirstOrDefaultAsync(x => x.Id == command.ExamId);
+
+      exam.Enabled = true;
 
       await _context.SaveChangesAsync();
     }

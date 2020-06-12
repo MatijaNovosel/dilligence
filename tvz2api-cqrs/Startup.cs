@@ -236,6 +236,7 @@ namespace tvz2api_cqrs
       services.AddScoped<ICommandHandlerAsync<ExamUpdateCommand>, ExamCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<ExamPreCreateCommand, int>, ExamCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<ExamFinalizeCommand>, ExamCommandHandler>();
+      services.AddScoped<ICommandHandlerAsync<ExamEnableSolvingCommand>, ExamCommandHandler>();
 
       // CourseTask commands
       services.AddScoped<ICommandHandlerAsync<CourseTaskCreateCommand>, CourseTaskCommandHandler>();
