@@ -38,12 +38,14 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
     public async Task HandleAsync(ExamStartAttemptCommand command)
     {
-      // Write different logic here!!! Add a new record to the database when the user chooses to start an attempt!
-      var attempt = await _context.ExamAttempt.FirstOrDefaultAsync(x => x.Id == command.AttemptId);
-
-      attempt.Started = true;
-      attempt.StartedAt = DateTime.Now;
-
+      _context.ExamAttempt.Add(new ExamAttempt()
+      {
+        ExamId = command.ExamId,
+        StartedAt = DateTime.Now,
+        Started = true,
+        Terminated = false,
+        UserId = command.UserId
+      });
       await _context.SaveChangesAsync();
     }
 

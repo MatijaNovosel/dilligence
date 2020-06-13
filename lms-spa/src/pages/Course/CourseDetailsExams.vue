@@ -1,5 +1,13 @@
 <template>
   <div>
+    <div class="row q-mb-md">
+      <div class="col-12">
+        <div class="q-my-sm" :class="[$q.dark.isActive ? 'hint-text-dark' : 'hint-text']">
+          *
+          <q-icon size="xs" class="q-mr-xs" name="mdi-mouse" />Right click on cards (or long tap on phones) for more options
+        </div>
+      </div>
+    </div>
     <div class="row" v-if="hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)">
       <div class="col-12 q-pb-md">
         <span>Unfinished exams</span>
@@ -109,7 +117,7 @@
                   separator
                   style="min-width: 100px; border-radius: 6px;"
                 >
-                  <q-item clickable v-close-popup>
+                  <q-item clickable v-close-popup @click="startAttempt(finishedExam.id)">
                     <q-item-section>Start attempt</q-item-section>
                   </q-item>
                 </q-list>
@@ -153,6 +161,15 @@ export default {
   name: "CourseDetailsExams",
   mixins: [UserMixin],
   methods: {
+    startAttempt(id) {
+      let payload = {
+        examId: id,
+        courseId: this.courseId
+      };
+      ExamService.startAttempt(payload, this.courseId).then(() => {
+        this.$router.push({ name: "exam-details", params: { id } });
+      });
+    },
     deleteExam(id) {
       // Delete exam which is unfinished ...
       /*
@@ -181,9 +198,11 @@ export default {
       );
     },
     getFinishedExamsForUser() {
-      ExamService.getAvailableExams(this.courseId, this.user.id).then(({ data }) => {
-        this.availableExams = data;
-      });
+      ExamService.getAvailableExams(this.courseId, this.user.id).then(
+        ({ data }) => {
+          this.availableExams = data;
+        }
+      );
     },
     createNewExam() {
       // Create new exam instance, get the id and send it as a parameter to route

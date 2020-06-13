@@ -92,5 +92,8 @@ export default {
   },
   async getAvailableExams(courseId, userId) {
     return await axios.get('Exam/available', { params: { courseId, userId } });
+  },
+  async startAttempt(payload, courseId) {
+    return await axios.post('Exam/start', payload, { params: { courseId } });
   }
 }

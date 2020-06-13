@@ -24,7 +24,8 @@ namespace tvz2api_cqrs.Implementation.Commands
   public class ExamStartAttemptCommand : ICommand
   {
     public ExamStartAttemptCommand() { }
-    public int AttemptId { get; set; }
+    public int ExamId { get; set; }
+    public int UserId { get; set; }
   }
 
   public class ExamEnableSolvingCommand : ICommand

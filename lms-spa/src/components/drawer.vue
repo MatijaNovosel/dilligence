@@ -30,7 +30,6 @@
         </q-item>
         <q-separator class="q-mb-sm" />
         <q-expansion-item
-          group="drawer"
           dense
           dense-toggle
           class="text-weight-regular"
