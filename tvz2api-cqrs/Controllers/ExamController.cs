@@ -94,6 +94,13 @@ namespace tvz2api_cqrs.Controllers
       return Ok(result);
     }
 
+    [HttpGet("in-progress")]
+    public async Task<IActionResult> GetExamsInProgress(int courseId, int userId)
+    {
+      var result = await _queryBus.ExecuteAsync(new ExamInProgressCourseQuery(courseId, userId));
+      return Ok(result);
+    }
+
     [HttpPut("attempt")]
     public async Task<IActionResult> Register(ExamUpdateAttemptCommand command)
     {

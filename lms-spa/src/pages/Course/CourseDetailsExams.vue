@@ -108,7 +108,7 @@
       </div>
       <div class="col-12 q-pb-md">
         <div class="row q-col-gutter-sm">
-          <div class="col-xs-6 col-md-4" :key="i" v-for="(finishedExam, i) in availableExams">
+          <div class="col-xs-6 col-md-4" :key="i" v-for="(availableExam, i) in availableExams">
             <q-card class="border-box-dark">
               <q-menu touch-position context-menu>
                 <q-list
@@ -117,18 +117,57 @@
                   separator
                   style="min-width: 100px; border-radius: 6px;"
                 >
-                  <q-item clickable v-close-popup @click="startAttempt(finishedExam.id)">
+                  <q-item clickable v-close-popup @click="startAttempt(availableExam.id)">
                     <q-item-section>Start attempt</q-item-section>
                   </q-item>
                 </q-list>
               </q-menu>
               <q-card-section
                 class="q-py-sm text-center text-subtitle2"
-              >Exam (ID {{ finishedExam.id }})</q-card-section>
+              >Exam (ID {{ availableExam.id }})</q-card-section>
               <q-separator />
               <q-card-section class="q-py-sm">
                 <span class="text-subtitle2">Name:</span>
-                <span class="q-ml-sm">{{ finishedExam.name }}</span>
+                <span class="q-ml-sm">{{ availableExam.name }}</span>
+              </q-card-section>
+            </q-card>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 q-pb-md">
+        <span>Exams in progress</span>
+      </div>
+      <div class="col-12 q-pb-md">
+        <div class="row q-col-gutter-sm">
+          <div class="col-xs-6 col-md-4" :key="i" v-for="(examInProgress, i) in examsInProgress">
+            <q-card class="border-box-dark">
+              <q-menu touch-position context-menu>
+                <q-list
+                  :class="`${$q.dark.isActive ? 'border-dark' : 'border-light'}`"
+                  dense
+                  separator
+                  style="min-width: 100px; border-radius: 6px;"
+                >
+                  <q-item
+                    clickable
+                    v-close-popup
+                    @click="$router.push({ name: 'exam-details', params: { id: examInProgress.id }})"
+                  >
+                    <q-item-section>Continue attempt</q-item-section>
+                  </q-item>
+                </q-list>
+              </q-menu>
+              <q-card-section
+                class="q-py-sm text-center text-subtitle2"
+              >Exam (ID {{ examInProgress.id }})</q-card-section>
+              <q-separator />
+              <q-card-section class="q-py-sm">
+                <span class="text-subtitle2">Name:</span>
+                <span class="q-ml-sm">{{ examInProgress.name }}</span>
+              </q-card-section>
+              <q-card-section class="q-py-none">
+                <span class="text-subtitle2">Time left:</span>
+                <span class="q-ml-sm">{{ examInProgress.startedAt }}</span>
               </q-card-section>
             </q-card>
           </div>
@@ -164,7 +203,7 @@ export default {
     startAttempt(id) {
       let payload = {
         examId: id,
-        courseId: this.courseId
+        userId: this.user.id
       };
       ExamService.startAttempt(payload, this.courseId).then(() => {
         this.$router.push({ name: "exam-details", params: { id } });
@@ -204,6 +243,13 @@ export default {
         }
       );
     },
+    getExamsInProgress() {
+      ExamService.getExamsInProgress(this.courseId, this.user.id).then(
+        ({ data }) => {
+          this.examsInProgress = data;
+        }
+      );
+    },
     createNewExam() {
       // Create new exam instance, get the id and send it as a parameter to route
       ExamService.createExam({
@@ -226,6 +272,7 @@ export default {
       this.getFinishedExams();
     } else {
       this.getFinishedExamsForUser();
+      this.getExamsInProgress();
     }
   },
   data() {
@@ -233,7 +280,8 @@ export default {
       courseId: null,
       unfinishedExams: null,
       finishedExams: null,
-      availableExams: null
+      availableExams: null,
+      examsInProgress: null
     };
   }
 };

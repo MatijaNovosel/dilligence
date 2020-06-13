@@ -17,7 +17,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     IQueryHandlerAsync<ExamFinishedQuery, List<FinishedExamDTO>>,
     IQueryHandlerAsync<ExamUnfinishedDetailsQuery, ExamUnfinishedDetailsQueryModel>,
     IQueryHandlerAsync<ExamPreviewQuery, ExamPreviewQueryModel>,
-    IQueryHandlerAsync<ExamAvailableQuery, List<FinishedExamDTO>>
+    IQueryHandlerAsync<ExamAvailableQuery, List<FinishedExamDTO>>,
+    IQueryHandlerAsync<ExamInProgressCourseQuery, List<ExamInProgressDTO>>
   {
     private readonly lmsContext _context;
 
@@ -118,7 +119,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     public async Task<List<FinishedExamDTO>> HandleAsync(ExamAvailableQuery query)
     {
       var exams = await _context.Exam
-        .Where(t => t.CourseId == query.CourseId && t.Finalized == true)
+        .Include(t => t.ExamAttempt)
+        .Where(t => t.CourseId == query.CourseId && t.Finalized == true && !t.ExamAttempt.Any(x => x.UserId == query.UserId))
         .Select(t => new FinishedExamDTO
         {
           CourseId = t.CourseId,
@@ -126,6 +128,25 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           CreatedById = t.CreatedById,
           Enabled = (bool)t.Enabled,
           Name = t.Name
+        }).ToListAsync();
+      return exams;
+    }
+
+    public async Task<List<ExamInProgressDTO>> HandleAsync(ExamInProgressCourseQuery query)
+    {
+      var exams = await _context
+        .ExamAttempt
+        .Include(t => t.Exam)
+        .Where(t => t.Exam.CourseId == query.CourseId && t.UserId == query.UserId)
+        .Select(t => new ExamInProgressDTO
+        {
+          CourseId = t.Exam.CourseId,
+          Id = t.Id,
+          CreatedById = t.Exam.CreatedById,
+          Enabled = (bool)t.Exam.Enabled,
+          Name = t.Exam.Name,
+          TimeNeeded = t.Exam.TimeNeeded,
+          StartedAt = t.StartedAt
         }).ToListAsync();
       return exams;
     }

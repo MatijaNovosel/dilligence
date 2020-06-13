@@ -27,6 +27,17 @@ namespace tvz2api_cqrs.Models.DTO
     public int? CreatedById { get; set; }
   }
 
+  public class ExamInProgressDTO
+  {
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public bool Enabled { get; set; }
+    public int? CourseId { get; set; }
+    public int? CreatedById { get; set; }
+    public int TimeNeeded { get; set; }
+    public DateTime? StartedAt { get; set; }
+  }
+
   public class CourseGradesTaskDTO
   {
     public string Name { get; set; }

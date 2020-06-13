@@ -1,7 +1,6 @@
 <template>
   <q-option-group
     class="q-py-sm"
-    dense
     v-model="selectedAnswer"
     :options="answers"
     :type="type == 1 ? 'radio' : 'checkbox'"
