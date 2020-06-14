@@ -98,5 +98,8 @@ export default {
   },
   async getExamsInProgress(courseId, userId) {
     return await axios.get('Exam/in-progress', { params: { courseId, userId } });
+  },
+  async finishExam(payload) {
+    return await axios.post('Exam/finish-attempt', payload);
   }
 }

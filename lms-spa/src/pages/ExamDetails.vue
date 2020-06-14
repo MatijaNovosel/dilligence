@@ -112,11 +112,7 @@
         <q-card-section class="text-center q-mt-md">{{ $i18n.t("areYouSure") }}</q-card-section>
         <q-card-actions class="q-pb-md">
           <q-space />
-          <q-btn
-            color="green"
-            class="text-white"
-            @click="finishExamDialog = false"
-          >{{ $i18n.t("yes") }}</q-btn>
+          <q-btn color="green" class="text-white" @click="finishExam">{{ $i18n.t("yes") }}</q-btn>
           <q-btn
             color="red"
             class="text-white"
@@ -167,6 +163,18 @@ export default {
     }
   },
   methods: {
+    finishExam() {
+      this.finishExamDialog = false;
+      let payload = {
+        attemptId: this.attempt.id
+      };
+      ExamService.finishExam(payload).then(() => {
+        $router.push({
+          name: "course-details-exams",
+          params: { id: this.attempt.courseId }
+        });
+      });
+    },
     updateAttempt() {
       let updatedAttempt = JSON.parse(JSON.stringify(this.attempt));
       updatedAttempt.exam.questions.forEach(x => {

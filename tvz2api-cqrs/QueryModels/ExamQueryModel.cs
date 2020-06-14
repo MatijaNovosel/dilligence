@@ -9,6 +9,7 @@ namespace tvz2api_cqrs.QueryModels
     public int Id { get; set; }
     public bool? Terminated { get; set; }
     public bool? Started { get; set; }
+    public int CourseId { get; set; }
     public DateTime? StartedAt { get; set; }
     public ExamDetailsDTO Exam { get; set; }
   }

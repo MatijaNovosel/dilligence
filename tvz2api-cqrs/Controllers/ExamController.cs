@@ -115,6 +115,13 @@ namespace tvz2api_cqrs.Controllers
       return Ok();
     }
 
+    [HttpPost("finish-attempt")]
+    public async Task<IActionResult> FinishAttempt(ExamFinishAttemptCommand command)
+    {
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
+    }
+
     [HttpPost("enable")]
     public async Task<IActionResult> EnableExamSolving(ExamEnableSolvingCommand command, int courseId)
     {

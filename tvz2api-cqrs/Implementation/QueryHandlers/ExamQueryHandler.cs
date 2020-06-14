@@ -36,6 +36,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Id = t.Id,
           Terminated = t.Terminated,
           StartedAt = t.StartedAt,
+          CourseId = (int)t.Exam.CourseId,
           Exam = new ExamDetailsDTO()
           {
             Id = t.Exam.Id,

@@ -27,7 +27,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     ICommandHandlerAsync<ExamPreCreateCommand, int>,
     ICommandHandlerAsync<ExamUpdateCommand>,
     ICommandHandlerAsync<ExamFinalizeCommand>,
-    ICommandHandlerAsync<ExamEnableSolvingCommand>
+    ICommandHandlerAsync<ExamEnableSolvingCommand>,
+    ICommandHandlerAsync<ExamFinishAttemptCommand>
   {
     private readonly lmsContext _context;
 
@@ -52,9 +53,14 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     public async Task HandleAsync(ExamEnableSolvingCommand command)
     {
       var exam = await _context.Exam.FirstOrDefaultAsync(x => x.Id == command.ExamId);
-
       exam.Enabled = true;
+      await _context.SaveChangesAsync();
+    }
 
+    public async Task HandleAsync(ExamFinishAttemptCommand command)
+    {
+      var attempt = await _context.ExamAttempt.FirstOrDefaultAsync(x => x.Id == command.AttemptId);
+      attempt.Terminated = true;
       await _context.SaveChangesAsync();
     }
 
