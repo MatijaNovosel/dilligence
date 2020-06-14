@@ -35,6 +35,7 @@ namespace tvz2api_cqrs.Models.DTO
     public int? CourseId { get; set; }
     public int? CreatedById { get; set; }
     public int TimeNeeded { get; set; }
+    public bool Expired { get; set; }
     public DateTime? StartedAt { get; set; }
   }
 

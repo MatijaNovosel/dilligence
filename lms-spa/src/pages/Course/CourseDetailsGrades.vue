@@ -1,7 +1,14 @@
 <template>
   <div class="row q-col-gutter-sm">
     <div class="col-xs-12 col-md-6">
-      <q-table hide-pagination v-if="tasks" dense :data="tasks" :columns="taskColumns" row-key="name">
+      <q-table
+        hide-pagination
+        v-if="tasks"
+        dense
+        :data="tasks"
+        :columns="taskColumns"
+        row-key="name"
+      >
         <template v-slot:top>
           <div class="row full-width">
             <div class="col-12">
@@ -15,7 +22,14 @@
       </q-table>
     </div>
     <div class="col-xs-12 col-md-6">
-      <q-table hide-pagination v-if="tasks" dense :data="tasks" :columns="taskColumns" row-key="name">
+      <q-table
+        hide-pagination
+        v-if="exams"
+        dense
+        :data="exams"
+        :columns="taskColumns"
+        row-key="name"
+      >
         <template v-slot:top>
           <div class="row full-width">
             <div class="col-12">
@@ -43,6 +57,7 @@ export default {
     CourseService.getUserGrades(this.courseId, this.user.id).then(
       ({ data }) => {
         this.tasks = data.tasks;
+        this.exams = data.exams;
       }
     );
   },
@@ -54,19 +69,19 @@ export default {
           name: "name",
           label: "Name",
           field: "name",
-          align: 'left'
+          align: "left"
         },
         {
           name: "grade",
           label: "Grade",
           field: "grade",
-          align: 'center'
+          align: "center"
         },
         {
           name: "maximumGrade",
           label: "Maximum grade",
           field: "maximumGrade",
-          align: 'center'
+          align: "center"
         }
       ],
       tasks: null,

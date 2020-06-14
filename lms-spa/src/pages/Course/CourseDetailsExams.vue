@@ -135,7 +135,7 @@
         </div>
       </div>
       <div class="col-12 q-pb-md">
-        <span>Exams in progress</span>
+        <span>Started exams</span>
       </div>
       <div class="col-12 q-pb-md">
         <div class="row q-col-gutter-sm">
@@ -151,9 +151,17 @@
                   <q-item
                     clickable
                     v-close-popup
+                    v-if="!examInProgress.expired"
                     @click="$router.push({ name: 'exam-details', params: { id: examInProgress.id }})"
                   >
                     <q-item-section>Continue attempt</q-item-section>
+                  </q-item>
+                  <q-item
+                    clickable
+                    v-close-popup
+                    @click="$router.push({ name: 'course-details-grades', params: { id: courseId }})"
+                  >
+                    <q-item-section>View grade</q-item-section>
                   </q-item>
                 </q-list>
               </q-menu>
@@ -161,13 +169,16 @@
                 class="q-py-sm text-center text-subtitle2"
               >Exam (ID {{ examInProgress.id }})</q-card-section>
               <q-separator />
-              <q-card-section class="q-py-sm">
+              <q-card-section class="q-pb-sm q-pt-md">
                 <span class="text-subtitle2">Name:</span>
                 <span class="q-ml-sm">{{ examInProgress.name }}</span>
               </q-card-section>
-              <q-card-section class="q-py-none">
+              <q-card-section class="q-pt-none q-pb-md">
                 <span class="text-subtitle2">Time left:</span>
-                <span class="q-ml-sm">{{ examInProgress.startedAt }}</span>
+                <span
+                  class="q-ml-sm"
+                  :class="examInProgress.expired ? 'text-red-6' : ''"
+                >{{ examInProgress.expired ? 'Expired' : examInProgress.startedAt }}</span>
               </q-card-section>
             </q-card>
           </div>

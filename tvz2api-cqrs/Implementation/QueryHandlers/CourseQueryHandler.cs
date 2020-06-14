@@ -61,6 +61,57 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           MaximumGrade = t.CourseTask.GradeMaximum,
           Name = t.CourseTask.Title
         }).ToListAsync();
+
+      var examAttempts = await _context
+        .ExamAttempt
+        .Include(t => t.Exam)
+        .ThenInclude(t => t.Question)
+        .Where(t => t.UserId == query.UserId && t.Exam.CourseId == query.CourseId)
+        .ToListAsync();
+
+      grades.Exams = new List<CourseGradesExamDTO>();
+
+      examAttempts.ForEach(x =>
+      {
+        var sumOfPoints = 0;
+        var maximumPoints = 0;
+
+        var questions = x.Exam.Question.ToList();
+        var userAnswers = x.UserAnswer;
+
+        questions.ForEach(x =>
+        {
+          maximumPoints += x.Value;
+
+          var userAnswer = userAnswers.FirstOrDefault(y => y.QuestionId == x.Id);
+
+          if (userAnswer != null)
+          {
+            if (x.TypeId == 1)
+            {
+              if (userAnswer.AnswerId != null)
+              {
+                if (x.Answer.Any(y => y.Correct == true && y.Id == userAnswer.AnswerId))
+                {
+                  sumOfPoints += x.Value;
+                }
+              }
+            }
+            else
+            {
+              // Neki kurac
+            }
+          }
+        });
+
+        grades.Exams.Add(new CourseGradesExamDTO()
+        {
+          Grade = sumOfPoints,
+          MaximumGrade = maximumPoints,
+          Name = x.Exam.Name
+        });
+      });
+
       return grades;
     }
 

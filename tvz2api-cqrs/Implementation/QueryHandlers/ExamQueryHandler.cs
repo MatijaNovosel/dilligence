@@ -7,6 +7,7 @@ using tvz2api_cqrs.Infrastructure.QueryHandlers;
 using tvz2api_cqrs.Models;
 using tvz2api_cqrs.Models.DTO;
 using tvz2api_cqrs.QueryModels;
+using System;
 
 namespace tvz2api_cqrs.Implementation.QueryHandlers
 {
@@ -138,7 +139,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
       var exams = await _context
         .ExamAttempt
         .Include(t => t.Exam)
-        .Where(t => t.Exam.CourseId == query.CourseId && t.UserId == query.UserId)
+        .Where(t => t.Exam.CourseId == query.CourseId && t.UserId == query.UserId && t.Terminated == false)
         .Select(t => new ExamInProgressDTO
         {
           CourseId = t.Exam.CourseId,
@@ -147,7 +148,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Enabled = (bool)t.Exam.Enabled,
           Name = t.Exam.Name,
           TimeNeeded = t.Exam.TimeNeeded,
-          StartedAt = t.StartedAt
+          StartedAt = t.StartedAt,
+          Expired = (t.Exam.TimeNeeded - (DateTime.Now - (DateTime)t.StartedAt).TotalSeconds) < 0 
         }).ToListAsync();
       return exams;
     }
