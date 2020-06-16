@@ -23,7 +23,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 {
   public class ExamCommandHandler :
     ICommandHandlerAsync<ExamUpdateAttemptCommand>,
-    ICommandHandlerAsync<ExamStartAttemptCommand>,
+    ICommandHandlerAsync<ExamStartAttemptCommand, int>,
     ICommandHandlerAsync<ExamPreCreateCommand, int>,
     ICommandHandlerAsync<ExamUpdateCommand>,
     ICommandHandlerAsync<ExamFinalizeCommand>,
@@ -37,17 +37,20 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       _context = context;
     }
 
-    public async Task HandleAsync(ExamStartAttemptCommand command)
+    public async Task<ICommandResult<int>> HandleAsync(ExamStartAttemptCommand command)
     {
-      _context.ExamAttempt.Add(new ExamAttempt()
+      var newAttempt = new ExamAttempt()
       {
         ExamId = command.ExamId,
         StartedAt = DateTime.Now,
         Started = true,
         Terminated = false,
         UserId = command.UserId
-      });
+      };
+      _context.ExamAttempt.Add(newAttempt);
       await _context.SaveChangesAsync();
+
+      return CommandResult<int>.Success(newAttempt.Id);
     }
 
     public async Task HandleAsync(ExamEnableSolvingCommand command)

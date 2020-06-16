@@ -122,7 +122,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     {
       var exams = await _context.Exam
         .Include(t => t.ExamAttempt)
-        .Where(t => t.CourseId == query.CourseId && t.Finalized == true && !t.ExamAttempt.Any(x => x.UserId == query.UserId))
+        .Where(t => t.CourseId == query.CourseId && t.Finalized == true && t.Enabled == true && !t.ExamAttempt.Any(x => x.UserId == query.UserId))
         .Select(t => new FinishedExamDTO
         {
           CourseId = t.CourseId,

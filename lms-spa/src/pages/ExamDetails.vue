@@ -106,9 +106,8 @@
         </q-card>
       </div>
     </div>
-    <q-dialog v-model="finishExamDialog" persistent max-width="500">
+    <q-dialog v-model="finishExamDialog" persistent>
       <q-card>
-        <q-system-bar color="primary" />
         <q-card-section class="text-center q-mt-md">{{ $i18n.t("areYouSure") }}</q-card-section>
         <q-card-actions class="q-pb-md">
           <q-space />
@@ -169,7 +168,7 @@ export default {
         attemptId: this.attempt.id
       };
       ExamService.finishExam(payload).then(() => {
-        $router.push({
+        this.$router.push({
           name: "course-details-exams",
           params: { id: this.attempt.courseId }
         });

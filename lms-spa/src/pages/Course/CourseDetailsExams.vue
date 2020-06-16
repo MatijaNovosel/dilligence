@@ -216,8 +216,8 @@ export default {
         examId: id,
         userId: this.user.id
       };
-      ExamService.startAttempt(payload, this.courseId).then(() => {
-        this.$router.push({ name: "exam-details", params: { id } });
+      ExamService.startAttempt(payload, this.courseId).then(({ data }) => {
+        this.$router.push({ name: "exam-details", params: { id: data.payload }});
       });
     },
     deleteExam(id) {

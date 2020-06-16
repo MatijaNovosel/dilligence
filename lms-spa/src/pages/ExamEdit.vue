@@ -206,7 +206,7 @@
           </div>
         </template>
       </div>
-      <div class="col-12 text-right q-pr-md">
+      <div class="col-12 text-right q-pr-md q-pb-md">
         <q-btn
           :disabled="$v.exam.$invalid"
           @click="finalizeExam"
