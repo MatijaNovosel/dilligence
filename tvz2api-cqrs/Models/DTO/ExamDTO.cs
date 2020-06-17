@@ -36,6 +36,7 @@ namespace tvz2api_cqrs.Models.DTO
     public int? CreatedById { get; set; }
     public int TimeNeeded { get; set; }
     public bool Expired { get; set; }
+    public bool Terminated { get; set; }
     public DateTime? StartedAt { get; set; }
   }
 
@@ -49,7 +50,7 @@ namespace tvz2api_cqrs.Models.DTO
   public class CourseGradesExamDTO
   {
     public string Name { get; set; }
-    public int Grade { get; set; }
+    public double Grade { get; set; }
     public int MaximumGrade { get; set; }
   }
 }

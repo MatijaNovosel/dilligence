@@ -169,16 +169,22 @@
                 class="q-py-sm text-center text-subtitle2"
               >Exam (ID {{ examInProgress.id }})</q-card-section>
               <q-separator />
-              <q-card-section class="q-pb-sm q-pt-md">
+              <q-card-section class="q-py-none q-pt-md">
                 <span class="text-subtitle2">Name:</span>
                 <span class="q-ml-sm">{{ examInProgress.name }}</span>
               </q-card-section>
-              <q-card-section class="q-pt-none q-pb-md">
+              <q-card-section class="q-py-none">
                 <span class="text-subtitle2">Time left:</span>
                 <span
                   class="q-ml-sm"
                   :class="examInProgress.expired ? 'text-red-6' : ''"
                 >{{ examInProgress.expired ? 'Expired' : examInProgress.startedAt }}</span>
+              </q-card-section>
+              <q-card-section class="q-pt-none q-pb-md">
+                <span class="text-subtitle2">Status:</span>
+                <span
+                  class="q-ml-sm text-green-4"
+                >{{ examInProgress.terminated || examInProgress.expired ? 'Terminated' : 'In progress' }}</span>
               </q-card-section>
             </q-card>
           </div>
@@ -217,7 +223,10 @@ export default {
         userId: this.user.id
       };
       ExamService.startAttempt(payload, this.courseId).then(({ data }) => {
-        this.$router.push({ name: "exam-details", params: { id: data.payload }});
+        this.$router.push({
+          name: "exam-details",
+          params: { id: data.payload }
+        });
       });
     },
     deleteExam(id) {

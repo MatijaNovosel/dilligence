@@ -148,6 +148,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Enabled = (bool)t.Exam.Enabled,
           Name = t.Exam.Name,
           TimeNeeded = t.Exam.TimeNeeded,
+          Terminated = (bool)t.Terminated,
           StartedAt = t.StartedAt,
           Expired = (t.Exam.TimeNeeded - (DateTime.Now - (DateTime)t.StartedAt).TotalSeconds) < 0 
         }).ToListAsync();

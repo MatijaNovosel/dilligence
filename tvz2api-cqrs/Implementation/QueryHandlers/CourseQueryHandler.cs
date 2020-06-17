@@ -66,6 +66,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         .ExamAttempt
         .Include(t => t.Exam)
         .ThenInclude(t => t.Question)
+        .ThenInclude(t => t.Answer)
+        .Include(t => t.UserAnswer)
         .Where(t => t.UserId == query.UserId && t.Exam.CourseId == query.CourseId)
         .ToListAsync();
 
@@ -73,7 +75,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
 
       examAttempts.ForEach(x =>
       {
-        var sumOfPoints = 0;
+        double sumOfPoints = 0;
         var maximumPoints = 0;
 
         var questions = x.Exam.Question.ToList();
@@ -83,11 +85,11 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         {
           maximumPoints += x.Value;
 
-          var userAnswer = userAnswers.FirstOrDefault(y => y.QuestionId == x.Id);
-
-          if (userAnswer != null)
+          if (x.TypeId == 1)
           {
-            if (x.TypeId == 1)
+            var userAnswer = userAnswers.FirstOrDefault(y => y.QuestionId == x.Id);
+
+            if (userAnswer != null)
             {
               if (userAnswer.AnswerId != null)
               {
@@ -97,9 +99,16 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
                 }
               }
             }
-            else
+          }
+          else
+          {
+            var userAnswer = userAnswers.Where(y => y.QuestionId == x.Id).ToList();
+            if (userAnswer.Count != 0)
             {
-              // Neki kurac
+              if (userAnswer.TrueForAll(x => x.AnswerId != null))
+              {
+                // Logika
+              }
             }
           }
         });
