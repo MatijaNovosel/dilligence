@@ -76,7 +76,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
       examAttempts.ForEach(x =>
       {
         double sumOfPoints = 0;
-        var maximumPoints = 0;
+        int maximumPoints = 0;
 
         var questions = x.Exam.Question.ToList();
         var userAnswers = x.UserAnswer;
@@ -105,9 +105,17 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
             var userAnswer = userAnswers.Where(y => y.QuestionId == x.Id).ToList();
             if (userAnswer.Count != 0)
             {
-              if (userAnswer.TrueForAll(x => x.AnswerId != null))
+              if (userAnswer.TrueForAll(y => y.AnswerId != null))
               {
-                // Logika
+                var answerIds = userAnswer.Select(y => y.AnswerId).ToList();
+                var correctAnswerIds = x.Answer.Where(y => y.Correct == true).Select(y => y.Id).ToList();
+                answerIds.ForEach(y =>
+                {
+                  if (correctAnswerIds.Contains((int)y))
+                  {
+                    sumOfPoints += Math.Ceiling((double)x.Value / correctAnswerIds.Count);
+                  }
+                });
               }
             }
           }

@@ -111,8 +111,8 @@ namespace tvz2api_cqrs.Controllers
     [HttpPost("start")]
     public async Task<IActionResult> StartAttempt(ExamStartAttemptCommand command)
     {
-      await _commandBus.ExecuteAsync(command);
-      return Ok();
+      var id = await _commandBus.ExecuteAsync<int>(command);
+      return Ok(id);
     }
 
     [HttpPost("finish-attempt")]
