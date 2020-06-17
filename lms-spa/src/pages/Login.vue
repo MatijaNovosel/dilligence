@@ -2,7 +2,7 @@
   <q-page class="row justify-center items-center">
     <q-card flat :style="$q.screen.xs || $q.screen.sm ? loginCardSmall : loginCardNormal">
       <q-card-section class="text-center q-mb-lg">
-        <q-img style="width: 150px; height: 150px;" src="../assets/tvz-logo.svg"></q-img>
+        <q-img class="spin" style="width: 150px; height: 165px; " src="../assets/logo-outlined.png"></q-img>
       </q-card-section>
       <q-card-section class="q-py-none">
         <q-input
@@ -138,7 +138,20 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
-.sign-up-text:hover
+<style>
+
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+.spin {
+  -webkit-animation:spin 30s linear infinite;
+  -moz-animation:spin 30s linear infinite;
+  animation:spin 30s linear infinite;
+}
+
+.sign-up-text:hover {
 	cursor: pointer
+}
+
 </style>
