@@ -28,17 +28,22 @@ namespace tvz2api_cqrs.Controllers
   {
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
+    private readonly IUserResolver _userResolver;
 
-    public CourseTaskController(ICommandBus commandBus, IQueryBus queryBus)
+    public CourseTaskController(ICommandBus commandBus, IQueryBus queryBus, IUserResolver userResolver)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;
+      _userResolver = userResolver;
     }
 
     [HttpGet]
-    // [AuthorizeBelongsToCourse]
     public async Task<IActionResult> Get(int courseId, string name, bool showOverdue, bool showActive)
     {
+      if (!_userResolver.UserBelongsToCourse(courseId))
+      {
+        return Unauthorized();
+      }
       var specification = new CourseTaskSpecification(courseId, name, showOverdue, showActive);
       var result = await _queryBus.ExecuteAsync(new CourseTaskQuery(specification));
       var count = await _queryBus.ExecuteAsync(new CourseTaskTotalQuery(specification));
@@ -46,9 +51,12 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpGet("details/{id}")]
-    // [AuthorizeBelongsToCourse]
     public async Task<IActionResult> GetDetails(int id, int courseId)
     {
+      if (!_userResolver.UserBelongsToCourse(courseId))
+      {
+        return Unauthorized();
+      }
       var result = await _queryBus.ExecuteAsync(new CourseTaskDetailsQuery()
       {
         Id = id
@@ -57,9 +65,12 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpGet("attempts/{id}")]
-    // [AuthorizeBelongsToCourse]
     public async Task<IActionResult> GetAttempts(int id, int courseId)
     {
+      if (!_userResolver.UserBelongsToCourse(courseId))
+      {
+        return Unauthorized();
+      }
       var result = await _queryBus.ExecuteAsync(new CourseTaskAttemptsQuery()
       {
         Id = id,
@@ -69,9 +80,12 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpGet("attempts/details/{id}")]
-    // [AuthorizeBelongsToCourse]
     public async Task<IActionResult> GetAttemptDetails(int id, int courseId)
     {
+      if (!_userResolver.UserBelongsToCourse(courseId))
+      {
+        return Unauthorized();
+      }
       var result = await _queryBus.ExecuteAsync(new CourseTaskAttemptDetailsQuery()
       {
         Id = id,
@@ -81,33 +95,45 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPost("new-attempt")]
-    // [AuthorizeBelongsToCourse]
     public async Task<IActionResult> NewAttempt(int courseId, [FromForm] CourseTaskSubmitAttemptCommand command)
     {
+      if (!_userResolver.UserBelongsToCourse(courseId))
+      {
+        return Unauthorized();
+      }
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
 
     [HttpPut("edit-attempt")]
-    // [AuthorizeBelongsToCourse]
     public async Task<IActionResult> EditAttempt(int courseId, [FromForm] CourseTaskEditAttemptCommand command)
     {
+      if (!_userResolver.UserBelongsToCourse(courseId))
+      {
+        return Unauthorized();
+      }
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
 
     [HttpPost("grade-attempt")]
-    // [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanGradeTasks)]
     public async Task<IActionResult> GradeAttempt(int courseId, CourseTaskGradeAttemptCommand command)
     {
+      if (!_userResolver.HasCoursePrivilege(courseId, new List<PrivilegeEnum>() { PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanGradeTasks }))
+      {
+        return Unauthorized();
+      }
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
 
     [HttpDelete("{id}")]
-    // [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanDeleteTasks)]
     public async Task<IActionResult> CreateNew(int id, int courseId)
     {
+      if (!_userResolver.HasCoursePrivilege(courseId, new List<PrivilegeEnum>() { PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanDeleteTasks }))
+      {
+        return Unauthorized();
+      }
       await _commandBus.ExecuteAsync(new CourseTaskDeleteCommand()
       {
         CourseId = courseId,
@@ -117,17 +143,23 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPost]
-    // [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanCreateTasks)]
     public async Task<IActionResult> CreateNew(int courseId, [FromForm] CourseTaskCreateCommand command)
     {
+      if (!_userResolver.HasCoursePrivilege(courseId, new List<PrivilegeEnum>() { PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanCreateTasks }))
+      {
+        return Unauthorized();
+      }
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
 
     [HttpPut]
-    // [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanCreateTasks)]
     public async Task<IActionResult> Update(int courseId, [FromForm] CourseTaskUpdateCommand command)
     {
+      if (!_userResolver.HasCoursePrivilege(courseId, new List<PrivilegeEnum>() { PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanCreateTasks }))
+      {
+        return Unauthorized();
+      }
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }

@@ -77,7 +77,8 @@ namespace tvz2api_cqrs
               .SetIsOriginAllowedToAllowWildcardSubdomains();
           });
       });
-      services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+      services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+      .AddJwtBearer(options =>
       {
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -117,6 +118,7 @@ namespace tvz2api_cqrs
         });
       });
       services.AddHttpContextAccessor();
+      services.AddTransient<IUserResolver, UserResolver>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -17,6 +17,7 @@ using Newtonsoft.Json;
 using System.Net;
 using tvz2api_cqrs.Custom.Attributes;
 using tvz2api_cqrs.Implementation.Commands;
+using tvz2api_cqrs.Custom;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
@@ -31,14 +32,14 @@ namespace tvz2api_cqrs.Controllers
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
     private readonly lmsContext _context;
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IUserResolver _userResolver;
 
-    public CourseController(ICommandBus commandBus, IQueryBus queryBus, lmsContext context, IHttpContextAccessor httpContextAccessor)
+    public CourseController(ICommandBus commandBus, IQueryBus queryBus, lmsContext context, IUserResolver userResolver)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;
       _context = context;
-      _httpContextAccessor = httpContextAccessor;
+      _userResolver = userResolver;
     }
 
     [HttpGet]
@@ -120,9 +121,12 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPost("new-sidebar")]
-    // [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanUploadCourseFiles)]
     public async Task<IActionResult> CreateNewSidebar(int courseId, CourseCreateNewSidebarCommand command)
     {
+      if (!_userResolver.HasCoursePrivilege(courseId, new List<PrivilegeEnum>() { PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanUploadCourseFiles }))
+      {
+        return Unauthorized();
+      }
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
@@ -135,17 +139,23 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPut("password")]
-    // [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse)]
     public async Task<IActionResult> ChangePassword(int courseId, CourseUpdatePasswordCommand command)
     {
+      if (!_userResolver.HasCoursePrivilege(courseId, new List<PrivilegeEnum>() { PrivilegeEnum.CanManageCourse }))
+      {
+        return Unauthorized();
+      }
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
 
     [HttpPost("landing-page")]
-    // [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanUploadCourseFiles)]
     public async Task<IActionResult> UpdateLandingPage(int courseId, CourseUpdateLandingPageCommand command)
     {
+      if (!_userResolver.HasCoursePrivilege(courseId, new List<PrivilegeEnum>() { PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanUploadCourseFiles }))
+      {
+        return Unauthorized();
+      }
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
@@ -158,17 +168,23 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPost("new-discussion")]
-    // [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageDiscussion, PrivilegeEnum.CanCreateNewDiscussion)]
     public async Task<IActionResult> CreateNewDiscussion(int courseId, [FromForm] CourseCreateDiscussionCommand command)
     {
+      if (!_userResolver.HasCoursePrivilege(courseId, new List<PrivilegeEnum>() { PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageDiscussion, PrivilegeEnum.CanCreateNewDiscussion }))
+      {
+        return Unauthorized();
+      }
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
 
     [HttpDelete("delete-sidebar/{id}")]
-    // [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanDeleteCourseFiles)]
     public async Task<IActionResult> DeleteSidebar(int id, int courseId)
     {
+      if (!_userResolver.HasCoursePrivilege(courseId, new List<PrivilegeEnum>() { PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanDeleteCourseFiles }))
+      {
+        return Unauthorized();
+      }
       await _commandBus.ExecuteAsync(new CourseDeleteSidebarCommand()
       {
         SidebarId = id,
