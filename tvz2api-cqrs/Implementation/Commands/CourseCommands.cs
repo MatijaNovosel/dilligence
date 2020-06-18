@@ -14,6 +14,15 @@ namespace tvz2api_cqrs.Implementation.Commands
     public string Title { get; set; }
   }
 
+  public class CourseCreateCommand : ICommand<int>
+  {
+    public CourseCreateCommand() { }
+    public string Name { get; set; }
+    public string Password { get; set; }
+    public int SpecializationId { get; set; }
+    public int CreatedById { get; set; }
+  }
+
   public class CourseUpdatePasswordCommand : ICommand
   {
     public CourseUpdatePasswordCommand() { }
@@ -27,7 +36,7 @@ namespace tvz2api_cqrs.Implementation.Commands
     {
       DiscussionId = discussionId;
     }
-    public int DiscussionId { get; set; }   
+    public int DiscussionId { get; set; }
   }
 
   public class CourseUpdateLandingPageCommand : ICommand
@@ -38,8 +47,8 @@ namespace tvz2api_cqrs.Implementation.Commands
       CourseId = courseId;
       Content = content;
     }
-    public int CourseId { get; set; } 
-    public string Content { get; set; } 
+    public int CourseId { get; set; }
+    public string Content { get; set; }
   }
 
   public class CourseDeleteSidebarCommand : ICommand
@@ -51,7 +60,7 @@ namespace tvz2api_cqrs.Implementation.Commands
 
   public class CourseDiscussionReplyCommand : ICommand
   {
-    public CourseDiscussionReplyCommand() {}
+    public CourseDiscussionReplyCommand() { }
     public int DiscussionId { get; set; }
     public int SubmittedById { get; set; }
     public string Content { get; set; }

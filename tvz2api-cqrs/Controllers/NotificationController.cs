@@ -60,7 +60,7 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPost]
-    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanSendNotifications)]
+    // [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanSendNotifications)]
     public async Task<IActionResult> CreateNew(int courseId, [FromForm] NotificationCreateCommand command)
     {
       await _commandBus.ExecuteAsync(command);
@@ -76,7 +76,7 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPost("archive")]
-    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanArchiveNotifications)]
+    // [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanArchiveNotifications)]
     public async Task<IActionResult> Archive(int courseId, NotificationArchiveCommand command)
     {
       await _commandBus.ExecuteAsync(command);
@@ -84,7 +84,7 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpDelete]
-    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanDeleteNotifications)]
+    // [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageNotifications, PrivilegeEnum.CanDeleteNotifications)]
     public async Task<IActionResult> Delete(int courseId, int id)
     {
       await _commandBus.ExecuteAsync(new NotificationDeleteCommand()

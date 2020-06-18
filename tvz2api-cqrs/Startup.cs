@@ -134,8 +134,8 @@ namespace tvz2api_cqrs
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "tvz2cqrs");
       });
       app.UseRouting();
-      app.UseAuthorization();
       app.UseAuthentication();
+      app.UseAuthorization();
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapControllers();
@@ -171,6 +171,7 @@ namespace tvz2api_cqrs
       services.AddScoped<ICommandHandlerAsync<CourseDeleteDiscussionCommand>, CourseCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<CourseUpdateLandingPageCommand>, CourseCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<CourseUpdatePasswordCommand>, CourseCommandHandler>();
+      services.AddScoped<ICommandHandlerAsync<CourseCreateCommand, int>, CourseCommandHandler>();
 
       // File commands
       services.AddScoped<ICommandHandlerAsync<FileUploadCommand, List<int>>, FileCommandHandler>();

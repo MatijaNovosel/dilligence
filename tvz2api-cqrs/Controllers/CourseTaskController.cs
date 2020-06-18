@@ -36,7 +36,7 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpGet]
-    [AuthorizeBelongsToCourse]
+    // [AuthorizeBelongsToCourse]
     public async Task<IActionResult> Get(int courseId, string name, bool showOverdue, bool showActive)
     {
       var specification = new CourseTaskSpecification(courseId, name, showOverdue, showActive);
@@ -46,7 +46,7 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpGet("details/{id}")]
-    [AuthorizeBelongsToCourse]
+    // [AuthorizeBelongsToCourse]
     public async Task<IActionResult> GetDetails(int id, int courseId)
     {
       var result = await _queryBus.ExecuteAsync(new CourseTaskDetailsQuery()
@@ -57,7 +57,7 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpGet("attempts/{id}")]
-    [AuthorizeBelongsToCourse]
+    // [AuthorizeBelongsToCourse]
     public async Task<IActionResult> GetAttempts(int id, int courseId)
     {
       var result = await _queryBus.ExecuteAsync(new CourseTaskAttemptsQuery()
@@ -69,7 +69,7 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpGet("attempts/details/{id}")]
-    [AuthorizeBelongsToCourse]
+    // [AuthorizeBelongsToCourse]
     public async Task<IActionResult> GetAttemptDetails(int id, int courseId)
     {
       var result = await _queryBus.ExecuteAsync(new CourseTaskAttemptDetailsQuery()
@@ -81,7 +81,7 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPost("new-attempt")]
-    [AuthorizeBelongsToCourse]
+    // [AuthorizeBelongsToCourse]
     public async Task<IActionResult> NewAttempt(int courseId, [FromForm] CourseTaskSubmitAttemptCommand command)
     {
       await _commandBus.ExecuteAsync(command);
@@ -89,7 +89,7 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPut("edit-attempt")]
-    [AuthorizeBelongsToCourse]
+    // [AuthorizeBelongsToCourse]
     public async Task<IActionResult> EditAttempt(int courseId, [FromForm] CourseTaskEditAttemptCommand command)
     {
       await _commandBus.ExecuteAsync(command);
@@ -97,7 +97,7 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPost("grade-attempt")]
-    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanGradeTasks)]
+    // [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanGradeTasks)]
     public async Task<IActionResult> GradeAttempt(int courseId, CourseTaskGradeAttemptCommand command)
     {
       await _commandBus.ExecuteAsync(command);
@@ -105,7 +105,7 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpDelete("{id}")]
-    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanDeleteTasks)]
+    // [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanDeleteTasks)]
     public async Task<IActionResult> CreateNew(int id, int courseId)
     {
       await _commandBus.ExecuteAsync(new CourseTaskDeleteCommand()
@@ -117,7 +117,7 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPost]
-    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanCreateTasks)]
+    // [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanCreateTasks)]
     public async Task<IActionResult> CreateNew(int courseId, [FromForm] CourseTaskCreateCommand command)
     {
       await _commandBus.ExecuteAsync(command);
@@ -125,7 +125,7 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPut]
-    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanCreateTasks)]
+    // [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanCreateTasks)]
     public async Task<IActionResult> Update(int courseId, [FromForm] CourseTaskUpdateCommand command)
     {
       await _commandBus.ExecuteAsync(command);

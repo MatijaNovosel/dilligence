@@ -93,7 +93,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     public async Task<List<UnfinishedExamDTO>> HandleAsync(ExamUnfinishedQuery query)
     {
       var exams = await _context.Exam
-        .Where(t => t.CreatedById == query.UserId && t.Finalized == false)
+        .Where(t => t.CourseId == query.CourseId && t.CreatedById == query.UserId && t.Finalized == false)
         .Select(t => new UnfinishedExamDTO
         {
           CourseId = t.CourseId,
@@ -106,7 +106,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
     public async Task<List<FinishedExamDTO>> HandleAsync(ExamFinishedQuery query)
     {
       var exams = await _context.Exam
-        .Where(t => t.CreatedById == query.UserId && t.Finalized == true)
+        .Where(t => t.CourseId == query.CourseId && t.CreatedById == query.UserId && t.Finalized == true)
         .Select(t => new FinishedExamDTO
         {
           CourseId = t.CourseId,
@@ -150,7 +150,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           TimeNeeded = t.Exam.TimeNeeded,
           Terminated = (bool)t.Terminated,
           StartedAt = t.StartedAt,
-          Expired = (t.Exam.TimeNeeded - (DateTime.Now - (DateTime)t.StartedAt).TotalSeconds) < 0 
+          Expired = (t.Exam.TimeNeeded - (DateTime.Now - (DateTime)t.StartedAt).TotalSeconds) < 0
         }).ToListAsync();
       return exams;
     }

@@ -14,11 +14,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
-using System.Net.Mail;
 using System.Net;
-using tvz2api_cqrs.Custom;
 using tvz2api_cqrs.Custom.Attributes;
 using tvz2api_cqrs.Implementation.Commands;
+using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace tvz2api_cqrs.Controllers
 {
@@ -29,11 +30,15 @@ namespace tvz2api_cqrs.Controllers
   {
     private readonly ICommandBus _commandBus;
     private readonly IQueryBus _queryBus;
+    private readonly lmsContext _context;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public CourseController(ICommandBus commandBus, IQueryBus queryBus)
+    public CourseController(ICommandBus commandBus, IQueryBus queryBus, lmsContext context, IHttpContextAccessor httpContextAccessor)
     {
       _commandBus = commandBus;
       _queryBus = queryBus;
+      _context = context;
+      _httpContextAccessor = httpContextAccessor;
     }
 
     [HttpGet]
@@ -115,15 +120,22 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPost("new-sidebar")]
-    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanUploadCourseFiles)]
+    // [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanUploadCourseFiles)]
     public async Task<IActionResult> CreateNewSidebar(int courseId, CourseCreateNewSidebarCommand command)
     {
       await _commandBus.ExecuteAsync(command);
       return Ok();
     }
 
+    [HttpPost("new-course")]
+    public async Task<IActionResult> CreateNewCourse(CourseCreateCommand command)
+    {
+      var newCourseId = await _commandBus.ExecuteAsync<int>(command);
+      return Ok(newCourseId);
+    }
+
     [HttpPut("password")]
-    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse)]
+    // [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse)]
     public async Task<IActionResult> ChangePassword(int courseId, CourseUpdatePasswordCommand command)
     {
       await _commandBus.ExecuteAsync(command);
@@ -131,7 +143,7 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPost("landing-page")]
-    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanUploadCourseFiles)]
+    // [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanUploadCourseFiles)]
     public async Task<IActionResult> UpdateLandingPage(int courseId, CourseUpdateLandingPageCommand command)
     {
       await _commandBus.ExecuteAsync(command);
@@ -146,7 +158,7 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpPost("new-discussion")]
-    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageDiscussion, PrivilegeEnum.CanCreateNewDiscussion)]
+    // [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageDiscussion, PrivilegeEnum.CanCreateNewDiscussion)]
     public async Task<IActionResult> CreateNewDiscussion(int courseId, [FromForm] CourseCreateDiscussionCommand command)
     {
       await _commandBus.ExecuteAsync(command);
@@ -154,7 +166,7 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpDelete("delete-sidebar/{id}")]
-    [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanDeleteCourseFiles)]
+    // [AuthorizeCoursePrivilege(PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageCourseFiles, PrivilegeEnum.CanDeleteCourseFiles)]
     public async Task<IActionResult> DeleteSidebar(int id, int courseId)
     {
       await _commandBus.ExecuteAsync(new CourseDeleteSidebarCommand()

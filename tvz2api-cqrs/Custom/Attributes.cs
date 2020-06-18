@@ -8,6 +8,7 @@ using tvz2api_cqrs.Custom;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Linq;
+using System.Security.Principal;
 
 namespace tvz2api_cqrs.Custom.Attributes
 {

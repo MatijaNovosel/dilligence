@@ -20,6 +20,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net.Mail;
 using Microsoft.Extensions.Configuration;
 using tvz2api_cqrs.Custom;
+using tvz2api_cqrs.Enumerations;
+using Newtonsoft.Json;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace tvz2api_cqrs.Implementation.CommandHandlers
 {
@@ -30,7 +34,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     ICommandHandlerAsync<CourseDiscussionReplyCommand>,
     ICommandHandlerAsync<CourseDeleteDiscussionCommand>,
     ICommandHandlerAsync<CourseUpdateLandingPageCommand>,
-    ICommandHandlerAsync<CourseUpdatePasswordCommand>
+    ICommandHandlerAsync<CourseUpdatePasswordCommand>,
+    ICommandHandlerAsync<CourseCreateCommand, int>
   {
     private readonly lmsContext _context;
     private readonly IConfiguration _configuration;
@@ -60,7 +65,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
     public async Task HandleAsync(CourseDiscussionReplyCommand command)
     {
-      _context.DiscussionComment.Add(new DiscussionComment() 
+      _context.DiscussionComment.Add(new DiscussionComment()
       {
         Content = command.Content,
         DiscussionId = command.DiscussionId,
@@ -68,6 +73,53 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         SubmittedById = command.SubmittedById
       });
       await _context.SaveChangesAsync();
+    }
+
+    public async Task<ICommandResult<int>> HandleAsync(CourseCreateCommand command)
+    {
+      if (_context.Course.Any(x => String.Equals(x.Name.ToLower(), command.Name.ToLower())))
+      {
+        throw new Exception("This name is already used!");
+      }
+
+      var newCourse = new Course()
+      {
+        Name = command.Name,
+        MadeById = command.CreatedById,
+        Password = command.Password,
+        SpecializationId = command.SpecializationId
+      };
+
+      _context.Course.Add(newCourse);
+      await _context.SaveChangesAsync();
+
+      var privileges = new List<UserCoursePrivilege>() {
+        new UserCoursePrivilege()
+        {
+          CourseId = newCourse.Id,
+          PrivilegeId = (int)PrivilegeEnum.CanManageCourse,
+          UserId = command.CreatedById
+        },
+        new UserCoursePrivilege()
+        {
+          CourseId = newCourse.Id,
+          PrivilegeId = (int)PrivilegeEnum.IsInvolvedWithCourse,
+          UserId = command.CreatedById
+        }
+      };
+
+      _context.Subscription.Add(new Subscription()
+      {
+        CourseId = newCourse.Id,
+        JoinedAt = DateTime.Now,
+        UserId = command.CreatedById,
+        Blacklisted = false
+      });
+
+      _context.UserCoursePrivilege.AddRange(privileges);
+      await _context.SaveChangesAsync();
+
+      return CommandResult<int>.Success(newCourse.Id);
     }
 
     public async Task HandleAsync(CourseUpdateLandingPageCommand command)
@@ -99,7 +151,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         SubmittedAt = DateTime.Now,
         SubmittedById = command.SubmittedById
       };
-      
+
       _context.Discussion.Add(discussion);
       await _context.SaveChangesAsync();
     }

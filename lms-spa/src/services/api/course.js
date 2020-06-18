@@ -86,5 +86,8 @@ export default {
   },
   async getUserGrades(courseId, userId) {
     return await axios.get('Course/grades/' + userId, { params: { courseId } });
+  },
+  async createNewCourse(payload) {
+    return await axios.post('Course/new-course', payload);
   }
 }

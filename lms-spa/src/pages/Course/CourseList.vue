@@ -1,5 +1,10 @@
 <template>
   <q-page class="q-pa-md">
+    <q-btn
+      size="sm"
+      class="absolute-top-right q-mr-sm bg-green-8 text-white"
+      @click="newCourseDialog = true"
+    >Create course</q-btn>
     <div class="row">
       <div class="col-12">
         <span class="text-weight-light text-h5">{{ $i18n.t('availableCourses') }}</span>
@@ -201,6 +206,71 @@
         </q-card-section>
       </q-card>
     </q-dialog>
+    <q-dialog :maximized="$q.screen.xs || $q.screen.sm" v-model="newCourseDialog" persistent>
+      <q-card :style="$q.screen.xs || $q.screen.sm || newDialogStyle">
+        <q-toolbar
+          :style="`border-bottom: 1px solid ${$q.dark.isActive ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.12)'};`"
+        >
+          <span style="font-size: 18px;">New course</span>
+          <q-space />
+          <q-btn
+            @click="resetNewCourseDialog"
+            :ripple="false"
+            dense
+            size="sm"
+            flat
+            round
+            icon="mdi-close-thick"
+          />
+        </q-toolbar>
+        <q-card-section class="q-gutter-sm q-pb-none">
+          <div class="row">
+            <div class="col-12">
+              <q-input
+                :error="$v.newCourse.name.$invalid && $v.newCourse.name.$dirty"
+                error-message="This field is required!"
+                dense
+                outlined
+                v-model="newCourse.name"
+                label="Title"
+                @input="$v.newCourse.name.$touch()"
+              />
+            </div>
+            <div class="col-12">
+              <q-input
+                :error="$v.newCourse.password.$invalid && $v.newCourse.password.$dirty"
+                error-message="This field is required!"
+                dense
+                outlined
+                v-model="newCourse.password"
+                label="Password"
+                @input="$v.newCourse.password.$touch()"
+              />
+            </div>
+            <div class="col-12">
+              <q-select
+                outlined
+                dense
+                v-model="newCourse.specializationId"
+                :options="smjerOptions"
+                :label="$i18n.t('specialization')"
+                emit-value
+                map-options
+              />
+            </div>
+          </div>
+        </q-card-section>
+        <q-card-actions class="justify-end q-pt-md">
+          <q-btn
+            :disabled="$v.newCourse.$invalid"
+            @click="createNewCourse"
+            class="q-mr-sm q-mb-sm"
+            color="primary"
+            size="sm"
+          >Create</q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -225,6 +295,33 @@ export default {
         cacheKey: "course-list",
         saveProperties: ["searchData"]
       };
+    },
+    resetNewCourseDialog() {
+      this.newCourseDialog = false;
+    },
+    createNewCourse() {
+      let payload = {
+        name: this.newCourse.name,
+        password: this.newCourse.password,
+        specializationId: this.newCourse.specializationId,
+        createdById: this.user.id
+      };
+      CourseService.createNewCourse(payload)
+        .then(({ data }) => {
+          let id = data.payload;
+          this.addNewPrivelege({
+            courseId: id,
+            privileges: [
+              this.Privileges.CanManageCourse,
+              this.Privileges.IsInvolvedWithCourse
+            ]
+          });
+          this.getData();
+          this.resetNewCourseDialog();
+        })
+        .catch(error => {
+          NotificationService.showError(error.message);
+        });
     },
     subscribe() {
       UserService.subscribe(this.password, this.user.id, this.activeSubjectId)
@@ -279,6 +376,16 @@ export default {
     }, 1000)
   },
   validations: {
+    newCourse: {
+      name: {
+        required,
+        minLength: minLength(4)
+      },
+      password: {
+        required,
+        minLength: minLength(4)
+      }
+    },
     password: {
       required,
       minLength: minLength(4)
@@ -292,12 +399,22 @@ export default {
   },
   data() {
     return {
+      newCourseDialog: false,
       dialogStyle: { width: "35%", "max-width": "90vw" },
       showPassword: false,
       activeSubjectId: null,
       subscribeDialog: null,
       password: null,
       smjerOptions: [],
+      newCourse: {
+        name: null,
+        password: null,
+        specializationId: null
+      },
+      newDialogStyle: {
+        width: "70%",
+        "max-width": "90vw"
+      },
       showSubscriptionsOptions: [
         { label: "Show subscribed", value: 0 },
         { label: "Show non subscribed", value: 1 }
@@ -357,15 +474,15 @@ export default {
 
 <style lang="sass" scoped>
 .aside
-	position: absolute
-	right: 15px
-	bottom: 15px
+  position: absolute
+  right: 15px
+  bottom: 15px
 .dialog-toolbar
-	min-height: 30px
+  min-height: 30px
 .ellipsis-text
-	white-space: nowrap
-	overflow: hidden
-	display: block
+  white-space: nowrap
+  overflow: hidden
+  display: block
 .rounded
-	border-radius: 10px
+  border-radius: 10px
 </style>
