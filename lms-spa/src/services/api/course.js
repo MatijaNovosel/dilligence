@@ -95,5 +95,8 @@ export default {
   },
   async kickParticipant(payload) {
     return await axios.post('Course/kick', payload);
+  },
+  async deleteCourse(id) {
+    return await axios.delete('Course/delete-course/' + id);
   }
 }

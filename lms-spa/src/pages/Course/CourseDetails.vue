@@ -156,7 +156,9 @@ export default {
   methods: {
     ...mapActions(["removePrivelege"]),
     deleteCourse() {
-      // delete course
+      CourseService.deleteCourse(this.courseId).then(() => {
+        this.$router.push({ name: "courses" });
+      });
     },
     unsubscribeFromCourse() {
       UserService.unsubscribe(this.user.id, this.courseId).then(() => {

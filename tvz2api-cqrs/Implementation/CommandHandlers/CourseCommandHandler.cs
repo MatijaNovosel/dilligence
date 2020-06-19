@@ -80,8 +80,72 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
     public async Task HandleAsync(CourseDeleteCommand command)
     {
-      var course = await _context.Course.FirstOrDefaultAsync(x => x.Id == command.CourseId);
+      var course = await _context
+        .Course
+        .Include(x => x.Subscription)
+        .Include(x => x.CourseTask)
+        .ThenInclude(x => x.CourseTaskAttachment)
+        .Include(x => x.CourseTask)
+        .ThenInclude(x => x.CourseTaskAttempt)
+        .ThenInclude(x => x.TaskAttemptAttachment)
+        .Include(x => x.Discussion)
+        .ThenInclude(x => x.DiscussionComment)
+        .Include(x => x.Exam)
+        .ThenInclude(x => x.ExamAttempt)
+        .ThenInclude(x => x.UserAnswer)
+        .Include(x => x.Exam)
+        .ThenInclude(x => x.Question)
+        .ThenInclude(x => x.Answer)
+        .Include(x => x.SidebarContent)
+        .ThenInclude(x => x.SidebarContentFile)
+        .FirstOrDefaultAsync(x => x.Id == command.CourseId);
+
+      _context.Subscription.RemoveRange(course.Subscription);
+
+      var courseTasks = course.CourseTask.ToList();
+      courseTasks.ForEach(x =>
+      {
+        _context.CourseTaskAttachment.RemoveRange(x.CourseTaskAttachment);
+        var attempts = x.CourseTaskAttempt.ToList();
+        attempts.ForEach(y =>
+        {
+          _context.TaskAttemptAttachment.RemoveRange(y.TaskAttemptAttachment);
+        });
+        _context.CourseTaskAttempt.RemoveRange(attempts);
+      });
+
+      var discussions = course.Discussion.ToList();
+      discussions.ForEach(x =>
+      {
+        _context.DiscussionComment.RemoveRange(x.DiscussionComment);
+      });
+      _context.Discussion.RemoveRange(discussions);
+
+      var exams = course.Exam.ToList();
+
+      exams.ForEach(x =>
+      {
+        var attempts = x.ExamAttempt.ToList();
+
+        attempts.ForEach(y =>
+        {
+          _context.UserAnswer.RemoveRange(y.UserAnswer);
+        });
+
+        _context.ExamAttempt.RemoveRange(attempts);
+
+        var questions = x.Question.ToList();
+        questions.ForEach(y =>
+        {
+          _context.Answer.RemoveRange(y.Answer);
+        });
+        _context.Question.RemoveRange(questions);
+      });
+
+      _context.Exam.RemoveRange(exams);
+
       _context.Course.Remove(course);
+
       await _context.SaveChangesAsync();
     }
 
