@@ -110,6 +110,24 @@ export default {
       });
     }, 1500)
   },
+  watch: {
+    value(val) {
+      UserService.getBlacklist(this.user.id).then(({ data }) => {
+        let blacklistOptions = [];
+        data.forEach(x =>
+          blacklistOptions.push({ label: x.name, value: x.courseId })
+        );
+        this.options = blacklistOptions;
+        this.blacklist = data
+          .map(x => {
+            if (x.blacklisted) {
+              return x.courseId;
+            }
+          })
+          .filter(x => x != null);
+      });
+    }
+  },
   mounted() {
     UserService.getBlacklist(this.user.id).then(({ data }) => {
       let blacklistOptions = [];

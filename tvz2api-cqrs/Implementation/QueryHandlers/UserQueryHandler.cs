@@ -44,17 +44,43 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
 
     public async Task<List<BlacklistDTO>> HandleAsync(UserBlacklistQuery query)
     {
-      var blacklist = await _context.Subscription
-        .Include(t => t.Course)
-        .ThenInclude(t => t.UserCoursePrivilege)
-        .Where(t => t.UserId == query.UserId && t.Course.UserCoursePrivilege.Where(x => x.UserId == query.UserId).Count() == 0)
-        .Select(t => new BlacklistDTO
+      var user = await _context
+        .User
+        .Include(x => x.UserCoursePrivilege)
+        .Include(x => x.Subscription)
+        .ThenInclude(x => x.Course)
+        .FirstOrDefaultAsync(x => x.Id == query.UserId);
+
+      var subscriptions = user.Subscription.ToList();
+      var privileges = user.UserCoursePrivilege.ToList();
+      var blacklist = new List<BlacklistDTO>();
+
+      subscriptions.ForEach(x =>
+      {
+        var extractedPrivileges = privileges.Where(y => y.CourseId == x.CourseId);
+        if (extractedPrivileges.Count() != 0 && extractedPrivileges != null)
         {
-          Blacklisted = t.Blacklisted,
-          CourseId = t.CourseId,
-          Name = t.Course.Name
-        })
-        .ToListAsync();
+          if (!extractedPrivileges.Any(y => y.PrivilegeId == (int)PrivilegeEnum.IsInvolvedWithCourse))
+          {
+            blacklist.Add(new BlacklistDTO
+            {
+              Blacklisted = x.Blacklisted,
+              CourseId = x.CourseId,
+              Name = x.Course.Name
+            });
+          }
+        }
+        else
+        {
+          blacklist.Add(new BlacklistDTO
+          {
+            Blacklisted = x.Blacklisted,
+            CourseId = x.CourseId,
+            Name = x.Course.Name
+          });
+        }
+      });
+
       return blacklist;
     }
 
