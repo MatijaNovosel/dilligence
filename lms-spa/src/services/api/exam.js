@@ -101,5 +101,11 @@ export default {
   },
   async finishExam(payload) {
     return await axios.post('Exam/finish-attempt', payload);
+  },
+  async deleteUnfinishedExam(id) {
+    return await axios.delete('Exam/delete-unfinished/' + id);
+  },
+  async deleteFinishedExam(id) {
+    return await axios.delete('Exam/delete-finished/' + id);
   }
 }

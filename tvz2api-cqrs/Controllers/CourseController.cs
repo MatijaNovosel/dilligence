@@ -192,5 +192,19 @@ namespace tvz2api_cqrs.Controllers
       });
       return Ok();
     }
+
+    [HttpDelete("delete-course/{id}")]
+    public async Task<IActionResult> DeleteCourse(int id)
+    {
+      if (!_userResolver.HasCoursePrivilege(id, new List<PrivilegeEnum>() { PrivilegeEnum.CanManageCourse }))
+      {
+        return Unauthorized();
+      }
+      await _commandBus.ExecuteAsync(new CourseDeleteCommand() 
+      {
+        CourseId = id
+      });
+      return Ok();
+    }
   }
 }

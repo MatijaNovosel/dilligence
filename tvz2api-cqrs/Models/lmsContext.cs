@@ -65,6 +65,7 @@ namespace tvz2api_cqrs.Models
         entity.HasOne(d => d.Question)
                   .WithMany(p => p.Answer)
                   .HasForeignKey(d => d.QuestionId)
+                  .OnDelete(DeleteBehavior.Cascade)
                   .HasConstraintName("FK__Answer__Question__6E01572D");
       });
 
@@ -117,6 +118,7 @@ namespace tvz2api_cqrs.Models
         entity.HasOne(d => d.Specialization)
                   .WithMany(p => p.Course)
                   .HasForeignKey(d => d.SpecializationId)
+                  .OnDelete(DeleteBehavior.Cascade)
                   .HasConstraintName("FK__Course__Speciali__6EF57B66");
       });
 
@@ -141,14 +143,12 @@ namespace tvz2api_cqrs.Models
         entity.HasOne(d => d.Course)
                   .WithMany(p => p.CourseTask)
                   .HasForeignKey(d => d.CourseId)
-                  .OnDelete(DeleteBehavior.ClientSetNull)
-                  .HasConstraintName("FK__CourseTas__Cours__09A971A2");
+                  .HasConstraintName("FK__CourseTas__Cours__02084FDA");
 
         entity.HasOne(d => d.CreatedBy)
                   .WithMany(p => p.CourseTask)
                   .HasForeignKey(d => d.CreatedById)
-                  .OnDelete(DeleteBehavior.ClientSetNull)
-                  .HasConstraintName("FK__CourseTas__Creat__02084FDA");
+                  .HasConstraintName("FK__CourseTas__Creat__02FC7413");
       });
 
       modelBuilder.Entity<CourseTaskAttachment>(entity =>
@@ -162,14 +162,12 @@ namespace tvz2api_cqrs.Models
         entity.HasOne(d => d.CourseTask)
                   .WithMany(p => p.CourseTaskAttachment)
                   .HasForeignKey(d => d.CourseTaskId)
-                  .OnDelete(DeleteBehavior.ClientSetNull)
-                  .HasConstraintName("FK__CourseTas__Cours__03F0984C");
+                  .HasConstraintName("FK__CourseTas__Cours__04E4BC85");
 
         entity.HasOne(d => d.File)
                   .WithMany(p => p.CourseTaskAttachment)
                   .HasForeignKey(d => d.FileId)
-                  .OnDelete(DeleteBehavior.ClientSetNull)
-                  .HasConstraintName("FK__CourseTas__FileI__02FC7413");
+                  .HasConstraintName("FK__CourseTas__FileI__03F0984C");
       });
 
       modelBuilder.Entity<CourseTaskAttempt>(entity =>
@@ -190,18 +188,17 @@ namespace tvz2api_cqrs.Models
                   .WithMany(p => p.CourseTaskAttempt)
                   .HasForeignKey(d => d.CourseTaskId)
                   .OnDelete(DeleteBehavior.ClientSetNull)
-                  .HasConstraintName("FK__CourseTas__Cours__04E4BC85");
+                  .HasConstraintName("FK__CourseTas__Cours__05D8E0BE");
 
         entity.HasOne(d => d.GradedBy)
                   .WithMany(p => p.CourseTaskAttemptGradedBy)
                   .HasForeignKey(d => d.GradedById)
-                  .HasConstraintName("FK__CourseTas__Grade__06CD04F7");
+                  .HasConstraintName("FK__CourseTas__Grade__07C12930");
 
         entity.HasOne(d => d.User)
                   .WithMany(p => p.CourseTaskAttemptUser)
                   .HasForeignKey(d => d.UserId)
-                  .OnDelete(DeleteBehavior.ClientSetNull)
-                  .HasConstraintName("FK__CourseTas__UserI__05D8E0BE");
+                  .HasConstraintName("FK__CourseTas__UserI__06CD04F7");
       });
 
       modelBuilder.Entity<Discussion>(entity =>
@@ -217,11 +214,13 @@ namespace tvz2api_cqrs.Models
         entity.HasOne(d => d.Course)
                   .WithMany(p => p.Discussion)
                   .HasForeignKey(d => d.CourseId)
+                  .OnDelete(DeleteBehavior.Cascade)
                   .HasConstraintName("FK__Discussio__Cours__0E6E26BF");
 
         entity.HasOne(d => d.SubmittedBy)
                   .WithMany(p => p.Discussion)
                   .HasForeignKey(d => d.SubmittedById)
+                  .OnDelete(DeleteBehavior.Cascade)
                   .HasConstraintName("FK__Discussio__Submi__0D7A0286");
       });
 
@@ -238,6 +237,7 @@ namespace tvz2api_cqrs.Models
         entity.HasOne(d => d.Discussion)
                   .WithMany(p => p.DiscussionComment)
                   .HasForeignKey(d => d.DiscussionId)
+                  .OnDelete(DeleteBehavior.Cascade)
                   .HasConstraintName("FK__Discussio__Discu__0F624AF8");
 
         entity.HasOne(d => d.SubmittedBy)
@@ -265,6 +265,7 @@ namespace tvz2api_cqrs.Models
         entity.HasOne(d => d.Course)
                   .WithMany(p => p.Exam)
                   .HasForeignKey(d => d.CourseId)
+                  .OnDelete(DeleteBehavior.Cascade)
                   .HasConstraintName("FK__Exam__CourseID__656C112C");
 
         entity.HasOne(d => d.CreatedBy)
@@ -289,6 +290,7 @@ namespace tvz2api_cqrs.Models
         entity.HasOne(d => d.User)
                   .WithMany(p => p.ExamAttempt)
                   .HasForeignKey(d => d.UserId)
+                  .OnDelete(DeleteBehavior.Cascade)
                   .HasConstraintName("FK__ExamAttem__UserI__6754599E");
       });
 
@@ -322,13 +324,11 @@ namespace tvz2api_cqrs.Models
         entity.HasOne(d => d.Chat)
                   .WithMany(p => p.Message)
                   .HasForeignKey(d => d.ChatId)
-                  .OnDelete(DeleteBehavior.ClientSetNull)
                   .HasConstraintName("FK__Message__ChatID__797309D9");
 
         entity.HasOne(d => d.User)
                   .WithMany(p => p.Message)
                   .HasForeignKey(d => d.UserId)
-                  .OnDelete(DeleteBehavior.ClientSetNull)
                   .HasConstraintName("FK__Message__UserID__7A672E12");
       });
 
@@ -353,6 +353,7 @@ namespace tvz2api_cqrs.Models
         entity.HasOne(d => d.Course)
                   .WithMany(p => p.Notification)
                   .HasForeignKey(d => d.CourseId)
+                  .OnDelete(DeleteBehavior.Cascade)
                   .HasConstraintName("FK__Notificat__Cours__72C60C4A");
 
         entity.HasOne(d => d.SubmittedBy)
@@ -372,13 +373,11 @@ namespace tvz2api_cqrs.Models
         entity.HasOne(d => d.File)
                   .WithMany(p => p.NotificationFile)
                   .HasForeignKey(d => d.FileId)
-                  .OnDelete(DeleteBehavior.ClientSetNull)
                   .HasConstraintName("FK__Notificat__FileI__01142BA1");
 
         entity.HasOne(d => d.Notification)
                   .WithMany(p => p.NotificationFile)
                   .HasForeignKey(d => d.NotificationId)
-                  .OnDelete(DeleteBehavior.ClientSetNull)
                   .HasConstraintName("FK__Notificat__Notif__00200768");
       });
 
@@ -395,11 +394,13 @@ namespace tvz2api_cqrs.Models
         entity.HasOne(d => d.Notification)
                   .WithMany(p => p.NotificationUserSeen)
                   .HasForeignKey(d => d.NotificationId)
+                  .OnDelete(DeleteBehavior.Cascade)
                   .HasConstraintName("FK__Notificat__Notif__7E37BEF6");
 
         entity.HasOne(d => d.User)
                   .WithMany(p => p.NotificationUserSeen)
                   .HasForeignKey(d => d.UserId)
+                  .OnDelete(DeleteBehavior.Cascade)
                   .HasConstraintName("FK__Notificat__UserI__7F2BE32F");
       });
 
@@ -431,11 +432,13 @@ namespace tvz2api_cqrs.Models
         entity.HasOne(d => d.Exam)
                   .WithMany(p => p.Question)
                   .HasForeignKey(d => d.ExamId)
+                  .OnDelete(DeleteBehavior.Cascade)
                   .HasConstraintName("FK__Question__ExamID__6C190EBB");
 
         entity.HasOne(d => d.Type)
                   .WithMany(p => p.Question)
                   .HasForeignKey(d => d.TypeId)
+                  .OnDelete(DeleteBehavior.Cascade)
                   .HasConstraintName("FK__Question__TypeID__6D0D32F4");
       });
 
@@ -461,6 +464,7 @@ namespace tvz2api_cqrs.Models
         entity.HasOne(d => d.Course)
                   .WithMany(p => p.SidebarContent)
                   .HasForeignKey(d => d.CourseId)
+                  .OnDelete(DeleteBehavior.Cascade)
                   .HasConstraintName("FK__SidebarCo__Cours__71D1E811");
       });
 
@@ -475,6 +479,7 @@ namespace tvz2api_cqrs.Models
         entity.HasOne(d => d.File)
                   .WithMany(p => p.SidebarContentFile)
                   .HasForeignKey(d => d.FileId)
+                  .OnDelete(DeleteBehavior.Cascade)
                   .HasConstraintName("FK__SidebarCo__FileI__75A278F5");
 
         entity.HasOne(d => d.SidebarContent)
@@ -512,11 +517,13 @@ namespace tvz2api_cqrs.Models
         entity.HasOne(d => d.Course)
                   .WithMany(p => p.Subscription)
                   .HasForeignKey(d => d.CourseId)
+                  .OnDelete(DeleteBehavior.Cascade)
                   .HasConstraintName("FK__Subscript__Cours__6FE99F9F");
 
         entity.HasOne(d => d.User)
                   .WithMany(p => p.Subscription)
                   .HasForeignKey(d => d.UserId)
+                  .OnDelete(DeleteBehavior.Cascade)
                   .HasConstraintName("FK__Subscript__UserI__70DDC3D8");
       });
 
@@ -531,14 +538,12 @@ namespace tvz2api_cqrs.Models
         entity.HasOne(d => d.CourseTaskAttempt)
                   .WithMany(p => p.TaskAttemptAttachment)
                   .HasForeignKey(d => d.CourseTaskAttemptId)
-                  .OnDelete(DeleteBehavior.ClientSetNull)
-                  .HasConstraintName("FK__TaskAttem__Cours__07C12930");
+                  .HasConstraintName("FK__TaskAttem__Cours__08B54D69");
 
         entity.HasOne(d => d.File)
                   .WithMany(p => p.TaskAttemptAttachment)
                   .HasForeignKey(d => d.FileId)
-                  .OnDelete(DeleteBehavior.ClientSetNull)
-                  .HasConstraintName("FK__TaskAttem__FileI__08B54D69");
+                  .HasConstraintName("FK__TaskAttem__FileI__09A971A2");
       });
 
       modelBuilder.Entity<User>(entity =>
@@ -593,11 +598,13 @@ namespace tvz2api_cqrs.Models
         entity.HasOne(d => d.Attempt)
                   .WithMany(p => p.UserAnswer)
                   .HasForeignKey(d => d.AttemptId)
+                  .OnDelete(DeleteBehavior.Cascade)
                   .HasConstraintName("FK__UserAnswe__Attem__693CA210");
 
         entity.HasOne(d => d.Question)
                   .WithMany(p => p.UserAnswer)
                   .HasForeignKey(d => d.QuestionId)
+                  .OnDelete(DeleteBehavior.Cascade)
                   .HasConstraintName("FK__UserAnswe__Quest__6A30C649");
       });
 
@@ -614,7 +621,6 @@ namespace tvz2api_cqrs.Models
         entity.HasOne(d => d.Course)
                   .WithMany(p => p.UserCoursePrivilege)
                   .HasForeignKey(d => d.CourseId)
-                  .OnDelete(DeleteBehavior.ClientSetNull)
                   .HasConstraintName("FK__UserCours__Cours__0A9D95DB");
 
         entity.HasOne(d => d.Privilege)
@@ -626,7 +632,6 @@ namespace tvz2api_cqrs.Models
         entity.HasOne(d => d.User)
                   .WithMany(p => p.UserCoursePrivilege)
                   .HasForeignKey(d => d.UserId)
-                  .OnDelete(DeleteBehavior.ClientSetNull)
                   .HasConstraintName("FK__UserCours__UserI__0B91BA14");
       });
 
@@ -641,13 +646,11 @@ namespace tvz2api_cqrs.Models
         entity.HasOne(d => d.Privilege)
                   .WithMany(p => p.UserPrivilege)
                   .HasForeignKey(d => d.PrivilegeId)
-                  .OnDelete(DeleteBehavior.ClientSetNull)
                   .HasConstraintName("FK__UserPrivi__Privi__7C4F7684");
 
         entity.HasOne(d => d.User)
                   .WithMany(p => p.UserPrivilege)
                   .HasForeignKey(d => d.UserId)
-                  .OnDelete(DeleteBehavior.ClientSetNull)
                   .HasConstraintName("FK__UserPrivi__UserI__7B5B524B");
       });
 
@@ -670,7 +673,6 @@ namespace tvz2api_cqrs.Models
         entity.HasOne(d => d.User)
                   .WithMany(p => p.UserSettings)
                   .HasForeignKey(d => d.UserId)
-                  .OnDelete(DeleteBehavior.ClientSetNull)
                   .HasConstraintName("FK__UserSetti__UserI__7D439ABD");
       });
 

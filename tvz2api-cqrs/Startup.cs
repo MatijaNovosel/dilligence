@@ -173,6 +173,7 @@ namespace tvz2api_cqrs
       services.AddScoped<ICommandHandlerAsync<CourseDeleteDiscussionCommand>, CourseCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<CourseUpdateLandingPageCommand>, CourseCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<CourseUpdatePasswordCommand>, CourseCommandHandler>();
+      services.AddScoped<ICommandHandlerAsync<CourseDeleteCommand>, CourseCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<CourseCreateCommand, int>, CourseCommandHandler>();
 
       // File commands
@@ -243,6 +244,8 @@ namespace tvz2api_cqrs
       services.AddScoped<ICommandHandlerAsync<ExamFinalizeCommand>, ExamCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<ExamEnableSolvingCommand>, ExamCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<ExamFinishAttemptCommand>, ExamCommandHandler>();
+      services.AddScoped<ICommandHandlerAsync<ExamDeleteUnfinishedCommand>, ExamCommandHandler>();
+      services.AddScoped<ICommandHandlerAsync<ExamDeleteFinishedCommand>, ExamCommandHandler>();
 
       // CourseTask commands
       services.AddScoped<ICommandHandlerAsync<CourseTaskCreateCommand>, CourseTaskCommandHandler>();

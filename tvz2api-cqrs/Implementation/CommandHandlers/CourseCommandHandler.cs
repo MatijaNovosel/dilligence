@@ -35,6 +35,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     ICommandHandlerAsync<CourseDeleteDiscussionCommand>,
     ICommandHandlerAsync<CourseUpdateLandingPageCommand>,
     ICommandHandlerAsync<CourseUpdatePasswordCommand>,
+    ICommandHandlerAsync<CourseDeleteCommand>,
     ICommandHandlerAsync<CourseCreateCommand, int>
   {
     private readonly lmsContext _context;
@@ -72,6 +73,13 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         SubmittedAt = DateTime.Now,
         SubmittedById = command.SubmittedById
       });
+      await _context.SaveChangesAsync();
+    }
+
+    public async Task HandleAsync(CourseDeleteCommand command)
+    {
+      var course = await _context.Course.FirstOrDefaultAsync(x => x.Id == command.CourseId);
+      _context.Course.Remove(course);
       await _context.SaveChangesAsync();
     }
 
@@ -131,14 +139,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
     public async Task HandleAsync(CourseDeleteDiscussionCommand command)
     {
-      var discussion = await _context
-        .Discussion
-        .Include(t => t.DiscussionComment)
-        .FirstOrDefaultAsync(x => x.Id == command.DiscussionId);
-
-      _context.DiscussionComment.RemoveRange(discussion.DiscussionComment);
+      var discussion = await _context.Discussion.FirstOrDefaultAsync(x => x.Id == command.DiscussionId);
       _context.Discussion.Remove(discussion);
-
       await _context.SaveChangesAsync();
     }
 
@@ -158,14 +160,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
 
     public async Task HandleAsync(CourseDeleteSidebarCommand command)
     {
-      var sidebar = await _context
-        .SidebarContent
-        .Include(t => t.SidebarContentFile)
-        .FirstOrDefaultAsync(x => x.Id == command.SidebarId);
-
-      _context.SidebarContentFile.RemoveRange(sidebar.SidebarContentFile);
+      var sidebar = await _context.SidebarContent.FirstOrDefaultAsync(x => x.Id == command.SidebarId);
       _context.Remove(sidebar);
-
       await _context.SaveChangesAsync();
     }
   }

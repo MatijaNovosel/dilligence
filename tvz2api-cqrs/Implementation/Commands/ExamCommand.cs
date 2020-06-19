@@ -35,8 +35,20 @@ namespace tvz2api_cqrs.Implementation.Commands
 
   public class ExamEnableSolvingCommand : ICommand
   {
-    ExamEnableSolvingCommand() { }
+    public ExamEnableSolvingCommand() { }
     public int ExamId { get; set; }
+  }
+
+  public class ExamDeleteUnfinishedCommand : ICommand
+  {
+    public ExamDeleteUnfinishedCommand() {}
+    public int Id { get; set; }
+  }
+
+  public class ExamDeleteFinishedCommand : ICommand
+  {
+    public ExamDeleteFinishedCommand() {}
+    public int Id { get; set; }
   }
 
   public class ExamUpdateCommand : ICommand

@@ -28,6 +28,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     ICommandHandlerAsync<ExamUpdateCommand>,
     ICommandHandlerAsync<ExamFinalizeCommand>,
     ICommandHandlerAsync<ExamEnableSolvingCommand>,
+    ICommandHandlerAsync<ExamDeleteUnfinishedCommand>,
+    ICommandHandlerAsync<ExamDeleteFinishedCommand>,
     ICommandHandlerAsync<ExamFinishAttemptCommand>
   {
     private readonly lmsContext _context;
@@ -57,6 +59,32 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     {
       var exam = await _context.Exam.FirstOrDefaultAsync(x => x.Id == command.ExamId);
       exam.Enabled = true;
+      await _context.SaveChangesAsync();
+    }
+
+    public async Task HandleAsync(ExamDeleteUnfinishedCommand command)
+    {
+      var unfinishedExam = await _context.Exam.FirstOrDefaultAsync(x => x.Id == command.Id);
+      _context.Exam.Remove(unfinishedExam);
+      await _context.SaveChangesAsync();
+    }
+
+    public async Task HandleAsync(ExamDeleteFinishedCommand command)
+    {
+      var finishedExam = await _context
+        .Exam
+        .Include(x => x.ExamAttempt)
+        .ThenInclude(x => x.UserAnswer)
+        .FirstOrDefaultAsync(x => x.Id == command.Id);
+
+      finishedExam.ExamAttempt.ToList().ForEach(x =>
+      {
+        _context.UserAnswer.RemoveRange(x.UserAnswer);
+      });
+
+      _context.ExamAttempt.RemoveRange(finishedExam.ExamAttempt);
+      _context.Exam.Remove(finishedExam);
+
       await _context.SaveChangesAsync();
     }
 

@@ -34,7 +34,11 @@
                     >
                       <q-item-section>View</q-item-section>
                     </q-item>
-                    <q-item @click="deleteExam(unfinishedExam.id)" clickable v-close-popup>
+                    <q-item
+                      @click="deleteUnfinishedExam(unfinishedExam.id)"
+                      clickable
+                      v-close-popup
+                    >
                       <q-item-section>Delete</q-item-section>
                     </q-item>
                   </q-list>
@@ -72,7 +76,7 @@
                       <q-item-section>View grades</q-item-section>
                     </q-item>
                     <q-item clickable v-close-popup>
-                      <q-item-section>Delete</q-item-section>
+                      <q-item-section @click="deleteFinishedExam(finishedExam.id)">Delete</q-item-section>
                     </q-item>
                     <q-item
                       @click="enableExamSolving(finishedExam.id)"
@@ -121,90 +125,106 @@
       </div>
     </div>
     <div v-else class="row">
-      <div class="col-12 q-pb-md">
-        <span>Available exams</span>
+      <div class="col-12">
+        <span style="font-size: 12px;">Available exams</span>
+      </div>
+      <div class="col-12 q-py-sm">
+        <q-separator />
       </div>
       <div class="col-12 q-pb-md">
         <div class="row q-col-gutter-sm">
-          <div class="col-xs-6 col-md-4" :key="i" v-for="(availableExam, i) in availableExams">
-            <q-card class="border-box-dark">
-              <q-menu touch-position context-menu>
-                <q-list
-                  :class="`${$q.dark.isActive ? 'border-dark' : 'border-light'}`"
-                  dense
-                  separator
-                  style="min-width: 100px; border-radius: 6px;"
-                >
-                  <q-item clickable v-close-popup @click="startAttempt(availableExam.id)">
-                    <q-item-section>Start attempt</q-item-section>
-                  </q-item>
-                </q-list>
-              </q-menu>
-              <q-card-section
-                class="q-py-sm text-center text-subtitle2"
-              >Exam (ID {{ availableExam.id }})</q-card-section>
-              <q-separator />
-              <q-card-section class="q-py-sm">
-                <span class="text-subtitle2">Name:</span>
-                <span class="q-ml-sm">{{ availableExam.name }}</span>
-              </q-card-section>
-            </q-card>
+          <template v-if="availableExams && availableExams.length != 0">
+            <div class="col-xs-6 col-md-4" :key="i" v-for="(availableExam, i) in availableExams">
+              <q-card class="border-box-dark">
+                <q-menu touch-position context-menu>
+                  <q-list
+                    :class="`${$q.dark.isActive ? 'border-dark' : 'border-light'}`"
+                    dense
+                    separator
+                    style="min-width: 100px; border-radius: 6px;"
+                  >
+                    <q-item clickable v-close-popup @click="startAttempt(availableExam.id)">
+                      <q-item-section>Start attempt</q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-menu>
+                <q-card-section
+                  class="q-py-sm text-center text-subtitle2"
+                >Exam (ID {{ availableExam.id }})</q-card-section>
+                <q-separator />
+                <q-card-section class="q-py-sm">
+                  <span class="text-subtitle2">Name:</span>
+                  <span class="q-ml-sm">{{ availableExam.name }}</span>
+                </q-card-section>
+              </q-card>
+            </div>
+          </template>
+          <div v-else>
+            <span>None found!</span>
           </div>
         </div>
       </div>
-      <div class="col-12 q-pb-md">
-        <span>Started exams</span>
+      <div class="col-12">
+        <span style="font-size: 12px;">Started exams</span>
+      </div>
+      <div class="col-12 q-py-sm">
+        <q-separator />
       </div>
       <div class="col-12 q-pb-md">
         <div class="row q-col-gutter-sm">
-          <div class="col-xs-6 col-md-4" :key="i" v-for="(examInProgress, i) in examsInProgress">
-            <q-card class="border-box-dark">
-              <q-menu touch-position context-menu>
-                <q-list
-                  :class="`${$q.dark.isActive ? 'border-dark' : 'border-light'}`"
-                  dense
-                  separator
-                  style="min-width: 100px; border-radius: 6px;"
-                >
-                  <q-item
-                    clickable
-                    v-close-popup
-                    v-if="!examInProgress.expired"
-                    @click="$router.push({ name: 'exam-details', params: { id: examInProgress.id }})"
+          <template v-if="examsInProgress && examsInProgress.length != 0">
+            <div class="col-xs-6 col-md-4" :key="i" v-for="(examInProgress, i) in examsInProgress">
+              <q-card class="border-box-dark">
+                <q-menu touch-position context-menu>
+                  <q-list
+                    :class="`${$q.dark.isActive ? 'border-dark' : 'border-light'}`"
+                    dense
+                    separator
+                    style="min-width: 100px; border-radius: 6px;"
                   >
-                    <q-item-section>Continue attempt</q-item-section>
-                  </q-item>
-                  <q-item
-                    clickable
-                    v-close-popup
-                    @click="$router.push({ name: 'course-details-grades', params: { id: courseId }})"
-                  >
-                    <q-item-section>View grade</q-item-section>
-                  </q-item>
-                </q-list>
-              </q-menu>
-              <q-card-section
-                class="q-py-sm text-center text-subtitle2"
-              >Exam (ID {{ examInProgress.id }})</q-card-section>
-              <q-separator />
-              <q-card-section class="q-py-none q-pt-md">
-                <span class="text-subtitle2">Name:</span>
-                <span class="q-ml-sm">{{ examInProgress.name }}</span>
-              </q-card-section>
-              <q-card-section class="q-py-none">
-                <span class="text-subtitle2">Time left:</span>
-                <span
-                  class="q-ml-sm"
-                  :class="examInProgress.expired ? 'text-red-6' : ''"
-                >{{ examInProgress.expired ? 'Expired' : examInProgress.startedAt }}</span>
-              </q-card-section>
-              <q-card-section class="q-pt-none q-pb-md">
-                <span class="text-subtitle2">Status:</span>
-                <span
-                  class="q-ml-sm text-green-4"
-                >{{ examInProgress.terminated || examInProgress.expired ? 'Terminated' : 'In progress' }}</span>
-              </q-card-section>
-            </q-card>
+                    <q-item
+                      clickable
+                      v-close-popup
+                      v-if="!examInProgress.expired"
+                      @click="$router.push({ name: 'exam-details', params: { id: examInProgress.id }})"
+                    >
+                      <q-item-section>Continue attempt</q-item-section>
+                    </q-item>
+                    <q-item
+                      clickable
+                      v-close-popup
+                      @click="$router.push({ name: 'course-details-grades', params: { id: courseId }})"
+                    >
+                      <q-item-section>View grade</q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-menu>
+                <q-card-section
+                  class="q-py-sm text-center text-subtitle2"
+                >Exam (ID {{ examInProgress.id }})</q-card-section>
+                <q-separator />
+                <q-card-section class="q-py-none q-pt-md">
+                  <span class="text-subtitle2">Name:</span>
+                  <span class="q-ml-sm">{{ examInProgress.name }}</span>
+                </q-card-section>
+                <q-card-section class="q-py-none">
+                  <span class="text-subtitle2">Time left:</span>
+                  <span
+                    class="q-ml-sm"
+                    :class="examInProgress.expired ? 'text-red-6' : ''"
+                  >{{ examInProgress.expired ? 'Expired' : examInProgress.startedAt }}</span>
+                </q-card-section>
+                <q-card-section class="q-pt-none q-pb-md">
+                  <span class="text-subtitle2">Status:</span>
+                  <span
+                    class="q-ml-sm text-green-4"
+                  >{{ examInProgress.terminated || examInProgress.expired ? 'Terminated' : 'In progress' }}</span>
+                </q-card-section>
+              </q-card>
+            </div>
+          </template>
+          <div v-else>
+            <span>None found!</span>
           </div>
         </div>
       </div>
@@ -247,13 +267,15 @@ export default {
         });
       });
     },
-    deleteExam(id) {
-      // Delete exam which is unfinished ...
-      /*
-      ExamService.deleteExam(id).then(() => {
+    deleteUnfinishedExam(id) {
+      ExamService.deleteUnfinishedExam(id).then(() => {
         this.getUnfinishedExams();
       });
-      */
+    },
+    deleteFinishedExam(id) {
+      ExamService.deleteFinishedExam(id).then(() => {
+        this.getFinishedExams();
+      });
     },
     enableExamSolving(id) {
       ExamService.enableExamSolving(id, this.courseId).then(() => {

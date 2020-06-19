@@ -129,6 +129,20 @@ namespace tvz2api_cqrs.Controllers
       return Ok();
     }
 
+    [HttpDelete("delete-unfinished/{id}")]
+    public async Task<IActionResult> DeleteUnfinishedExam(int id)
+    {
+      await _commandBus.ExecuteAsync(new ExamDeleteUnfinishedCommand() { Id = id });
+      return Ok();
+    }
+
+    [HttpDelete("delete-finished/{id}")]
+    public async Task<IActionResult> DeleteFinishedExam(int id)
+    {
+      await _commandBus.ExecuteAsync(new ExamDeleteFinishedCommand() { Id = id });
+      return Ok();
+    }
+
     [HttpPost("finalize")]
     public async Task<IActionResult> FinalizeExam(ExamFinalizeCommand command, int courseId)
     {

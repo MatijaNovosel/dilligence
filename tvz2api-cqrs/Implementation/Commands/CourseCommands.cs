@@ -58,6 +58,12 @@ namespace tvz2api_cqrs.Implementation.Commands
     public int CourseId { get; set; }
   }
 
+  public class CourseDeleteCommand : ICommand
+  {
+    public CourseDeleteCommand() { }
+    public int CourseId { get; set; }
+  }
+
   public class CourseDiscussionReplyCommand : ICommand
   {
     public CourseDiscussionReplyCommand() { }

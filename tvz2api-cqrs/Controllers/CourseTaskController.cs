@@ -128,7 +128,7 @@ namespace tvz2api_cqrs.Controllers
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> CreateNew(int id, int courseId)
+    public async Task<IActionResult> DeleteTask(int id, int courseId)
     {
       if (!_userResolver.HasCoursePrivilege(courseId, new List<PrivilegeEnum>() { PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanManageTasks, PrivilegeEnum.CanDeleteTasks }))
       {
