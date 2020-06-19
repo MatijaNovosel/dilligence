@@ -89,5 +89,11 @@ export default {
   },
   async createNewCourse(payload) {
     return await axios.post('Course/new-course', payload);
+  },
+  async muteParticipant(payload) {
+    return await axios.post('Course/mute', payload)
+  },
+  async kickParticipant(payload) {
+    return await axios.post('Course/kick', payload);
   }
 }

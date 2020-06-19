@@ -200,10 +200,32 @@ namespace tvz2api_cqrs.Controllers
       {
         return Unauthorized();
       }
-      await _commandBus.ExecuteAsync(new CourseDeleteCommand() 
+      await _commandBus.ExecuteAsync(new CourseDeleteCommand()
       {
         CourseId = id
       });
+      return Ok();
+    }
+
+    [HttpPost("mute")]
+    public async Task<IActionResult> Mute(CourseMuteParticipantCommand command)
+    {
+      if (!_userResolver.HasCoursePrivilege(command.CourseId, new List<PrivilegeEnum>() { PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanMuteParticipants }))
+      {
+        return Unauthorized();
+      }
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
+    }
+
+    [HttpPost("kick")]
+    public async Task<IActionResult> Kick(CourseKickParticipantCommand command)
+    {
+      if (!_userResolver.HasCoursePrivilege(command.CourseId, new List<PrivilegeEnum>() { PrivilegeEnum.CanManageCourse, PrivilegeEnum.CanKickParticipants }))
+      {
+        return Unauthorized();
+      }
+      await _commandBus.ExecuteAsync(command);
       return Ok();
     }
   }

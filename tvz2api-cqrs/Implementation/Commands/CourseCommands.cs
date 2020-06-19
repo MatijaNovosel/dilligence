@@ -64,6 +64,21 @@ namespace tvz2api_cqrs.Implementation.Commands
     public int CourseId { get; set; }
   }
 
+  public class CourseMuteParticipantCommand : ICommand
+  {
+    public CourseMuteParticipantCommand() { }
+    public int CourseId { get; set; }
+    public int UserId { get; set; }
+    public bool Mute { get; set; }
+  }
+
+  public class CourseKickParticipantCommand : ICommand 
+  {
+    public CourseKickParticipantCommand() { }
+    public int UserId { get; set; }
+    public int CourseId { get; set; }
+  }
+
   public class CourseDiscussionReplyCommand : ICommand
   {
     public CourseDiscussionReplyCommand() { }

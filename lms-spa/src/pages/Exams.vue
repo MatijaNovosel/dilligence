@@ -9,7 +9,7 @@
       </div>
       <div class="col-12">
         <div class="row">
-          <template v-if="attempts">
+          <template v-if="attempts && attempts.length != 0">
             <div
               v-for="(attempt, i) in attempts"
               :key="i"
@@ -18,6 +18,7 @@
               <exam-card :value="attempt" />
             </div>
           </template>
+          <div v-else>None found!</div>
         </div>
       </div>
     </div>

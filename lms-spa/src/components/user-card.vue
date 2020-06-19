@@ -1,10 +1,5 @@
 <template>
-  <q-card
-    flat
-    bordered
-    :style="{ 'width': cardWidth }"
-    @click="$router.push({ name: 'profile', params: { id: value.id } })"
-  >
+  <q-card flat bordered :style="{ 'width': cardWidth }">
     <q-menu touch-position context-menu v-if="user.id != value.id">
       <q-list
         :class="`${$q.dark.isActive ? 'border-dark' : 'border-light'}`"
@@ -17,14 +12,23 @@
         <q-item
           clickable
           v-close-popup
+          @click="muteParticipant(value.id)"
           v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanMuteParticipants) 
           && hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
         >
-          <q-item-section>Mute participant</q-item-section>
+          <q-item-section>{{ value.muted ? 'Unmute participant' : 'Mute participant' }}</q-item-section>
         </q-item>
         <q-item
           clickable
           v-close-popup
+          @click="$router.push({ name: 'profile', params: { id: value.id } })"
+        >
+          <q-item-section>View profile</q-item-section>
+        </q-item>
+        <q-item
+          clickable
+          v-close-popup
+          @click="kickParticipant(value.id)"
           v-if="hasCoursePrivileges(courseId, Privileges.CanManageCourse, Privileges.CanKickParticipants) 
           && hasCoursePrivileges(courseId, Privileges.IsInvolvedWithCourse)"
         >
@@ -32,6 +36,13 @@
         </q-item>
       </q-list>
     </q-menu>
+    <q-icon
+      class="absolute-top-right"
+      size="sm"
+      color="red-8"
+      name="mdi-volume-off"
+      v-show="value.muted && !value.admin"
+    />
     <img style="width: 180px; height: 180px;" :src="generatePictureSource(value.picture)" />
     <q-card-section>
       <div class="text-h6">{{ `${value.name} ${value.surname}` }}</div>
@@ -43,6 +54,7 @@
 <script>
 import { generatePictureSource } from "../helpers/helpers";
 import UserMixin from "../mixins/userMixin";
+import CourseService from "../services/api/course";
 
 export default {
   name: "user-card",
@@ -60,7 +72,25 @@ export default {
     }
   },
   methods: {
-    generatePictureSource
+    generatePictureSource,
+    kickParticipant(id) {
+      CourseService.kickParticipant({
+        userId: id,
+        courseId: this.courseId
+      }).then(() => {
+        this.$emit("mute");
+      });
+    },
+    muteParticipant(id) {
+      let payload = {
+        courseId: this.courseId,
+        userId: this.value.id,
+        mute: !this.value.muted
+      };
+      CourseService.muteParticipant(payload).then(() => {
+        this.$emit("mute");
+      });
+    }
   }
 };
 </script>

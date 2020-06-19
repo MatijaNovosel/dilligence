@@ -31,6 +31,7 @@ namespace tvz2api_cqrs.Models.DTO
     public string Email { get; set; }
     public string Picture { get; set; }
     public bool Admin { get; set; }
+    public bool Muted { get; set; }
   }
 
   public class UserProfilePictureDTO

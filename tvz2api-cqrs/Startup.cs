@@ -174,6 +174,8 @@ namespace tvz2api_cqrs
       services.AddScoped<ICommandHandlerAsync<CourseUpdateLandingPageCommand>, CourseCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<CourseUpdatePasswordCommand>, CourseCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<CourseDeleteCommand>, CourseCommandHandler>();
+      services.AddScoped<ICommandHandlerAsync<CourseMuteParticipantCommand>, CourseCommandHandler>();
+      services.AddScoped<ICommandHandlerAsync<CourseKickParticipantCommand>, CourseCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<CourseCreateCommand, int>, CourseCommandHandler>();
 
       // File commands

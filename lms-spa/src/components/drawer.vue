@@ -31,6 +31,7 @@
         <q-separator class="q-mb-sm" />
         <q-expansion-item
           dense
+          group="1"
           dense-toggle
           class="text-weight-regular"
           v-for="link in links"

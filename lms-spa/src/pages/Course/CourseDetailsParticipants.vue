@@ -41,7 +41,8 @@
       </div>
       <template v-if="participants">
         <user-card
-          class="user-card q-ma-sm"
+          @mute="getUsers"
+          class="q-ma-sm"
           :courseId="courseId"
           :value="participant"
           v-for="(participant, i) in participants"
@@ -94,11 +95,3 @@ export default {
   }
 };
 </script>
-
-<style lang="sass">
-.user-card
-  transition: all .2s ease-in-out;
-.user-card:hover
-  transform: scale(0.9);
-  cursor: pointer
-</style>

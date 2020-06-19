@@ -36,6 +36,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     ICommandHandlerAsync<CourseUpdateLandingPageCommand>,
     ICommandHandlerAsync<CourseUpdatePasswordCommand>,
     ICommandHandlerAsync<CourseDeleteCommand>,
+    ICommandHandlerAsync<CourseMuteParticipantCommand>,
+    ICommandHandlerAsync<CourseKickParticipantCommand>,
     ICommandHandlerAsync<CourseCreateCommand, int>
   {
     private readonly lmsContext _context;
@@ -81,6 +83,74 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       var course = await _context.Course.FirstOrDefaultAsync(x => x.Id == command.CourseId);
       _context.Course.Remove(course);
       await _context.SaveChangesAsync();
+    }
+
+    public async Task HandleAsync(CourseMuteParticipantCommand command)
+    {
+      if (command.Mute == true)
+      {
+        var privelege = await _context
+          .UserCoursePrivilege
+          .FirstOrDefaultAsync(x =>
+            x.UserId == command.UserId &&
+            x.CourseId == command.CourseId &&
+            x.PrivilegeId == (int)PrivilegeEnum.CanCreateNewDiscussion
+          );
+        if (privelege != null)
+        {
+          _context.UserCoursePrivilege.Remove(privelege);
+        }
+      }
+      else
+      {
+        _context.UserCoursePrivilege.Add(new UserCoursePrivilege()
+        {
+          CourseId = command.CourseId,
+          PrivilegeId = (int)PrivilegeEnum.CanCreateNewDiscussion,
+          UserId = command.UserId
+        });
+      }
+
+      _context.SaveChanges();
+    }
+
+    public async Task HandleAsync(CourseKickParticipantCommand command)
+    {
+      var user = await _context
+        .User
+        .Include(x => x.Subscription)
+        .Include(x => x.DiscussionComment)
+        .Include(x => x.Discussion)
+        .ThenInclude(x => x.DiscussionComment)
+        .Include(x => x.ExamAttempt)
+        .ThenInclude(x => x.UserAnswer)
+        .Include(x => x.CourseTaskAttemptUser)
+        .ThenInclude(x => x.TaskAttemptAttachment)
+        .Include(x => x.UserCoursePrivilege)
+        .FirstOrDefaultAsync(x => x.Id == command.UserId);
+
+      _context.Discussion.RemoveRange(user.Discussion);
+      _context.DiscussionComment.RemoveRange(user.DiscussionComment);
+
+      var attempts = user.ExamAttempt.ToList();
+      attempts.ForEach(x =>
+      {
+        _context.UserAnswer.RemoveRange(x.UserAnswer);
+      });
+      _context.ExamAttempt.RemoveRange(user.ExamAttempt);
+
+      var courseTaskAttempts = user.CourseTaskAttemptUser.ToList();
+      courseTaskAttempts.ForEach(x =>
+      {
+        _context.TaskAttemptAttachment.RemoveRange(x.TaskAttemptAttachment);
+      });
+      _context.RemoveRange(courseTaskAttempts);
+
+      _context.UserCoursePrivilege.RemoveRange(user.UserCoursePrivilege);
+
+      _context.Subscription.RemoveRange(user.Subscription.Where(x => x.CourseId == command.CourseId));
+
+      _context.SaveChanges();
     }
 
     public async Task<ICommandResult<int>> HandleAsync(CourseCreateCommand command)

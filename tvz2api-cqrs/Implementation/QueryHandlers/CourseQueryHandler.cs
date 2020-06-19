@@ -9,6 +9,7 @@ using tvz2api_cqrs.Models.DTO;
 using tvz2api_cqrs.QueryModels;
 using System;
 using System.Security.Claims;
+using tvz2api_cqrs.Enumerations;
 
 namespace tvz2api_cqrs.Implementation.QueryHandlers
 {
@@ -187,6 +188,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         .Include(t => t.Subscription)
         .ThenInclude(t => t.Course)
         .Include(t => t.ImageFile)
+        .Include(t => t.UserCoursePrivilege)
         .Where(query.Specification.Predicate)
         .Select(t => new UserCourseDetailsDTO
         {
@@ -196,8 +198,9 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Username = t.Username,
           Email = t.Email,
           Created = t.Created,
+          Muted = !t.UserCoursePrivilege.Any(x => x.CourseId == query.Id && x.PrivilegeId == (int)PrivilegeEnum.CanCreateNewDiscussion),
           Picture = t.ImageFile != null ? Convert.ToBase64String(t.ImageFile.Data) : null,
-          Admin = t.Id == t.Subscription.FirstOrDefault(x => x.CourseId == query.Id).Course.MadeById
+          Admin = t.Id == t.Subscription.FirstOrDefault(x => x.CourseId == query.Id).Course.MadeById || t.UserCoursePrivilege.Any(x => x.CourseId == query.Id && x.PrivilegeId == (int)PrivilegeEnum.CanManageCourse)
         })
         .ToListAsync();
       return users;
