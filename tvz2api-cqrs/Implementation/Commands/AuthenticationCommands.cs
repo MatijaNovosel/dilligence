@@ -10,13 +10,11 @@ namespace tvz2api_cqrs.Implementation.Commands
   public class AuthenticationRegisterCommand : ICommand
   {
     public AuthenticationRegisterCommand() { }
-    public AuthenticationRegisterCommand(string username, string password)
-    {
-      Username = username;
-      Password = password;
-    }
     public string Username { get; set; }
     public string Password { get; set; }
+    public string Email { get; set; }
+    public string Name { get; set; }
+    public string Surname { get; set; }
   }
 
   public class AuthenticationLoginCommand : ICommand<LoginUserDTO>

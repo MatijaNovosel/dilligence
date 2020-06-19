@@ -191,6 +191,9 @@ namespace tvz2api_cqrs
       services.AddScoped<ICommandHandlerAsync<AuthenticationRegisterCommand>, AuthenticationCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<AuthenticationLoginCommand, LoginUserDTO>, AuthenticationCommandHandler>();
 
+      // Authentication queries
+      services.AddScoped<IQueryHandlerAsync<AuthenticationCheckUsernameQuery, bool>, AuthenticationQueryHandler>();
+
       // User commands
       services.AddScoped<ICommandHandlerAsync<UserSubscribeCommand>, UserCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<UserUnsubscribeCommand>, UserCommandHandler>();

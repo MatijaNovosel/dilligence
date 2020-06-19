@@ -52,10 +52,20 @@
 <script>
 import { mapGetters } from "vuex";
 import { generatePictureSource } from "../helpers/helpers";
+import UserMixin from "../mixins/userMixin";
 
 export default {
   name: "drawer",
   props: ["drawerTrigger"],
+  mixins: [UserMixin],
+  created() {
+    if (this.hasPrivileges(this.Privileges.CanCreateCourse)) {
+      this.links[0].push({
+        text: "adminConsole",
+        route: { name: "employees" }
+      });
+    }
+  },
   data() {
     return {
       drawerOpen: false,
@@ -68,10 +78,6 @@ export default {
             {
               text: "home",
               route: { name: "home" }
-            },
-            {
-              text: "adminConsole",
-              route: { name: "employees" }
             },
             {
               text: "chats",

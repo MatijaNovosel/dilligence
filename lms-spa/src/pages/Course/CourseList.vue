@@ -4,6 +4,7 @@
       size="sm"
       class="absolute-top-right q-mr-sm bg-green-8 text-white"
       @click="newCourseDialog = true"
+      v-if="hasPrivileges(Privileges.CanCreateCourse)"
     >Create course</q-btn>
     <div class="row">
       <div class="col-12">

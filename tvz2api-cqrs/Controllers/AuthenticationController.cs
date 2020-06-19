@@ -44,5 +44,12 @@ namespace tvz2api_cqrs.Controllers
       var userInfo = await _commandBus.ExecuteAsync<LoginUserDTO>(command);
       return Ok(userInfo);
     }
+
+    [HttpGet("check-username")]
+    public async Task<IActionResult> CheckUsername(string username)
+    {
+      var check = await _queryBus.ExecuteAsync(new AuthenticationCheckUsernameQuery() { Username = username });
+      return Ok(check);
+    }
   }
 }

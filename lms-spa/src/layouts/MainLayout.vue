@@ -1,10 +1,12 @@
 <template>
   <q-layout view="hHh LpR fFf">
-    <div v-if="$router.currentRoute.path != '/login'">
+    <div v-if="!['/login', '/register'].includes($router.currentRoute.path)">
       <navbar @drawerState="drawer = !drawer" />
       <drawer :drawerTrigger="drawer" />
     </div>
-    <q-page-container :class="{'svg-bg': $router.currentRoute.path == '/login' }">
+    <q-page-container
+      :class="{'svg-bg': ['/login', '/register'].includes($router.currentRoute.path) }"
+    >
       <router-view />
     </q-page-container>
   </q-layout>

@@ -21,9 +21,9 @@ export default {
    * @return {AxiosPromise<any>} Axios promise to be resolved in the view.
    */
   async register(payload) {
-    return await axios.post('auth/register', {
-      Username: payload.Username,
-      Password: payload.Password
-    });
+    return await axios.post('auth/register', payload);
+  },
+  async checkUsername(username) {
+    return await axios.get('auth/check-username', { params: { username } });
   }
 }

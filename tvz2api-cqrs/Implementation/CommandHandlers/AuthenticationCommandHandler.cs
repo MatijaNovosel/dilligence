@@ -70,7 +70,13 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         throw new Exception("Username already exists!");
       }
 
-      var newUser = new User() { Username = command.Username };
+      var newUser = new User()
+      {
+        Username = command.Username,
+        Name = command.Name,
+        Surname = command.Surname,
+        Email = command.Email
+      };
 
       byte[] passwordHash, passwordSalt;
       CreatePasswordHash(command.Password, out passwordHash, out passwordSalt);

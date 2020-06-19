@@ -42,7 +42,7 @@
       </q-card-section>
       <q-card-section class="q-pb-none q-pt-sm q-ml-md text-subtitle1">
         New to LMS?
-        <span class="sign-up-text text-bold text-primary">SIGN UP</span>
+        <span @click="$router.push({ 'name': 'register' })" class="sign-up-text text-bold text-primary">SIGN UP</span>
       </q-card-section>
       <q-card-actions class="justify-center q-mt-sm">
         <q-btn
@@ -139,19 +139,30 @@ export default {
 </script>
 
 <style>
-
-@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
-@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
-@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+@-moz-keyframes spin {
+  100% {
+    -moz-transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
 
 .spin {
-  -webkit-animation:spin 30s linear infinite;
-  -moz-animation:spin 30s linear infinite;
-  animation:spin 30s linear infinite;
+  -webkit-animation: spin 30s linear infinite;
+  -moz-animation: spin 30s linear infinite;
+  animation: spin 30s linear infinite;
 }
 
 .sign-up-text:hover {
-	cursor: pointer
+  cursor: pointer;
 }
-
 </style>

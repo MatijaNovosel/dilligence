@@ -98,9 +98,19 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
         .ThenInclude(x => x.Answer)
         .Include(x => x.SidebarContent)
         .ThenInclude(x => x.SidebarContentFile)
+        .Include(x => x.Notification)
+        .ThenInclude(x => x.NotificationUserSeen)
         .FirstOrDefaultAsync(x => x.Id == command.CourseId);
 
       _context.Subscription.RemoveRange(course.Subscription);
+
+      var notifications = course.Notification.ToList();
+      notifications.ForEach(x =>
+      {
+        _context.NotificationUserSeen.RemoveRange(x.NotificationUserSeen);
+      });
+
+      _context.Notification.RemoveRange(notifications);
 
       var courseTasks = course.CourseTask.ToList();
       courseTasks.ForEach(x =>
