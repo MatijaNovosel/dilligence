@@ -2,21 +2,11 @@
   <q-dialog :maximized="$q.screen.xs || $q.screen.sm" v-model="open" persistent>
     <q-card :style="$q.screen.xs || $q.screen.sm || dialogStyle">
       <q-toolbar
-        :class="[ $q.dark.isActive ? 'dark-dialog-background' : 'bg-primary']"
-        class="text-white dialog-toolbar"
+        :style="`border-bottom: 1px solid ${$q.dark.isActive ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.12)'};`"
       >
-        <span>{{ mode == "edit" ? 'View submission' : 'New submission' }}</span>
+        <span style="font-size: 18px;">{{ mode == "edit" ? 'View submission' : 'New submission' }}</span>
         <q-space />
-        <q-btn
-          :ripple="false"
-          dense
-          size="sm"
-          color="white"
-          flat
-          round
-          icon="mdi-close-circle"
-          @click="reset"
-        />
+        <q-btn @click="reset" :ripple="false" dense size="sm" flat round icon="mdi-close-thick" />
       </q-toolbar>
       <q-card-section v-if="taskInfo">
         <div class="q-mb-md text-subtitle1">

@@ -2,21 +2,11 @@
   <q-dialog :maximized="$q.screen.xs || $q.screen.sm" v-model="open" persistent>
     <q-card :style="$q.screen.xs || $q.screen.sm || dialogStyle">
       <q-toolbar
-        :class="[ $q.dark.isActive ? 'dark-dialog-background' : 'bg-primary']"
-        class="text-white dialog-toolbar"
+        :style="`border-bottom: 1px solid ${$q.dark.isActive ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.12)'};`"
       >
-        <span>Submissions</span>
+        <span style="font-size: 18px;">Submissions</span>
         <q-space />
-        <q-btn
-          :ripple="false"
-          dense
-          size="sm"
-          color="white"
-          flat
-          round
-          icon="mdi-close-circle"
-          @click="reset"
-        />
+        <q-btn @click="reset" :ripple="false" dense size="sm" flat round icon="mdi-close-thick" />
       </q-toolbar>
       <template v-if="submissions && !$q.screen.xs && !$q.screen.sm">
         <q-card-section
@@ -43,9 +33,10 @@
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>{{ submission.submittedBy }}</q-item-label>
-                    <q-item-label
-                      caption
-                    ><span class="text-bold">Submitted at</span>: {{ format(new Date(submission.submittedAt), 'dd.MM.yyyy. HH:mm') }}</q-item-label>
+                    <q-item-label caption>
+                      <span class="text-bold">Submitted at</span>
+                      : {{ format(new Date(submission.submittedAt), 'dd.MM.yyyy. HH:mm') }}
+                    </q-item-label>
                   </q-item-section>
                   <q-item-section side>
                     <span

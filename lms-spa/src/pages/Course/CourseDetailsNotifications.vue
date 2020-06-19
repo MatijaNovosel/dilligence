@@ -43,20 +43,18 @@
     <q-dialog :maximized="$q.screen.xs || $q.screen.sm" v-model="newNotificationDialog" persistent>
       <q-card :style="$q.screen.xs || $q.screen.sm || dialogStyle">
         <q-toolbar
-          :style="'background-color: ' + newNotification.color"
-          class="text-white dialog-toolbar"
+          :style="`border-bottom: 1px solid ${$q.dark.isActive ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.12)'};`"
         >
-          <span>Create new notification</span>
+          <span style="font-size: 18px;">Create new notification</span>
           <q-space />
           <q-btn
+            @click="resetNewNotificationDialog"
             :ripple="false"
             dense
             size="sm"
-            color="white"
             flat
             round
-            icon="mdi-close-circle"
-            @click="resetNewNotificationDialog"
+            icon="mdi-close-thick"
           />
         </q-toolbar>
         <q-card-section class="q-gutter-sm q-pb-none">
@@ -351,12 +349,12 @@ export default {
 
 <style lang="sass">
 .q-btn--fab .q-btn__wrapper
-	padding: 10px
-	min-height: 12px
-	min-width: 12px
+  padding: 10px
+  min-height: 12px
+  min-width: 12px
 .dialog-toolbar
-	min-height: 30px
+  min-height: 30px
 .container-border
-	border: 1px solid #e0dede;
-	border-radius: 6px;
+  border: 1px solid #e0dede;
+  border-radius: 6px;
 </style>

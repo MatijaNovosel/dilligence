@@ -157,20 +157,18 @@
     <q-dialog :maximized="$q.screen.xs || $q.screen.sm" v-model="subscribeDialog" persistent>
       <q-card :style="$q.screen.xs || $q.screen.sm || dialogStyle">
         <q-toolbar
-          :class="[ $q.dark.isActive ? 'dark-dialog-background' : 'bg-primary']"
-          class="text-white dialog-toolbar"
+          :style="`border-bottom: 1px solid ${$q.dark.isActive ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.12)'};`"
         >
-          <span>{{ $i18n.t('subscribeToCourse') }}</span>
+          <span style="font-size: 18px;">{{ $i18n.t('subscribeToCourse') }}</span>
           <q-space />
           <q-btn
+            @click="resetSubscribeDialog"
             :ripple="false"
             dense
             size="sm"
-            color="white"
             flat
             round
-            icon="mdi-close-circle"
-            @click="resetSubscribeDialog"
+            icon="mdi-close-thick"
           />
         </q-toolbar>
         <q-card-section class="text-center">

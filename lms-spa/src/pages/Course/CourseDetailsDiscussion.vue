@@ -59,20 +59,18 @@
     <q-dialog :maximized="$q.screen.xs || $q.screen.sm" v-model="newDiscussionDialog" persistent>
       <q-card :style="$q.screen.xs || $q.screen.sm || dialogStyle">
         <q-toolbar
-          :class="[ $q.dark.isActive ? 'dark-dialog-background' : 'bg-primary']"
-          class="text-white dialog-toolbar"
+          :style="`border-bottom: 1px solid ${$q.dark.isActive ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.12)'};`"
         >
-          <span>Create new discussion</span>
+          <span style="font-size: 18px;">Create new discussion</span>
           <q-space />
           <q-btn
+            @click="resetNewDiscussionDialog"
             :ripple="false"
             dense
             size="sm"
-            color="white"
             flat
             round
-            icon="mdi-close-circle"
-            @click="resetNewDiscussionDialog"
+            icon="mdi-close-thick"
           />
         </q-toolbar>
         <q-card-section class="q-gutter-sm">
