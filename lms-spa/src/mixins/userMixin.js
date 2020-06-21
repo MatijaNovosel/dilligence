@@ -1,5 +1,6 @@
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import Privileges from "../constants/privileges";
+import UserService from "../services/api/user";
 
 export default {
   created() {
@@ -12,6 +13,7 @@ export default {
     ...mapGetters(["user"])
   },
   methods: {
+    ...mapActions(["setUserData"]),
     /**
      * @param {...number} requestedPrivileges - Variable amount of numbers representing the requested privileges.
      * @description
@@ -40,6 +42,13 @@ export default {
         .privileges
         .courses
         .some(course => course.id == courseId && course.privileges.some(privilege => requestedPrivileges.includes(privilege)));
+    },
+    reinitPrivileges() {
+      let user = { ...this.user };
+      UserService.getUserDetails(this.user.id).then(({ data }) => {
+        user.privileges = data.privileges;
+        this.setUserData(user);
+      });
     }
   }
 }

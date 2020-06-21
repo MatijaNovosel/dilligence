@@ -39,6 +39,14 @@ const routes = [
         }
       },
       {
+        path: 'admin',
+        name: 'admin',
+        component: () => import('pages/Admin.vue'),
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
         path: 'chat',
         name: 'chat',
         component: () => import('pages/Chat.vue'),

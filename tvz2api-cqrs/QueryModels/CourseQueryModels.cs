@@ -11,6 +11,7 @@ namespace tvz2api_cqrs.QueryModels
     public int? Ects { get; set; }
     public int? SpecializationId { get; set; }
     public bool Subscribed { get; set; }
+    public bool IsInvolved { get; set; }
   }
 
   public class CourseDetailsQueryModel

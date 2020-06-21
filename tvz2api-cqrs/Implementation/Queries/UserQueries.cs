@@ -19,6 +19,11 @@ namespace tvz2api_cqrs.Implementation.Queries
     public UserSpecification Specification { get; set; }
   }
 
+  public class UserGetAllQuery : IQuery<List<UserQueryModel>>
+  {
+    public UserGetAllQuery() { }
+  }
+
   public class UserTotalQuery : IQuery<int>
   {
     public UserTotalQuery(UserSpecification specification)

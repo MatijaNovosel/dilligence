@@ -12,6 +12,7 @@ namespace tvz2api_cqrs.Models.DTO
     public string Surname { get; set; }
     public string Email { get; set; }
     public string Picture { get; set; }
+    public UserPrivilegeDTO Privileges { get; set; }
   }
 
   public class BlacklistDTO

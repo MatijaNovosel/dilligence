@@ -58,4 +58,18 @@ namespace tvz2api_cqrs.Implementation.Commands
     public string Surname { get; set; }
     public string Email { get; set; }
   }
+
+  public class UserUpdatePrivilegesCommand : ICommand
+  {
+    public UserUpdatePrivilegesCommand() { }
+    public List<int> Courses { get; set; }
+    public int UserId { get; set; }
+  }
+
+  public class UserUpdateGeneralCommand : ICommand
+  {
+    public UserUpdateGeneralCommand() { }
+    public List<int> Privileges { get; set; }
+    public int UserId { get; set; }
+  }
 }

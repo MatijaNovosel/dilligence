@@ -208,7 +208,9 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
 
     public async Task<List<CourseQueryModel>> HandleAsync(CourseQuery query)
     {
-      var courses = await _context.Course
+      var courses = await _context
+        .Course
+        .Include(t => t.UserCoursePrivilege)
         .Where(query.Specification.Predicate)
         .Select(t => new CourseQueryModel
         {
@@ -216,7 +218,8 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
           Name = t.Name,
           Ects = t.Ects,
           Subscribed = t.Subscription.Any(x => x.UserId == query.Specification.UserId),
-          SpecializationId = t.SpecializationId
+          SpecializationId = t.SpecializationId,
+          IsInvolved = t.UserCoursePrivilege.Any(x => x.UserId == query.Specification.UserId && x.PrivilegeId == (int)PrivilegeEnum.IsInvolvedWithCourse)
         })
         .ToListAsync();
       return courses;

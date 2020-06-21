@@ -15,6 +15,7 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
   public class UserQueryHandler :
     IQueryHandlerAsync<UserQuery, List<UserQueryModel>>,
     IQueryHandlerAsync<UserChatQuery, List<UserChatQueryModel>>,
+    IQueryHandlerAsync<UserGetAllQuery, List<UserQueryModel>>,
     IQueryHandlerAsync<UserSettingsQuery, UserSettingsQueryModel>,
     IQueryHandlerAsync<UserDetailsQuery, UserDetailsDTO>,
     IQueryHandlerAsync<UserBlacklistQuery, List<BlacklistDTO>>,
@@ -36,7 +37,26 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
         {
           Id = t.Id,
           Username = t.Username,
-          Created = t.Created
+          Created = t.Created,
+          Name = t.Name,
+          Surname = t.Surname,
+          Email = t.Email
+        })
+        .ToListAsync();
+      return korisnici;
+    }
+
+    public async Task<List<UserQueryModel>> HandleAsync(UserGetAllQuery query)
+    {
+      var korisnici = await _context.User
+        .Select(t => new UserQueryModel
+        {
+          Id = t.Id,
+          Username = t.Username,
+          Created = t.Created,
+          Name = t.Name,
+          Surname = t.Surname,
+          Email = t.Email
         })
         .ToListAsync();
       return korisnici;
@@ -138,25 +158,51 @@ namespace tvz2api_cqrs.Implementation.QueryHandlers
 
     public async Task<UserDetailsDTO> HandleAsync(UserDetailsQuery query)
     {
-      var user = await _context.User.Include(t => t.ImageFile).FirstOrDefaultAsync(x => x.Id == query.Id);
+      var user = await _context
+        .User
+        .Include(t => t.ImageFile)
+        .Include(p => p.UserPrivilege)
+        .Include(p => p.UserCoursePrivilege)
+        .ThenInclude(p => p.Course)
+        .Include(p => p.Subscription)
+        .FirstOrDefaultAsync(x => x.Id == query.Id);
+
       return new UserDetailsDTO()
       {
+        Id = user.Id,
         Name = user.Name,
         Surname = user.Surname,
         Created = user.Created,
         Email = user.Email,
         Picture = user.ImageFile != null ? Convert.ToBase64String(user.ImageFile.Data) : null,
-        Username = user.Username
-      };
-    }
-
-    public async Task<List<int>> HandleAsync(UserSubscriptionQuery query)
-    {
-      var subscriptions = await _context.Subscription
-        .Where(t => t.UserId == query.Id)
-        .Select(t => (int)t.CourseId)
-        .ToListAsync();
-      return subscriptions;
-    }
+        Username = user.Username,
+        Privileges = new UserPrivilegeDTO()
+        {
+          GeneralPrivileges = user.UserPrivilege.Select(x => x.PrivilegeId).ToList(),
+          Courses = user.UserCoursePrivilege
+          .GroupBy(x => x.CourseId)
+          .Select(x => new UserCoursePrivilegeDTO()
+          {
+            Id = x.FirstOrDefault().CourseId,
+            Name = x.FirstOrDefault().Course.Name,
+            Privileges = user
+              .UserCoursePrivilege
+              .Where(y => y.CourseId == x.FirstOrDefault().CourseId)
+              .Select(y => y.PrivilegeId)
+              .ToList()
+          })
+          .ToList()
+        }
+    };
   }
+
+  public async Task<List<int>> HandleAsync(UserSubscriptionQuery query)
+  {
+    var subscriptions = await _context.Subscription
+      .Where(t => t.UserId == query.Id)
+      .Select(t => (int)t.CourseId)
+      .ToListAsync();
+    return subscriptions;
+  }
+}
 }

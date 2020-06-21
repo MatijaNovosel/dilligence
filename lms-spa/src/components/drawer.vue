@@ -60,9 +60,9 @@ export default {
   mixins: [UserMixin],
   created() {
     if (this.hasPrivileges(this.Privileges.CanCreateCourse)) {
-      this.links[0].push({
+      this.links[0].sublinks.push({
         text: "adminConsole",
-        route: { name: "employees" }
+        route: { name: "admin" }
       });
     }
   },

@@ -33,6 +33,14 @@ namespace tvz2api_cqrs.Controllers
       _queryBus = queryBus;
     }
 
+    [HttpGet("all")]
+    public async Task<IActionResult> GetAll(string name = null)
+    {
+      // var queryOptions = QueryOptionsExtensions.GetFromRequest(Request);
+      var result = await _queryBus.ExecuteAsync(new UserGetAllQuery());
+      return Ok(result);
+    }
+
     [HttpGet]
     public async Task<IActionResult> Get(string name = null)
     {
@@ -101,6 +109,20 @@ namespace tvz2api_cqrs.Controllers
 
     [HttpPut("personal")]
     public async Task<IActionResult> UpdatePersonalInformation(UserUpdatePersonalInformationCommand command)
+    {
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
+    }
+
+    [HttpPut("update-privileges")]
+    public async Task<IActionResult> UpdatePrivileges(UserUpdatePrivilegesCommand command)
+    {
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
+    }
+
+    [HttpPut("update-general")]
+    public async Task<IActionResult> UpdateGeneral(UserUpdateGeneralCommand command)
     {
       await _commandBus.ExecuteAsync(command);
       return Ok();

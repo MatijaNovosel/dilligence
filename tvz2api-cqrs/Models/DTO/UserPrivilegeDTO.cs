@@ -12,6 +12,7 @@ namespace tvz2api_cqrs.Models.DTO
   public class UserCoursePrivilegeDTO
   {
     public int Id { get; set; }
+    public string Name { get; set; }
     public List<int> Privileges { get; set; }
   }
 }

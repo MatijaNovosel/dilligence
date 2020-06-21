@@ -28,6 +28,8 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     ICommandHandlerAsync<UserUpdatePersonalInformationCommand>,
     ICommandHandlerAsync<UserUploadPictureCommand, UserProfilePictureDTO>,
     ICommandHandlerAsync<UserUpdateSettingsCommand>,
+    ICommandHandlerAsync<UserUpdatePrivilegesCommand>,
+    ICommandHandlerAsync<UserUpdateGeneralCommand>,
     ICommandHandlerAsync<UserUpdateBlacklistCommand>
   {
     private readonly lmsContext _context;
@@ -105,6 +107,67 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
       settings.DarkMode = command.DarkMode;
       settings.Locale = command.Locale;
       settings.Popups = command.Popups;
+      await _context.SaveChangesAsync();
+    }
+
+    public async Task HandleAsync(UserUpdatePrivilegesCommand command)
+    {
+      var user = await _context
+        .User
+        .Include(t => t.UserCoursePrivilege)
+        .FirstOrDefaultAsync(x => x.Id == command.UserId);
+
+      var currentCoursePrivilegeIds = user.UserCoursePrivilege.Select(x => x.CourseId);
+      var res = currentCoursePrivilegeIds.Union(command.Courses).Except(currentCoursePrivilegeIds.Intersect(command.Courses)).ToList();
+
+      res.ForEach(x =>
+      {
+        if (currentCoursePrivilegeIds.Contains(x))
+        {
+          var privileges = _context.UserCoursePrivilege.Where(y => y.CourseId == x && y.UserId == command.UserId);
+          _context.UserCoursePrivilege.RemoveRange(privileges);
+        }
+        else
+        {
+          _context.UserCoursePrivilege.Add(new UserCoursePrivilege()
+          {
+            CourseId = x,
+            PrivilegeId = (int)PrivilegeEnum.IsInvolvedWithCourse,
+            UserId = command.UserId
+          });
+        }
+      });
+
+      await _context.SaveChangesAsync();
+    }
+
+    public async Task HandleAsync(UserUpdateGeneralCommand command)
+    {
+      var user = await _context
+        .User
+        .Include(t => t.UserPrivilege)
+        .FirstOrDefaultAsync(x => x.Id == command.UserId);
+
+      var currentGeneralPrivileges = user.UserPrivilege.Select(x => x.PrivilegeId);
+      var res = currentGeneralPrivileges.Union(command.Privileges).Except(currentGeneralPrivileges.Intersect(command.Privileges)).ToList();
+
+      res.ForEach(x =>
+      {
+        if (currentGeneralPrivileges.Contains(x))
+        {
+          var privileges = _context.UserPrivilege.Where(y => y.PrivilegeId == x && y.UserId == command.UserId);
+          _context.UserPrivilege.RemoveRange(privileges);
+        }
+        else
+        {
+          _context.UserPrivilege.Add(new UserPrivilege()
+          {
+            PrivilegeId = x,
+            UserId = command.UserId
+          });
+        }
+      });
+
       await _context.SaveChangesAsync();
     }
 

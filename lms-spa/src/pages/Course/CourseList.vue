@@ -296,6 +296,12 @@ export default {
       };
     },
     resetNewCourseDialog() {
+      this.newCourse = {
+        name: null,
+        password: null,
+        specializationId: null
+      };
+      this.$v.$reset();
       this.newCourseDialog = false;
     },
     createNewCourse() {
@@ -383,6 +389,9 @@ export default {
       password: {
         required,
         minLength: minLength(4)
+      },
+      specializationId: {
+        required
       }
     },
     password: {

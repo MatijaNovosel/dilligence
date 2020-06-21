@@ -83,5 +83,14 @@ export default {
   },
   async updateBlacklist(payload) {
     return await axios.put('User/update-blacklist/', payload);
+  },
+  async getAll() {
+    return await axios.get('User/all');
+  },
+  async updatePrivileges(payload) {
+    return await axios.put('User/update-privileges', payload);
+  },
+  async updateGeneralPrivileges(payload) {
+    return await axios.put('User/update-general', payload);
   }
 };

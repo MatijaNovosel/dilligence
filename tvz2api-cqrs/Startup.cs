@@ -201,6 +201,8 @@ namespace tvz2api_cqrs
       services.AddScoped<ICommandHandlerAsync<UserUploadPictureCommand, UserProfilePictureDTO>, UserCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<UserUpdatePersonalInformationCommand>, UserCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<UserUpdateBlacklistCommand>, UserCommandHandler>();
+      services.AddScoped<ICommandHandlerAsync<UserUpdateGeneralCommand>, UserCommandHandler>();
+      services.AddScoped<ICommandHandlerAsync<UserUpdatePrivilegesCommand>, UserCommandHandler>();
 
       // Notification queries
       services.AddScoped<IQueryHandlerAsync<NotificationQuery, List<NotificationQueryModel>>, NotificationQueryHandler>();
@@ -221,6 +223,7 @@ namespace tvz2api_cqrs
       services.AddScoped<IQueryHandlerAsync<UserDetailsQuery, UserDetailsDTO>, UserQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<UserSubscriptionQuery, List<int>>, UserQueryHandler>();
       services.AddScoped<IQueryHandlerAsync<UserBlacklistQuery, List<BlacklistDTO>>, UserQueryHandler>();
+      services.AddScoped<IQueryHandlerAsync<UserGetAllQuery, List<UserQueryModel>>, UserQueryHandler>();
 
       // Chat queries
       services.AddScoped<IQueryHandlerAsync<ChatDetailsQuery, ChatQueryModel>, ChatQueryHandler>();
