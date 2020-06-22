@@ -128,6 +128,13 @@ namespace tvz2api_cqrs.Controllers
       return Ok();
     }
 
+    [HttpPut("update-specific")]
+    public async Task<IActionResult> UpdateSpecific(UserUpdateSpecificCommand command)
+    {
+      await _commandBus.ExecuteAsync(command);
+      return Ok();
+    }
+
     [HttpPut("image/{userId}")]
     public async Task<IActionResult> UploadImage([FromForm] IFormFile picture, int userId)
     {

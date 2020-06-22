@@ -72,4 +72,11 @@ namespace tvz2api_cqrs.Implementation.Commands
     public List<int> Privileges { get; set; }
     public int UserId { get; set; }
   }
+
+  public class UserUpdateSpecificCommand : ICommand
+  {
+    public UserUpdateSpecificCommand() { }
+    public List<UpdateCoursePrivilegeDTO> Courses { get; set; }
+    public int UserId { get; set; }
+  }
 }

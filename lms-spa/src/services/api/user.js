@@ -92,5 +92,8 @@ export default {
   },
   async updateGeneralPrivileges(payload) {
     return await axios.put('User/update-general', payload);
+  },
+  async updateCoursePrivileges(payload) {
+    return await axios.put('User/update-specific', payload);
   }
 };

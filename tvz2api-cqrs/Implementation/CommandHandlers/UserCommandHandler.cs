@@ -30,6 +30,7 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
     ICommandHandlerAsync<UserUpdateSettingsCommand>,
     ICommandHandlerAsync<UserUpdatePrivilegesCommand>,
     ICommandHandlerAsync<UserUpdateGeneralCommand>,
+    ICommandHandlerAsync<UserUpdateSpecificCommand>,
     ICommandHandlerAsync<UserUpdateBlacklistCommand>
   {
     private readonly lmsContext _context;
@@ -167,6 +168,56 @@ namespace tvz2api_cqrs.Implementation.CommandHandlers
           });
         }
       });
+
+      await _context.SaveChangesAsync();
+    }
+
+    public async Task HandleAsync(UserUpdateSpecificCommand command)
+    {
+      var user = await _context
+        .User
+        .Include(t => t.UserCoursePrivilege)
+        .ThenInclude(t => t.Course)
+        .FirstOrDefaultAsync(x => x.Id == command.UserId);
+
+      var courseIdsToRemove = command.Courses.Where(x => x.Privileges.Count == 0).Select(x => x.CourseId).ToList();
+      if (courseIdsToRemove.Count != 0)
+      {
+        courseIdsToRemove.ForEach(x =>
+        {
+          _context.UserCoursePrivilege.Remove(user.UserCoursePrivilege.FirstOrDefault(y => y.CourseId == x));
+        });
+      }
+
+      var courseIdsToChange = command.Courses.Where(x => x.Privileges.Count != 0).Select(x => x.CourseId).ToList();
+
+      if (courseIdsToChange.Count != 0)
+      {
+        courseIdsToChange.ForEach(x =>
+        {
+          var currentPrivilegeIds = user.UserCoursePrivilege.Where(y => y.CourseId == x).Select(y => y.PrivilegeId).ToList();
+          var changedPrivilegeIds = command.Courses.FirstOrDefault(y => y.CourseId == x).Privileges;
+          var res = currentPrivilegeIds.Union(changedPrivilegeIds).Except(currentPrivilegeIds.Intersect(changedPrivilegeIds)).ToList();
+
+          res.ForEach(y =>
+          {
+            if (currentPrivilegeIds.Contains(y))
+            {
+              var privileges = _context.UserCoursePrivilege.Where(z => z.PrivilegeId == y && z.UserId == command.UserId && z.CourseId == x);
+              _context.UserCoursePrivilege.RemoveRange(privileges);
+            }
+            else
+            {
+              _context.UserCoursePrivilege.Add(new UserCoursePrivilege()
+              {
+                PrivilegeId = y,
+                UserId = command.UserId,
+                CourseId = x
+              });
+            }
+          });
+        });
+      }
 
       await _context.SaveChangesAsync();
     }

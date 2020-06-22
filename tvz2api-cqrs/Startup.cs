@@ -203,6 +203,7 @@ namespace tvz2api_cqrs
       services.AddScoped<ICommandHandlerAsync<UserUpdateBlacklistCommand>, UserCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<UserUpdateGeneralCommand>, UserCommandHandler>();
       services.AddScoped<ICommandHandlerAsync<UserUpdatePrivilegesCommand>, UserCommandHandler>();
+      services.AddScoped<ICommandHandlerAsync<UserUpdateSpecificCommand>, UserCommandHandler>();
 
       // Notification queries
       services.AddScoped<IQueryHandlerAsync<NotificationQuery, List<NotificationQueryModel>>, NotificationQueryHandler>();

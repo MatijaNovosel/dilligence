@@ -120,6 +120,7 @@
                 :nodes="courseSpecificPrivileges[i]"
                 :key="i"
                 :ticked.sync="courseSpecificPrivilegesTicked[i]"
+                @update:ticked="courseSpecificPrivilegesChanged"
                 node-key="key"
                 tick-strategy="leaf-filtered"
               />
@@ -138,6 +139,7 @@
 import UserMixin from "../mixins/userMixin";
 import UserService from "../services/api/user";
 import CourseService from "../services/api/course";
+import NotificationService from "../services/notification/notifications";
 import { generatePictureSource } from "../helpers/helpers";
 import { debounce } from "debounce";
 
@@ -183,6 +185,31 @@ export default {
             { label: "Can create courses", key: 3 }
           ]
         }
+      ],
+      coursePrivileges: [
+        { label: "Can manage course", key: 4 },
+        { label: "Can change course landing page", key: 5 },
+        { label: "Can manage notifications", key: 6 },
+        { label: "Can send notifications", key: 7 },
+        { label: "Can delete notifications", key: 8 },
+        { label: "Can archive notifications", key: 9 },
+        { label: "Can kick participants", key: 10 },
+        { label: "Can mute participants", key: 11 },
+        { label: "Can manage tasks", key: 12 },
+        { label: "Can create tasks", key: 13 },
+        { label: "Can delete tasks", key: 14 },
+        { label: "Can grade tasks", key: 15 },
+        { label: "Can manage exams", key: 16 },
+        { label: "Can create exams", key: 17 },
+        { label: "Can delete exams", key: 18 },
+        { label: "Can grade exams", key: 19 },
+        { label: "Can manage discussions", key: 20 },
+        { label: "Can create new discussions", key: 21 },
+        { label: "Can delete discussions", key: 22 },
+        { label: "Can manage course files", key: 23 },
+        { label: "Can upload course files", key: 24 },
+        { label: "Can delete course files", key: 25 },
+        { label: "Is involved with course", key: 26 }
       ]
     };
   },
@@ -191,6 +218,19 @@ export default {
   },
   methods: {
     generatePictureSource,
+    courseSpecificPrivilegesChanged: debounce(function() {
+      let payload = { userId: this.activeUser.id, courses: [] };
+      this.courseSpecificPrivilegesTicked.forEach((x, i) => {
+        payload.courses.push({
+          courseId: this.courseSpecificPrivileges[i][0].key,
+          privileges: x
+        });
+      });
+      UserService.updateCoursePrivileges(payload).then(() => {
+        this.getUserDetails(this.activeUser.id);
+        NotificationService.showSuccess("Privileges successfully updated!");
+      });
+    }, 750),
     generalPrivilegesChanged: debounce(function() {
       UserService.updateGeneralPrivileges({
         privileges: this.activeUser.privileges.generalPrivileges,
@@ -198,6 +238,7 @@ export default {
       }).then(() => {
         this.getUserDetails(this.activeUser.id);
         this.reinitPrivileges();
+        NotificationService.showSuccess("Privileges successfully updated!");
       });
     }, 750),
     openPrivilegeDialog() {
@@ -211,6 +252,7 @@ export default {
       }).then(() => {
         this.getUserDetails(this.activeUser.id);
         this.reinitPrivileges();
+        NotificationService.showSuccess("Privileges successfully updated!");
       });
     }, 750),
     reset() {
@@ -227,31 +269,8 @@ export default {
           this.courseSpecificPrivileges.push([
             {
               label: x.name,
-              children: [
-                { label: "Can manage course", key: 4 },
-                { label: "Can change course landing page", key: 5 },
-                { label: "Can manage notifications", key: 6 },
-                { label: "Can send notifications", key: 7 },
-                { label: "Can delete notifications", key: 8 },
-                { label: "Can archive notifications", key: 9 },
-                { label: "Can kick participants", key: 10 },
-                { label: "Can mute participants", key: 11 },
-                { label: "Can manage tasks", key: 12 },
-                { label: "Can create tasks", key: 13 },
-                { label: "Can delete tasks", key: 14 },
-                { label: "Can grade tasks", key: 15 },
-                { label: "Can manage exams", key: 16 },
-                { label: "Can create exams", key: 17 },
-                { label: "Can delete exams", key: 18 },
-                { label: "Can grade exams", key: 19 },
-                { label: "Can manage discussions", key: 20 },
-                { label: "Can create new discussions", key: 21 },
-                { label: "Can delete discussions", key: 22 },
-                { label: "Can manage course files", key: 23 },
-                { label: "Can upload course files", key: 24 },
-                { label: "Can delete course files", key: 25 },
-                { label: "Is involved with course", key: 26 }
-              ]
+              key: x.id,
+              children: this.coursePrivileges
             }
           ]);
         });
@@ -269,7 +288,7 @@ export default {
     },
     courseNameChanged: debounce(function() {
       CourseService.get(
-        this.user.id,
+        this.activeUser.id,
         null,
         this.searchTextCourse,
         true,

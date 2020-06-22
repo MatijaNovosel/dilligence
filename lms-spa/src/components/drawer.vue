@@ -59,7 +59,7 @@ export default {
   props: ["drawerTrigger"],
   mixins: [UserMixin],
   created() {
-    if (this.hasPrivileges(this.Privileges.CanCreateCourse)) {
+    if (this.hasPrivileges(this.Privileges.CanGrantPrivileges)) {
       this.links[0].sublinks.push({
         text: "adminConsole",
         route: { name: "admin" }
