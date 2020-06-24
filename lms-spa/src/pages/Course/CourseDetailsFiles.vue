@@ -115,7 +115,7 @@ export default {
       CourseService.createNewSidebar({
         title: this.newSidebar.title,
         courseId: this.courseId
-      }).then(() => {
+      }, this.courseId).then(() => {
         this.getCourseFiles();
         this.$v.$reset();
         this.reset();
@@ -143,7 +143,7 @@ export default {
 
 <style lang="sass">
 .q-btn--fab .q-btn__wrapper
-	padding: 10px
-	min-height: 12px
-	min-width: 12px
+  padding: 10px
+  min-height: 12px
+  min-width: 12px
 </style>

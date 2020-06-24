@@ -75,7 +75,10 @@
       </q-card-section>
       <q-card-section class="q-pb-none q-pt-sm q-ml-md text-subtitle1">
         Already have an account?
-        <span class="sign-up-text text-bold text-primary">SIGN IN</span>
+        <span
+          class="sign-up-text text-bold text-primary"
+          @click="$router.push({ 'name': 'login' })"
+        >SIGN IN</span>
       </q-card-section>
       <q-card-actions class="justify-center q-mt-sm">
         <q-btn
