@@ -18,9 +18,19 @@ Learning management system made with VueJS 2 and .NET Core.
     3. Kick or mute course participants
     ![](https://i.imgur.com/DowagCE.png)
     4. Create gradable and timed tasks
+    ![](https://i.imgur.com/A2YwivN.png)
     5. Grade or view submitted tasks
+    ![](https://i.imgur.com/xUiwiH4.png)
+    ![](https://i.imgur.com/gUXJLl7.png)
     6. Create or take gradable and timed exams that can be graded manually or automatically
+    ![](https://i.imgur.com/9KQxqal.png)
+    ![](https://i.imgur.com/WWnGJcP.png)
     7. Create a discussion board divided into threads
+    ![](https://i.imgur.com/sAo0Bol.png)
+    ![](https://i.imgur.com/Bod3fPZ.png)
     8. Upload course files which can be viewed by all participants
-4. User privilege manipulation using an admin console
+    ![](https://i.imgur.com/p89QxhM.png)
+4. Edit user privilege using an admin console
+![](https://i.imgur.com/bQmAYAP.png)
 5. Chat with other users in real time
+![](https://i.imgur.com/IaAyExL.png)
