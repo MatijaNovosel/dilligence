@@ -1,5 +1,5 @@
 # LMS
-Learning management system made with VueJS 2 on the frontend and .NET Core on the backend with MSSQL as the database.
+Learning management system.
 
 **Features of the web application:**
 
