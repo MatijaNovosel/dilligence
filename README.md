@@ -1,5 +1,5 @@
-# LMS
-Learning management system.
+<h1 align=center>LMS - Learning management system</h1>
+<p align=center>An application intended for both teachers and students with the purpose of making learning easier.</p>
 
 **Features of the web application:**
 
