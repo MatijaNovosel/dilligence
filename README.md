@@ -5,7 +5,7 @@
 
 - [MSSQL](https://www.microsoft.com/en-us/sql-server)
 - [Vue 2](https://vuejs.org/)
-- [.NET Core 2.1](https://dotnet.microsoft.com/en-us/)
+- [.NET Core](https://dotnet.microsoft.com/en-us/)
 - [Quasar](https://quasar.dev/)
 
 ## 🚀 Features
