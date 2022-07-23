@@ -1,7 +1,13 @@
 <h1 align=center>LMS - Learning management system</h1>
 <p align=center>An application intended for both teachers and students with the purpose of making learning easier.</p>
 
-**Features of the web application:**
+## 🔨 Built With
+
+- [MSSQL](https://www.microsoft.com/en-us/sql-server)
+- [Vue 2](https://vuejs.org/)
+- [.NET Core 2.1](https://dotnet.microsoft.com/en-us/)
+
+## 🚀 Features
 
 1. Authorization and authentication system
     1. Login and register system including customizable user accounts with specific privileges tied to each created educational course
