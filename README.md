@@ -1,3 +1,5 @@
+![image](https://user-images.githubusercontent.com/36193643/184144166-37e92494-dcba-4f55-87a3-51d3c9cdf2ab.png)
+
 <h1 align=center>LMS - Learning management system</h1>
 <p align=center>An application intended for both teachers and students with the purpose of making learning easier.</p>
 
