@@ -1,4 +1,4 @@
-<h1 align=center>LMS - Learning management system</h1>
+<h1 align=center>Dilligence</h1>
 <p align=center>An application intended for both teachers and students with the purpose of making learning easier.</p>
 
 ## 🔨 Built With
