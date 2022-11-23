@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@aspnet/signalr": "^1.1.4",
-    "@quasar/app": "^1.0.0",
+    "@quasar/app": "^3.3.3",
     "babel-eslint": "^10.0.1",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.0",
