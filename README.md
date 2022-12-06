@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/36193643/206032981-e67c49d2-bc16-444a-941d-e1551ba9cac0.png" />
+</div>
+
 <h1 align=center>Dilligence</h1>
 <p align=center>An application intended for both teachers and students with the purpose of making learning easier.</p>
 
